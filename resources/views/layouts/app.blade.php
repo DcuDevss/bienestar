@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="{{ str_replace('_', '-', app()->getLocale()) }}">
+
+<head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="csrf-token" content="{{ csrf_token() }}">
+
+    <title>{{ config('app.name', 'Laravel') }}</title>
+
+    <!-- Fonts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+
+    <!-- Scripts -->
+    @vite(['resources/css/app.css', 'resources/js/app.js'])
+
+    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
+    <!-- Styles -->
+    <style>
+        /* LIGHTBOX */
+        /* Estilos para la imagen ampliada */
+        .image-container {
+            position: relative;
+        }
+
+        #image {
+            cursor: pointer;
+        }
+
+        .full-image-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.8);
+            z-index: 9999;
+            display: none;
+        }
+
+        .full-image-container {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            height: 100%;
+            transform: translate(-50%, -50%);
+            text-align: center;
+        }
+
+        .full-image-container img {
+            max-width: 90%;
+            max-height: 90%;
+        }
+
+        .action-button {
+            margin-top: 10px;
+            padding: 5px 10px;
+            background-color: #fff;
+            color: #000;
+            border: none;
+            cursor: pointer;
+        }
+
+        /* estilos paginacion */
+
+        /* FORMULARIO NUEVO PERSONAL inputs */
+        /* input:focus,
+        select:focus {
+            outline: none !important;
+            border-color: #2d5986 !important;
+            box-shadow: none !important;
+        } */
+        /* stepbar FORM NUEVO PERSONAL*/
+        .stepBar {
+            transition: background-color 1s ease;
+        }
+
+        .hr-transition {
+            transition: background-color 2.5s;
+        }
+
+        /* step form */
+        .step-transition {
+            transition: opacity 4.3s ease-in-out;
+            opacity: 1;
+        }
+
+        .step-active {
+            opacity: 3;
+        }
+
+        /* MEDIAQUERYS TABLAS */
+        @media (max-width: 1550px) {
+
+            /* PADRETABLAS */
+            .padreTablas {
+                padding-left: 6px;
+                padding-right: 6px;
+            }
+
+            /* TABLA 1 */
+            .agre {
+                color: ;
+            }
+
+            .seccionTab {
+                margin: 0 auto;
+            }
+
+            .teGead {
+                font-size: 12px;
+            }
+
+            .tiBody {
+                font-size: 12px;
+                padding-top: 4px;
+                padding-bottom: 4px;
+            }
+
+            /* TABLA 2 */
+            .seccionTab2 {
+                font-size: 11px;
+            }
+
+            .subTab2 {
+                max-height: 532px;
+            }
+
+            .teGead2 {
+                font-size: 10px;
+                padding-top: 2px;
+                padding-bottom: 2px;
+            }
+
+            .fak {
+                font-size: 10px;
+                padding-top: 14px;
+                padding-bottom: 14px;
+            }
+        }
+
+        @keyframes pulseYellow {
+
+            0%,
+            100% {
+                background-color: #f6e05e;
+                /* Color amarillo */
+                box-shadow: 0 0 0 0px #f6e05e;
+            }
+
+            50% {
+                background-color: transparent;
+                box-shadow: 0 0 0 10px transparent;
+            }
+        }
+
+        @keyframes pulseRed {
+
+            0%,
+            100% {
+                background-color: #ef4444;
+                /* Color rojo */
+                box-shadow: 0 0 0 0px #ef4444;
+            }
+
+            50% {
+                background-color: transparent;
+                box-shadow: 0 0 0 10px transparent;
+            }
+        }
+    </style>
+
+    @livewireStyles
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+    <!--  -->
+    <script src="{{ asset('js/all.min.js') }}" defer></script>
+</head>
+
+<body class="font-sans antialiased">
+    <x-banner />
+
+    <div class="min-h-screen bg-gray-100">
+        @livewire('navigation-menu')
+
+        <!-- Page Heading -->
+        @if (isset($header))
+            <header class="bg-white shadow">
+                <div class="max-w-7xl mx-auto">
+                    {{ $header }}
+                </div>
+            </header>
+        @endif
+
+        <!-- Page Content -->
+        <main>
+            {{ $slot }}
+        </main>
+    </div>
+
+    @stack('modals')
+
+    @livewireScripts
+</body>
+
+</html>

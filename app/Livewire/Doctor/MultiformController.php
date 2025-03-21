@@ -90,7 +90,7 @@ class MultiformController extends Component
                 'email' => $this->email,
                 'telefono' => $this->telefono,
             ]);
-            session()->flash('message', 'Customer successfully updated.');
+            session()->flash('message', 'Paciente reistrado correctamente.');
         } else {
             $this->customer = Paciente::create([
                 'apellido_nombre' => $this->apellido_nombre,
@@ -101,7 +101,7 @@ class MultiformController extends Component
                 'email' => $this->email,
                 'telefono' => $this->telefono,
             ]);
-            session()->flash('message', 'Customer successfully created.');
+            session()->flash('message', 'Paciente reistrado correctamente.');
         }
 
         $this->step++;

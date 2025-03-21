@@ -181,11 +181,11 @@
             <div class="mt-4">
                 @if ($step > 0 && $step <= 2)
                     <button type="button" wire:click="decreaseStep"
-                        class="bg-gray-500 text-white px-4 py-2 rounded mr-3">Back</button>
+                        class="bg-gray-500 text-white px-4 py-2 rounded mr-3">Volver</button>
                 @endif
 
                 @if ($step <= 2)
-                    <button type="submit" class="bg-[#2d5986] text-white px-4 py-2 rounded">Next</button>
+                    <button type="submit" class="bg-[#2d5986] text-white px-4 py-2 rounded">Siguiente</button>
                 @endif
             </div>
         </form>

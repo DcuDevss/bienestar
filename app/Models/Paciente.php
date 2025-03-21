@@ -11,8 +11,54 @@ class Paciente extends Model
     use HasFactory;
     use SoftDeletes;
 
-
     protected $fillable = [
+        'apellido_nombre',
+        'dni',
+        'cuil',
+        'genero',
+        'direccion',
+        'email',
+        'telefono',
+        'escalafon',
+        'jerarquia',
+        'legajo',
+        'destino_actual',
+        'ciudad',
+        'edad',
+        'fecha_nacimiento',
+        'peso',
+        'altura',
+        'factore_id',
+        'jerarquia_id',
+        'estado_id',
+        'fecha_atencion',
+        'enfermedad',
+        'remedios',
+        'chapa',
+        'NroCredencial',
+        'sexo',
+        'cuil1',
+        'dni_bis',
+        'cuil2',
+        'TelefonoCelular',
+        'TelefonoFijo',
+        'domicilio',
+        'CiudadDomicilio',
+        'FecIngreso',
+        'fecNacimiento',
+        'FechaNombramiento',
+        'EmailOfic',
+        'antiguedad',
+        'comisaria_servicio',
+        'deleted_at',
+        'created_at',
+        'updated_at',
+        'user_id'
+    ];
+
+
+
+   /* protected $fillable = [
         'apellido_nombre',
         'dni',
         'cuil',
@@ -37,18 +83,9 @@ class Paciente extends Model
         'enfermedad',
         'remedios',
 
-    ];
+    ];*/
 
-    /* public function scopeSearch($query, $value){
-        $query->where('apellido_nombre','like',"%{$value}%")
-        ->orWhere('dni','like',"%{$value}%")
-        ->orWhere('legajo','like',"%{$value}%")
-        ->orWhere('estado_id','like',"%{$value}%")
-        ->orWhere('destino_actual','like',"%{$value}%")
-        ->orWhereHas('estados', function ($query) {
-            $query->where('name', 'like', "%{$this->search}%");
-        });
-    }*/
+
     public function scopeSearch($query, $value)
     {
         $query->where('apellido_nombre', 'like', "%{$value}%")

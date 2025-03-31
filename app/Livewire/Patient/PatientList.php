@@ -82,34 +82,4 @@ public function render()
 
 
 
-
-    /*public function render()
-    {
-        return view('livewire.patient.patient-list', [
-            'pacientes' => Paciente::search($this->search)
-                ->when($this->admin !== '', function ($query) {
-                    $query->where('id', $this->admin);
-                })
-                ->orderBy('id', 'ASC') // Ordenar por ID de forma ascendente
-                ->orderBy($this->sortBy, $this->sortDir)
-                ->paginate($this->perPage),
-        ])->layout('layouts.app');
-    }*/
-
-   /* public function render()
-    {
-        return view('livewire.patient.patient-list',
-        [
-            'pacientes' => Paciente::search($this->search)
-            ->when($this->admin !== '',function($query){
-                $query->where('is_admin',$this->admin);
-            })
-            ->orderBy($this->sortBy,$this->sortDir)
-            ->paginate($this->perPage)
-        ]
-        );
-    }*/
-
-
-
 }

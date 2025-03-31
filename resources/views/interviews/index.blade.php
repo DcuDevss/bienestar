@@ -171,8 +171,8 @@
                         </div>
 
                         <div class="flex">
-                            <div class="px-3 pb-1 font-semibold capitalize">{{ __('escalafon') }} : </div>
-                            <p class="px-3 pb-1 text-slate-800 font-semibold capitalize">{{ $paciente->escalafon }}</p>
+                            <div class="px-3 pb-1 font-semibold capitalize">{{ __('estado') }} : </div>
+                            <p class="px-3 pb-1 text-slate-800 font-semibold capitalize">{{ $paciente->estado }}</p>
                         </div>
 
                         <div class="flex">
@@ -186,8 +186,8 @@
                         </div>
 
                         <div class="flex">
-                            <div class="px-3 pb-1 font-semibold capitalize">{{ __('cuil') }} : </div>
-                            <p class="px-3 pb-1 text-slate-800 font-semibold capitalize">{{ $paciente->cuil }}</p>
+                            <div class="px-3 pb-1 font-semibold capitalize">{{ __('legajo') }} : </div>
+                            <p class="px-3 pb-1 text-slate-800 font-semibold capitalize">{{ $paciente->legajo }}</p>
                         </div>
 
                         <div class="flex">
@@ -203,19 +203,19 @@
 
                         </div>
                         <div class="flex text-sm">
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ __('genero') }} :</p>
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->genero }}</p>
+                            <p class="px-3 pb-1 font-semibold capitalize">{{ __('sexo') }} :</p>
+                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->sexo }}</p>
                         </div>
                         <div class="flex text-sm">
                             <p class="px-3 pb-1 font-semibold capitalize">{{ __('contacto') }} :</p>
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->telefono }}</p>
+                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->TelefonoCelular }}</p>
                         </div>
                         <div class="flex text-sm">
                             <p class="px-3 pb-1 font-semibold capitalize">{{ __('fecha de nacimiento') }} :</p>
-                            @if ($paciente->fecha_nacimiento)
-                                @if ($paciente->fecha_nacimiento instanceof \Carbon\Carbon)
+                            @if ($paciente->fecNacimiento)
+                                @if ($paciente->fecNacimiento instanceof \Carbon\Carbon)
                                     <p class="px-3 pb-1 font-semibold capitalize">
-                                        {{ $paciente->fecha_nacimiento->format('d-m-Y') }}
+                                        {{ $paciente->fecNacimiento->format('d-m-Y') }}
                                     </p>
                                 @else
                                     <p class="px-3 pb-1 font-semibold capitalize">{{ __('formato invalido') }}</p>
@@ -229,8 +229,8 @@
                         </div>
 
                         <div class="flex text-sm">
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ __('direccion') }} :</p>
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->direccion }}</p>
+                            <p class="px-3 pb-1 font-semibold capitalize">{{ __('domicilio') }} :</p>
+                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->domicilio }}</p>
                         </div>
                         <div class="flex text-sm">
                             <p class="px-3 pb-1 font-semibold capitalize">{{ __('peso') }} :</p>
@@ -242,10 +242,6 @@
                         </div>
                         <div class="flex text-sm">
                             <p class="px-3 pb-1 font-semibold capitalize">{{ __('grupo y fator sangineo') }} :</p>
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->direccion }}</p>
-                        </div>
-                        <div class="flex text-sm">
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ __('direccion') }} :</p>
                             <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->direccion }}</p>
                         </div>
 

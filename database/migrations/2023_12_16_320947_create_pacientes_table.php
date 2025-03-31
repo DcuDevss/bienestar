@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('pacientes', function (Blueprint $table) {
             $table->id();
-           // $table->string('escalafon')->nullable();
+            // $table->string('escalafon')->nullable();
             $table->string('jerarquia')->nullable();
             $table->string('apellido_nombre')->nullable();
             $table->integer('legajo')->nullable();

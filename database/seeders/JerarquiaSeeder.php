@@ -37,6 +37,9 @@ class JerarquiaSeeder extends Seeder
         Jerarquia::create(['name'=>'Auxiliar de Quinta']);
         Jerarquia::create(['name'=>'Auxiliar de Sexta']);
         Jerarquia::create(['name'=>'Auxiliar de Septima']);
+        Jerarquia::create(['name'=>'Cadete']);
+        Jerarquia::create(['name'=>'Aspirante a Agente']);
+
 
     }
 }

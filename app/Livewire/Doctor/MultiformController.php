@@ -5,20 +5,21 @@ namespace App\Livewire\Doctor;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\Estado;
+use App\Models\Factore;
 use App\Models\Paciente;
+use App\Models\Jerarquia;
 
 class MultiformController extends Component
 { public $color;
 
     public $apellido_nombre;
     public $dni;
-    public $cuil;
-    public $direccion;
-    public $genero;
+    public $cuil1;
+    public $domicilio;
+    public $sexo = '';
     public $email;
-    public $telefono;
+    public $TelefonoCelular;
 
-    public $escalafon;
     public $jerarquia;
     public $legajo;
     public $destino_actual;
@@ -29,9 +30,9 @@ class MultiformController extends Component
     public $peso;
     public $altura;
 
-    public $estado_id;
+    public $estado_id = '';
     public $factore_id;
-    public $jerarquia_id;
+    public $jerarquia_id = '';
     public $comisaria_servicio;
     public $fecha_atencion;
     public $enfermedad;
@@ -39,6 +40,12 @@ class MultiformController extends Component
 
     public $step;
     public $estados;
+    public $factores;
+    public $FecIngreso;
+    public $NroCredencial;
+    public $antiguedad;
+    public $chapa;
+    public $jerarquias;
 
     public $customer;
 
@@ -52,6 +59,8 @@ class MultiformController extends Component
     {
         $this->step = 0;
         $this->estados = Estado::all(); // Obtener todos los estados
+        $this->factores = Factore::all();
+        $this->jerarquias = Jerarquia::all();
 
     }
 
@@ -72,39 +81,48 @@ class MultiformController extends Component
     {
         $this->validate([
             'apellido_nombre' => 'required',
-            'dni' => 'required',
-            'cuil' => 'required',
-            'genero' => 'required',
-            'direccion' => 'required',
-            'email' => 'required',
-            'telefono' => 'required',
+            'dni' => 'required|numeric',
+            'cuil1' => 'required',
+            'sexo' => 'required',
+            'domicilio' => 'required',
+            'fecha_nacimiento' => 'required',
+            'email' => 'required|email',
+            'TelefonoCelular' => 'required|numeric',
         ]);
+
 
         if ($this->customer) {
             $this->customer = tap($this->customer)->update([
                 'apellido_nombre' => $this->apellido_nombre,
                 'dni' => $this->dni,
-                'cuil' => $this->cuil,
-                'genero' => $this->genero,
-                'direccion' => $this->direccion,
+                'cuil1' => $this->cuil1,
+                'sexo' => $this->sexo,
+                'domicilio' => $this->domicilio,
+                'fecha_nacimiento' => $this->fecha_nacimiento,
                 'email' => $this->email,
-                'telefono' => $this->telefono,
+                'TelefonoCelular' => $this->TelefonoCelular,
+                'FecIngreso' => $this->FecIngreso,
             ]);
+
             session()->flash('message', 'Paciente reistrado correctamente.');
         } else {
             $this->customer = Paciente::create([
                 'apellido_nombre' => $this->apellido_nombre,
                 'dni' => $this->dni,
-                'cuil' => $this->cuil,
-                'genero' => $this->genero,
-                'direccion' => $this->direccion,
+                'cuil1' => $this->cuil1,
+                'sexo' => $this->sexo,
+                'domicilio' => $this->domicilio,
+                'fecha_nacimiento' => $this->fecha_nacimiento,
                 'email' => $this->email,
-                'telefono' => $this->telefono,
+                'TelefonoCelular' => $this->TelefonoCelular,
+                'FecIngreso' => $this->FecIngreso,
             ]);
+
             session()->flash('message', 'Paciente reistrado correctamente.');
         }
 
         $this->step++;
+
     }
 
 
@@ -113,23 +131,27 @@ class MultiformController extends Component
 public function submit2()
 {
     $this->validate([
-        'escalafon' => 'required',
         'legajo' => 'required',
-        'jerarquia' => 'required',
+        'jerarquia_id' => 'required',
         'destino_actual' => 'required',
         'ciudad' => 'required',
         'edad' => 'required',
         'estado_id' => 'required', // Agregar validación para el estado_id
+        'NroCredencial' => 'required',
+        'antiguedad' => 'required',
+        'chapa' => 'required',
     ]);
 
     $this->customer = tap($this->customer)->update([
-        'escalafon' => $this->escalafon,
         'legajo' => $this->legajo,
-        'jerarquia' => $this->jerarquia,
+        'jerarquia_id' => $this->jerarquia_id,
         'destino_actual' => $this->destino_actual,
         'ciudad' => $this->ciudad,
         'edad' => $this->edad,
         'estado_id' => $this->estado_id, // Incluir estado_id en la actualización
+        'NroCrendecial' => $this->NroCredencial,
+        'antiguedad' => $this->antiguedad,
+        'chapa' => $this->chapa,
     ]);
 
     $this->step++;
@@ -141,15 +163,17 @@ public function submit2()
     public function submit3()
     {
         $this->validate([
-            'fecha_nacimiento' => 'required',
             'peso' => 'required',
             'altura' => 'required',
+            'factore_id'=> 'required',
+            'enfermedad'=>'required',
         ]);
 
         $this->customer = tap($this->customer)->update([
-            'fecha_nacimiento' => $this->fecha_nacimiento,
             'peso' => $this->peso,
             'altura' => $this->altura,
+            'factore_id' => $this->factore_id,
+            'enfermedad' => $this->enfermedad,
         ]);
 
         session()->flash('message', 'Wow! ' . $this->customer->fecha_nacimiento . ' is nice fecha_nacimiento ' . $this->customer->fecha_nacimiento);

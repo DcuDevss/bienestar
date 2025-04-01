@@ -1,5 +1,5 @@
 <div class="padreTablas flex gap-x-2 px-6">
-    
+
     <section class="seccionTab xl:mx-auto lg:mx-auto w-[95%]">
         <div class="mx-auto text-[12px]">
             <!-- Start coding here -->
@@ -41,7 +41,7 @@
                                 <th scope="col" class="px-4 py-3">Jerarquia</th>
                                 <th scope="col" class="px-4 py-3">Destino</th>
                                 <th scope="col" class="px-4 py-3">Ciudad</th>
-                                <th scope="col" class="px-4 py-3">Estado</th>
+{{--                                 <th scope="col" class="px-4 py-3">Estado</th> --}}
                                 <th scope="col" class="px-4 py-3">Email</th>
                                 <th scope="col" class="px-4 py-3">Celular</th>
                                 <th scope="col" class="px-4 py-3">Revista</th>
@@ -79,10 +79,10 @@
                                     <th class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">{{ $paciente->apellido_nombre }}</th>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->dni }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->legajo }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->jerarquia }}</td>
+                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->jerarquia_id ? $paciente->jerarquias->name : 'No asignado' }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->destino_actual }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->ciudad }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->estado }}</td>
+{{--                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->estado }}</td> --}}
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->email }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->TelefonoCelular }}</td>
 
@@ -90,15 +90,15 @@
 
                                     <td class="tiBody px-2 py-1 text-[14px]">
                                         @if ($paciente->estado_id == 1)
-                                            <span class="text-black bg-green-600 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span> <!-- Color por defecto -->
+                                            <span class="bg-green-600 text-white rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color por defecto -->
                                         @elseif ($paciente->estado_id == 2)
-                                            <span class="text-white bg-gray-600 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span> <!-- Color rojo medio -->
+                                            <span class="text-white bg-gray-600 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color rojo medio -->
                                         @elseif ($paciente->estado_id == 3)
-                                            <span class="text-black bg-yellow-400 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span> <!-- Color azul -->
+                                            <span class="text-black bg-yellow-400 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color azul -->
                                         @elseif ($paciente->estado_id == 4)
-                                            <span class="text-white bg-red-700 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span> <!-- Color rojo fuerte -->
+                                            <span class="text-white bg-red-700 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color rojo fuerte -->
                                         @elseif ($paciente->estado_id == 5)
-                                            <span class="text-white bg-black rounded-md px-2 py-1">{{ $paciente->estados->name }}</span> <!-- Color amarillo -->
+                                            <span class="text-white bg-black rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color amarillo -->
                                         @else
                                             <span class=""></span>
                                             <!-- Color por defecto para otros casos -->

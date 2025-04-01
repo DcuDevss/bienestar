@@ -14,11 +14,10 @@ class EstadoSeeder extends Seeder
 
     public function run(): void
     {
-        Estado::create(['name'=>'Activo']);
-        Estado::create(['name'=>'Pasiva']);
-        Estado::create(['name'=>'Disponibilidad']);
-        Estado::create(['name'=>'Baja']);
-        Estado::create(['name'=>'Retiro']);
-
+        Estado::create(['name' => 'Servicio Efectivo']);
+        Estado::create(['name' => 'Pasiva']);
+        Estado::create(['name' => 'Disponibilidad']);
+        Estado::create(['name' => 'Tramite de Baja']);
+        Estado::create(['name' => 'Retiro']);
     }
 }

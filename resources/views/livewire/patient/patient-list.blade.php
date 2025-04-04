@@ -42,9 +42,9 @@
                                 <th scope="col" class="px-4 py-3">Jerarquia</th>
                                 <th scope="col" class="px-4 py-3">Destino</th>
                                 <th scope="col" class="px-4 py-3">Ciudad</th>
-                                {{--                                 <th scope="col" class="px-4 py-3">Estado</th> --}}
+{{--                                 {{--<th scope="col" class="px-4 py-3">Estado</th>
                                 <th scope="col" class="px-4 py-3">Email</th>
-                                <th scope="col" class="px-4 py-3">Celular</th>
+                                <th scope="col" class="px-4 py-3">Celular</th>--}}
                                 <th scope="col" class="px-4 py-3">Revista</th>
                                 <th scope="col" class="px-4 py-3">Finalizacion licencia</th>
                                 <th scope="col" class="px-4 py-3">Accion</th>
@@ -89,10 +89,9 @@
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
                                         {{ $paciente->destino_actual }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->ciudad }}</td>
-                                    {{--                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->estado }}</td> --}}
+{{--                                    {{-- <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->estado }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->email }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
-                                        {{ $paciente->TelefonoCelular }}</td>
+                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->TelefonoCelular }}</td>--}}
 
                                     <!-- ... (resto de tu código) -->
 

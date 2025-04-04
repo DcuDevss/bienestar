@@ -70,7 +70,7 @@
                         <div class="flex flex-col gap-y-2 p-5 w-[80%] mx-auto">
                             <!-- CUIL -->
                             <label for="">Cuil:</label>
-                            <input type="number" wire:model.lazy="cuil1" placeholder="..."
+                            <input type="number" wire:model.lazy="cuil" placeholder="..."
                                 class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
                             <!-- DOMICILIO -->
                             <label for="">Domicilio:</label>
@@ -152,7 +152,7 @@
                             <label for="jerarquia_id" class="">Jerarquia</label>
                             <select wire:model.lazy="jerarquia_id"
                                 class="h-9 w-full rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                                <option disabled  value="">Seleccionar Jerarquia</option>
+                                <option disabled value="">Seleccionar Jerarquia</option>
                                 @foreach ($jerarquias as $jerarquia)
                                     <option value="{{ $jerarquia->id }}" class="text-[#666666]">{{ $jerarquia->name }}
                                     </option>
@@ -174,9 +174,9 @@
                             <label for="">Legajo:</label>
                             <input type="number"wire:model.lazy="legajo" placeholder="..."
                                 class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                              {{-- CREDENCIAL --}}
+                            {{-- CREDENCIAL --}}
                             <label for="">N° de Credencial:</label>
-                            <input type="text"wire:model.lazy="NroCredencial" placeholder="..."
+                            <input type="number"wire:model.lazy="NroCredencial" placeholder="..."
                                 class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
                         </div>
 
@@ -250,24 +250,29 @@
                             <input type="number" wire:model.lazy="altura" placeholder="altura" step="any"
                                 class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
                             <label for="">Posee alguna enfermedad preexistente:</label>
-                            <input type="text" wire:model.lazy="enfermedad" placeholder="En caso de consumir algun medicamento, agreguelo en este campo..."
-                                step="any"
+                            <input type="text" wire:model.lazy="enfermedad" placeholder="..." step="any"
+                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                            <label for="">Medicamentos que consume:</label>
+                            <input type="text" wire:model.lazy="remedios" placeholder="..." step="any"
                                 class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
                         </div>
                     </div>
 
                     <div class="mx-auto">
                         @error('factore_id')
-                        <p class="text-sm text-red-500 text-center">{{ $message }}</p>
+                            <p class="text-sm text-red-500 text-center">{{ $message }}</p>
                         @enderror
                         @error('peso')
-                        <p class="text-sm text-red-500 text-center">{{ $message }}</p>
+                            <p class="text-sm text-red-500 text-center">{{ $message }}</p>
                         @enderror
                         @error('altura')
-                        <p class="text-sm text-red-500 text-center">{{ $message }}</p>
+                            <p class="text-sm text-red-500 text-center">{{ $message }}</p>
                         @enderror
                         @error('enfermedad')
-                        <p class="text-sm text-red-500 text-center">{{ $message }}</p>
+                            <p class="text-sm text-red-500 text-center">{{ $message }}</p>
+                        @enderror
+                        @error('remedios')
+                            <p class="text-sm text-red-500 text-center">{{ $message }}</p>
                         @enderror
                     </div>
                 @endif
@@ -281,10 +286,9 @@
                             <h4 class="text-xl font-semibold mb-4">Registro completado</h4>
                             <i class="fa-solid fa-check text-[#2d5986] text-[30px] font-extrabold ml-2 -mt-1"></i>
                         </div>
-
-                        <a href="/" class="text-blue-500">Volver a inicio</a>
                     </div>
                 @endif
+
             </div>
             <!-- BOTONES -->
             <div class="mt-4">
@@ -298,5 +302,18 @@
                 @endif
             </div>
         </form>
+        @if ($registroCompletado)
+        <div class="mt-4">
+            <a href="{{ route('interviews.index', $this->customer->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded">
+                Ver datos del paciente
+            </a>
+        </div>
+        @endif
+
+        <div class="mt-4 ml-14 ">
+            <a href="{{ route('dashboard') }}" class="bg-[#42be31] text-white px-4 py-2 rounded">
+                {{ __('Volver') }}
+            </a>
+        </div>
     </div>
 </div>

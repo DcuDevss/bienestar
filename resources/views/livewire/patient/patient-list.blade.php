@@ -8,8 +8,8 @@
                     <div class="flex flex-row items-end justify-between w-full">
                         <div class="w-fit">
                             <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
-                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500"
-                                    fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor"
+                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
                                     <path fill-rule="evenodd"
                                         d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
                                         clip-rule="evenodd" />
@@ -22,7 +22,8 @@
                         </div>
                         <!-- BOTON AGREGAR -->
                         <div class="">
-                            <a href="{{route('multiform.index')}}" class="pr-3 pl-2 py-2 text-white bg-[#2d5986] rounded-md hover:text-white hover:bg-[#3973ac]">
+                            <a href="{{ route('multiform.index') }}"
+                                class="pr-3 pl-2 py-2 text-white bg-[#2d5986] rounded-md hover:text-white hover:bg-[#3973ac]">
                                 <span class="text-[20px]">+ </span>
                                 <span class="agre text-[13px]">AGREGAR</span>
                             </a>
@@ -41,14 +42,14 @@
                                 <th scope="col" class="px-4 py-3">Jerarquia</th>
                                 <th scope="col" class="px-4 py-3">Destino</th>
                                 <th scope="col" class="px-4 py-3">Ciudad</th>
-{{--                                 <th scope="col" class="px-4 py-3">Estado</th> --}}
+                                {{--                                 <th scope="col" class="px-4 py-3">Estado</th> --}}
                                 <th scope="col" class="px-4 py-3">Email</th>
                                 <th scope="col" class="px-4 py-3">Celular</th>
                                 <th scope="col" class="px-4 py-3">Revista</th>
                                 <th scope="col" class="px-4 py-3">Finalizacion licencia</th>
                                 <th scope="col" class="px-4 py-3">Accion</th>
                                 <th scope="col" class="px-3 py-3">Entrevista</th>
-                                    {{-- @include('livewire.includes.table-sortable-th',[
+                                {{-- @include('livewire.includes.table-sortable-th',[
                                             'name' => 'id',
                                             'displayName' => 'Nro'
                                         ])
@@ -75,48 +76,61 @@
                         <tbody class="">
                             @foreach ($pacientes as $paciente)
                                 <tr wire:key="{{ $paciente->id }}" class="border-b border-gray-700 hover:bg-[#204060]">
-                                    <th class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-nowrap dark:text-white">{{ $paciente->id }}</th>
-                                    <th class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">{{ $paciente->apellido_nombre }}</th>
+                                    <th
+                                        class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-nowrap dark:text-white">
+                                        {{ $paciente->id }}</th>
+                                    <th
+                                        class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
+                                        {{ $paciente->apellido_nombre }}</th>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->dni }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->legajo }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->jerarquia_id ? $paciente->jerarquias->name : 'No asignado' }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->destino_actual }}</td>
+                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
+                                        {{ $paciente->jerarquia_id ? $paciente->jerarquias->name : 'No asignado' }}</td>
+                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
+                                        {{ $paciente->destino_actual }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->ciudad }}</td>
-{{--                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->estado }}</td> --}}
+                                    {{--                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->estado }}</td> --}}
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->email }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->TelefonoCelular }}</td>
+                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
+                                        {{ $paciente->TelefonoCelular }}</td>
 
                                     <!-- ... (resto de tu código) -->
 
                                     <td class="tiBody px-2 py-1 text-[14px]">
                                         @if ($paciente->estado_id == 1)
-                                            <span class="bg-green-600 text-white rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color por defecto -->
+                                            <span
+                                                class="bg-green-600 text-white rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
+                                            <!-- Color por defecto -->
                                         @elseif ($paciente->estado_id == 2)
-                                            <span class="text-white bg-gray-600 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color rojo medio -->
+                                            <span
+                                                class="text-white bg-gray-600 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
+                                            <!-- Color rojo medio -->
                                         @elseif ($paciente->estado_id == 3)
-                                            <span class="text-black bg-yellow-400 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color azul -->
+                                            <span
+                                                class="text-black bg-yellow-400 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
+                                            <!-- Color azul -->
                                         @elseif ($paciente->estado_id == 4)
-                                            <span class="text-white bg-red-700 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color rojo fuerte -->
+                                            <span
+                                                class="text-white bg-red-700 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
+                                            <!-- Color rojo fuerte -->
                                         @elseif ($paciente->estado_id == 5)
-                                            <span class="text-white bg-black rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span> <!-- Color amarillo -->
+                                            <span
+                                                class="text-white bg-black rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
+                                            <!-- Color amarillo -->
                                         @else
                                             <span class=""></span>
                                             <!-- Color por defecto para otros casos -->
                                         @endif
-                                        <td class="tiBody px-4 py-3
-                                        @php
-                                            $ultimaEnfermedad = $paciente->disases->last();
-                                        @endphp
-                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
-                                            @php
+                                    <td
+                                        class="tiBody px-4 py-3
+                                        @php $ultimaEnfermedad = $paciente->disases->last(); @endphp
+                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia) @php
                                                 $fechaFinalizacionLicencia = \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia);
                                             @endphp
                                             @if ($fechaFinalizacionLicencia->startOfDay() == \Carbon\Carbon::now()->startOfDay())
-                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse /* Amarillo con transparencia y animación de pulso */
-                                            @endif
+                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse /* Amarillo con transparencia y animación de pulso */ @endif
                                         @endif
-                                        font-semibold text-xs text-white uppercase tracking-widest  focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition"
-                                    >
+                                        font-semibold text-xs text-white uppercase tracking-widest  focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition">
                                         @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
                                             {{ $ultimaEnfermedad->pivot->fecha_finalizacion_licencia }}
                                         @else
@@ -170,4 +184,3 @@
 
 
 </div>
-

@@ -14,7 +14,7 @@ class MultiformController extends Component
 
     public $apellido_nombre;
     public $dni;
-    public $cuil1;
+    public $cuil;
     public $domicilio;
     public $sexo = '';
     public $email;
@@ -48,6 +48,7 @@ class MultiformController extends Component
     public $jerarquias;
 
     public $customer;
+    public $registroCompletado = false;
 
     private $stepActions = [
         'submit1',
@@ -82,7 +83,7 @@ class MultiformController extends Component
         $this->validate([
             'apellido_nombre' => 'required',
             'dni' => 'required|numeric',
-            'cuil1' => 'required',
+            'cuil' => 'required',
             'sexo' => 'required',
             'domicilio' => 'required',
             'fecha_nacimiento' => 'required',
@@ -95,7 +96,7 @@ class MultiformController extends Component
             $this->customer = tap($this->customer)->update([
                 'apellido_nombre' => $this->apellido_nombre,
                 'dni' => $this->dni,
-                'cuil1' => $this->cuil1,
+                'cuil' => $this->cuil,
                 'sexo' => $this->sexo,
                 'domicilio' => $this->domicilio,
                 'fecha_nacimiento' => $this->fecha_nacimiento,
@@ -109,7 +110,7 @@ class MultiformController extends Component
             $this->customer = Paciente::create([
                 'apellido_nombre' => $this->apellido_nombre,
                 'dni' => $this->dni,
-                'cuil1' => $this->cuil1,
+                'cuil' => $this->cuil,
                 'sexo' => $this->sexo,
                 'domicilio' => $this->domicilio,
                 'fecha_nacimiento' => $this->fecha_nacimiento,
@@ -142,6 +143,7 @@ public function submit2()
         'chapa' => 'required',
     ]);
 
+
     $this->customer = tap($this->customer)->update([
         'legajo' => $this->legajo,
         'jerarquia_id' => $this->jerarquia_id,
@@ -167,6 +169,7 @@ public function submit2()
             'altura' => 'required',
             'factore_id'=> 'required',
             'enfermedad'=>'required',
+            'remedios'=>'required',
         ]);
 
         $this->customer = tap($this->customer)->update([
@@ -174,9 +177,13 @@ public function submit2()
             'altura' => $this->altura,
             'factore_id' => $this->factore_id,
             'enfermedad' => $this->enfermedad,
+            'remedios' => $this->remedios,
         ]);
 
         session()->flash('message', 'Wow! ' . $this->customer->fecha_nacimiento . ' is nice fecha_nacimiento ' . $this->customer->fecha_nacimiento);
+
+        // Marcar como completado el registro
+        $this->registroCompletado = true;
 
         $this->step++;
     }

@@ -30,6 +30,13 @@ class JerarquiaSeeder extends Seeder
         Jerarquia::create(['name'=>'Cabo Primero']);
         Jerarquia::create(['name'=>'Cabo']);
         Jerarquia::create(['name'=>'Agente']);
+        Jerarquia::create(['name'=>'Auxiliar Superior de Primera']);
+        Jerarquia::create(['name'=>'Auxiliar Superior de Segunada']);
+        Jerarquia::create(['name'=>'Auxiliar Superior de Tercera']);
+        Jerarquia::create(['name'=>'Auxiliar Superior de Cuarta']);
+        Jerarquia::create(['name'=>'Auxiliar Superior de Quinta']);
+        Jerarquia::create(['name'=>'Auxiliar Superior de Sexta']);
+        Jerarquia::create(['name'=>'Auxiliar Superior de Septima']);
         Jerarquia::create(['name'=>'Auxiliar de Primera']);
         Jerarquia::create(['name'=>'Auxiliar de Segunada']);
         Jerarquia::create(['name'=>'Auxiliar de Tercera']);
@@ -39,7 +46,8 @@ class JerarquiaSeeder extends Seeder
         Jerarquia::create(['name'=>'Auxiliar de Septima']);
         Jerarquia::create(['name'=>'Cadete']);
         Jerarquia::create(['name'=>'Aspirante a Agente']);
-
+        Jerarquia::create(['name'=>'Postulante a Cadete']);
+        Jerarquia::create(['name'=>'Postulante a Agente']);
 
     }
 }

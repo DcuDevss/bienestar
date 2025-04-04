@@ -22,6 +22,7 @@ class TipolicenciaSeeder extends Seeder
         Tipolicencia::create(['name'=>'Salud embarazo']);
         Tipolicencia::create(['name'=>'Licencia pandemia']);
         Tipolicencia::create(['name'=>'Dto. 564/18 lic. extraordinaria ley 911-art 9']);
+        Tipolicencia::create(['name'=>'Art']);
         
     }
 }

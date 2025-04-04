@@ -53,6 +53,7 @@ return new class extends Migration
             $table->timestamp('fecha_atencion')->nullable();
             $table->text('enfermedad')->nullable();
             $table->string('remedios')->nullable();
+            $table->bigInteger('cuil')->nullable()->default(12);
             $table->softDeletes();
             $table->timestamps();
         });

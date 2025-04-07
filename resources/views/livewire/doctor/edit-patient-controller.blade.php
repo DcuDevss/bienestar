@@ -18,12 +18,12 @@
 
             <div class="col-span-2 sm:col-span-1">
                 <label for="dni" class="block font-medium">DNI</label>
-                <input type="text" id="dni" wire:model="dni" class="input" required>
+                <input type="number" id="dni" wire:model="dni" class="input" required>
             </div>
 
             <div class="col-span-2 sm:col-span-1">
                 <label for="cuil" class="block font-medium">CUIL</label>
-                <input type="text" id="cuil" wire:model="cuil" class="input" required>
+                <input type="number" id="cuil" wire:model="cuil" class="input" required>
             </div>
 
             <div class="col-span-2 sm:col-span-1">
@@ -52,7 +52,7 @@
 
             <div class="col-span-2 sm:col-span-1">
                 <label for="TelefonoCelular" class="block font-medium">Teléfono Celular</label>
-                <input type="text" id="TelefonoCelular" wire:model="TelefonoCelular" class="input" required>
+                <input type="number" id="TelefonoCelular" wire:model="TelefonoCelular" class="input" required>
             </div>
 
             <div class="col-span-2 sm:col-span-1">
@@ -67,7 +67,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="col-span-2 sm:col-span-1">
                     <label for="legajo" class="block font-medium">Legajo</label>
-                    <input type="text" id="legajo" wire:model="legajo" class="input" required>
+                    <input type="number" id="legajo" wire:model="legajo" class="input" required>
                 </div>
 
                 <div class="col-span-2 sm:col-span-1">
@@ -107,7 +107,7 @@
 
                 <div class="col-span-2 sm:col-span-1">
                     <label for="NroCredencial" class="block font-medium">Nro Credencial</label>
-                    <input type="text" id="NroCredencial" wire:model="NroCredencial" class="input" required>
+                    <input type="number" id="NroCredencial" wire:model="NroCredencial" class="input" required>
                 </div>
 
                 <div class="col-span-2 sm:col-span-1">
@@ -117,7 +117,7 @@
 
                 <div class="col-span-2 sm:col-span-1">
                     <label for="chapa" class="block font-medium">Chapa</label>
-                    <input type="text" id="chapa" wire:model="chapa" class="input" required>
+                    <input type="number" id="chapa" wire:model="chapa" class="input" required>
                 </div>
             </div>
         </div>
@@ -128,12 +128,12 @@
             <div class="grid grid-cols-2 gap-4">
                 <div class="col-span-2 sm:col-span-1">
                     <label for="peso" class="block font-medium">Peso</label>
-                    <input type="text" id="peso" wire:model="peso" class="input" required>
+                    <input type="number" id="peso" wire:model="peso" class="input" required>
                 </div>
 
                 <div class="col-span-2 sm:col-span-1">
                     <label for="altura" class="block font-medium">Altura</label>
-                    <input type="text" id="altura" wire:model="altura" class="input" required>
+                    <input type="number" id="altura" wire:model="altura" class="input" required>
                 </div>
 
                 <div class="col-span-2 sm:col-span-1">

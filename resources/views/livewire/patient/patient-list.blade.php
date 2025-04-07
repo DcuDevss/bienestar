@@ -42,9 +42,9 @@
                                 <th scope="col" class="px-4 py-3">Jerarquia</th>
                                 <th scope="col" class="px-4 py-3">Destino</th>
                                 <th scope="col" class="px-4 py-3">Ciudad</th>
-{{--                                 {{--<th scope="col" class="px-4 py-3">Estado</th>
+                                {{--                                 {{-- <th scope="col" class="px-4 py-3">Estado</th>
                                 <th scope="col" class="px-4 py-3">Email</th>
-                                <th scope="col" class="px-4 py-3">Celular</th>--}}
+                                <th scope="col" class="px-4 py-3">Celular</th> --}}
                                 <th scope="col" class="px-4 py-3">Revista</th>
                                 <th scope="col" class="px-4 py-3">Finalizacion licencia</th>
                                 <th scope="col" class="px-4 py-3">Accion</th>
@@ -89,9 +89,9 @@
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
                                         {{ $paciente->destino_actual }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->ciudad }}</td>
-{{--                                    {{-- <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->estado }}</td>
+                                    {{--                                    {{-- <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->estado }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->email }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->TelefonoCelular }}</td>--}}
+                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->TelefonoCelular }}</td> --}}
 
                                     <!-- ... (resto de tu código) -->
 
@@ -139,14 +139,17 @@
 
                                     <td class="tiBody px-4 py-1 text-[14px] relative">
                                         <!-- Botón de opciones (Desplegable) -->
-                                        <button onclick="toggleDropdown(event, {{ $paciente->id }})" class="ml-2 px-4 py-2 text-[12px] font-medium uppercase bg-gray-600 hover:bg-gray-500 text-white rounded">
+                                        <button onclick="toggleDropdown(event, {{ $paciente->id }})"
+                                            class="ml-2 px-4 py-2 text-[12px] font-medium uppercase bg-gray-600 hover:bg-gray-500 text-white rounded">
                                             Opciones
                                         </button>
 
                                         <!-- Menú desplegable -->
-                                        <div id="dropdown-{{ $paciente->id }}" class="hidden absolute bg-white shadow-lg rounded-lg mt-1 right-0 z-10 w-auto">
+                                        <div id="dropdown-{{ $paciente->id }}"
+                                            class="hidden absolute bg-white shadow-lg rounded-lg mt-1 right-0 z-10 w-auto">
                                             <!-- Opción Editar -->
-                                            <a href="{{ route('patient.edit', $paciente->id) }}" class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-gray-700 hover:bg-gray-400">
+                                            <a href="{{ route('patient.edit', $paciente->id) }}"
+                                                class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-gray-700 hover:bg-gray-400">
                                                 Editar
                                             </a>
                                             <!-- Opción Eliminar -->
@@ -205,19 +208,17 @@
 
 </div>
 <script>
-   function toggleDropdown(event, patientId) {
-    // Cerrar cualquier otro dropdown abierto
-    const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
-    dropdowns.forEach(function(dropdown) {
-        if (dropdown.id !== `dropdown-${patientId}`) {
-            dropdown.classList.add('hidden');
-        }
-    });
+    function toggleDropdown(event, patientId) {
+        // Cerrar cualquier otro dropdown abierto
+        const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
+        dropdowns.forEach(function(dropdown) {
+            if (dropdown.id !== `dropdown-${patientId}`) {
+                dropdown.classList.add('hidden');
+            }
+        });
 
-    // Toggle (mostrar/ocultar) el dropdown del paciente actual
-    const dropdown = document.getElementById(`dropdown-${patientId}`);
-    dropdown.classList.toggle('hidden');
-}
-
+        // Toggle (mostrar/ocultar) el dropdown del paciente actual
+        const dropdown = document.getElementById(`dropdown-${patientId}`);
+        dropdown.classList.toggle('hidden');
+    }
 </script>
-

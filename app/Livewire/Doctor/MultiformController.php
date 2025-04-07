@@ -31,7 +31,7 @@ class MultiformController extends Component
     public $altura;
 
     public $estado_id = '';
-    public $factore_id;
+    public $factore_id = '';
     public $jerarquia_id = '';
     public $comisaria_servicio;
     public $fecha_atencion;

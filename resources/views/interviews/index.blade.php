@@ -256,7 +256,7 @@
                             </div>
                             <div class="flex">
                                 <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('grupo y fator sanguineo') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{-- $paciente->factores->name --}}</p>
+                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->factores->name }}</p>
                             </div>
 
                             <div class="flex">

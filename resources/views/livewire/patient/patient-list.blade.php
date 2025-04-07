@@ -137,12 +137,33 @@
                                         @endif
                                     </td>
 
-                                    <td class="tiBody px-4 py-1 text-[14px]">
-                                        <button
-                                            onclick="confirm('Seguro desea eliminar a este paciente {{ $paciente->apellido_nombre }} ?') || event.stopImmediatePropagation()"
-                                            wire:click="delete({{ $paciente->id }})"
-                                            class="ml-2 px-4 py-[1.5px] bg-red-700 hover:bg-red-600 text-white rounded">X</button>
+                                    <td class="tiBody px-4 py-1 text-[14px] relative">
+                                        <!-- Botón de opciones (Desplegable) -->
+                                        <button onclick="toggleDropdown(event, {{ $paciente->id }})" class="ml-2 px-4 py-2 text-[12px] font-medium uppercase bg-gray-600 hover:bg-gray-500 text-white rounded">
+                                            Opciones
+                                        </button>
+
+                                        <!-- Menú desplegable -->
+                                        <div id="dropdown-{{ $paciente->id }}" class="hidden absolute bg-white shadow-lg rounded-lg mt-1 right-0 z-10 w-auto">
+                                            <!-- Opción Editar -->
+                                            <a href="{{ route('patient.edit', $paciente->id) }}" class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-gray-700 hover:bg-gray-400">
+                                                Editar
+                                            </a>
+                                            <!-- Opción Eliminar -->
+                                            <button
+                                                onclick="confirm('Seguro desea eliminar a este paciente {{ $paciente->apellido_nombre }} ?') || event.stopImmediatePropagation()"
+                                                wire:click="delete({{ $paciente->id }})"
+                                                class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-red-700 hover:bg-red-600">
+                                                Eliminar
+                                            </button>
+                                        </div>
                                     </td>
+
+
+
+
+
+
                                     <td class="tiBody px-4 py-1 text-[14px]">
                                         <a class="ml-3 px-4 py-1 rounded-md bg-[#2d5986] text-white  hover:bg-[#3973ac]"
                                             href="{{ route('interviews.index', ['paciente' => $paciente->id]) }}">
@@ -183,3 +204,20 @@
 
 
 </div>
+<script>
+   function toggleDropdown(event, patientId) {
+    // Cerrar cualquier otro dropdown abierto
+    const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
+    dropdowns.forEach(function(dropdown) {
+        if (dropdown.id !== `dropdown-${patientId}`) {
+            dropdown.classList.add('hidden');
+        }
+    });
+
+    // Toggle (mostrar/ocultar) el dropdown del paciente actual
+    const dropdown = document.getElementById(`dropdown-${patientId}`);
+    dropdown.classList.toggle('hidden');
+}
+
+</script>
+

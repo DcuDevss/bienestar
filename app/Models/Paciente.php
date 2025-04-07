@@ -92,8 +92,12 @@ class Paciente extends Model
             ->orWhere('dni', 'like', "%{$value}%")
             ->orWhere('legajo', 'like', "%{$value}%")
             ->orWhere('estado_id', 'like', "%{$value}%")
+            ->orWhere('jerarquia_id', 'like', "%{$value}%")
             ->orWhere('destino_actual', 'like', "%{$value}%")
             ->orWhereHas('estados', function ($query) use ($value) {
+                $query->where('name', 'like', "%{$value}%");
+            })
+            ->orWhereHas('jerarquias', function ($query) use ($value) {
                 $query->where('name', 'like', "%{$value}%");
             })
             ->orWhereHas('disases', function ($query) use ($value) {

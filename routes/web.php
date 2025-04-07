@@ -23,6 +23,7 @@ use App\Livewire\Doctor\DiadetrabajoController;
 use App\Livewire\Doctor\DisaseController;
 use App\Livewire\Doctor\EnfermedadeController;
 use App\Livewire\Doctor\MultiformController;
+use App\Livewire\Doctor\EditPatientController;
 use App\Livewire\Doctor\OficinaController;
 use App\Livewire\Enfermero\EnfermeroController;
 use App\Livewire\Enfermero\EnfermeroHistorial;
@@ -37,6 +38,7 @@ use App\Livewire\Patient\PatientHistorialEnfermedades;
 use App\Livewire\Patient\PatientTratamiento;
 use App\Models\Paciente;
 use Illuminate\Support\Facades\Auth;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -129,6 +131,8 @@ Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])
 //Route::get('/disases', Multiform::class)->name('multiform.index');
 Route::get('/disases', DisaseController::class)->middleware('can:disases.index')->name('disases.index');
 Route::get('/multiform', MultiformController::class)->middleware('can:multiform.index')->name('multiform.index');
+Route::get('paciente/{customerId}/edit', EditPatientController::class)->name('patient.edit');
+
 Route::get('patient/show/{paciente}', PatientHistorialCertificado::class)->middleware('can:patient-certificados.show')->name('patient-certificados.show');
 Route::get('patient/edit/{paciente}', PatientHistorialEnfermedades::class)->middleware('can:patient-enfermedades.show')->name('patient-enfermedades.show');
 Route::get('paciente/show/{paciente}', PacienteHistorialGeneral::class)->middleware('can:paciente-general.show')->name('paciente-general.show');

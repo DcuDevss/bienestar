@@ -305,7 +305,7 @@
         @if ($registroCompletado)
         <div class="mt-4">
             <a href="{{ route('interviews.index', $this->customer->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded">
-                Ver datos del paciente
+                Acceder a Historia clínica
             </a>
         </div>
         @endif

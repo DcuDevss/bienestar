@@ -18,6 +18,11 @@
     <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
     <!-- Styles -->
     <style>
+        body {
+            padding-bottom: 80px;
+            /* Ajusta el tamaño según el footer */
+        }
+
         /* LIGHTBOX */
         /* Estilos para la imagen ampliada */
         .image-container {
@@ -140,6 +145,35 @@
             }
         }
 
+        footer {
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            background-color: #2d3748;
+            /* Fondo oscuro */
+            color: white;
+            /* Color del texto */
+            font-size: 0.875rem;
+            /* Tamaño de fuente más pequeño */
+            padding: 1.5rem 0;
+            /* Espaciado vertical */
+            text-align: center;
+            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+            /* Sombra sutil para separación */
+            z-index: 1000;
+            /* Asegura que quede por encima del contenido */
+        }
+
+        footer p {
+            margin: 0;
+            /* Elimina márgenes */
+            font-size: 0.875rem;
+            /* Tamaño de fuente ajustado */
+        }
+
+
+
         @keyframes pulseYellow {
 
             0%,
@@ -201,6 +235,11 @@
     @stack('modals')
 
     @livewireScripts
+
 </body>
+<footer class="text-center py-6 bg-gray-800 font-semibold text-xs text-white shadow-lg fixed bottom-0 left-0 w-full">
+    <p>&copy; 2025 Policía de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>
+</footer>
+
 
 </html>

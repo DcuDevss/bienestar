@@ -94,6 +94,7 @@ class EditPatientController extends Component
 
     public function submit()
     {
+
         // Validación de los campos
         $this->validate([
             'apellido_nombre' => 'required',
@@ -104,7 +105,7 @@ class EditPatientController extends Component
             'fecha_nacimiento' => 'required',
             'email' => 'required|email',
             'TelefonoCelular' => 'required|numeric',
-            // Agregar validaciones para los otros campos
+
         ]);
 
         // Actualizar los datos del paciente en la base de datos
@@ -120,20 +121,20 @@ class EditPatientController extends Component
             'email' => $this->email,
             'TelefonoCelular' => $this->TelefonoCelular,
             'FecIngreso' => $this->FecIngreso,
-            'legajo' => $this->legajo,
-            'jerarquia_id' => $this->jerarquia_id,
-            'destino_actual' => $this->destino_actual,
-            'ciudad' => $this->ciudad,
-            'edad' => $this->edad,
-            'estado_id' => $this->estado_id,
-            'NroCredencial' => $this->NroCredencial,
-            'antiguedad' => $this->antiguedad,
-            'chapa' => $this->chapa,
-            'peso' => $this->peso,
-            'altura' => $this->altura,
-            'factore_id' => $this->factore_id,
-            'enfermedad' => $this->enfermedad,
-            'remedios' => $this->remedios,
+            'legajo' => $this->legajo ?? null,
+            'jerarquia_id' => $this->jerarquia_id ?? null,
+            'destino_actual' => $this->destino_actual ?? null,
+            'ciudad' => $this->ciudad ?? null,
+            'edad' => $this->edad ?? null,
+            'estado_id' => $this->estado_id ?? null,
+            'NroCredencial' => $this->NroCredencial ?? null,
+            'antiguedad' => $this->antiguedad ?? null,
+            'chapa' => $this->chapa ?? null,
+            'peso' => $this->peso ?? null,
+            'altura' => $this->altura ?? null,
+            'factore_id' => $this->factore_id ?? null,
+            'enfermedad' => $this->enfermedad ?? null,
+            'remedios' => $this->remedios ?? null,
         ]);
 
         return redirect()->route('interviews.index', $this->customerId);

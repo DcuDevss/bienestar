@@ -25,3 +25,6 @@
         @livewireScripts
     </body>
 </html>
+<footer class="text-center py-6 bg-gray-800 font-semibold text-xs text-white shadow-lg m-0 p-0 fixed bottom-0 left-0 w-full">
+    <p class="text-sm">&copy; 2025 Policía de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>
+</footer>

@@ -216,11 +216,10 @@
         </div>
     </footer>
      --}}
-     <footer class="text-center py-6 bg-gray-800 text-white">
-        Desarrolladores: Sargento Cristian Retamar, Cabo Primero Sergio Ramos
+    <footer class="text-center  py-6 bg-transparent font-semibold text-xs text-white shadow-lg m-0 p-0 fixed bottom-0 left-0 w-full ">
+        <p class="text-xs">@ 2025 Policía de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>
     </footer>
 
-    <div class="w-full text-center bg-gray-800 text-white border-y">Policia de la Provincia de Tierra del Fuego 2023</div>
     @push('script')
         <script>
             window.addEventListener('load', event => {

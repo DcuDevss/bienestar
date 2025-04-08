@@ -12,43 +12,19 @@ use Illuminate\Support\Facades\Redirect;
 
 class InterviewController extends Controller
 {
-   /*public function index(User $user){
 
-        return view('interviews.index',compact('user'));
-    }*/
-   /* public function index(Paciente $paciente)
-{
-    // Obtén la última fecha de enfermedad
-    $ultimaFechaEnfermedad = $paciente->disases()->latest('disase_paciente.fecha_enfermedad')->first();
-
-    // Puedes acceder a los detalles
-    if ($ultimaFechaEnfermedad) {
-        $nombre = $ultimaFechaEnfermedad->name;
-        $fechaEnfermedad = $ultimaFechaEnfermedad->pivot->fecha_enfermedad;
-        $tipoEnfermedad = $ultimaFechaEnfermedad->pivot->tipo_enfermedad;
-
-        // Haz algo con esta información
-        // ...
-    }
-
-    //$pacientes=Paciente::all();
-    return view('interviews.index', compact('paciente', 'ultimaFechaEnfermedad'));
-}*/
 public function index(Paciente $paciente)
 {
     // Obtén la última fecha de enfermedad
     $ultimaFechaEnfermedad = $paciente->disases()->latest('disase_paciente.fecha_finalizacion_licencia')->first();
-    //$dias_salud = $paciente->disases()->latest('disase_paciente.suma_salud')->first();
-   // $sumaSalud = $paciente->disases()->sum('disase_paciente.suma_salud');
-
-   // Calcula la suma de salud excluyendo los registros con 'Atencion familiar' en 'tipodelicencia'
+  
    $sumaSalud = $paciente->disases()
-   ->where('disase_paciente.tipodelicencia', '!=', 'Atención familiar')
+   ->where('disase_paciente.tipolicencia_id', '!=', 'Atención familiar')
    ->sum('disase_paciente.suma_salud');
 
 // Calcula la suma de 'suma_salud' solo para los registros con 'Atencion familiar' en 'tipodelicencia'
 $atencionFamiliar = $paciente->disases()
-   ->where('disase_paciente.tipodelicencia', 'Atención familiar')
+   ->where('disase_paciente.tipolicencia_id', 'Atención familiar')
    ->sum('disase_paciente.suma_salud');
     // Puedes acceder a los detalles
     if ($ultimaFechaEnfermedad) {
@@ -80,7 +56,7 @@ $atencionFamiliar = $paciente->disases()
 {
     // Reiniciar las sumas a cero
     $paciente->disases()->update(['suma_salud' => 0]);
-    $paciente->disases()->where('tipodelicencia', 'Atencion familiar')->update(['suma_salud' => 0]);
+    $paciente->disases()->where('tipolicencia_id', 'Atencion familiar')->update(['suma_salud' => 0]);
 
     // Redirigir de nuevo a la página de detalle del paciente
     return redirect()->route('interviews.index', ['interview' => $paciente->id])

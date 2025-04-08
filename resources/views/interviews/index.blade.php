@@ -92,40 +92,7 @@
                                         </td>
                                     </span>
                                 </li>
-                                {{--   <li class="flex items-center py-3 capitalize">
-                                    <div class="flex">
-                                        <div class="px-1 py-1 font-semibold capitalize">{{ __('ultima fecha de atencion')}}</div>
-                                        @can('doctor')@endcan
-                                        <p class=" py-1 text-slate-800 font-semibold capitalize">
-                                            @if ($ultimaFechaEnfermedad)
-                                            <div class="flex justify-between items-center">
-                                                <span class="cursor-pointer px-1 rounded-md py-1 bg-slate-900 text-white">{{ $ultimaFechaEnfermedad->pivot->fecha_finalizacion_licencia }}</span>
-                                            </div>
-                                        @else
-                                            <p>No hay información.</p>
-                                        @endif
-                                        </p>
-
-                                    </div>
-
-                                </li>
-                                <li class="flex items-center py-3 capitalize">
-                                    <div class="flex">
-                                        <div class="px-1 py-1 font-semibold capitalize">{{ __('ultima fecha de atencion')}}</div>
-                                        @can('doctor')@endcan
-                                        <p class="py-1 text-slate-800 font-semibold capitalize">
-                                            @if ($ultimaFechaEnfermedad)
-                                                <div class="flex justify-between items-center">
-                                                    <span class="cursor-pointer px-1 rounded-md py-1 bg-slate-900 text-white">
-                                                        {{ $ultimaFechaEnfermedad->pivot->fecha_finalizacion_licencia->format('d/m/Y') }}
-                                                    </span>
-                                                </div>
-                                            @else
-                                                <p>No hay información.</p>
-                                            @endif
-                                        </p>
-                                    </div>
-                                </li> --}}
+                                
 
                                 <li class="flex items-center py-3 capitalize">
                                     <div class="flex flex-col">

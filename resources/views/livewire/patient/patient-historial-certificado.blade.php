@@ -32,8 +32,10 @@
                             {{ $disase->name }}</p>
                         </li>
                         <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">Tipo de licencia:</span>
-                                {{ $disase->pivot->tipodelicencia }}</p>
+                            <p><span class="pr-1 font-extrabold text-black">Tipo de licencia:</span>
+                                {{ $tipolicencias->get($disase->pivot->tipolicencia_id)?->name ?? 'No definido' }}
+                            </p>                            
+                            
                         </li>
                         <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">Presentacion de certificado:</span>

@@ -63,7 +63,8 @@ class PatientHistorialCertificado extends Component
         'imagen_frente'=>'nullable|file',
         'imagen_dorso'=>'nullable|file',
         'estado_certificado'=>'nullable',
-        'tipodelicencia'=>'nullable',
+        //'tipodelicencia'=>'nullable',
+        'tipolicencia_id'=>'nullable',
         'disase_id' => 'required',
         'suma_auxiliar'=>'nullable',
 
@@ -99,7 +100,8 @@ class PatientHistorialCertificado extends Component
             $this->suma_auxiliar = $disase->pivot->suma_auxiliar ?? null;
             $this->estado_certificado = $disase->pivot->estado_certificado ?? null;
             $this->detalle_certificado = $disase->pivot->detalle_certificado ?? null;
-            $this->tipodelicencia = $disase->pivot->tipodelicencia ?? null;
+            //$this->tipodelicencia = $disase->pivot->tipodelicencia ?? null;
+            $this->tipolicencia_id = $disase->pivot->tipolicencia_id ?? null;
             $this->modal = true;
         }
     }
@@ -161,7 +163,8 @@ class PatientHistorialCertificado extends Component
         'suma_salud' => $data['suma_salud'],
         'suma_auxiliar' => $data['suma_salud'],
         'estado_certificado' => isset($data['estado_certificado']) ? $data['estado_certificado'] : true,
-        'tipodelicencia' => $data['tipodelicencia'],
+        //'tipodelicencia' => $data['tipodelicencia'],
+        'tipolicencia_id' => $data['tipolicencia_id'],
     ]);
 
     // Cerrar el modal y limpiar los datos
@@ -177,7 +180,7 @@ class PatientHistorialCertificado extends Component
         'suma_salud',
         'suma_auxiliar',
         'tipolicencia_id',
-        'tipodelicencia',
+        //'tipodelicencia',
         'estado_certificado',
         'imagen_frente',
         'imagen_dorso',
@@ -216,6 +219,9 @@ public function render()
     // Obtén el paciente actual con sus enfermedades paginadas y con búsqueda
     $paciente = Paciente::find($this->pacienteId);
 
+    // Cargar las licencias de una vez y almacenarlas por su ID
+    $tipolicencias = \App\Models\Tipolicencia::all()->keyBy('id');
+
     // Verifica si el paciente existe
     if ($paciente) {
         // Aplica la paginación a las enfermedades asociadas al paciente con el valor de búsqueda
@@ -229,9 +235,7 @@ public function render()
                     ->orWhere('disase_paciente.fecha_presentacion_certificado', 'like', '%' . $this->search . '%')
                     ->orWhere('disase_paciente.estado_certificado', 'like', '%' . $this->search . '%')
                     ->orWhere('disase_paciente.suma_auxiliar', 'like', '%' . $this->search . '%')
-                    ->orWhere('disase_paciente.tipodelicencia', 'like', '%' . $this->search . '%');
-                    // Agrega más columnas según sea necesario
-                    //->orWhere('disase_paciente.otra_columna', 'like', '%' . $this->search . '%');
+                    ->orWhere('disase_paciente.tipolicencia_id', 'like', '%' . $this->search . '%');
             })
             ->orderBy('disase_paciente.id', $this->sortAsc ? 'desc' : 'asc')
             ->paginate($this->perPage, ['*'], 'enfermedades_page');
@@ -239,10 +243,10 @@ public function render()
         return view('livewire.patient.patient-historial-certificado', [
             'paciente' => $paciente,
             'enfermedades' => $enfermedades,
+            'tipolicencias' => $tipolicencias, // ✅ pasamos las licencias a la vista
         ])->layout('layouts.app');
     }
 
-    // Si el paciente no existe
     return view('livewire.patient.patient-historial-certificado')->layout('layouts.app');
 }
 

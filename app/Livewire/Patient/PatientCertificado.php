@@ -47,7 +47,8 @@ class PatientCertificado extends Component
         'imagen_frente'=>'nullable|file',
         'imagen_dorso'=>'nullable|file',
         'estado_certificado'=>'nullable',
-        'tipodelicencia'=>'nullable',
+        //'tipodelicencia'=>'nullable',
+        'tipolicencia_id' => 'required',
         'disase_id' => 'required',
 
 
@@ -108,8 +109,10 @@ class PatientCertificado extends Component
         'suma_salud' => $data['suma_salud'],
         'suma_auxiliar' => $data['suma_salud'],
         'estado_certificado' => isset($data['estado_certificado']) ? $data['estado_certificado'] : true, // O ajusta según tus necesidades
-        'tipodelicencia' => $data['tipodelicencia']
+        //'tipodelicencia' => $data['tipodelicencia']
         //'tipolicencia_id' => $data['tipolicencia_id'],
+        'tipolicencia_id' => $this->tipolicencia_id,
+
     ]);
 
     $this->modal = false;

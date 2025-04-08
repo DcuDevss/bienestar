@@ -27,22 +27,4 @@ class Disase extends Model
     }
 }
 
-/*namespace App\Models;
-
-use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Model;
-
-class Disase extends Model
-{
-    protected $fillable = ['name', 'slug', 'symptoms', 'tipolicencia_id'];
-    use HasFactory;
-
-
-
-
-    public function pacientes()
-    {
-        return $this->belongsToMany(Paciente::class)->withPivot('fecha_enfermedad', 'tipo_enfermedad', 'fecha_atencion', 'fecha_finalizacion', 'horas_salud', 'archivo', 'activo', 'tipodelicencia');
-    }
-}*/
 

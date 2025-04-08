@@ -57,35 +57,6 @@ class Paciente extends Model
     ];
 
 
-
-   /* protected $fillable = [
-        'apellido_nombre',
-        'dni',
-        'cuil',
-        'genero',
-        'direccion',
-        'email',
-        'telefono',
-        'escalafon',
-        'jerarquia',
-        'legajo',
-        'destino_actual',
-        'ciudad',
-        'edad',
-        'fecha_nacimiento',
-        'peso',
-        'altura',
-        'factore_id',
-        'jerarquia_id',
-        'estado_id',
-
-        'fecha_atencion',
-        'enfermedad',
-        'remedios',
-
-    ];*/
-
-
     public function scopeSearch($query, $value)
     {
         $query->where('apellido_nombre', 'like', "%{$value}%")
@@ -172,9 +143,16 @@ class Paciente extends Model
 
 
     public function disases()
-    {
-        return $this->belongsToMany(Disase::class)->withPivot('fecha_presentacion_certificado', 'detalle_certificado', 'fecha_inicio_licencia', 'fecha_finalizacion_licencia', 'horas_salud', 'suma_salud', 'suma_auxiliar', 'imagen_frente', 'imagen_dorso', 'estado_certificado', 'tipodelicencia');
-    }
+{
+    return $this->belongsToMany(Disase::class)->withPivot(
+        'fecha_presentacion_certificado', 'detalle_certificado',
+        'fecha_inicio_licencia', 'fecha_finalizacion_licencia',
+        'horas_salud', 'suma_salud', 'suma_auxiliar',
+        'imagen_frente', 'imagen_dorso', 'estado_certificado',
+        'tipodelicencia', 'tipolicencia_id' // agregado acá
+    );
+}
+
 
     /*public function enfermeros()
     {

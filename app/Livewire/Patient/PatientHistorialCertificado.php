@@ -250,6 +250,4 @@ public function render()
     return view('livewire.patient.patient-historial-certificado')->layout('layouts.app');
 }
 
-
-
 }

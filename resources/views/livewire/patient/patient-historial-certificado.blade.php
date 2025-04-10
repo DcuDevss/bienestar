@@ -160,24 +160,16 @@
                 </div>
 
                 <div>
-                    <label for="tipodelicencia"
-                        class="block text-sm font-medium text-gray-700">{{ __('Tipo de Licencia') }}</label>
-                    <select id="tipodelicencia" class="w-full rounded" wire:model.defer="tipodelicencia">
+                    <select id="tipolicencia_id" class="w-full rounded cursor-pointer" wire:model="tipolicencia_id">
                         <option value="" selected>{{ __('Seleccione una opción') }}</option>
-                        <option value="Enfermedad común">{{ __('Enfermedad común') }}</option>
-                        <option value="Enfermedad largo tratamiento">{{ __('Enfermedad largo tratamiento') }}
-                        </option>
-                        <option value="Atención familiar">{{ __('Atención familiar') }}</option>
-                        <option value="Donación de sangre">{{ __('Donación de sangre') }}</option>
-                        <option value="Maternidad">{{ __('Maternidad') }}</option>
-                        <option value="Nacimiento trabajo">{{ __('Nacimiento trabajo') }}</option>
-                        <option value="Salud embarazo">{{ __('Salud embarazo') }}</option>
-                        <option value="Licencia pandemia">{{ __('Licencia pandemia') }}</option>
-                        <option value="Dto. 564/18 lic. extraordinaria ley 911-art 9">
-                            {{ __('Dto. 564/18 lic. extraordinaria ley 911-art 9') }}</option>
-                    </select>
-                    <x-input-error for="tipodelicencia" />
-                </div>
+                        @foreach ($tipolicencias as $licencia)
+                            <option value="{{ $licencia->id }}">{{ $licencia->name }}</option>
+                        @endforeach
+                    </select> 
+                    <x-input-error for="tipolicencia_id" />
+                
+                </div>         
+               
 
                 <div>
                     <label for="fecha_presentacion_certificado"

@@ -90,7 +90,8 @@ Route::middleware([
         } elseif ($user->hasRole('psicologa'))
         {
            // return view('panel-administrador');
-            return redirect()->intended(route('psicologo.index'));
+            //return redirect()->intended(route('psicologo.index'));
+            return view('dashboard');
         }elseif ($user->hasRole('admin-jefa'))
         {
             return view('dashboard');
@@ -102,7 +103,7 @@ Route::middleware([
 /***finailza*** */
 
 Route::view('/administrador','administrador')->name('panel-administrador');
-Route::get('/psicologo', [PsicologoController::class, 'index'])->middleware('can:psicologo.index')->name('psicologo.index');
+//Route::get('/psicologo', [PsicologoController::class, 'index'])->middleware('can:psicologo.index')->name('psicologo.index');
 
 Route::get('get',function()
 {return view('admin.index');})

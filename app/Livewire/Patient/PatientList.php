@@ -65,20 +65,36 @@ public function getPatientsWithTodayFinalization()
     ->paginate($this->perPage);
 }
 
+//se agego esto nuevo
+public function getPacientesAgrupadosPorTipoLicencia()
+{
+    return \App\Models\Tipolicencia::with([
+        'disases_paciente' => function ($query) {
+            $query->whereNotNull('fecha_finalizacion_licencia')
+                  ->with('paciente'); // 👈 para obtener datos del paciente
+        }
+    ])->get();
+}
+
+
+
 // ... (otros métodos)
 
 public function render()
 {
     return view('livewire.patient.patient-list', [
         'pacientes' => Paciente::search($this->search)
-            ->when($this->admin !== '', function ($query) {
-                $query->where('is_admin', $this->admin);
-            })
+            ->when($this->admin !== '', fn ($q) => $q->where('is_admin', $this->admin))
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate($this->perPage),
+
         'pacientesConFinalizacionHoy' => $this->getPatientsWithTodayFinalization(),
+
+        'agrupadosPorLicencia' => $this->getPacientesAgrupadosPorTipoLicencia() // ✅
     ]);
 }
+
+
 
 
 

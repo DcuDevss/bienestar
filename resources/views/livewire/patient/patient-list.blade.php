@@ -200,7 +200,30 @@
         </div>
     </section>
 
-    <section class="seccionTab2 w-fit">@livewire('patient.patient-listfechas')</section>
+    <section class="seccionTab2 w-fit">@livewire('patient.patient-listfechas')
+
+        <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm">
+            <h2 class="text-lg font-bold mb-2 text-gray-700">Pacientes por Tipo de Licencia</h2>
+        
+            @foreach ($agrupadosPorLicencia as $licencia)
+                <div class="mb-3">
+                    <h3 class="font-semibold text-blue-600">{{ $licencia->name }}</h3>
+                    <ul class="list-disc list-inside">
+                        @forelse ($licencia->disases_paciente as $dp)
+                            <li class="text-gray-700">
+                                {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
+                                - Finaliza: {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
+                            </li>
+                        @empty
+                            <li class="text-gray-500">Sin pacientes registrados</li>
+                        @endforelse
+                    </ul>
+                </div>
+            @endforeach
+        </div>
+        
+        
+    </section>
 
 
 </div>

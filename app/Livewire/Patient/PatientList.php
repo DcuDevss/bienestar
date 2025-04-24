@@ -71,10 +71,12 @@ public function getPacientesAgrupadosPorTipoLicencia()
     return \App\Models\Tipolicencia::with([
         'disases_paciente' => function ($query) {
             $query->whereNotNull('fecha_finalizacion_licencia')
-                  ->with('paciente'); // 👈 para obtener datos del paciente
+                  ->whereDate('fecha_finalizacion_licencia', '>=', now()) // 👈 solo licencias vigentes
+                  ->with('paciente');
         }
     ])->get();
 }
+
 
 
 

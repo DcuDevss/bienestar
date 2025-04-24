@@ -52,9 +52,6 @@ class PatientCertificado extends Component
         'disase_id' => 'required',
 
 
-
-
-
     ];
 
     public function mount(Paciente $paciente)

@@ -92,7 +92,7 @@
                                         </td>
                                     </span>
                                 </li>
-                                
+
 
                                 <li class="flex items-center py-3 capitalize">
                                     <div class="flex flex-col">
@@ -223,7 +223,9 @@
                             </div>
                             <div class="flex">
                                 <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('grupo y fator sanguineo') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{-- $paciente->factores->names --}}</p>
+                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize"><p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->factores ? $paciente->factores->name : 'Sin Datos' }}
+                                </p>
+                                </p>
                             </div>
 
                             <div class="flex">
@@ -244,9 +246,14 @@
                         </div>
 
 
+                        psicologo.index
 
 
                     <div class="flex flex-1">
+                        @can('psicologo.index')
+                        <a href="{{ route('entrevista.create', $paciente->id)}}"
+                            class="flex-1 px-3 py-3 bg-gray-300 hover:text-gray-600 text-center text-black my-12 mr-4">{{ __('Entrevista ') }}</a>
+                        @endcan
                         <a href="{{ route('patient-certificados.show', $paciente->id) }}"
                             class="flex-1 px-3 py-3 bg-gray-300 hover:text-gray-600 text-center text-black my-12 mr-4">
                             {{ __('historial certificados medicos ') }}

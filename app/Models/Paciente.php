@@ -153,6 +153,11 @@ class Paciente extends Model
     );
 }
 
+    public function entrevistas()
+    {
+        return $this->hasMany(Entrevista::class);
+    }
+
 
     /*public function enfermeros()
     {
@@ -231,4 +236,7 @@ class Paciente extends Model
     {
         return $this->hasMany(Appoinment::class, 'patient_id');
     }
+
+
+
 }

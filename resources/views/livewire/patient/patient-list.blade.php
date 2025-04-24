@@ -162,11 +162,6 @@
                                         </div>
                                     </td>
 
-
-
-
-
-
                                     <td class="tiBody px-4 py-1 text-[14px]">
                                         <a class="ml-3 px-4 py-1 rounded-md bg-[#2d5986] text-white  hover:bg-[#3973ac]"
                                             href="{{ route('interviews.index', ['paciente' => $paciente->id]) }}">

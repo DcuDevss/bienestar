@@ -209,6 +209,7 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
     <!--  -->
     <script src="{{ asset('js/all.min.js') }}" defer></script>
+
 </head>
 
 <body class="font-sans antialiased">

@@ -5,11 +5,14 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Indicacionterapeutica extends Model
+class Abordaje extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];
+    // Atributos que se pueden llenar masivamente
+    protected $fillable = [
+        'name',  // Individual, Vincular, Familiar
+    ];
 
     // Relación inversa con la tabla Entrevistas
     public function entrevistas()

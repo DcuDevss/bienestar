@@ -260,7 +260,7 @@
                 {{-- <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
                              {{ __('Pacientes') }}
                 </x-responsive-nav-link> --}}
-
+            
                 <div class="ml-5">
                     <div class="relative mt-5" x-data="{ open: false }">
                         <button @click="open = !open"
@@ -306,7 +306,7 @@
             </div>
 
 
-            
+
 
 
             @can('users.index')

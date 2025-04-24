@@ -24,6 +24,9 @@ use App\Livewire\Doctor\DisaseController;
 use App\Livewire\Doctor\EnfermedadeController;
 use App\Livewire\Doctor\MultiformController;
 use App\Livewire\Doctor\EditPatientController;
+use App\Livewire\Doctor\EntrevistaFormController;
+use App\Livewire\Doctor\EditEntrevista;
+use App\Livewire\Doctor\EntrevistaIndex;
 use App\Livewire\Doctor\OficinaController;
 use App\Livewire\Enfermero\EnfermeroController;
 use App\Livewire\Enfermero\EnfermeroHistorial;
@@ -37,6 +40,7 @@ use App\Livewire\Patient\PatientHistorialCertificado;
 use App\Livewire\Patient\PatientHistorialEnfermedades;
 use App\Livewire\Patient\PatientTratamiento;
 use App\Models\Paciente;
+use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -67,9 +71,9 @@ Route::middleware([
     })->name('dashboard');
 });
 
- /********nuevo********/
+/********nuevo********/
 
- Route::middleware([
+Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
     'verified'
@@ -85,29 +89,28 @@ Route::middleware([
             //return redirect()->intended(route('dashboard'));
             return view('dashboard');
         } elseif ($user->hasRole('enfermero')) {
-          // return redirect()->intended(route('dashboard'));
-          return view('dashboard');
-        } elseif ($user->hasRole('psicologa'))
-        {
-           // return view('panel-administrador');
+            // return redirect()->intended(route('dashboard'));
+            return view('dashboard');
+        } elseif ($user->hasRole('psicologa')) {
+            // return view('panel-administrador');
             //return redirect()->intended(route('psicologo.index'));
             return view('dashboard');
-        }elseif ($user->hasRole('admin-jefa'))
-        {
+        } elseif ($user->hasRole('admin-jefa')) {
             return view('dashboard');
-        }else{
+        } else {
             return view('dashboard');
         }
     })->name('dashboard');
 });
 /***finailza*** */
 
-Route::view('/administrador','administrador')->name('panel-administrador');
+Route::view('/administrador', 'administrador')->name('panel-administrador');
 //Route::get('/psicologo', [PsicologoController::class, 'index'])->middleware('can:psicologo.index')->name('psicologo.index');
 
-Route::get('get',function()
-{return view('admin.index');})
-->name('admin.index')->middleware((['can:admin.index']));
+Route::get('get', function () {
+    return view('admin.index');
+})
+    ->name('admin.index')->middleware((['can:admin.index']));
 
 
 //rutas de roles todas index, show, create, edit
@@ -116,7 +119,7 @@ Route::get('get',function()
 //Route::resource('/users',UserController::class)->names('users');
 
 
-Route::resource('/especialidades',EspecialidadeController::class)->names('especialidades');
+Route::resource('/especialidades', EspecialidadeController::class)->names('especialidades');
 
 
 Route::get('get', function () {
@@ -127,12 +130,21 @@ Route::get('/oficinas', OficinaController::class)->middleware('can:oficinas.inde
 Route::get('/diadetrabajos', DiadetrabajoController::class)->middleware('can:diadetrabajos.index')->name('diadetrabajos.index');
 Route::get('/curriculum', [CurriculumController::class, 'index'])->middleware('can:curriculum.index')->name('curriculum.index');
 Route::get('/interviews/{paciente}', [InterviewController::class, 'index'])->middleware('can:interviews.index')->name('interviews.index');
-Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])->name('reset-sums');
+Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])->name('reset-sums'); // web.php
+
+
+
+
 
 //Route::get('/disases', Multiform::class)->name('multiform.index');
 Route::get('/disases', DisaseController::class)->middleware('can:disases.index')->name('disases.index');
 Route::get('/multiform', MultiformController::class)->middleware('can:multiform.index')->name('multiform.index');
 Route::get('paciente/{customerId}/edit', EditPatientController::class)->name('patient.edit');
+Route::get('paciente/{paciente_id}/entrevista/create', EntrevistaFormController::class)->name('entrevista.create');
+Route::get('/entrevistas/{paciente_id}', EntrevistaIndex::class)->name('entrevistas.index');
+Route::get('/entrevistas/editar/{entrevista_id}', EditEntrevista::class)->name('entrevistas.edit');
+
+
 
 Route::get('patient/show/{paciente}', PatientHistorialCertificado::class)->middleware('can:patient-certificados.show')->name('patient-certificados.show');
 Route::get('patient/edit/{paciente}', PatientHistorialEnfermedades::class)->middleware('can:patient-enfermedades.show')->name('patient-enfermedades.show');
@@ -143,7 +155,7 @@ Route::get('/patinet/patient-tratamiento/{paciente}', PatientTratamiento::class)
 Route::get('/patient/patient-historial/{paciente}/{tratamiento}', PatientHistorial::class)->name('patient.patient-historial');
 //Route::get('/patient/patient-control-historial/{paciente}/{enfermedade}', PatientControlHistorial::class)->name('patient.patient-control-historial');
 
-    Route::get('/patient/patient-control-historial/{paciente}/{enfermedade_paciente_id}', PatientControlHistorial::class)
+Route::get('/patient/patient-control-historial/{paciente}/{enfermedade_paciente_id}', PatientControlHistorial::class)
     ->name('patient.patient-control-historial');
 
 
@@ -153,6 +165,6 @@ Route::get('/interviews/detail/{interview}', [InterviewController::class, 'detai
 
 Route::get('/enfermero/enfermero-historial/{paciente}', EnfermeroHistorial::class)->middleware('can:enfermero.enfermero-historial')->name('enfermero.enfermero-historial');
 
-Route::resource('users', UserController::class)->only('index','edit','update');
+Route::resource('users', UserController::class)->only('index', 'edit', 'update');
 Route::resource('roles', RoleController::class)->names('admin-roles');
 //Route::get('/reservar-turno', TurnoReservation::class);

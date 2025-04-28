@@ -39,6 +39,7 @@ use App\Livewire\Patient\PatientHistorial;
 use App\Livewire\Patient\PatientHistorialCertificado;
 use App\Livewire\Patient\PatientHistorialEnfermedades;
 use App\Livewire\Patient\PatientTratamiento;
+use App\Livewire\Patient\PatientEntrevistas;
 use App\Models\Paciente;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -153,6 +154,7 @@ Route::get('paciente/edit/{paciente}', PacienteEditCertificado::class)->middlewa
 
 Route::get('/patinet/patient-tratamiento/{paciente}', PatientTratamiento::class)->name('patient.patient-tratamiento');
 Route::get('/patient/patient-historial/{paciente}/{tratamiento}', PatientHistorial::class)->name('patient.patient-historial');
+Route::get('/patient/patient-entrevistas', PatientEntrevistas::class)->name('patient.patient.patient-entrevistas');
 //Route::get('/patient/patient-control-historial/{paciente}/{enfermedade}', PatientControlHistorial::class)->name('patient.patient-control-historial');
 
 Route::get('/patient/patient-control-historial/{paciente}/{enfermedade_paciente_id}', PatientControlHistorial::class)

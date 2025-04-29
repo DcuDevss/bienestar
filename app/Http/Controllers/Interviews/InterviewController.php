@@ -30,7 +30,8 @@ $atencionFamiliar = $paciente->disases()
     if ($ultimaFechaEnfermedad) {
         $nombre = $ultimaFechaEnfermedad->name;
         $fechaEnfermedad = $ultimaFechaEnfermedad->pivot->fecha_finalizacion_licencia;
-       // $tipoEnfermedad = $ultimaFechaEnfermedad->pivot->tipo_enfermedad;
+       // $tipoEnfermedad = $ultimaFechaEnfermedad->pivot->tipo_enfermedad;  
+       
 
 
     }

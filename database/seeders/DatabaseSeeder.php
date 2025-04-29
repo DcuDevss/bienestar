@@ -22,7 +22,7 @@ class DatabaseSeeder extends Seeder
         // ]);
          // User::flushEventListeners();//esto evita que se envien correos electronicos
          $this->call(RoleSeeder::class);
-         //$this->call(PermissionSeeder::class);
+         //$this->call(PermissionSeeder::class);TipoEntrevistaSeeder
          $this->call(UserSeeder::class);
          $this->call(JerarquiaSeeder::class);
          $this->call(FactoreSeeder::class);
@@ -36,5 +36,7 @@ class DatabaseSeeder extends Seeder
          $this->call(DerivacionpsiquiatricaSeeder::class);
          $this->call(IndicacionterapeuticaSeeder::class);
          $this->call(EstadoSeeder::class);
+         $this->call(TipoEntrevistaSeeder::class);
+     
     }
 }

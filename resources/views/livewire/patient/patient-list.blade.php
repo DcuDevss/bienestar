@@ -136,7 +136,6 @@
                                             Sin fecha
                                         @endif
                                     </td>
-
                                     <td class="tiBody px-4 py-1 text-[14px] relative">
                                         <!-- Botón de opciones (Desplegable) -->
                                         <button onclick="toggleDropdown(event, {{ $paciente->id }})"

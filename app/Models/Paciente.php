@@ -78,16 +78,16 @@ class Paciente extends Model
 
 
 
-    public function tratamientos(){
+    public function tratamientos()
+    {
 
         return $this->hasMany(Paciente::class, 'paciente_id');
-
     }
 
-    public function resultados(){
+    public function resultados()
+    {
 
         return $this->hasMany(Paciente::class, 'paciente_id');
-
     }
 
 
@@ -143,20 +143,34 @@ class Paciente extends Model
 
 
     public function disases()
-{
-    return $this->belongsToMany(Disase::class)->withPivot(
-        'fecha_presentacion_certificado', 'detalle_certificado',
-        'fecha_inicio_licencia', 'fecha_finalizacion_licencia',
-        'horas_salud', 'suma_salud', 'suma_auxiliar',
-        'imagen_frente', 'imagen_dorso', 'estado_certificado',
-        'tipodelicencia', 'tipolicencia_id' // agregado acá
-    );
-}
+    {
+        return $this->belongsToMany(Disase::class)->withPivot(
+            'fecha_presentacion_certificado',
+            'detalle_certificado',
+            'fecha_inicio_licencia',
+            'fecha_finalizacion_licencia',
+            'horas_salud',
+            'suma_salud',
+            'suma_auxiliar',
+            'imagen_frente',
+            'imagen_dorso',
+            'estado_certificado',
+            'tipodelicencia',
+            'tipolicencia_id' // agregado acá
+        );
+    }
 
     public function entrevistas()
     {
-        return $this->hasMany(Entrevista::class);
+        return $this->hasMany(Entrevista::class, 'paciente_id');
     }
+
+    // En el modelo Paciente
+    public function ultimaEntrevista()
+    {
+        return $this->hasOne(Entrevista::class)->latest(); // Obtiene la última entrevista por fecha
+    }
+
 
 
     /*public function enfermeros()
@@ -194,7 +208,7 @@ class Paciente extends Model
 
     public function enfermedades()
     {
-        return $this->belongsToMany(Enfermedade::class)->withPivot('detalle_diagnostico','estado_enfermedad','derivacion_psiquiatrica','motivo_consulta', 'fecha_atencion_enfermedad', 'fecha_finalizacion_enfermedad', 'horas_reposo', 'imgen_enfermedad', 'pdf_enfermedad', 'medicacion', 'dosis', 'detalle_medicacion', 'nro_osef','art', 'tipodelicencia');
+        return $this->belongsToMany(Enfermedade::class)->withPivot('detalle_diagnostico', 'estado_enfermedad', 'derivacion_psiquiatrica', 'motivo_consulta', 'fecha_atencion_enfermedad', 'fecha_finalizacion_enfermedad', 'horas_reposo', 'imgen_enfermedad', 'pdf_enfermedad', 'medicacion', 'dosis', 'detalle_medicacion', 'nro_osef', 'art', 'tipodelicencia');
     }
 
 
@@ -236,7 +250,4 @@ class Paciente extends Model
     {
         return $this->hasMany(Appoinment::class, 'patient_id');
     }
-
-
-
 }

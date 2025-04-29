@@ -53,6 +53,16 @@ class Entrevista extends Model
         'user_id',
     ];
 
+    public function scopeSearch($query, $value)
+    {
+        return $query->where(function ($query) use ($value) {
+            $query->whereHas('tipoEntrevista', function ($query) use ($value) {
+                $query->where('name', 'like', "%{$value}%");
+            })
+            ->orWhere('posee_arma', '=', strtolower($value) == 'si' ? 1 : (strtolower($value) == 'no' ? 0 : null))
+            ->orWhere('created_at', 'like', "%{$value}%");
+        });
+    }
 
 
     // Relación con TipoEntrevista

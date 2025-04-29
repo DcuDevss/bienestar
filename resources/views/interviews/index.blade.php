@@ -245,10 +245,6 @@
 
                         </div>
 
-
-                        psicologo.index
-
-
                     <div class="flex flex-1">
                         @can('psicologo.index')
                         <a href="{{ route('entrevista.create', $paciente->id)}}"

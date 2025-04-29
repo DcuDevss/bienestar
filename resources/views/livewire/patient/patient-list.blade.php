@@ -49,28 +49,6 @@
                                 <th scope="col" class="px-4 py-3">Finalizacion licencia</th>
                                 <th scope="col" class="px-4 py-3">Accion</th>
                                 <th scope="col" class="px-3 py-3">Entrevista</th>
-                                {{-- @include('livewire.includes.table-sortable-th',[
-                                            'name' => 'id',
-                                            'displayName' => 'Nro'
-                                        ])
-                                        @include('livewire.includes.table-sortable-th',[
-                                            'name' => 'apellido_nombre',
-                                            'displayName' => 'Nombre y apellido'
-                                        ])
-                                        @include('livewire.includes.table-sortable-th',[
-                                            'name' => 'dni',
-                                            'displayName' => 'DNI'
-                                        ])
-                                        @include('livewire.includes.table-sortable-th',[
-                                            'name' => 'legajo',
-                                            'displayName' => 'Legajo'
-                                        ])
-                                        @include('livewire.includes.table-sortable-th',[
-                                            'name' => 'jerarquia',
-                                            'displayName' => 'Jerarquia'
-                                        ])
-                                        <th scope="col" class="px-4 py-3">Last update</th>
-                                    --}}
                             </tr>
                         </thead>
                         <tbody class="">
@@ -89,12 +67,6 @@
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
                                         {{ $paciente->destino_actual }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->ciudad }}</td>
-                                    {{--                                    {{-- <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->estado }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->email }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->TelefonoCelular }}</td> --}}
-
-                                    <!-- ... (resto de tu código) -->
-
                                     <td class="tiBody px-2 py-1 text-[14px]">
                                         @if ($paciente->estado_id == 1)
                                             <span

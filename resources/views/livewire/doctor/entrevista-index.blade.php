@@ -164,6 +164,10 @@
                                                     break;
                                             }
                                         @endphp
+                                        <p >
+                                            <strong>Actitud del Paciente:</strong>
+                                            {{ $entrevista->actitudEntrevista->name ?? 'Sin Datos' }}
+                                        </p>
                                         <p class="{{ $color }}">
                                             <strong>El paciente se encuentra:</strong>
                                             {{ $entrevista->estadoEntrevista->name ?? 'Sin Datos' }}

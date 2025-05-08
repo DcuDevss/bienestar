@@ -17,14 +17,14 @@ return new class extends Migration
         $table->boolean('posee_arma')->nullable();
         $table->boolean('posee_sanciones')->nullable();
         $table->string('motivo_sanciones')->nullable();
-        $table->boolean('causas_judiciales');
+        $table->boolean('causas_judiciales')->nullable();
         $table->string('motivo_causas_judiciales')->nullable();
-        $table->boolean('sosten_de_familia');
-        $table->boolean('sosten_economico');
-        $table->boolean('tiene_embargos');
+        $table->boolean('sosten_de_familia')->nullable();
+        $table->boolean('sosten_economico')->nullable();
+        $table->boolean('tiene_embargos')->nullable();
         $table->boolean('enfermedad_preexistente')->nullable();  // Permitir NULL
         $table->text('medicacion')->nullable();
-        $table->boolean('realizo_tratamiento_psicologico');
+        $table->boolean('realizo_tratamiento_psicologico')->nullable();
         $table->string('hace_cuanto_tratamiento_psicologico')->nullable();
         $table->text('signos_y_sintomas')->nullable();
         $table->date('fecha')->nullable();
@@ -32,16 +32,16 @@ return new class extends Migration
         $table->string('duracion')->nullable();
         $table->string('motivo')->nullable();
         $table->text('medicacion_recetada')->nullable();
-        $table->boolean('fuma');
+        $table->boolean('fuma')->nullable();
         $table->integer('cantidad_fuma')->nullable();
-        $table->boolean('consume_alcohol');
+        $table->boolean('consume_alcohol')->nullable();
         $table->string('frecuencia_alcohol')->nullable();
-        $table->boolean('consume_sustancias');
+        $table->boolean('consume_sustancias')->nullable();
         $table->string('tipo_sustancia')->nullable();
-        $table->boolean('realiza_actividades');
+        $table->boolean('realiza_actividades')->nullable();
         $table->string('actividades')->nullable();
         $table->integer('horas_dormir')->nullable();
-        $table->boolean('horas_suficientes');
+        $table->boolean('horas_suficientes')->nullable();
         $table->foreignId('actitud_entrevista_id')->nullable()->constrained()->onDelete('cascade');
         $table->text('notas_clinicas')->nullable();
         $table->text('tecnica_utilizada')->nullable();
@@ -51,7 +51,7 @@ return new class extends Migration
         $table->text('evolucion_tratamiento')->nullable();
         $table->boolean('aptitud_reintegro')->nullable();
         $table->foreignId('estado_entrevista_id')->nullable()->constrained()->onDelete('cascade');
-        $table->foreignId('user_id')->constrained()->onDelete('cascade');
+        $table->foreignId('user_id')->nullable()->constrained()->onDelete('cascade');
         $table->unsignedBigInteger('paciente_id')->nullable();  // Campo que vincula la entrevista con el paciente
         $table->foreign('paciente_id')->references('id')->on('pacientes')->onDelete('cascade');
         $table->timestamps();

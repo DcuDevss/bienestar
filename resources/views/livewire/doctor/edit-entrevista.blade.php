@@ -18,7 +18,7 @@
         posee_arma: @entangle('posee_arma'),
         posee_sanciones: @entangle('posee_sanciones'),
         motivo_sanciones: @entangle('motivo_sanciones'),
-        indicaciones_terapeuticas_id: @entangle('indicaciones_terapeuticas_id'),
+        indicacionterapeutica_id: @entangle('indicacionterapeutica_id'),
         abordaje_id: @entangle('abordaje_id'),
         derivacion_psiquiatrica: @entangle('derivacion_psiquiatrica'),
         evolucion_tratamiento: @entangle('evolucion_tratamiento')
@@ -43,7 +43,7 @@
                 <option value="1">Sí</option>
                 <option value="0">No</option>
             </select>
-            @error('entrevista_data.posee_sanciones')
+            @error('posee_sanciones')
                 <span class="text-red-500">{{ $message }}</span>
             @enderror
         </div>
@@ -53,7 +53,7 @@
             <label for="motivo_sanciones" class="block text-sm font-medium">Motivo de Sanciones</label>
             <input type="text" wire:model="motivo_sanciones"
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            @error('entrevista_data.motivo_sanciones')
+            @error('motivo_sanciones')
                 <span class="text-red-500">{{ $message }}</span>
             @enderror
         </div>
@@ -163,7 +163,7 @@
                 Psicológico</label>
             <input type="text" wire:model="hace_cuanto_tratamiento_psicologico"
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-            @error('entrevista_data.hace_cuanto_tratamiento_psicologico')
+            @error('hace_cuanto_tratamiento_psicologico')
                 <span class="text-red-500">{{ $message }}</span>
             @enderror
         </div>
@@ -193,7 +193,7 @@
         <!-- Profesional -->
         <div class="mb-4 mx-auto px-4 w-9/12">
             <label for="profesional" class="block text-sm font-medium">Profesional</label>
-            <input type="text" wire:model="entrevista_data.profesional"
+            <input type="text" wire:model="profesional"
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
             @error('profesional')
                 <span class="text-red-500">{{ $message }}</span>
@@ -366,7 +366,7 @@
         <!-- Actividades -->
         <div class="mb-4 mx-auto px-4 w-9/12">
             <label for="actividades" class="block text-sm font-medium">Actividades</label>
-            <input type="text" wire:model="entrevista_data.actividades"
+            <input type="text" wire:model="actividades"
                 class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
             @error('actividades')
                 <span class="text-red-500">{{ $message }}</span>

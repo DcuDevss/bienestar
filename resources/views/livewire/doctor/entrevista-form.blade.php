@@ -52,6 +52,7 @@
                         class="mb-4">
                         <label for="posee_arma" class="block text-sm font-medium text-gray-700">¿Posee arma?</label>
                         <select wire:model="posee_arma" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -66,6 +67,7 @@
                         <label for="posee_sanciones" class="block text-sm font-medium text-gray-700">¿Posee
                             sanciones?</label>
                         <select wire:model="posee_sanciones" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -91,6 +93,7 @@
                         <label for="causas_judiciales" class="block text-sm font-medium text-gray-700">¿Tiene causas
                             judiciales?</label>
                         <select wire:model="causas_judiciales" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -115,6 +118,7 @@
                         <label for="sosten_de_familia" class="block text-sm font-medium text-gray-700">¿Sos sosten de
                             Familia?</label>
                         <select wire:model="sosten_de_familia" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -124,6 +128,7 @@
                         <label for="sosten_economico" class="block text-sm font-medium text-gray-700">¿Sos sosten
                             Económico?</label>
                         <select wire:model="sosten_economico" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -133,6 +138,7 @@
                         <label for="tiene_embargos" class="block text-sm font-medium text-gray-700">¿Tiene
                             Embargos?</label>
                         <select wire:model="tiene_embargos" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -198,6 +204,18 @@
                         Miembro</button>
                 </div>
             </div>
+            <div class="mt-4">
+                <h3 class="text-lg font-medium">Miembros Agregados:</h3>
+                <ul class="list-disc pl-6">
+                    @foreach ($miembros as $miembro)
+                        <li>
+                            <strong>{{ $miembro['nombre'] }}</strong>, {{ $miembro['edad'] }} años,
+                            Ocupación: {{ $miembro['ocupacion'] }}, Parentesco: {{ $miembro['parentesco'] }},
+                            Antecedentes Psiquiátricos: {{ $miembro['antecedentes_psiquiatricos'] }}
+                        </li>
+                    @endforeach
+                </ul>
+            </div>
         </div>
 
         <!-- Card de Otros Campos Médicos -->
@@ -215,6 +233,7 @@
                             alguna
                             enfermedad Preexistente?</label>
                         <select wire:model="enfermedad_preexistente" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -236,8 +255,8 @@
                         <label for="realizo_tratamiento_psicologico"
                             class="block text-sm font-medium text-gray-700">¿Realizó
                             algún tratamiento psicológico?</label>
-                        <select wire:model="realizo_tratamiento_psicologico"
-                            class="mt-1 p-2 w-full border rounded-md">
+                        <select wire:model="realizo_tratamiento_psicologico" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -317,6 +336,7 @@
                     <div class="mb-4">
                         <label for="fuma" class="block text-sm font-medium text-gray-700">Fuma?</label>
                         <select wire:model="fuma" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -327,9 +347,7 @@
 
                     <div class="mb-4">
                         <label for="cantidad_fuma" class="block text-sm font-medium text-gray-700">Cantidad y
-                            frecuencia
-                            con
-                            la que fuma</label>
+                            frecuencia con la que fuma</label>
                         <input type="number" wire:model="cantidad_fuma" class="mt-1 p-2 w-full border rounded-md">
                         @error('cantidad_fuma')
                             <span class="text-red-500">{{ $message }}</span>
@@ -340,6 +358,7 @@
                         <label for="consume_alcohol" class="block text-sm font-medium text-gray-700">Consume
                             Alcohol?</label>
                         <select wire:model="consume_alcohol" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
@@ -350,8 +369,7 @@
 
                     <div class="mb-4">
                         <label for="frecuencia_alcohol" class="block text-sm font-medium text-gray-700">Cantidad y
-                            frecuencia
-                            con la que consume alcohol</label>
+                            frecuencia con la que consume alcohol</label>
                         <input type="text" wire:model="frecuencia_alcohol"
                             class="mt-1 p-2 w-full border rounded-md">
                         @error('frecuencia_alcohol')
@@ -364,6 +382,7 @@
                             consumió
                             alguna sustancia psicotropica?</label>
                         <select wire:model="consume_sustancias" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                             @error('consume_sustancias')
@@ -387,6 +406,7 @@
                             actividades
                             recreativas?</label>
                         <select wire:model="realiza_actividades" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                             @error('realiza_actividades')
@@ -421,6 +441,7 @@
                             las
                             horas que duerme?</label>
                         <select wire:model="horas_suficientes" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                             @error('horas_suficientes')

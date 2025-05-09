@@ -29,6 +29,7 @@
                     evolucion_tratamiento: @entangle('evolucion_tratamiento')
                 }"> <!-- Usamos x-data para manejar el estado en Alpine -->
 
+                <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <!-- Tipo de Entrevista -->
                     <div class="mb-4">
                         <label for="tipo_entrevista_id" class="block text-sm font-medium text-gray-700">Tipo de
@@ -81,7 +82,7 @@
                     <div x-show="!(tipo_entrevista_id == 3 || tipo_entrevista_id == 4)" class="mb-4">
                         <label for="motivo_sanciones" class="block text-sm font-medium text-gray-700">Motivo de las
                             sanciones</label>
-                        <input type="text" wire:model="motivo_sanciones" class="mt-1 p-2 w-full border rounded-md">
+                        <textarea type="text" wire:model="motivo_sanciones" class="mt-1 p-2 w-full border rounded-md"></textarea>
                         @error('motivo_sanciones')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
@@ -106,8 +107,7 @@
                     <div x-show="" class="mb-4">
                         <label for="motivo_causas_judiciales" class="block text-sm font-medium text-gray-700">Motivo de
                             las causas judiciales</label>
-                        <input type="text" wire:model="motivo_causas_judiciales"
-                            class="mt-1 p-2 w-full border rounded-md">
+                        <textarea type="text" wire:model="motivo_causas_judiciales" class="mt-1 p-2 w-full border rounded-md"></textarea>
                         @error('motivo_causas_judiciales')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
@@ -144,6 +144,7 @@
                         </select>
                     </div>
                 </div>
+                </div>
 
             </div>
         </div>
@@ -156,62 +157,73 @@
 
             <div id="collapseTwo" class="collapse-content p-4 hidden">
                 <div class="mb-4">
-                    <div>
-                        <div class="mb-4">
-                            <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre:</label>
-                            <input type="text" wire:model="grupo_familiar.nombre"
-                                class="mt-1 p-2 w-full border rounded-md" placeholder="Nombre del familiar">
-                            @error('miembros.*.nombre')
-                                <span class="text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-4">
-                            <label for="edad" class="block text-sm font-medium text-gray-700">Edad:</label>
-                            <input type="number" wire:model="grupo_familiar.edad"
-                                class="mt-1 p-2 w-full border rounded-md" placeholder="Edad del familiar">
-                            @error('miembros.*.edad')
-                                <span class="text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-4">
-                            <label for="ocupacion" class="block text-sm font-medium text-gray-700">Ocupación:</label>
-                            <input type="text" wire:model="grupo_familiar.ocupacion"
-                                class="mt-1 p-2 w-full border rounded-md" placeholder="Ocupación del familiar">
-                            @error('miembros.*.ocupacion')
-                                <span class="text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-4">
-                            <label for="parentesco"
-                                class="block text-sm font-medium text-gray-700">Parentesco:</label>
-                            <input type="text" wire:model="grupo_familiar.parentesco"
-                                class="mt-1 p-2 w-full border rounded-md" placeholder="Parentesco">
-                            @error('miembros.*.parentesco')
-                                <span class="text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
-                        <div class="mb-4">
-                            <label for="antecedentes_psiquiatricos"
-                                class="block text-sm font-medium text-gray-700">Antecedentes Psiquiatricos:</label>
-                            <input type="text" wire:model="grupo_familiar.antecedentes_psiquiatricos"
-                                class="mt-1 p-2 w-full border rounded-md" placeholder="Antecedentes">
-                            @error('miembros.*.antecedentes_psiquiatricos')
-                                <span class="text-red-500">{{ $message }}</span>
-                            @enderror
-                        </div>
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-2 gap-4">
+
+
+                            <div class="mb-4">
+                                <label for="nombre" class="block text-sm font-medium text-gray-700">Nombre:</label>
+                                <input type="text" wire:model="grupo_familiar.nombre"
+                                    class="mt-1 p-2 w-full border rounded-md" placeholder="Nombre del familiar">
+                                @error('miembros.*.nombre')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="edad" class="block text-sm font-medium text-gray-700">Edad:</label>
+                                <input type="number" wire:model="grupo_familiar.edad"
+                                    class="mt-1 p-2 w-full border rounded-md" placeholder="Edad del familiar">
+                                @error('miembros.*.edad')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="ocupacion" class="block text-sm font-medium text-gray-700">Ocupación:</label>
+                                <input type="text" wire:model="grupo_familiar.ocupacion"
+                                    class="mt-1 p-2 w-full border rounded-md" placeholder="Ocupación del familiar">
+                                @error('miembros.*.ocupacion')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="parentesco"
+                                    class="block text-sm font-medium text-gray-700">Parentesco:</label>
+                                <input type="text" wire:model="grupo_familiar.parentesco"
+                                    class="mt-1 p-2 w-full border rounded-md" placeholder="Parentesco">
+                                @error('miembros.*.parentesco')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
+                            <div class="mb-4">
+                                <label for="antecedentes_psiquiatricos"
+                                    class="block text-sm font-medium text-gray-700">Antecedentes Psiquiatricos:</label>
+                                <input type="text" wire:model="grupo_familiar.antecedentes_psiquiatricos"
+                                    class="mt-1 p-2 w-full border rounded-md" placeholder="Antecedentes">
+                                @error('miembros.*.antecedentes_psiquiatricos')
+                                    <span class="text-red-500">{{ $message }}</span>
+                                @enderror
+                            </div>
                     </div>
-                    <button type="button" wire:click="addMember" class="text-white bg-blue-500 p-2 rounded">Agregar
-                        Miembro</button>
+                    <div class="mt-4 flex justify-start">
+                        <button type="button" wire:click="addMember" class="text-white bg-blue-500 p-2 rounded w-auto">
+                            Agregar Miembro
+                        </button>
+                    </div>
                 </div>
             </div>
             <div class="mt-4">
-                <h3 class="text-lg font-medium">Miembros Agregados:</h3>
+                <h3 class="text-md font-semibold text-blue-500 ml-4">Miembros Agregados:</h3>
                 <ul class="list-disc pl-6">
-                    @foreach ($miembros as $miembro)
+                    @foreach ($miembros as $index => $miembro)
                         <li>
-                            <strong>{{ $miembro['nombre'] }}</strong>, {{ $miembro['edad'] }} años,
-                            Ocupación: {{ $miembro['ocupacion'] }}, Parentesco: {{ $miembro['parentesco'] }},
-                            Antecedentes Psiquiátricos: {{ $miembro['antecedentes_psiquiatricos'] }}
+                            <strong>Nombre: </strong>{{ $miembro['nombre'] }},
+                            <strong>Edad: </strong>{{ $miembro['edad'] }} años,
+                            <strong>Ocupación: </strong> {{ $miembro['ocupacion'] }},
+                            <strong>Parentesco: </strong> {{ $miembro['parentesco'] }},
+                            <strong>Antecedentes Psiquiátricos: </strong> {{ $miembro['antecedentes_psiquiatricos'] }}
+                             <!-- Botón para eliminar el miembro -->
+                            <button type="button" wire:click="removeMember({{ $index }})" class="px-2 mb-2 ml-2 text-center bg-red-500 text-white rounded-md shadow-md hover:bg-red-600 focus:outline-none">
+                                X
+                            </button>
                         </li>
                     @endforeach
                 </ul>
@@ -227,7 +239,7 @@
             <div id="collapseThree" class="collapse-content p-4 hidden">
 
                 <div x-data="{ tipo_entrevista_id: @entangle('tipo_entrevista_id') }">
-
+                    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="mb-4">
                         <label for="enfermedad_preexistente" class="block text-sm font-medium text-gray-700">¿Posee
                             alguna
@@ -316,7 +328,7 @@
                     <div class="mb-4">
                         <label for="motivo" class="block text-sm font-medium text-gray-700">Motivo del
                             Tratamiento</label>
-                        <input type="text" wire:model="motivo" class="mt-1 p-2 w-full border rounded-md">
+                        <textarea type="text" wire:model="motivo" class="mt-1 p-2 w-full border rounded-md"></textarea>
                         @error('motivo')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
@@ -324,8 +336,7 @@
 
                     <div class="mb-4">
                         <label for="medicacion_recetada" class="block text-sm font-medium text-gray-700">Medicación
-                            que le
-                            Recetaron</label>
+                            que le Recetaron</label>
                         <input type="text" wire:model="medicacion_recetada"
                             class="mt-1 p-2 w-full border rounded-md">
                         @error('medicacion_recetada')
@@ -418,7 +429,7 @@
                     <div class="mb-4">
                         <label for="actividades" class="block text-sm font-medium text-gray-700">Qué actividades
                             realiza?</label>
-                        <input type="text" wire:model="actividades" class="mt-1 p-2 w-full border rounded-md">
+                        <textarea type="text" wire:model="actividades" class="mt-1 p-2 w-full border rounded-md"></textarea>
                         @error('actividades')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
@@ -455,7 +466,7 @@
                     <div class="mb-4">
                         <label for="notas_clinicas" class="block text-sm font-medium text-gray-700">Notas
                             Clínicas:</label>
-                        <textarea wire:model="notas_clinicas" class="mt-1 p-2 w-full border rounded-md" placeholder="Notas adicionales"></textarea>
+                        <textarea wire:model="notas_clinicas" class="mt-1 p-2 w-full border rounded-md" placeholder=""></textarea>
                         @error('notas_clinicas')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
@@ -478,7 +489,7 @@
                     <div class="mb-4">
                         <label for="tecnica_utilizada" class="block text-sm font-medium text-gray-700">Técnicas
                             Utilizadas:</label>
-                        <textarea wire:model="tecnica_utilizada" class="mt-1 p-2 w-full border rounded-md" placeholder="Notas adicionales"></textarea>
+                        <textarea wire:model="tecnica_utilizada" class="mt-1 p-2 w-full border rounded-md" placeholder=""></textarea>
                         @error('tecnica_utilizada')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
@@ -533,10 +544,8 @@
                     <div x-show="!(tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 10 || tipo_entrevista_id == 11)"
                         class="mb-4">
                         <label for="derivacion_psiquiatrica"
-                            class="block text-sm font-medium text-gray-700">Derivacion
-                            Psiquiatrica:</label>
-                        <textarea wire:model="derivacion_psiquiatrica" class="mt-1 p-2 w-full border rounded-md"
-                            placeholder="Notas adicionales"></textarea>
+                            class="block text-sm font-medium text-gray-700">Derivacion Psiquiatrica:</label>
+                        <textarea wire:model="derivacion_psiquiatrica" class="mt-1 p-2 w-full border rounded-md" placeholder=""></textarea>
                         @error('derivacion_psiquiatrica')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
@@ -554,6 +563,7 @@
                         @enderror
                     </div>
 
+
                 </div>
             </div>
         </div>
@@ -564,18 +574,29 @@
         <input type="hidden" wire:model="evolucion_tratamiento" :value="evolucion_tratamiento ?? null">
         <input type="hidden" wire:model="abordaje_id" :value="abordaje_id ?? null">
         <input type="hidden" wire:model="indicacionterapeutica_id" :value="indicacionterapeutica_id ?? null">
-        <button type="submit"
-            class="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md sm:ml-4 md:ml-60 mb-5">Guardar</button>
+
+        <div class="mt-4 w-full flex flex-col gap-4 items-start ml-4">
+            <!-- Botón de Guardar -->
+            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md sm:w-auto">
+                Guardar
+            </button>
+
+            <!-- Ver Entrevistas del paciente (solo si existe el paciente) -->
+            @if ($paciente)
+                <a href="{{ route('entrevistas.index', ['paciente_id' => $paciente->id]) }}"
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto mb-4">
+                    Ver entrevistas del paciente
+                </a>
+            @else
+                <p>No se encontró el paciente.</p>
+            @endif
+        </div>
     </form>
-    @if ($paciente)
-        <a href="{{ route('entrevistas.index', ['paciente_id' => $paciente->id]) }}"
-           class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:ml-4 md:ml-60 mt-5">
-            Ver entrevistas del paciente
-        </a>
-    @else
-        <p>No se encontró el paciente.</p>
-    @endif
 </div>
+
+
+
+
 <script>
     function toggleCard(id) {
         const card = document.getElementById(id);

@@ -66,6 +66,7 @@ class EntrevistaFormController extends Component
     public $indicacionterapeuticas;
     public $abordajes;
     public $estados_entrevista;
+    public $index;
 
 
     public function mount($paciente_id)
@@ -110,6 +111,7 @@ class EntrevistaFormController extends Component
 
         // Agregar el miembro al array $miembros
         $this->miembros[] = $this->grupo_familiar;
+        
 
         // Limpiar los campos después de agregar el miembro
         $this->grupo_familiar = [
@@ -122,6 +124,17 @@ class EntrevistaFormController extends Component
 
         // Mensaje de éxito
         session()->flash('message', 'Miembro agregado exitosamente.');
+    }
+
+
+
+    public function removeMember($index)
+    {
+        // Eliminar el miembro del array $miembros utilizando el índice
+        array_splice($this->miembros, $index, 1);
+
+        // Mensaje de éxito
+        session()->flash('message', 'Miembro eliminado exitosamente.');
     }
 
     public function submit()

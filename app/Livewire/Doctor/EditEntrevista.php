@@ -9,7 +9,9 @@ use App\Models\ActitudEntrevista;
 use App\Models\IndicacionTerapeutica;
 use App\Models\Abordaje;
 use App\Models\EstadoEntrevista;
+use App\Models\GrupoFamiliar;
 use App\Models\Paciente;
+use Illuminate\Support\Facades\Log;
 
 class EditEntrevista extends Component
 {
@@ -21,6 +23,9 @@ class EditEntrevista extends Component
     public $abordajes = [];
     public $paciente;
     public $paciente_id;
+    public $miembros = []; // Para almacenar los miembros de la entrevista
+    public $grupo_familiar = [];  // Para almacenar el miembro a editar
+    public $editIndex = null;
 
     // Desacoplar los campos individuales en lugar de usar entrevista_data
     public $tipo_entrevista_id;
@@ -61,9 +66,12 @@ class EditEntrevista extends Component
     public $horas_suficientes;
     public $horas_dormir;
 
+
     public function mount($entrevista_id)
     {
         $this->entrevista_id = $entrevista_id;
+
+
 
         // Buscar la entrevista por ID
         $entrevista = Entrevista::find($this->entrevista_id);
@@ -110,6 +118,12 @@ class EditEntrevista extends Component
         $this->actividades = $entrevista->actividades;
         $this->horas_suficientes = $entrevista->horas_suficientes;
         $this->horas_dormir = $entrevista->horas_dormir;
+        $this->miembros = $entrevista->grupoFamiliar;
+
+
+        if (is_null($this->miembros)) {
+        $this->miembros = [];
+        }
 
         // Cargar opciones para los campos relacionados (tipos de entrevista, actitudes, estados)
         $this->tipos_entrevista = TipoEntrevista::all();
@@ -118,6 +132,58 @@ class EditEntrevista extends Component
         $this->indicacionterapeuticas = IndicacionTerapeutica::all();
         $this->abordajes = Abordaje::all();
     }
+
+    public function editMember($id)
+    {
+        $this->editIndex = $id;
+        $miembro = GrupoFamiliar::find($id);
+
+        if ($miembro) {
+            // Asignar el miembro seleccionado a $grupo_familiar
+            $this->grupo_familiar = $miembro->toArray();  // Actualiza $grupo_familiar con los datos del miembro
+        }
+    }
+
+    // Método para guardar los cambios en el miembro editado
+    public function saveMember()
+    {
+        // Validar los datos
+        $this->validate([
+            'grupo_familiar.nombre' => 'required|string',
+            'grupo_familiar.edad' => 'required|numeric',
+            'grupo_familiar.ocupacion' => 'nullable|string',
+            'grupo_familiar.parentesco' => 'nullable|string',
+            'grupo_familiar.antecedentes_psiquiatricos' => 'nullable|string',
+        ]);
+
+        if ($this->editIndex !== null) {
+            // Buscar el miembro a actualizar
+            $miembro = GrupoFamiliar::find($this->editIndex);
+
+            if ($miembro) {
+                // Actualizar los campos del miembro con los nuevos valores
+                $miembro->update([
+                    'nombre' => $this->grupo_familiar['nombre'],
+                    'edad' => $this->grupo_familiar['edad'],
+                    'ocupacion' => $this->grupo_familiar['ocupacion'],
+                    'parentesco' => $this->grupo_familiar['parentesco'],
+                    'antecedentes_psiquiatricos' => $this->grupo_familiar['antecedentes_psiquiatricos'],
+                ]);
+
+                // Recargar la lista de miembros
+                $entrevista = Entrevista::find($this->entrevista_id);
+                $this->miembros = $entrevista->grupoFamiliar;  // Recargar los miembros para reflejar los cambios
+
+                // Mostrar mensaje de éxito
+                session()->flash('message', 'Miembro editado exitosamente.');
+
+                // Limpiar el estado de edición
+                $this->editIndex = null;
+                $this->grupo_familiar = [];
+            }
+        }
+    }
+
 
     // Método para actualizar los datos de la entrevista
     public function update()

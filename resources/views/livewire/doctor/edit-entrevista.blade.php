@@ -430,39 +430,35 @@
             </div>
         </div>
 
-           <div class="mt-4">
-    <h3 class="text-md font-semibold text-blue-500 ml-4">Editar Miembro/s:</h3>
-
-    <!-- Miembros - Lista inicial -->
-    <ul class="list-disc pl-6">
-        @foreach($miembros as $index => $miembro)
-            <li>
-                <strong>Nombre: </strong>{{ $miembro->nombre }},
-                <strong>Edad: </strong>{{ $miembro->edad }} años,
-                <strong>Ocupación: </strong> {{ $miembro->ocupacion }},
-                <strong>Parentesco: </strong> {{ $miembro->parentesco }},
-                <strong>Antecedentes Psiquiátricos: </strong> {{ $miembro->antecedentes_psiquiatricos }}
-
-                <!-- Botón de editar -->
-                <button @click="editMode = true; $wire.editMember({{ $miembro->id }})" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md">Editar</button>
-            </li>
-        @endforeach
-    </ul>
-
-    <!-- Formulario de edición - Alpine.js -->
-    <div x-data="{ editMode: true, miembro: @entangle('grupo_familiar') }">
-        <!-- Formulario de edición del miembro seleccionado -->
-        <div x-show="editMode">
-            <input x-model="miembro.nombre" placeholder="Nombre">
-            <input x-model="miembro.edad" placeholder="Edad">
-            <input x-model="miembro.ocupacion" placeholder="Ocupación">
-            <input x-model="miembro.parentesco" placeholder="Parentesco">
-            <input x-model="miembro.antecedentes_psiquiatricos" placeholder="Antecedentes psiquiátricos">
-
-            <button @click="editMode = false; $wire.saveMember()">Guardar Cambios</button>
+        <div class="mt-4">
+            <h3 class="text-md font-semibold text-blue-500 ml-4">Editar Miembro/s:</h3>
+            <!-- Miembros - Lista inicial -->
+            <ul class="list-disc pl-6">
+                @foreach($miembros as $index => $miembro)
+                    <li>
+                        <strong>Nombre: </strong>{{ $miembro->nombre }},
+                        <strong>Edad: </strong>{{ $miembro->edad }} años,
+                        <strong>Ocupación: </strong> {{ $miembro->ocupacion }},
+                        <strong>Parentesco: </strong> {{ $miembro->parentesco }},
+                        <strong>Antecedentes Psiquiátricos: </strong> {{ $miembro->antecedentes_psiquiatricos }}
+                        <!-- Botón de editar -->
+                        <button @click="editMode = true; $wire.editMember({{ $miembro->id }})" class="ml-2 px-4 py-2 bg-blue-500 text-white rounded-md mb-2">Editar</button>
+                    </li>
+                @endforeach
+            </ul>
+            <!-- Formulario de edición - Alpine.js -->
+            <div x-data="{ editMode: true, miembro: @entangle('grupo_familiar') }">
+            <!-- Formulario de edición del miembro seleccionado -->
+                <div x-show="editMode" class="flex space-x-4">
+                    <input x-model="miembro.nombre" placeholder="Nombre" class="mt-1 w-full max-w-sm h-10 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input x-model="miembro.edad" placeholder="Edad" class="mt-1 w-full max-w-sm h-10 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input x-model="miembro.ocupacion" placeholder="Ocupación" class="mt-1 w-full max-w-sm h-10 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input x-model="miembro.parentesco" placeholder="Parentesco" class="mt-1 w-full max-w-sm h-10 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <input x-model="miembro.antecedentes_psiquiatricos" placeholder="Antecedentes psiquiátricos" class="mt-1 w-full max-w-sm h-10 rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <button @click="editMode = true; $wire.saveMember()" class="ml-2 px-4 py-2 max-w-sm h-10 bg-blue-500 text-white rounded-md mt-2">Guardar</button>
+                </div>
+            </div>
         </div>
-    </div>
-</div>
 
 
 

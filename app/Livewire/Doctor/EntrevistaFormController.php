@@ -74,6 +74,7 @@ class EntrevistaFormController extends Component
 
         $this->paciente_id = $paciente_id;
         $this->paciente = Paciente::find($paciente_id);
+
         // Cargar las opciones de los select
 
         $this->tipos_entrevista = TipoEntrevista::all();  // Simula la carga de los tipos
@@ -111,7 +112,7 @@ class EntrevistaFormController extends Component
 
         // Agregar el miembro al array $miembros
         $this->miembros[] = $this->grupo_familiar;
-        
+
 
         // Limpiar los campos después de agregar el miembro
         $this->grupo_familiar = [

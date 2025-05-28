@@ -16,6 +16,7 @@ use App\Http\Controllers\RoleController;
 
 use App\Http\Controllers\Doctor\CurriculumController;
 use App\Http\Controllers\Psicologo\PsicologoController;
+use App\Http\Controllers\PdfController;
 //use App\Http\Controllers\Interviews\InterviewController;
 use App\Http\Livewire\Paciente\PdfViewer as PacientePdfViewer;
 use App\Livewire\Paciente\PdfViewer;
@@ -26,6 +27,7 @@ use App\Livewire\Doctor\MultiformController;
 use App\Livewire\Doctor\EditPatientController;
 use App\Livewire\Doctor\EntrevistaFormController;
 use App\Livewire\Doctor\EditEntrevista;
+use App\Livewire\Doctor\PdfPsiquiatraController;
 use App\Livewire\Doctor\EntrevistaIndex;
 use App\Livewire\Doctor\OficinaController;
 use App\Livewire\Enfermero\EnfermeroController;
@@ -132,6 +134,7 @@ Route::get('/diadetrabajos', DiadetrabajoController::class)->middleware('can:dia
 Route::get('/curriculum', [CurriculumController::class, 'index'])->middleware('can:curriculum.index')->name('curriculum.index');
 Route::get('/interviews/{paciente}', [InterviewController::class, 'index'])->middleware('can:interviews.index')->name('interviews.index');
 Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])->name('reset-sums'); // web.php
+Route::get('/pdfs/{filename}', [PdfController::class, 'show'])->name('pdf.show');
 
 
 
@@ -144,6 +147,8 @@ Route::get('paciente/{customerId}/edit', EditPatientController::class)->name('pa
 Route::get('paciente/{paciente_id}/entrevista/create', EntrevistaFormController::class)->name('entrevista.create');
 Route::get('/entrevistas/{paciente_id}', EntrevistaIndex::class)->name('entrevistas.index');
 Route::get('/entrevistas/editar/{entrevista_id}', EditEntrevista::class)->name('entrevistas.edit');
+Route::get('/entervistas/pdf-psiquiatra/{paciente}', PdfPsiquiatraController::class)->name('entrevistas.pdf-psiquiatra');
+
 
 
 

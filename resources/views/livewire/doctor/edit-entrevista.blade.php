@@ -36,6 +36,20 @@
                 </select>
             </div>
 
+            <!-- Mostrar si tipo_entrevista_id es 1 (por ejemplo, para "Anual") -->
+            <div x-show="!(tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7)"
+                class="mb-4 mx-auto px-4 w-9/12">
+                <label for="posee_arma" class="block text-sm font-medium">¿Posee arma?</label>
+                <select wire:model="posee_arma" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+                @error('posee_arma')
+                    <span class="text-red-500">{{ $message }}</span>
+                @enderror
+            </div>
+
             <!-- Posee Sanciones -->
             <div x-show="!(tipo_entrevista_id == 3 || tipo_entrevista_id == 4)" class="mb-4 mx-auto px-4 w-9/12">
                 <label for="posee_sanciones" class="block text-sm font-medium">Posee Sanciones</label>

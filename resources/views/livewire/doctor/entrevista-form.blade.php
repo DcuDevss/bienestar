@@ -1,5 +1,4 @@
 <div>
-
     @if (session()->has('message'))
         <div class="alert alert-success bg-green-500 text-white p-4 rounded-md shadow-md mb-4">
             <strong class="font-bold"></strong>
@@ -580,19 +579,25 @@
             <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md sm:w-auto">
                 Guardar
             </button>
-
             <!-- Ver Entrevistas del paciente (solo si existe el paciente) -->
             @if ($paciente)
                 <a href="{{ route('entrevistas.index', ['paciente_id' => $paciente->id]) }}"
-                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto mb-4">
+                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto">
                     Ver entrevistas del paciente
                 </a>
             @else
                 <p>No se encontró el paciente.</p>
             @endif
+            <a href="{{ route('entrevistas.pdf-psiquiatra', $paciente) }}"
+            class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto mb-4">
+            Adjuntar PDFs
+        </a>
+
         </div>
+
     </form>
 </div>
+
 
 
 

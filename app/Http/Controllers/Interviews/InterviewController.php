@@ -43,7 +43,6 @@ $atencionFamiliar = $paciente->disases()
 
 
 
-
     public function detail(Interview $interview){
 
         $patient = User::find($interview->patient_id);

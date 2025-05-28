@@ -73,6 +73,7 @@ class PatientEntrevistas extends Component
             })
             ->leftJoin('tipo_entrevistas', 'entrevistas.tipo_entrevista_id', '=', 'tipo_entrevistas.id')
             ->leftJoin('estado_entrevistas', 'entrevistas.estado_entrevista_id', '=', 'estado_entrevistas.id')
+            ->leftJoin('pacientes', 'entrevistas.paciente_id', '=', 'pacientes.id') // Unir la tabla de pacientes
             ->when($this->search, function ($query) use ($searchLower) {
                 $query->whereRaw('LOWER(entrevistas.created_at) LIKE ?', ['%' . $searchLower . '%'])
                     ->orWhereHas('tipoEntrevista', function ($query) use ($searchLower) {
@@ -80,6 +81,11 @@ class PatientEntrevistas extends Component
                     })
                     ->orWhereHas('estadoEntrevista', function ($query) use ($searchLower) {
                         $query->whereRaw('LOWER(name) LIKE ?', ['%' . $searchLower . '%']);
+                    })
+                    ->orWhere('entrevistas.paciente_id', 'LIKE', '%' . $searchLower . '%')  // Buscar por paciente_id
+                    ->orWhereRaw('LOWER(pacientes.apellido_nombre) LIKE ?', ['%' . $searchLower . '%']) // Buscar por apellido_nombre
+                    ->orWhereHas('paciente.jerarquias', function ($query) use ($searchLower) {
+                        $query->whereRaw('LOWER(jerarquias.name) LIKE ?', ['%' . $searchLower . '%']); // Buscar por jerarquias->name
                     });
             })
             ->when($this->poseeArmaFilter !== null, function ($query) {
@@ -94,13 +100,12 @@ class PatientEntrevistas extends Component
                     $query->where('entrevistas.posee_arma', '=', 1);
                 }
             })
-
             ->orderBy($this->sortBy, $this->sortDir)
             ->paginate($this->perPage);
 
-            $noResults = $entrevistas->isEmpty();
-
+        $noResults = $entrevistas->isEmpty();
 
         return view('livewire.patient.patient-entrevistas', compact('entrevistas'))->layout('layouts.app');
     }
+
 }

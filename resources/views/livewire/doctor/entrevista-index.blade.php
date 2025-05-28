@@ -145,6 +145,7 @@
                                         <p><strong>Duerme Suficiente:</strong>
                                             {{ $entrevista->horas_suficientes == 1 ? 'Si' : 'No' }}</p>
                                     @endif
+
                                     @if (!empty($entrevista->estado_entrevista_id))
                                         @php
                                             // Define los colores basados en el id del estado de la entrevista
@@ -168,6 +169,10 @@
                                             <strong>Actitud del Paciente:</strong>
                                             {{ $entrevista->actitudEntrevista->name ?? 'Sin Datos' }}
                                         </p>
+                                        <p>
+                                            <strong>Indicacion Terapéutica:</strong>
+                                            {{ $entrevista->indicacionTerapeutica->name ?? 'Sin Datos' }}
+                                        </p>
                                         <p class="{{ $color }}">
                                             <strong>El paciente se encuentra:</strong>
                                             {{ $entrevista->estadoEntrevista->name ?? 'Sin Datos' }}
@@ -189,6 +194,16 @@
                                             class="text-blue-500 text-sm mt-1">Ver Detalle</button>
                                     </p>
                                 @endif
+
+                                @if (!empty($entrevista->motivo_causas_judiciales))
+                                <p><strong>Motivo Causas Judiciaales:</strong>
+                                    <span id="motivo_causas_judiciales_{{ $entrevista->id }}"
+                                        class="hidden">{{ $entrevista->motivo_causas_judiciales ?? 'Sin Datos' }}</span>
+                                    <button type="button"
+                                        onclick="openModal('motivo_causas_judiciales_{{ $entrevista->id }}')"
+                                        class="text-blue-500 text-sm mt-1">Ver Detalle</button>
+                                </p>
+                            @endif
 
                                 @if (!empty($entrevista->medicacion))
                                     <p><strong>Medicación:</strong>
@@ -251,12 +266,6 @@
                                         </div>
                                     </div>
                                 </div>
-
-                                @if (!empty($entrevista->evolucion_tratamiento))
-                                    <p><strong>Indicaciones Terapéuticas:</strong>
-                                        {{ $entrevista->indicaciones_terapeuticas ?? 'Sin Datos' }}
-                                    </p>
-                                @endif
                             </div>
 
                             <!-- Sección Grupo Familiar -->

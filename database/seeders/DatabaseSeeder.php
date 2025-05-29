@@ -5,6 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\Estado;
+use App\Models\Portacion;
 use Illuminate\Database\Seeder;
 
 class DatabaseSeeder extends Seeder
@@ -36,5 +37,6 @@ class DatabaseSeeder extends Seeder
          $this->call(DerivacionpsiquiatricaSeeder::class);
          $this->call(IndicacionterapeuticaSeeder::class);
          $this->call(EstadoSeeder::class);
+         $this->call(PortacionSeeder::class);
     }
 }

@@ -8,6 +8,7 @@ use App\Models\TipoEntrevista;
 use App\Models\ActitudEntrevista;
 use App\Models\IndicacionTerapeutica;
 use App\Models\Abordaje;
+use App\Models\Portacion;
 use App\Models\EstadoEntrevista;
 use App\Models\GrupoFamiliar;
 use App\Models\Paciente;
@@ -21,6 +22,7 @@ class EditEntrevista extends Component
     public $estados_entrevista = [];
     public $indicacionterapeuticas = [];
     public $abordajes = [];
+    public $portacions = [];
     public $paciente;
     public $paciente_id;
     public $miembros = []; // Para almacenar los miembros de la entrevista
@@ -30,6 +32,7 @@ class EditEntrevista extends Component
     // Desacoplar los campos individuales en lugar de usar entrevista_data
     public $tipo_entrevista_id;
     public $actitud_entrevista_id;
+    public $portacion_id;
     public $estado_entrevista_id;
     public $tecnica_utilizada;
     public $notas_clinicas;
@@ -83,6 +86,7 @@ class EditEntrevista extends Component
         // Asignar los valores de la entrevista a las propiedades individuales
         $this->tipo_entrevista_id = $entrevista->tipo_entrevista_id;
         $this->actitud_entrevista_id = $entrevista->actitud_entrevista_id;
+        $this->portacion_id = $entrevista->portacion_id;
         $this->estado_entrevista_id = $entrevista->estado_entrevista_id;
         $this->tecnica_utilizada = $entrevista->tecnica_utilizada;
         $this->notas_clinicas = $entrevista->notas_clinicas;
@@ -131,6 +135,7 @@ class EditEntrevista extends Component
         $this->estados_entrevista = EstadoEntrevista::all();
         $this->indicacionterapeuticas = IndicacionTerapeutica::all();
         $this->abordajes = Abordaje::all();
+        $this->portacions = Portacion::all();
     }
 
     public function editMember($id)
@@ -192,6 +197,7 @@ class EditEntrevista extends Component
         $this->validate([
             'tipo_entrevista_id' => 'required|integer',
             'actitud_entrevista_id' => 'required|integer',
+            'portacion_id' => 'required|integer',
             'estado_entrevista_id' => 'nullable|integer',
             'tecnica_utilizada' => 'nullable|string|max:1000',
             'notas_clinicas' => 'nullable|string|max:1000',
@@ -234,6 +240,7 @@ class EditEntrevista extends Component
             // Actualizar los datos de la entrevista
             $entrevista->tipo_entrevista_id = $this->tipo_entrevista_id;
             $entrevista->actitud_entrevista_id = $this->actitud_entrevista_id;
+            $entrevista->portacion_id = $this->portacion_id;
             $entrevista->estado_entrevista_id = $this->estado_entrevista_id;
             $entrevista->tecnica_utilizada = $this->tecnica_utilizada;
             $entrevista->notas_clinicas = $this->notas_clinicas;

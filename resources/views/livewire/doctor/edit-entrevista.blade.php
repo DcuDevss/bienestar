@@ -16,6 +16,7 @@
     <div x-data="{
         tipo_entrevista_id: @entangle('tipo_entrevista_id'),
         posee_arma: @entangle('posee_arma'),
+        portacion_id: @entangle('portacion_id'),
         posee_sanciones: @entangle('posee_sanciones'),
         motivo_sanciones: @entangle('motivo_sanciones'),
         indicacionterapeutica_id: @entangle('indicacionterapeutica_id'),
@@ -420,6 +421,21 @@
                 @enderror
             </div>
 
+              <!-- Criterio de uso de arma reglamentaria -->
+
+            <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 )" class="mb-4 mx-auto px-4 w-9/12">
+                <label for="portacion_id" class="block text-sm font-medium">Portación de armamento:</label>
+                <select wire:model="portacion_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    @foreach ($portacions as $portacion)
+                         <option value="{{ $portacion->id }}">{{ $portacion->name }}</option>
+                    @endforeach
+                </select>
+                    @error('portacion_id')
+                        <span class="text-red-500">{{ $message }}</span>
+                    @enderror
+            </div>
+
+
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="tecnica_utilizada" class="block text-sm font-medium">Técnicas Utilizadas</label>
                 <input type="text" wire:model="tecnica_utilizada"
@@ -481,6 +497,7 @@
     </div>
 
     <input type="hidden" wire:model="posee_arma" :value="posee_arma ?? null">
+    <input type="hidden" wire:model="portacion_id" :value="portacion_id ?? null">
     <input type="hidden" wire:model="posee_sanciones" :value="posee_sanciones ?? null">
     <input type="hidden" wire:model="motivo_sanciones" :value="motivo_sanciones ?? null">
     <input type="hidden" wire:model="derivacion_psiquiatrica" :value="derivacion_psiquiatrica ?? null">

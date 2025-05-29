@@ -11,6 +11,7 @@ use App\Models\EstadoEntrevista;
 use App\Models\Entrevista;
 use App\Models\GrupoFamiliar;
 use App\Models\Paciente;
+use App\Models\Portacion;
 use Illuminate\Support\Facades\Log;
 
 
@@ -60,12 +61,14 @@ class EntrevistaFormController extends Component
     public $user_id;
     public $entrevista;
     public $entrevista_id;
+    public $portacion_id;
 
     public $tipos_entrevista;
     public $actitudes_entrevista;
     public $indicacionterapeuticas;
     public $abordajes;
     public $estados_entrevista;
+    public $portacions;
     public $index;
 
 
@@ -74,6 +77,9 @@ class EntrevistaFormController extends Component
 
         $this->paciente_id = $paciente_id;
         $this->paciente = Paciente::find($paciente_id);
+        //avento para abrir el modal de adjuntar pdf
+
+
 
         // Cargar las opciones de los select
 
@@ -82,11 +88,18 @@ class EntrevistaFormController extends Component
         $this->indicacionterapeuticas = IndicacionTerapeutica::all();
         $this->abordajes = Abordaje::all();
         $this->estados_entrevista = EstadoEntrevista::all();
+        $this->portacions = Portacion::all();
 
 
 
         // Valor predeterminado
     }
+
+    public function abrirModalPdf()
+    {
+        $this->dispatchBrowserEvent('openPdfModal');
+    }
+
 
     public $grupo_familiar = [
         'nombre' => '',
@@ -183,12 +196,14 @@ class EntrevistaFormController extends Component
             $this->evolucion_tratamiento = $this->evolucion_tratamiento ?? '';
             $this->aptitud_reintegro = $this->aptitud_reintegro ?? 0;
             $this->estado_entrevista_id = $this->estado_entrevista_id ?? null;
+            $this->portacion_id = $this->portacion_id ?? null;
 
 
 
             $this->validate([
                 'tipo_entrevista_id' => 'nullable|integer',
                 'actitud_entrevista_id' => 'nullable|integer',
+                'portacion_id' => 'nullable|integer',
                 'estado_entrevista_id' => 'nullable|integer', // Solo para Postulante o Reintegro
                 'tecnica_utilizada' => 'nullable|string|max:1000',
                 'grupo_familiar' => 'nullable|array', // Validación del array de miembros
@@ -270,6 +285,7 @@ class EntrevistaFormController extends Component
             $entrevista->horas_dormir = $this->horas_dormir ?? null;
             $entrevista->horas_suficientes = $this->horas_suficientes ?? null;
             $entrevista->actitud_entrevista_id = $this->actitud_entrevista_id ?? null;
+            $entrevista->portacion_id = $this->portacion_id ?? null;
             $entrevista->notas_clinicas = $this->notas_clinicas ?? null;
             $entrevista->tecnica_utilizada = $this->tecnica_utilizada ?? null;
             $entrevista->indicacionterapeutica_id = $this->indicacionterapeutica_id ?? null;
@@ -330,6 +346,7 @@ class EntrevistaFormController extends Component
                 'horas_dormir',
                 'horas_suficientes',
                 'actitud_entrevista_id',
+                'portacion_id',
                 'notas_clinicas',
                 'tecnica_utilizada',
                 'indicacionterapeutica_id',

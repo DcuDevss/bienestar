@@ -48,6 +48,7 @@ class Entrevista extends Model
         'derivacion_psiquiatrica',
         'evolucion_tratamiento',
         'aptitud_reintegro',
+        'portacion_id',
         'estado_entrevista_id',
         'paciente_id',
         'user_id',
@@ -118,5 +119,9 @@ class Entrevista extends Model
         return $this->belongsTo(Paciente::class);
     }
 
+    public function portacion()
+    {
+        return $this->belongsTo(Portacion::class);
+    }
 
 }

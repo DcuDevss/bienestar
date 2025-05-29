@@ -19,6 +19,7 @@
                 <!-- Tipo de entrevista -->
                 <div x-data="{
                     tipo_entrevista_id: @entangle('tipo_entrevista_id'),
+                    portacion: @entangle('portacion'),
                     posee_arma: @entangle('posee_arma'),
                     posee_sanciones: @entangle('posee_sanciones'),
                     motivo_sanciones: @entangle('motivo_sanciones'),
@@ -562,10 +563,25 @@
                         @enderror
                     </div>
 
+                    <!-- Criterio de uso de arma reglamentaria -->
+
+                    <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 )" class="mb-4">
+                        <label for="portacion_id" class="block text-sm font-medium text-gray-700">Portación de armamento:</label>
+                        <select wire:model="portacion_id" class="mt-1 p-2 w-full border rounded-md">
+                            @foreach ($portacions as $portacion)
+                                <option value="{{ $portacion->id }}">{{ $portacion->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('portacion_id')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+
 
                 </div>
             </div>
         </div>
+        <input type="hidden" wire:model="portacion_id" :value="portacion ?? null">
         <input type="hidden" wire:model="posee_arma" :value="posee_arma ?? null">
         <input type="hidden" wire:model="posee_sanciones" :value="posee_sanciones ?? null">
         <input type="hidden" wire:model="motivo_sanciones" :value="motivo_sanciones ?? null">
@@ -574,29 +590,56 @@
         <input type="hidden" wire:model="abordaje_id" :value="abordaje_id ?? null">
         <input type="hidden" wire:model="indicacionterapeutica_id" :value="indicacionterapeutica_id ?? null">
 
-        <div class="mt-4 w-full flex flex-col gap-4 items-start ml-4">
-            <!-- Botón de Guardar -->
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md sm:w-auto">
-                Guardar
-            </button>
-            <!-- Ver Entrevistas del paciente (solo si existe el paciente) -->
-            @if ($paciente)
-                <a href="{{ route('entrevistas.index', ['paciente_id' => $paciente->id]) }}"
-                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto">
-                    Ver entrevistas del paciente
-                </a>
-            @else
-                <p>No se encontró el paciente.</p>
-            @endif
-            <a href="{{ route('entrevistas.pdf-psiquiatra', $paciente) }}"
-            class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto mb-4">
+        <div class="mt-4 w-full flex justify-between items-center ml-4">
+    <!-- Grupo Izquierdo: 3 botones -->
+    <div class="flex gap-4 items-center">
+        <!-- Botón Guardar -->
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md sm:w-auto">
+            Guardar
+        </button>
+
+        <!-- Ver entrevistas paciente -->
+        @if ($paciente)
+            <a href="{{ route('entrevistas.index', ['paciente_id' => $paciente->id]) }}"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto">
+                Ver entrevistas del paciente
+            </a>
+        @else
+            <p>No se encontró el paciente.</p>
+        @endif
+
+        <!-- Adjuntar PDFs -->
+        <a href="{{ route('entrevistas.pdf-psiquiatra', $paciente) }}"
+            class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto">
             Adjuntar PDFs
         </a>
+    </div>
 
-        </div>
+    <!-- Grupo Derecho: 2 elementos -->
+    <div class="flex gap-4 items-center mr-6 mb-4">
+        <!-- Imagen con link (BCRA) -->
+        <a href="https://www.bcra.gob.ar/BCRAyVos/Situacion_Crediticia.asp" target="_blank" rel="noopener noreferrer"
+            style="display: inline-block; cursor: pointer; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: background-color 0.3s;"
+            onmouseover="this.style.backgroundColor='#3b82f6';" onmouseout="this.style.backgroundColor='transparent';">
+            <img src="{{ asset('assets/consultaCrediticia.png') }}" alt="Consultar Situación Crediticia BCRA"
+                style="width: 100px; height: auto; display: block; border-radius: 0.5rem;" />
+        </a>
+
+        <!-- Botón con imagen OSEF -->
+        <a href="https://prescriptorweb.ddaval.com.ar/" target="_blank" class="bg-blue-600 rounded-md py-1 px-3 inline-flex items-center justify-center">
+            <img class="h-[25px]" src="https://osef.gob.ar/assets/images/osef-logotipo.png" alt="">
+        </a>
+
+    </div>
+</div>
 
     </form>
+    <div>
 </div>
+
+</div>
+ {{-- Botón para abrir el modal --}}
+
 
 
 

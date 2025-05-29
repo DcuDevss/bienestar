@@ -178,6 +178,30 @@
                                             {{ $entrevista->estadoEntrevista->name ?? 'Sin Datos' }}
                                         </p>
                                     @endif
+                                    @if (!empty($entrevista->portacion_id))
+                                        @php
+                                            // Define los colores basados en el id del estado de la entrevista
+                                            $color = '';
+                                            switch ($entrevista->portacion_id) {
+                                                case 1:
+                                                    $color = 'bg-green-500'; // Ejemplo de color verde(apto)
+                                                    break;
+                                                case 2:
+                                                    $color = 'bg-blue-500'; // Ejemplo de color amarillo(no apto)
+                                                    break;
+                                                case 3:
+                                                    $color = 'bg-red-500'; // Ejemplo de color rojo(condicional)
+                                                    break;
+                                                default:
+                                                    $color = 'bg-gray-500'; // Color por defecto
+                                                    break;
+                                            }
+                                        @endphp
+                                        <p class="{{ $color }}">
+                                            <strong>Portación de armamento:</strong>
+                                            {{ $entrevista->portacion->name ?? 'Sin Datos' }}
+                                        </p>
+                                    @endif
 
                                 </div>
                             </div>

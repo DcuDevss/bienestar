@@ -49,6 +49,7 @@ class Entrevista extends Model
         'evolucion_tratamiento',
         'aptitud_reintegro',
         'portacion_id',
+        'enfermedad_id',
         'estado_entrevista_id',
         'paciente_id',
         'user_id',
@@ -122,6 +123,11 @@ class Entrevista extends Model
     public function portacion()
     {
         return $this->belongsTo(Portacion::class);
+    }
+
+    public function enfermedade()
+    {
+        return $this->belongsTo(Enfermedade::class, 'enfermedad_id');
     }
 
 }

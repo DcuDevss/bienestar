@@ -202,7 +202,12 @@
                                             {{ $entrevista->portacion->name ?? 'Sin Datos' }}
                                         </p>
                                     @endif
-
+                                    @if (!empty($entrevista->enfermedad_id))
+                                     <p class="bg-red-300">
+                                        <strong>Diagnóstico:</strong>
+                                        {{ $entrevista->enfermedade->name ?? 'Sin Datos' }}
+                                     </p>
+                                    @endif
                                 </div>
                             </div>
 

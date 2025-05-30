@@ -73,4 +73,8 @@ class Enfermedade extends Model
     {
         return $this->hasMany(Enfermedade_paciente::class, 'enfermedad_id');
     }*/
+    public function entrevistas()
+    {
+        return $this->hasMany(Entrevista::class);
+    }
 }

@@ -19,7 +19,8 @@
                 <!-- Tipo de entrevista -->
                 <div x-data="{
                     tipo_entrevista_id: @entangle('tipo_entrevista_id'),
-                    portacion: @entangle('portacion'),
+                    portacion_id: @entangle('portacion_id'),
+                    enfermedad_id: @entangle('enfermedad_id'),
                     posee_arma: @entangle('posee_arma'),
                     posee_sanciones: @entangle('posee_sanciones'),
                     motivo_sanciones: @entangle('motivo_sanciones'),
@@ -35,6 +36,7 @@
                         <label for="tipo_entrevista_id" class="block text-sm font-medium text-gray-700">Tipo de
                             Entrevista:</label>
                         <select x-model="tipo_entrevista_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($tipos_entrevista as $tipo)
                                 <option value="{{ $tipo->id }}" @if ($tipo_entrevista_id == $tipo->id) selected @endif>
                                     {{ $tipo->name }}
@@ -477,6 +479,7 @@
                         <label for="actitud_entrevista_id" class="block text-sm font-medium text-gray-700">Actitud
                             frente a la entrevista:</label>
                         <select wire:model="actitud_entrevista_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($actitudes_entrevista as $actitud)
                                 <option value="{{ $actitud->id }}">{{ $actitud->name }}</option>
                             @endforeach
@@ -501,6 +504,7 @@
                         <label for="estado_entrevista_id" class="block text-sm font-medium text-gray-700">Estado de la
                             Entrevista:</label>
                         <select wire:model="estado_entrevista_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($estados_entrevista as $estado)
                                 <option value="{{ $estado->id }}">{{ $estado->name }}</option>
                             @endforeach
@@ -516,20 +520,38 @@
                             class="block text-sm font-medium text-gray-700">Indicaciones
                             Terapéuticas:</label>
                         <select wire:model="indicacionterapeutica_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($indicacionterapeuticas as $indicacion)
                                 <option value="{{ $indicacion->id }}">{{ $indicacion->name }}</option>
                             @endforeach
-
                         </select>
                         @error('indicacionterapeutica_id')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
 
+                    <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 11 )"
+                        class="mb-4">
+                        <label for="enfermedad_id"
+                            class="block text-sm font-medium text-gray-700">Diagnóstico:</label>
+                        <select wire:model="enfermedad_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
+                            @foreach ($enfermedades as $enfermedad)
+                                <option value="{{ $enfermedad->id }}">{{ $enfermedad->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('enfermedad_id')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+
+
                     <div x-show="!(tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 10 || tipo_entrevista_id == 11)"
                         class="mb-4">
                         <label for="abordaje_id" class="block text-sm font-medium text-gray-700">Abordaje:</label>
                         <select wire:model="abordaje_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($abordajes as $abordaje)
                                 <option value="{{ $abordaje->id }}">{{ $abordaje->name }}</option>
                             @endforeach
@@ -568,6 +590,7 @@
                     <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 )" class="mb-4">
                         <label for="portacion_id" class="block text-sm font-medium text-gray-700">Portación de armamento:</label>
                         <select wire:model="portacion_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($portacions as $portacion)
                                 <option value="{{ $portacion->id }}">{{ $portacion->name }}</option>
                             @endforeach
@@ -581,7 +604,8 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" wire:model="portacion_id" :value="portacion ?? null">
+        <input type="hidden" wire:model="enfermedad_id" :value="enfermedad_id ?? null">
+        <input type="hidden" wire:model="portacion_id" :value="portacion_id ?? null">
         <input type="hidden" wire:model="posee_arma" :value="posee_arma ?? null">
         <input type="hidden" wire:model="posee_sanciones" :value="posee_sanciones ?? null">
         <input type="hidden" wire:model="motivo_sanciones" :value="motivo_sanciones ?? null">

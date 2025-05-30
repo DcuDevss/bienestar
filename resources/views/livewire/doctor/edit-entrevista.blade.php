@@ -236,6 +236,20 @@
                 @enderror
             </div>
 
+            <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 11 )"
+                class="mb-4 mx-auto px-4 w-9/12">
+                <label for="enfermedad_id" class="block text-sm font-medium">Diagnóstico:</label>
+                <select wire:model="enfermedad_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Seleccione una opción</option>
+                    @foreach ($enfermedades as $enfermedad)
+                        <option value="{{ $enfermedad->id }}">{{ $enfermedad->name }}</option>
+                    @endforeach
+                </select>
+                @error('enfermedad_id')
+                    <span class="text-red-500">{{ $message }}</span>
+                @enderror
+            </div>
+
             <!-- Medicación Recetada -->
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="medicacion_recetada" class="block text-sm font-medium">Medicación Recetada</label>

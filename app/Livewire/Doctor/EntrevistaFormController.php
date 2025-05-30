@@ -12,13 +12,14 @@ use App\Models\Entrevista;
 use App\Models\GrupoFamiliar;
 use App\Models\Paciente;
 use App\Models\Portacion;
+use App\Models\Enfermedade;
 use Illuminate\Support\Facades\Log;
 
 
 class EntrevistaFormController extends Component
 {
     // Propiedades del formulario
-    public $tipo_entrevista_id;
+    public $tipo_entrevista_id = '';
     public $posee_arma = '';
     public $posee_sanciones = '';
     public $motivo_sanciones;
@@ -47,21 +48,23 @@ class EntrevistaFormController extends Component
     public $actividades;
     public $horas_dormir;
     public $horas_suficientes = '';
-    public $actitud_entrevista_id;
+    public $actitud_entrevista_id = '';
     public $notas_clinicas;
     public $tecnica_utilizada;
     public $indicacionterapeutica_id;
-    public $abordaje_id;
+    public $abordaje_id = '';
     public $derivacion_psiquiatrica;
     public $evolucion_tratamiento;
-    public $aptitud_reintegro;
-    public $estado_entrevista_id;
+    public $aptitud_reintegro = '';
+    public $estado_entrevista_id = '';
     public $paciente_id;
     public $paciente;
     public $user_id;
     public $entrevista;
     public $entrevista_id;
-    public $portacion_id;
+    public $portacion_id = '';
+    public $enfermedad_id = '';
+    public $enfermedades = [];
 
     public $tipos_entrevista;
     public $actitudes_entrevista;
@@ -77,6 +80,7 @@ class EntrevistaFormController extends Component
 
         $this->paciente_id = $paciente_id;
         $this->paciente = Paciente::find($paciente_id);
+
         //avento para abrir el modal de adjuntar pdf
 
 
@@ -89,16 +93,13 @@ class EntrevistaFormController extends Component
         $this->abordajes = Abordaje::all();
         $this->estados_entrevista = EstadoEntrevista::all();
         $this->portacions = Portacion::all();
+        $this->enfermedades = Enfermedade::all();
 
 
 
         // Valor predeterminado
     }
 
-    public function abrirModalPdf()
-    {
-        $this->dispatchBrowserEvent('openPdfModal');
-    }
 
 
     public $grupo_familiar = [
@@ -161,42 +162,43 @@ class EntrevistaFormController extends Component
 
             $this->posee_arma = ($this->posee_arma === '') ? null : (int) $this->posee_arma;
             $this->posee_sanciones = ($this->posee_sanciones === '') ? null : (int) $this->posee_sanciones;
-            $this->motivo_sanciones = $this->motivo_sanciones ?? '';
-            $this->causas_judiciales = $this->causas_judiciales ?? 0;
-            $this->motivo_causas_judiciales = $this->motivo_causas_judiciales ?? '';
-            $this->sosten_de_familia = $this->sosten_de_familia ?? 0;
-            $this->sosten_economico = $this->sosten_economico ?? 0;
-            $this->tiene_embargos = $this->tiene_embargos ?? 0;
-            $this->enfermedad_preexistente = $this->enfermedad_preexistente ?? 0;
-            $this->medicacion = $this->medicacion ?? '';
-            $this->realizo_tratamiento_psicologico = $this->realizo_tratamiento_psicologico ?? 0;
-            $this->hace_cuanto_tratamiento_psicologico = $this->hace_cuanto_tratamiento_psicologico ?? '';
-            $this->signos_y_sintomas = $this->signos_y_sintomas ?? '';
-            $this->fecha = $this->fecha ?? now();
-            $this->profesional = $this->profesional ?? '';
-            $this->duracion = $this->duracion ?? '';
-            $this->motivo = $this->motivo ?? '';
-            $this->medicacion_recetada = $this->medicacion_recetada ?? '';
-            $this->fuma = $this->fuma ?? 0;
-            $this->cantidad_fuma = $this->cantidad_fuma ?? 0;
-            $this->consume_alcohol = $this->consume_alcohol ?? 0;
-            $this->frecuencia_alcohol = $this->frecuencia_alcohol ?? '';
-            $this->consume_sustancias = $this->consume_sustancias ?? 0;
-            $this->tipo_sustancia = $this->tipo_sustancia ?? '';
-            $this->realiza_actividades = $this->realiza_actividades ?? 0;
-            $this->actividades = $this->actividades ?? '';
-            $this->horas_dormir = $this->horas_dormir ?? 0;
-            $this->horas_suficientes = $this->horas_suficientes ?? 0;
-            $this->actitud_entrevista_id = $this->actitud_entrevista_id ?? 0;
-            $this->notas_clinicas = $this->notas_clinicas ?? '';
-            $this->tecnica_utilizada = $this->tecnica_utilizada ?? 0;
+            $this->motivo_sanciones = $this->motivo_sanciones ?? null;
+            $this->causas_judiciales = ($this->causas_judiciales === '') ? null : (int) $this->causas_judiciales;
+            $this->motivo_causas_judiciales = $this->motivo_causas_judiciales ?? null;
+            $this->sosten_de_familia = ($this->sosten_de_familia === '') ? null : (int) $this->sosten_de_familia;
+            $this->sosten_economico = ($this->sosten_economico === '') ? null : (int) $this->sosten_economico;
+            $this->tiene_embargos = ($this->tiene_embargos === '') ? null : (int) $this->tiene_embargos;
+            $this->enfermedad_preexistente = ($this->enfermedad_preexistente === '') ? null : (int) $this->enfermedad_preexistente;
+            $this->medicacion = $this->medicacion ?? null;
+            $this->realizo_tratamiento_psicologico = ($this->realizo_tratamiento_psicologico === '') ? null : (int) $this->realizo_tratamiento_psicologico;
+            $this->hace_cuanto_tratamiento_psicologico = $this->hace_cuanto_tratamiento_psicologico ?? null;
+            $this->signos_y_sintomas = $this->signos_y_sintomas ?? null;
+            $this->fecha = $this->fecha ?: null;
+            $this->profesional = $this->profesional ?? null;
+            $this->duracion = $this->duracion ?? null;
+            $this->motivo = $this->motivo ?? null;
+            $this->medicacion_recetada = $this->medicacion_recetada ?? null;
+            $this->fuma = ($this->fuma === '') ? null : (int) $this->fuma;
+            $this->cantidad_fuma = $this->cantidad_fuma ?? null;
+            $this->consume_alcohol = ($this->consume_alcohol === '') ? null : (int) $this->consume_alcohol;
+            $this->frecuencia_alcohol = $this->frecuencia_alcohol ?? null;
+            $this->consume_sustancias = ($this->consume_sustancias === '') ? null : (int) $this->consume_sustancias;
+            $this->tipo_sustancia = $this->tipo_sustancia ?? null;
+            $this->realiza_actividades = ($this->realiza_actividades === '') ? null : (int) $this->realiza_actividades;
+            $this->actividades = $this->actividades ?? null;
+            $this->horas_dormir = $this->horas_dormir ?? null;
+             $this->horas_suficientes = ($this->horas_suficientes === '') ? null : (int) $this->horas_suficientes;
+            $this->actitud_entrevista_id = $this->actitud_entrevista_id ?? null;
+            $this->notas_clinicas = $this->notas_clinicas ?? null;
+            $this->tecnica_utilizada = $this->tecnica_utilizada ?? null;
             $this->indicacionterapeutica_id = $this->indicacionterapeutica_id ?? null;
             $this->abordaje_id = $this->abordaje_id ?? null;
             $this->derivacion_psiquiatrica = $this->derivacion_psiquiatrica ?? null;
-            $this->evolucion_tratamiento = $this->evolucion_tratamiento ?? '';
-            $this->aptitud_reintegro = $this->aptitud_reintegro ?? 0;
+            $this->evolucion_tratamiento = $this->evolucion_tratamiento ?? null;
+            $this->aptitud_reintegro = ($this->aptitud_reintegro === '') ? null : (int) $this->aptitud_reintegro;
             $this->estado_entrevista_id = $this->estado_entrevista_id ?? null;
             $this->portacion_id = $this->portacion_id ?? null;
+            $this->enfermedad_id = $this->enfermedad_id ?? null;
 
 
 
@@ -204,6 +206,7 @@ class EntrevistaFormController extends Component
                 'tipo_entrevista_id' => 'nullable|integer',
                 'actitud_entrevista_id' => 'nullable|integer',
                 'portacion_id' => 'nullable|integer',
+                'enfermedad_id' => 'nullable|integer',
                 'estado_entrevista_id' => 'nullable|integer', // Solo para Postulante o Reintegro
                 'tecnica_utilizada' => 'nullable|string|max:1000',
                 'grupo_familiar' => 'nullable|array', // Validación del array de miembros
@@ -240,7 +243,7 @@ class EntrevistaFormController extends Component
                 'motivo' => 'nullable|string|max:255', // Motivo
                 'medicacion_recetada' => 'nullable|string|max:500', // Medicación recetada
                 'fuma' => 'nullable|boolean', // Fuma (sí/no)
-                'cantidad_fuma' => 'nullable|string|max:255', // Cantidad de cigarrillos si fuma
+                'cantidad_fuma' => 'nullable|integer', // Cantidad de cigarrillos si fuma
                 'consume_alcohol' => 'nullable|boolean', // Consume alcohol (sí/no)
                 'frecuencia_alcohol' => 'nullable|string|max:255', // Frecuencia de consumo de alcohol
                 'consume_sustancias' => 'nullable|boolean', // Consume sustancias (sí/no)
@@ -286,6 +289,7 @@ class EntrevistaFormController extends Component
             $entrevista->horas_suficientes = $this->horas_suficientes ?? null;
             $entrevista->actitud_entrevista_id = $this->actitud_entrevista_id ?? null;
             $entrevista->portacion_id = $this->portacion_id ?? null;
+            $entrevista->enfermedad_id = $this->enfermedad_id ?? null;
             $entrevista->notas_clinicas = $this->notas_clinicas ?? null;
             $entrevista->tecnica_utilizada = $this->tecnica_utilizada ?? null;
             $entrevista->indicacionterapeutica_id = $this->indicacionterapeutica_id ?? null;
@@ -347,6 +351,7 @@ class EntrevistaFormController extends Component
                 'horas_suficientes',
                 'actitud_entrevista_id',
                 'portacion_id',
+                'enfermedad_id',
                 'notas_clinicas',
                 'tecnica_utilizada',
                 'indicacionterapeutica_id',

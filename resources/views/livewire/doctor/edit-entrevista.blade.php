@@ -11,6 +11,10 @@
     <div class="alert alert-danger">{{ session('error') }}</div>
 @endif
 
+<div class="text-center">
+    <h3 class="font-semibold text-lg">Editar Entrevista del Paciente:</h3>{{ $paciente->apellido_nombre ?? 'Nombre no disponible' }}
+</div>
+
 <!-- Formulario de edición -->
 <form wire:submit.prevent="update" class="shadow-md rounded-lg mb-4 mt-4 mx-auto px-4 py-4 w-9/12">
     <div x-data="{
@@ -136,15 +140,15 @@
                 @enderror
             </div>
 
-            <!-- Enfermedad Preexistente -->
+            <!-- salud_mental Preexistente -->
             <div class="mb-4 mx-auto px-4 w-9/12">
-                <label for="enfermedad_preexistente" class="block text-sm font-medium">Enfermedad Preexistente</label>
-                <select wire:model="enfermedad_preexistente"
+                <label for="salud_mental_preexistente" class="block text-sm font-medium">salud_mental Preexistente</label>
+                <select wire:model="salud_mental_preexistente"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="1">Sí</option>
                     <option value="0">No</option>
                 </select>
-                @error('enfermedad_preexistente')
+                @error('salud_mental_preexistente')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
             </div>
@@ -238,14 +242,14 @@
 
             <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 11 )"
                 class="mb-4 mx-auto px-4 w-9/12">
-                <label for="enfermedad_id" class="block text-sm font-medium">Diagnóstico:</label>
-                <select wire:model="enfermedad_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <label for="salud_mental_id" class="block text-sm font-medium">Diagnóstico:</label>
+                <select wire:model="salud_mental_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Seleccione una opción</option>
-                    @foreach ($enfermedades as $enfermedad)
-                        <option value="{{ $enfermedad->id }}">{{ $enfermedad->name }}</option>
+                    @foreach ($salud_mentales as $salud_mental)
+                        <option value="{{ $salud_mental->id }}">{{ $salud_mental->name }}</option>
                     @endforeach
                 </select>
-                @error('enfermedad_id')
+                @error('salud_mental_id')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
             </div>

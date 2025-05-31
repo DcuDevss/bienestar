@@ -12,7 +12,7 @@ use App\Models\Entrevista;
 use App\Models\GrupoFamiliar;
 use App\Models\Paciente;
 use App\Models\Portacion;
-use App\Models\Enfermedade;
+use App\Models\SaludMentale;
 use Illuminate\Support\Facades\Log;
 
 
@@ -63,8 +63,8 @@ class EntrevistaFormController extends Component
     public $entrevista;
     public $entrevista_id;
     public $portacion_id = '';
-    public $enfermedad_id = '';
-    public $enfermedades = [];
+    public $salud_mental_id = '';
+    public $salud_mentales = [];
 
     public $tipos_entrevista;
     public $actitudes_entrevista;
@@ -93,7 +93,7 @@ class EntrevistaFormController extends Component
         $this->abordajes = Abordaje::all();
         $this->estados_entrevista = EstadoEntrevista::all();
         $this->portacions = Portacion::all();
-        $this->enfermedades = Enfermedade::all();
+        $this->salud_mentales = SaludMentale::all();
 
 
 
@@ -198,7 +198,7 @@ class EntrevistaFormController extends Component
             $this->aptitud_reintegro = ($this->aptitud_reintegro === '') ? null : (int) $this->aptitud_reintegro;
             $this->estado_entrevista_id = $this->estado_entrevista_id ?? null;
             $this->portacion_id = $this->portacion_id ?? null;
-            $this->enfermedad_id = $this->enfermedad_id ?? null;
+            $this->salud_mental_id = $this->salud_mental_id ?? null;
 
 
 
@@ -206,7 +206,7 @@ class EntrevistaFormController extends Component
                 'tipo_entrevista_id' => 'nullable|integer',
                 'actitud_entrevista_id' => 'nullable|integer',
                 'portacion_id' => 'nullable|integer',
-                'enfermedad_id' => 'nullable|integer',
+                'salud_mental_id' => 'nullable|integer',
                 'estado_entrevista_id' => 'nullable|integer', // Solo para Postulante o Reintegro
                 'tecnica_utilizada' => 'nullable|string|max:1000',
                 'grupo_familiar' => 'nullable|array', // Validación del array de miembros
@@ -289,7 +289,7 @@ class EntrevistaFormController extends Component
             $entrevista->horas_suficientes = $this->horas_suficientes ?? null;
             $entrevista->actitud_entrevista_id = $this->actitud_entrevista_id ?? null;
             $entrevista->portacion_id = $this->portacion_id ?? null;
-            $entrevista->enfermedad_id = $this->enfermedad_id ?? null;
+            $entrevista->salud_mental_id = $this->salud_mental_id ?? null;
             $entrevista->notas_clinicas = $this->notas_clinicas ?? null;
             $entrevista->tecnica_utilizada = $this->tecnica_utilizada ?? null;
             $entrevista->indicacionterapeutica_id = $this->indicacionterapeutica_id ?? null;
@@ -351,7 +351,7 @@ class EntrevistaFormController extends Component
                 'horas_suficientes',
                 'actitud_entrevista_id',
                 'portacion_id',
-                'enfermedad_id',
+                'salud_mental_id',
                 'notas_clinicas',
                 'tecnica_utilizada',
                 'indicacionterapeutica_id',

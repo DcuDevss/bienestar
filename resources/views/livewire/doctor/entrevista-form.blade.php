@@ -6,6 +6,13 @@
         </div>
     @endif
 
+    <div class="p-3 bg-gray-100 rounded shadow mb-4 text-center">
+        <div>
+            <h3 class="font-semibold text-lg">Paciente:</h3>{{ $paciente->apellido_nombre ?? 'Nombre no disponible' }}
+        </div>
+    </div>
+
+
     <form wire:submit.prevent="submit">
         @csrf
 
@@ -20,7 +27,7 @@
                 <div x-data="{
                     tipo_entrevista_id: @entangle('tipo_entrevista_id'),
                     portacion_id: @entangle('portacion_id'),
-                    enfermedad_id: @entangle('enfermedad_id'),
+                    salud_mental_id: @entangle('salud_mental_id'),
                     posee_arma: @entangle('posee_arma'),
                     posee_sanciones: @entangle('posee_sanciones'),
                     motivo_sanciones: @entangle('motivo_sanciones'),
@@ -243,15 +250,15 @@
                 <div x-data="{ tipo_entrevista_id: @entangle('tipo_entrevista_id') }">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="mb-4">
-                        <label for="enfermedad_preexistente" class="block text-sm font-medium text-gray-700">¿Posee
+                        <label for="salud_mental_preexistente" class="block text-sm font-medium text-gray-700">¿Posee
                             alguna
-                            enfermedad Preexistente?</label>
-                        <select wire:model="enfermedad_preexistente" class="mt-1 p-2 w-full border rounded-md">
+                            salud_mental Preexistente?</label>
+                        <select wire:model="salud_mental_preexistente" class="mt-1 p-2 w-full border rounded-md">
                             <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
-                        @error('enfermedad_preexistente')
+                        @error('salud_mental_preexistente')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -532,15 +539,15 @@
 
                     <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 11 )"
                         class="mb-4">
-                        <label for="enfermedad_id"
+                        <label for="salud_mental_id"
                             class="block text-sm font-medium text-gray-700">Diagnóstico:</label>
-                        <select wire:model="enfermedad_id" class="mt-1 p-2 w-full border rounded-md">
+                        <select wire:model="salud_mental_id" class="mt-1 p-2 w-full border rounded-md">
                             <option value="">Seleccione una opción</option>
-                            @foreach ($enfermedades as $enfermedad)
-                                <option value="{{ $enfermedad->id }}">{{ $enfermedad->name }}</option>
+                            @foreach ($salud_mentales as $salud_mental)
+                                <option value="{{ $salud_mental->id }}">{{ $salud_mental->name }}</option>
                             @endforeach
                         </select>
-                        @error('enfermedad_id')
+                        @error('salud_mental_id')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -604,7 +611,7 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" wire:model="enfermedad_id" :value="enfermedad_id ?? null">
+        <input type="hidden" wire:model="salud_mental_id" :value="salud_mental_id ?? null">
         <input type="hidden" wire:model="portacion_id" :value="portacion_id ?? null">
         <input type="hidden" wire:model="posee_arma" :value="posee_arma ?? null">
         <input type="hidden" wire:model="posee_sanciones" :value="posee_sanciones ?? null">

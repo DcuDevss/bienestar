@@ -47,6 +47,8 @@ return new class extends Migration
         $table->text('tecnica_utilizada')->nullable();
         $table->foreignId('indicacionterapeutica_id')->nullable()->constrained()->onDelete('cascade');
         $table->foreignId('abordaje_id')->nullable()->constrained()->onDelete('cascade');
+        $table->foreignId('portacion_id')->nullable()->constrained()->onDelete('cascade');
+        $table->foreignId('salud_mental_id')->nullable()->constrained()->onDelete('cascade');
         $table->string('derivacion_psiquiatrica')->nullable();
         $table->text('evolucion_tratamiento')->nullable();
         $table->boolean('aptitud_reintegro')->nullable();

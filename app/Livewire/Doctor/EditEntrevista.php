@@ -8,9 +8,11 @@ use App\Models\TipoEntrevista;
 use App\Models\ActitudEntrevista;
 use App\Models\IndicacionTerapeutica;
 use App\Models\Abordaje;
+use App\Models\Portacion;
 use App\Models\EstadoEntrevista;
 use App\Models\GrupoFamiliar;
 use App\Models\Paciente;
+use App\Models\SaludMentale;
 use Illuminate\Support\Facades\Log;
 
 class EditEntrevista extends Component
@@ -21,6 +23,8 @@ class EditEntrevista extends Component
     public $estados_entrevista = [];
     public $indicacionterapeuticas = [];
     public $abordajes = [];
+    public $portacions = [];
+    public $salud_mentales = [];
     public $paciente;
     public $paciente_id;
     public $miembros = []; // Para almacenar los miembros de la entrevista
@@ -30,6 +34,8 @@ class EditEntrevista extends Component
     // Desacoplar los campos individuales en lugar de usar entrevista_data
     public $tipo_entrevista_id;
     public $actitud_entrevista_id;
+    public $portacion_id;
+    public $salud_mental_id;
     public $estado_entrevista_id;
     public $tecnica_utilizada;
     public $notas_clinicas;
@@ -70,19 +76,19 @@ class EditEntrevista extends Component
     public function mount($entrevista_id)
     {
         $this->entrevista_id = $entrevista_id;
-
-
-
         // Buscar la entrevista por ID
         $entrevista = Entrevista::find($this->entrevista_id);
         if (!$entrevista) {
             session()->flash('error', 'La entrevista no se encontró.');
             return redirect()->route('entrevistas.index');
         }
+        $this->paciente = $entrevista->paciente;
 
         // Asignar los valores de la entrevista a las propiedades individuales
         $this->tipo_entrevista_id = $entrevista->tipo_entrevista_id;
         $this->actitud_entrevista_id = $entrevista->actitud_entrevista_id;
+        $this->portacion_id = $entrevista->portacion_id;
+        $this->salud_mental_id = $entrevista->salud_mental_id;
         $this->estado_entrevista_id = $entrevista->estado_entrevista_id;
         $this->tecnica_utilizada = $entrevista->tecnica_utilizada;
         $this->notas_clinicas = $entrevista->notas_clinicas;
@@ -131,6 +137,8 @@ class EditEntrevista extends Component
         $this->estados_entrevista = EstadoEntrevista::all();
         $this->indicacionterapeuticas = IndicacionTerapeutica::all();
         $this->abordajes = Abordaje::all();
+        $this->portacions = Portacion::all();
+        $this->salud_mentales = SaludMentale::all();
     }
 
     public function editMember($id)
@@ -184,6 +192,12 @@ class EditEntrevista extends Component
         }
     }
 
+    //funcion para acepar valores null
+    private function emptyToNull($value)
+    {
+        return ($value === '' || $value === null) ? null : $value;
+    }
+
 
     // Método para actualizar los datos de la entrevista
     public function update()
@@ -191,7 +205,9 @@ class EditEntrevista extends Component
         // Validar los datos antes de actualizar
         $this->validate([
             'tipo_entrevista_id' => 'required|integer',
-            'actitud_entrevista_id' => 'required|integer',
+            'actitud_entrevista_id' => 'nullable|integer',
+            'portacion_id' => 'nullable|integer',
+            'salud_mental_id' => 'nullable|integer',
             'estado_entrevista_id' => 'nullable|integer',
             'tecnica_utilizada' => 'nullable|string|max:1000',
             'notas_clinicas' => 'nullable|string|max:1000',
@@ -232,43 +248,46 @@ class EditEntrevista extends Component
         $entrevista = Entrevista::find($this->entrevista_id);
         if ($entrevista) {
             // Actualizar los datos de la entrevista
-            $entrevista->tipo_entrevista_id = $this->tipo_entrevista_id;
-            $entrevista->actitud_entrevista_id = $this->actitud_entrevista_id;
-            $entrevista->estado_entrevista_id = $this->estado_entrevista_id;
-            $entrevista->tecnica_utilizada = $this->tecnica_utilizada;
-            $entrevista->notas_clinicas = $this->notas_clinicas;
-            $entrevista->indicacionterapeutica_id = $this->indicacionterapeutica_id;
-            $entrevista->abordaje_id = $this->abordaje_id;
-            $entrevista->evolucion_tratamiento = $this->evolucion_tratamiento;
-            $entrevista->aptitud_reintegro = $this->aptitud_reintegro;
-            $entrevista->posee_arma = $this->posee_arma;
-            $entrevista->posee_sanciones = $this->posee_sanciones;
-            $entrevista->motivo_sanciones = $this->motivo_sanciones;
-            $entrevista->causas_judiciales = $this->causas_judiciales;
-            $entrevista->motivo_causas_judiciales = $this->motivo_causas_judiciales;
-            $entrevista->sosten_de_familia = $this->sosten_de_familia;
-            $entrevista->sosten_economico = $this->sosten_economico;
-            $entrevista->tiene_embargos = $this->tiene_embargos;
-            $entrevista->enfermedad_preexistente = $this->enfermedad_preexistente;
-            $entrevista->medicacion = $this->medicacion;
-            $entrevista->realizo_tratamiento_psicologico = $this->realizo_tratamiento_psicologico;
-            $entrevista->hace_cuanto_tratamiento_psicologico = $this->hace_cuanto_tratamiento_psicologico;
-            $entrevista->signos_y_sintomas = $this->signos_y_sintomas;
-            $entrevista->fecha = $this->fecha;
-            $entrevista->profesional = $this->profesional;
-            $entrevista->duracion = $this->duracion;
-            $entrevista->motivo = $this->motivo;
-            $entrevista->medicacion_recetada = $this->medicacion_recetada;
-            $entrevista->fuma = $this->fuma;
-            $entrevista->cantidad_fuma = $this->cantidad_fuma;
-            $entrevista->consume_alcohol = $this->consume_alcohol;
-            $entrevista->frecuencia_alcohol = $this->frecuencia_alcohol;
-            $entrevista->consume_sustancias = $this->consume_sustancias;
-            $entrevista->tipo_sustancia = $this->tipo_sustancia;
-            $entrevista->realiza_actividades = $this->realiza_actividades;
-            $entrevista->actividades = $this->actividades;
-            $entrevista->horas_suficientes = $this->horas_suficientes;
-            $entrevista->horas_dormir = $this->horas_dormir;
+                $entrevista->tipo_entrevista_id = $this->emptyToNull($this->tipo_entrevista_id);
+                $entrevista->actitud_entrevista_id = $this->emptyToNull($this->actitud_entrevista_id);
+                $entrevista->portacion_id = $this->emptyToNull($this->portacion_id);
+                $entrevista->salud_mental_id = $this->emptyToNull($this->salud_mental_id);
+                $entrevista->estado_entrevista_id = $this->emptyToNull($this->estado_entrevista_id);
+                $entrevista->tecnica_utilizada = $this->emptyToNull($this->tecnica_utilizada);
+                $entrevista->notas_clinicas = $this->emptyToNull($this->notas_clinicas);
+                $entrevista->indicacionterapeutica_id = $this->emptyToNull($this->indicacionterapeutica_id);
+                $entrevista->abordaje_id = $this->emptyToNull($this->abordaje_id);
+                $entrevista->evolucion_tratamiento = $this->emptyToNull($this->evolucion_tratamiento);
+                $entrevista->aptitud_reintegro = $this->emptyToNull($this->aptitud_reintegro);
+                $entrevista->posee_arma = $this->emptyToNull($this->posee_arma);
+                $entrevista->posee_sanciones = $this->emptyToNull($this->posee_sanciones);
+                $entrevista->motivo_sanciones = $this->emptyToNull($this->motivo_sanciones);
+                $entrevista->causas_judiciales = $this->emptyToNull($this->causas_judiciales);
+                $entrevista->motivo_causas_judiciales = $this->emptyToNull($this->motivo_causas_judiciales);
+                $entrevista->sosten_de_familia = $this->emptyToNull($this->sosten_de_familia);
+                $entrevista->sosten_economico = $this->emptyToNull($this->sosten_economico);
+                $entrevista->tiene_embargos = $this->emptyToNull($this->tiene_embargos);
+                $entrevista->enfermedad_preexistente = $this->emptyToNull($this->enfermedad_preexistente);
+                $entrevista->medicacion = $this->emptyToNull($this->medicacion);
+                $entrevista->realizo_tratamiento_psicologico = $this->emptyToNull($this->realizo_tratamiento_psicologico);
+                $entrevista->hace_cuanto_tratamiento_psicologico = $this->emptyToNull($this->hace_cuanto_tratamiento_psicologico);
+                $entrevista->signos_y_sintomas = $this->emptyToNull($this->signos_y_sintomas);
+                $entrevista->fecha = $this->emptyToNull($this->fecha);
+                $entrevista->profesional = $this->emptyToNull($this->profesional);
+                $entrevista->duracion = $this->emptyToNull($this->duracion);
+                $entrevista->motivo = $this->emptyToNull($this->motivo);
+                $entrevista->medicacion_recetada = $this->emptyToNull($this->medicacion_recetada);
+                $entrevista->fuma = $this->emptyToNull($this->fuma);
+                $entrevista->cantidad_fuma = $this->emptyToNull($this->cantidad_fuma);
+                $entrevista->consume_alcohol = $this->emptyToNull($this->consume_alcohol);
+                $entrevista->frecuencia_alcohol = $this->emptyToNull($this->frecuencia_alcohol);
+                $entrevista->consume_sustancias = $this->emptyToNull($this->consume_sustancias);
+                $entrevista->tipo_sustancia = $this->emptyToNull($this->tipo_sustancia);
+                $entrevista->realiza_actividades = $this->emptyToNull($this->realiza_actividades);
+                $entrevista->actividades = $this->emptyToNull($this->actividades);
+                $entrevista->horas_suficientes = $this->emptyToNull($this->horas_suficientes);
+                $entrevista->horas_dormir = $this->emptyToNull($this->horas_dormir);
+
 
             // Guardar los cambios
             $entrevista->save();

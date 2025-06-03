@@ -250,4 +250,10 @@ class Paciente extends Model
     {
         return $this->hasMany(Appoinment::class, 'patient_id');
     }
+
+    public function pdfPsiquiatras()
+    {
+        return $this->hasMany(PdfPsiquiatra::class);
+    }
+
 }

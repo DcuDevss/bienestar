@@ -1,5 +1,8 @@
 <div class="w-full px-4">
-    <h1 class="text-2xl font-semibold mb-6 text-center mt-2">Entrevistas del Paciente</h1>
+    <div class="p-3 bg-gray-100 rounded shadow mb-4 text-center">
+        <h3 class="font-semibold text-lg">Entrevistas del Paciente:</h3>{{ $paciente->apellido_nombre ?? 'Nombre no disponible' }}
+    </div>
+
 
     <button type="button" onclick="window.history.back()"
         class="px-4 py-2 mb-4 bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 focus:outline-none">
@@ -178,7 +181,36 @@
                                             {{ $entrevista->estadoEntrevista->name ?? 'Sin Datos' }}
                                         </p>
                                     @endif
-
+                                    @if (!empty($entrevista->portacion_id))
+                                        @php
+                                            // Define los colores basados en el id del estado de la entrevista
+                                            $color = '';
+                                            switch ($entrevista->portacion_id) {
+                                                case 1:
+                                                    $color = 'bg-green-500'; // Ejemplo de color verde(apto)
+                                                    break;
+                                                case 2:
+                                                    $color = 'bg-blue-500'; // Ejemplo de color amarillo(no apto)
+                                                    break;
+                                                case 3:
+                                                    $color = 'bg-red-500'; // Ejemplo de color rojo(condicional)
+                                                    break;
+                                                default:
+                                                    $color = 'bg-gray-500'; // Color por defecto
+                                                    break;
+                                            }
+                                        @endphp
+                                        <p class="{{ $color }}">
+                                            <strong>Portación de armamento:</strong>
+                                            {{ $entrevista->portacion->name ?? 'Sin Datos' }}
+                                        </p>
+                                    @endif
+                                    @if (!empty($entrevista->salud_mental_id))
+                                     <p class="bg-red-300">
+                                        <strong>Diagnóstico:</strong>
+                                        {{ $entrevista->saludMentale->name ?? 'Sin Datos' }}
+                                     </p>
+                                    @endif
                                 </div>
                             </div>
 

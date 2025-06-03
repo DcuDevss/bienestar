@@ -1,11 +1,17 @@
 <div>
-
     @if (session()->has('message'))
         <div class="alert alert-success bg-green-500 text-white p-4 rounded-md shadow-md mb-4">
             <strong class="font-bold"></strong>
             <span>{{ session('message') }}</span>
         </div>
     @endif
+
+    <div class="p-3 bg-gray-100 rounded shadow mb-4 text-center">
+        <div>
+            <h3 class="font-semibold text-lg">Paciente:</h3>{{ $paciente->apellido_nombre ?? 'Nombre no disponible' }}
+        </div>
+    </div>
+
 
     <form wire:submit.prevent="submit">
         @csrf
@@ -20,6 +26,8 @@
                 <!-- Tipo de entrevista -->
                 <div x-data="{
                     tipo_entrevista_id: @entangle('tipo_entrevista_id'),
+                    portacion_id: @entangle('portacion_id'),
+                    salud_mental_id: @entangle('salud_mental_id'),
                     posee_arma: @entangle('posee_arma'),
                     posee_sanciones: @entangle('posee_sanciones'),
                     motivo_sanciones: @entangle('motivo_sanciones'),
@@ -35,6 +43,7 @@
                         <label for="tipo_entrevista_id" class="block text-sm font-medium text-gray-700">Tipo de
                             Entrevista:</label>
                         <select x-model="tipo_entrevista_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($tipos_entrevista as $tipo)
                                 <option value="{{ $tipo->id }}" @if ($tipo_entrevista_id == $tipo->id) selected @endif>
                                     {{ $tipo->name }}
@@ -241,15 +250,15 @@
                 <div x-data="{ tipo_entrevista_id: @entangle('tipo_entrevista_id') }">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="mb-4">
-                        <label for="enfermedad_preexistente" class="block text-sm font-medium text-gray-700">¿Posee
+                        <label for="salud_mental_preexistente" class="block text-sm font-medium text-gray-700">¿Posee
                             alguna
-                            enfermedad Preexistente?</label>
-                        <select wire:model="enfermedad_preexistente" class="mt-1 p-2 w-full border rounded-md">
+                            salud_mental Preexistente?</label>
+                        <select wire:model="salud_mental_preexistente" class="mt-1 p-2 w-full border rounded-md">
                             <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
-                        @error('enfermedad_preexistente')
+                        @error('salud_mental_preexistente')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -477,6 +486,7 @@
                         <label for="actitud_entrevista_id" class="block text-sm font-medium text-gray-700">Actitud
                             frente a la entrevista:</label>
                         <select wire:model="actitud_entrevista_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($actitudes_entrevista as $actitud)
                                 <option value="{{ $actitud->id }}">{{ $actitud->name }}</option>
                             @endforeach
@@ -501,6 +511,7 @@
                         <label for="estado_entrevista_id" class="block text-sm font-medium text-gray-700">Estado de la
                             Entrevista:</label>
                         <select wire:model="estado_entrevista_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($estados_entrevista as $estado)
                                 <option value="{{ $estado->id }}">{{ $estado->name }}</option>
                             @endforeach
@@ -516,20 +527,38 @@
                             class="block text-sm font-medium text-gray-700">Indicaciones
                             Terapéuticas:</label>
                         <select wire:model="indicacionterapeutica_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($indicacionterapeuticas as $indicacion)
                                 <option value="{{ $indicacion->id }}">{{ $indicacion->name }}</option>
                             @endforeach
-
                         </select>
                         @error('indicacionterapeutica_id')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
 
+                    <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 11 )"
+                        class="mb-4">
+                        <label for="salud_mental_id"
+                            class="block text-sm font-medium text-gray-700">Diagnóstico:</label>
+                        <select wire:model="salud_mental_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
+                            @foreach ($salud_mentales as $salud_mental)
+                                <option value="{{ $salud_mental->id }}">{{ $salud_mental->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('salud_mental_id')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+
+
+
                     <div x-show="!(tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 10 || tipo_entrevista_id == 11)"
                         class="mb-4">
                         <label for="abordaje_id" class="block text-sm font-medium text-gray-700">Abordaje:</label>
                         <select wire:model="abordaje_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
                             @foreach ($abordajes as $abordaje)
                                 <option value="{{ $abordaje->id }}">{{ $abordaje->name }}</option>
                             @endforeach
@@ -563,10 +592,27 @@
                         @enderror
                     </div>
 
+                    <!-- Criterio de uso de arma reglamentaria -->
+
+                    <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 )" class="mb-4">
+                        <label for="portacion_id" class="block text-sm font-medium text-gray-700">Portación de armamento:</label>
+                        <select wire:model="portacion_id" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="">Seleccione una opción</option>
+                            @foreach ($portacions as $portacion)
+                                <option value="{{ $portacion->id }}">{{ $portacion->name }}</option>
+                            @endforeach
+                        </select>
+                        @error('portacion_id')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+
 
                 </div>
             </div>
         </div>
+        <input type="hidden" wire:model="salud_mental_id" :value="salud_mental_id ?? null">
+        <input type="hidden" wire:model="portacion_id" :value="portacion_id ?? null">
         <input type="hidden" wire:model="posee_arma" :value="posee_arma ?? null">
         <input type="hidden" wire:model="posee_sanciones" :value="posee_sanciones ?? null">
         <input type="hidden" wire:model="motivo_sanciones" :value="motivo_sanciones ?? null">
@@ -575,24 +621,57 @@
         <input type="hidden" wire:model="abordaje_id" :value="abordaje_id ?? null">
         <input type="hidden" wire:model="indicacionterapeutica_id" :value="indicacionterapeutica_id ?? null">
 
-        <div class="mt-4 w-full flex flex-col gap-4 items-start ml-4">
-            <!-- Botón de Guardar -->
-            <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md sm:w-auto">
-                Guardar
-            </button>
+        <div class="mt-4 w-full flex justify-between items-center ml-4">
+    <!-- Grupo Izquierdo: 3 botones -->
+    <div class="flex gap-4 items-center">
+        <!-- Botón Guardar -->
+        <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md sm:w-auto">
+            Guardar
+        </button>
 
-            <!-- Ver Entrevistas del paciente (solo si existe el paciente) -->
-            @if ($paciente)
-                <a href="{{ route('entrevistas.index', ['paciente_id' => $paciente->id]) }}"
-                    class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto mb-4">
-                    Ver entrevistas del paciente
-                </a>
-            @else
-                <p>No se encontró el paciente.</p>
-            @endif
-        </div>
-    </form>
+        <!-- Ver entrevistas paciente -->
+        @if ($paciente)
+            <a href="{{ route('entrevistas.index', ['paciente_id' => $paciente->id]) }}"
+                class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto">
+                Ver entrevistas del paciente
+            </a>
+        @else
+            <p>No se encontró el paciente.</p>
+        @endif
+
+        <!-- Adjuntar PDFs -->
+        <a href="{{ route('entrevistas.pdf-psiquiatra', $paciente) }}"
+            class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto">
+            Adjuntar PDFs
+        </a>
+    </div>
+
+    <!-- Grupo Derecho: 2 elementos -->
+    <div class="flex gap-4 items-center mr-6 mb-4">
+        <!-- Imagen con link (BCRA) -->
+        <a href="https://www.bcra.gob.ar/BCRAyVos/Situacion_Crediticia.asp" target="_blank" rel="noopener noreferrer"
+            style="display: inline-block; cursor: pointer; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: background-color 0.3s;"
+            onmouseover="this.style.backgroundColor='#3b82f6';" onmouseout="this.style.backgroundColor='transparent';">
+            <img src="{{ asset('assets/consultaCrediticia.png') }}" alt="Consultar Situación Crediticia BCRA"
+                style="width: 100px; height: auto; display: block; border-radius: 0.5rem;" />
+        </a>
+
+        <!-- Botón con imagen OSEF -->
+        <a href="https://prescriptorweb.ddaval.com.ar/" target="_blank" class="bg-blue-600 rounded-md py-1 px-3 inline-flex items-center justify-center">
+            <img class="h-[25px]" src="https://osef.gob.ar/assets/images/osef-logotipo.png" alt="">
+        </a>
+
+    </div>
 </div>
+
+    </form>
+    <div>
+</div>
+
+</div>
+ {{-- Botón para abrir el modal --}}
+
+
 
 
 

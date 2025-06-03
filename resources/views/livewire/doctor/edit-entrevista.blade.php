@@ -11,11 +11,16 @@
     <div class="alert alert-danger">{{ session('error') }}</div>
 @endif
 
+<div class="text-center">
+    <h3 class="font-semibold text-lg">Editar Entrevista del Paciente:</h3>{{ $paciente->apellido_nombre ?? 'Nombre no disponible' }}
+</div>
+
 <!-- Formulario de edición -->
 <form wire:submit.prevent="update" class="shadow-md rounded-lg mb-4 mt-4 mx-auto px-4 py-4 w-9/12">
     <div x-data="{
         tipo_entrevista_id: @entangle('tipo_entrevista_id'),
         posee_arma: @entangle('posee_arma'),
+        portacion_id: @entangle('portacion_id'),
         posee_sanciones: @entangle('posee_sanciones'),
         motivo_sanciones: @entangle('motivo_sanciones'),
         indicacionterapeutica_id: @entangle('indicacionterapeutica_id'),
@@ -34,6 +39,20 @@
                         </option>
                     @endforeach
                 </select>
+            </div>
+
+            <!-- Mostrar si tipo_entrevista_id es 1 (por ejemplo, para "Anual") -->
+            <div x-show="!(tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7)"
+                class="mb-4 mx-auto px-4 w-9/12">
+                <label for="posee_arma" class="block text-sm font-medium">¿Posee arma?</label>
+                <select wire:model="posee_arma" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+                @error('posee_arma')
+                    <span class="text-red-500">{{ $message }}</span>
+                @enderror
             </div>
 
             <!-- Posee Sanciones -->
@@ -121,15 +140,15 @@
                 @enderror
             </div>
 
-            <!-- Enfermedad Preexistente -->
+            <!-- salud_mental Preexistente -->
             <div class="mb-4 mx-auto px-4 w-9/12">
-                <label for="enfermedad_preexistente" class="block text-sm font-medium">Enfermedad Preexistente</label>
-                <select wire:model="enfermedad_preexistente"
+                <label for="salud_mental_preexistente" class="block text-sm font-medium">salud_mental Preexistente</label>
+                <select wire:model="salud_mental_preexistente"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="1">Sí</option>
                     <option value="0">No</option>
                 </select>
-                @error('enfermedad_preexistente')
+                @error('salud_mental_preexistente')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
             </div>
@@ -217,6 +236,20 @@
                 <input type="text" wire:model="motivo"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                 @error('motivo')
+                    <span class="text-red-500">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 11 )"
+                class="mb-4 mx-auto px-4 w-9/12">
+                <label for="salud_mental_id" class="block text-sm font-medium">Diagnóstico:</label>
+                <select wire:model="salud_mental_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="">Seleccione una opción</option>
+                    @foreach ($salud_mentales as $salud_mental)
+                        <option value="{{ $salud_mental->id }}">{{ $salud_mental->name }}</option>
+                    @endforeach
+                </select>
+                @error('salud_mental_id')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
             </div>
@@ -406,6 +439,21 @@
                 @enderror
             </div>
 
+              <!-- Criterio de uso de arma reglamentaria -->
+
+            <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 )" class="mb-4 mx-auto px-4 w-9/12">
+                <label for="portacion_id" class="block text-sm font-medium">Portación de armamento:</label>
+                <select wire:model="portacion_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    @foreach ($portacions as $portacion)
+                         <option value="{{ $portacion->id }}">{{ $portacion->name }}</option>
+                    @endforeach
+                </select>
+                    @error('portacion_id')
+                        <span class="text-red-500">{{ $message }}</span>
+                    @enderror
+            </div>
+
+
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="tecnica_utilizada" class="block text-sm font-medium">Técnicas Utilizadas</label>
                 <input type="text" wire:model="tecnica_utilizada"
@@ -467,6 +515,7 @@
     </div>
 
     <input type="hidden" wire:model="posee_arma" :value="posee_arma ?? null">
+    <input type="hidden" wire:model="portacion_id" :value="portacion_id ?? null">
     <input type="hidden" wire:model="posee_sanciones" :value="posee_sanciones ?? null">
     <input type="hidden" wire:model="motivo_sanciones" :value="motivo_sanciones ?? null">
     <input type="hidden" wire:model="derivacion_psiquiatrica" :value="derivacion_psiquiatrica ?? null">

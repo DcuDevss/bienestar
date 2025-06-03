@@ -15,7 +15,7 @@
     <h3 class="font-semibold text-lg">Editar Entrevista del Paciente:</h3>{{ $paciente->apellido_nombre ?? 'Nombre no disponible' }}
 </div>
 
-<!-- Formulario de edición -->
+<!-- Formulario de edición del formulario-->
 <form wire:submit.prevent="update" class="shadow-md rounded-lg mb-4 mt-4 mx-auto px-4 py-4 w-9/12">
     <div x-data="{
         tipo_entrevista_id: @entangle('tipo_entrevista_id'),

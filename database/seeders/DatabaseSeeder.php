@@ -4,7 +4,10 @@ namespace Database\Seeders;
 
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
+use App\Models\ActitudEntrevista;
+use App\Models\Derivacionpsiquiatrica;
 use App\Models\Estado;
+use App\Models\EstadoEntrevista;
 use App\Models\Portacion;
 use Illuminate\Database\Seeder;
 
@@ -34,9 +37,14 @@ class DatabaseSeeder extends Seeder
          $this->call(DisaseSeeder::class);
          $this->call(ProcedenciaSeeder::class);
          $this->call(TipolicenciaSeeder::class);
+         $this->call(TipoEntrevistaSeeder::class);
          $this->call(DerivacionpsiquiatricaSeeder::class);
          $this->call(IndicacionterapeuticaSeeder::class);
          $this->call(EstadoSeeder::class);
          $this->call(PortacionSeeder::class);
+         $this->call(AbordajeSeeder::class);
+         $this->call(ActitudEntrevistaSeeder::class);
+         $this->call(EstadoEntrevistaSeeder::class);
+         $this->call(DerivacionpsiquiatricaSeeder::class);
     }
 }

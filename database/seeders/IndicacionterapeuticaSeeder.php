@@ -17,7 +17,7 @@ class IndicacionterapeuticaSeeder extends Seeder
         Indicacionterapeutica::create(['name'=>'semanal']);
         Indicacionterapeutica::create(['name'=>'quincenal']);
         Indicacionterapeutica::create(['name'=>'mes']);
-        Indicacionterapeutica::create(['name'=>'vimestral']);
+        Indicacionterapeutica::create(['name'=>'bimestral']);
         Indicacionterapeutica::create(['name'=>'semestral']);
         Indicacionterapeutica::create(['name'=>'anual']);
         Indicacionterapeutica::create(['name'=>'otros']);

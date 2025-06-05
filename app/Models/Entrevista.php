@@ -49,6 +49,7 @@ class Entrevista extends Model
         'evolucion_tratamiento',
         'aptitud_reintegro',
         'portacion_id',
+        'recomendacion',
         'salud_mental_id',
         'estado_entrevista_id',
         'paciente_id',

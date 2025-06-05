@@ -176,6 +176,9 @@
                                             <strong>Indicacion Terapéutica:</strong>
                                             {{ $entrevista->indicacionTerapeutica->name ?? 'Sin Datos' }}
                                         </p>
+                                        <p class="bg-gray-500">
+                                            <strong>Continuar/Realizar Tratamiento:</strong> {{ $entrevista->recomendacion == 1 ? 'Sí' : 'No' }}
+                                        </p>
                                         <p class="{{ $color }}">
                                             <strong>El paciente se encuentra:</strong>
                                             {{ $entrevista->estadoEntrevista->name ?? 'Sin Datos' }}
@@ -303,20 +306,20 @@
                             <!-- Sección Grupo Familiar -->
                             <div class="border-b pb-4 mb-4">
                                 <h4 class="text-xl font-semibold mb-2">Grupo Familiar</h4>
-                                @foreach ($entrevista->grupoFamiliar as $miembro)
-                                    <div class="space-y-2">
-                                        <p><strong>Nombre:</strong> {{ $miembro->nombre ?? 'Sin Datos' }}</p>
-                                        <p><strong>Edad:</strong> {{ $miembro->edad ?? 'Sin Datos' }}</p>
-                                        <p><strong>Ocupación:</strong> {{ $miembro->ocupacion ?? 'Sin Datos' }}</p>
-                                        <p><strong>Parentesco:</strong> {{ $miembro->parentesco ?? 'Sin Datos' }}</p>
-                                        <p><strong>Antecedentes Psiquiátricos:</strong>
-                                            {{ $miembro->antecedentes_psiquiatricos ?? 'Sin Datos' }}</p>
+
+                                @forelse ($entrevista->grupoFamiliar as $miembro)
+                                    <div class="flex flex-wrap items-center gap-x-6 gap-y-1 mb-2 border-b border-gray-200 pb-2">
+                                        <span><strong>Nombre:</strong> {{ $miembro->nombre ?? 'Sin Datos' }}</span>
+                                        <span><strong>Edad:</strong> {{ $miembro->edad ?? 'Sin Datos' }}</span>
+                                        <span><strong>Ocupación:</strong> {{ $miembro->ocupacion ?? 'Sin Datos' }}</span>
+                                        <span><strong>Parentesco:</strong> {{ $miembro->parentesco ?? 'Sin Datos' }}</span>
+                                        <span><strong>Antecedentes Psiquiátricos:</strong> {{ $miembro->antecedentes_psiquiatricos ?? 'Sin Datos' }}</span>
                                     </div>
-                                @endforeach
-                                @if ($entrevista->grupoFamiliar->isEmpty())
+                                @empty
                                     <p>No hay miembros registrados para este grupo familiar.</p>
-                                @endif
+                                @endforelse
                             </div>
+
 
                             <div class="mt-4 text-right text-sm text-gray-600">
                                 <p><strong>Entrevista realizada por:</strong> <span

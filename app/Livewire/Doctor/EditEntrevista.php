@@ -32,45 +32,45 @@ class EditEntrevista extends Component
     public $editIndex = null;
 
     // Desacoplar los campos individuales en lugar de usar entrevista_data
-    public $tipo_entrevista_id;
-    public $actitud_entrevista_id;
-    public $portacion_id;
-    public $salud_mental_id;
-    public $estado_entrevista_id;
-    public $tecnica_utilizada;
-    public $notas_clinicas;
-    public $indicacionterapeutica_id;
-    public $abordaje_id;
-    public $evolucion_tratamiento;
-    public $aptitud_reintegro;
-    public $posee_arma;
-    public $posee_sanciones;
-    public $motivo_sanciones;
-    public $causas_judiciales;
-    public $motivo_causas_judiciales;
-    public $sosten_de_familia;
-    public $sosten_economico;
-    public $tiene_embargos;
-    public $enfermedad_preexistente;
-    public $medicacion;
-    public $realizo_tratamiento_psicologico;
-    public $hace_cuanto_tratamiento_psicologico;
-    public $signos_y_sintomas;
-    public $fecha;
-    public $profesional;
-    public $duracion;
-    public $motivo;
-    public $medicacion_recetada;
-    public $fuma;
-    public $cantidad_fuma;
-    public $consume_alcohol;
-    public $frecuencia_alcohol;
-    public $consume_sustancias;
-    public $tipo_sustancia;
-    public $realiza_actividades;
-    public $actividades;
-    public $horas_suficientes;
-    public $horas_dormir;
+    public $tipo_entrevista_id= '';
+    public $actitud_entrevista_id = '';
+    public $portacion_id = '';
+    public $salud_mental_id= '';
+    public $estado_entrevista_id= '';
+    public $tecnica_utilizada= '';
+    public $notas_clinicas= '';
+    public $indicacionterapeutica_id= '';
+    public $abordaje_id= '';
+    public $evolucion_tratamiento= '';
+    public $aptitud_reintegro= '';
+    public $posee_arma= '';
+    public $recomendacion= '';
+    public $posee_sanciones= '';
+    public $motivo_sanciones= '';
+    public $causas_judiciales= '';
+    public $motivo_causas_judiciales= '';
+    public $sosten_de_familia= '';
+    public $sosten_economico= '';
+    public $tiene_embargos= '';
+    public $enfermedad_preexistente= '';
+    public $medicacion= '';
+    public $realizo_tratamiento_psicologico= '';
+    public $hace_cuanto_tratamiento_psicologico= '';
+    public $signos_y_sintomas= '';
+    public $fecha= '';    public $profesional;
+    public $duracion= '';
+    public $motivo= '';
+    public $medicacion_recetada= '';
+    public $fuma= '';
+    public $cantidad_fuma= '';
+    public $consume_alcohol= '';
+    public $frecuencia_alcohol= '';
+    public $consume_sustancias= '';
+    public $tipo_sustancia= '';
+    public $realiza_actividades= '';
+    public $actividades= '';
+    public $horas_suficientes= '';
+    public $horas_dormir= '';
 
 
     public function mount($entrevista_id)
@@ -88,6 +88,7 @@ class EditEntrevista extends Component
         $this->tipo_entrevista_id = $entrevista->tipo_entrevista_id;
         $this->actitud_entrevista_id = $entrevista->actitud_entrevista_id;
         $this->portacion_id = $entrevista->portacion_id;
+        $this->recomendacion = $entrevista->recomendacion;
         $this->salud_mental_id = $entrevista->salud_mental_id;
         $this->estado_entrevista_id = $entrevista->estado_entrevista_id;
         $this->tecnica_utilizada = $entrevista->tecnica_utilizada;
@@ -192,6 +193,32 @@ class EditEntrevista extends Component
         }
     }
 
+    public function addMember()
+    {
+        // 👇 pegá este bloque entero
+        $this->validate([
+            'grupo_familiar.nombre' => 'required|string',
+            'grupo_familiar.edad' => 'required|numeric',
+            'grupo_familiar.ocupacion' => 'nullable|string',
+            'grupo_familiar.parentesco' => 'nullable|string',
+            'grupo_familiar.antecedentes_psiquiatricos' => 'nullable|string',
+        ]);
+
+        GrupoFamiliar::create([
+            'entrevista_id' => $this->entrevista_id,
+            'nombre' => $this->grupo_familiar['nombre'],
+            'edad' => $this->grupo_familiar['edad'],
+            'ocupacion' => $this->grupo_familiar['ocupacion'],
+            'parentesco' => $this->grupo_familiar['parentesco'],
+            'antecedentes_psiquiatricos' => $this->grupo_familiar['antecedentes_psiquiatricos'],
+        ]);
+
+        $this->grupo_familiar = [];
+        $this->miembros = Entrevista::find($this->entrevista_id)->grupoFamiliar;
+
+        session()->flash('message', 'Miembro agregado exitosamente.');
+    }
+
     //funcion para acepar valores null
     private function emptyToNull($value)
     {
@@ -207,6 +234,7 @@ class EditEntrevista extends Component
             'tipo_entrevista_id' => 'required|integer',
             'actitud_entrevista_id' => 'nullable|integer',
             'portacion_id' => 'nullable|integer',
+            'recomendacion' => 'nullable|boolean',
             'salud_mental_id' => 'nullable|integer',
             'estado_entrevista_id' => 'nullable|integer',
             'tecnica_utilizada' => 'nullable|string|max:1000',
@@ -251,6 +279,7 @@ class EditEntrevista extends Component
                 $entrevista->tipo_entrevista_id = $this->emptyToNull($this->tipo_entrevista_id);
                 $entrevista->actitud_entrevista_id = $this->emptyToNull($this->actitud_entrevista_id);
                 $entrevista->portacion_id = $this->emptyToNull($this->portacion_id);
+                $entrevista->recomendacion = $this->emptyToNull($this->recomendacion);
                 $entrevista->salud_mental_id = $this->emptyToNull($this->salud_mental_id);
                 $entrevista->estado_entrevista_id = $this->emptyToNull($this->estado_entrevista_id);
                 $entrevista->tecnica_utilizada = $this->emptyToNull($this->tecnica_utilizada);

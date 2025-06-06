@@ -82,6 +82,7 @@ class EditEntrevista extends Component
             session()->flash('error', 'La entrevista no se encontró.');
             return redirect()->route('entrevistas.index');
         }
+        Log::debug('estado_entrevista_id:', [$entrevista->estado_entrevista_id]);
         $this->paciente = $entrevista->paciente;
 
         // Asignar los valores de la entrevista a las propiedades individuales
@@ -126,7 +127,7 @@ class EditEntrevista extends Component
         $this->horas_suficientes = $entrevista->horas_suficientes;
         $this->horas_dormir = $entrevista->horas_dormir;
         $this->miembros = $entrevista->grupoFamiliar;
-
+        Log::debug('Valor asignado a this->estado_entrevista_id:', [$this->estado_entrevista_id]);
 
         if (is_null($this->miembros)) {
         $this->miembros = [];

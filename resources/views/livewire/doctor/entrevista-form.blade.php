@@ -250,15 +250,15 @@
                 <div x-data="{ tipo_entrevista_id: @entangle('tipo_entrevista_id') }">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="mb-4">
-                        <label for="salud_mental_preexistente" class="block text-sm font-medium text-gray-700">¿Posee
+                        <label for="enfermedad_preexistente" class="block text-sm font-medium text-gray-700">¿Posee
                             alguna
-                            salud_mental Preexistente?</label>
-                        <select wire:model="salud_mental_preexistente" class="mt-1 p-2 w-full border rounded-md">
+                            enfermmedad Preexistente?</label>
+                        <select wire:model="enfermedad_preexistente" class="mt-1 p-2 w-full border rounded-md">
                             <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
-                        @error('salud_mental_preexistente')
+                        @error('enfermedad_preexistente')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -505,7 +505,7 @@
                     </div>
 
 
-                    <!-- Mostrar solo si aptitud_reintegro es Sí -->
+
                     <div class="mb-4">
                         <label for="estado_entrevista_id" class="block text-sm font-medium text-gray-700">Estado de la
                             Entrevista:</label>
@@ -542,8 +542,8 @@
                             class="block text-sm font-medium text-gray-700">Diagnóstico:</label>
                         <select wire:model="salud_mental_id" class="mt-1 p-2 w-full border rounded-md">
                             <option value="">Seleccione una opción</option>
-                            @foreach ($salud_mentales as $salud_mental)
-                                <option value="{{ $salud_mental->id }}">{{ $salud_mental->name }}</option>
+                            @foreach ($salud_mentales as $salud)
+                                <option value="{{ $salud->id }}">{{ $salud->codigo }}-{{ $salud->name }}</option>
                             @endforeach
                         </select>
                         @error('salud_mental_id')
@@ -607,7 +607,7 @@
                     </div>
 
                                         <!-- Mostrar solo si aptitud_reintegro es Sí -->
-                    <div class="mb-4">
+                    <div x-show="!(tipo_entrevista_id == 1|| tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 )" class="mb-4">
                         <label for="recomendacion" class="block text-sm font-medium text-gray-700">Se recomienda realizar/continuar tratamiento:</label>
                          <select wire:model="recomendacion" class="mt-1 p-2 w-full border rounded-md">
                             <option value="" disabled selected>Seleccione una opción</option>

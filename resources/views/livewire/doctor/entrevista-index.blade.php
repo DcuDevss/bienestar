@@ -176,9 +176,11 @@
                                             <strong>Indicacion Terapéutica:</strong>
                                             {{ $entrevista->indicacionTerapeutica->name ?? 'Sin Datos' }}
                                         </p>
+                                         @if (!empty($entrevista->portacion_id))
                                         <p class="bg-gray-500">
                                             <strong>Continuar/Realizar Tratamiento:</strong> {{ $entrevista->recomendacion == 1 ? 'Sí' : 'No' }}
                                         </p>
+                                        @endif
                                         <p class="{{ $color }}">
                                             <strong>El paciente se encuentra:</strong>
                                             {{ $entrevista->estadoEntrevista->name ?? 'Sin Datos' }}
@@ -211,7 +213,7 @@
                                     @if (!empty($entrevista->salud_mental_id))
                                      <p class="bg-red-300">
                                         <strong>Diagnóstico:</strong>
-                                        {{ $entrevista->saludMentale->name ?? 'Sin Datos' }}
+                                        {{ $entrevista->saludMentale ? $entrevista->saludMentale->name . ' (' . $entrevista->saludMentale->codigo . ')' : 'Sin Datos' }}
                                      </p>
                                     @endif
                                 </div>

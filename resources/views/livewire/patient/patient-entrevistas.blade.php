@@ -29,7 +29,7 @@
                         <p>No hay resultados para esta búsqueda.</p>
                     </div>
                 @else
-                    <!-- Tabla -->
+                    <!-- Tabla ---->
                     <div class="overflow-x-auto">
                         <table class="w-full text-center text-gray-500">
                             <thead class="text-xs text-white uppercase bg-gray-900">

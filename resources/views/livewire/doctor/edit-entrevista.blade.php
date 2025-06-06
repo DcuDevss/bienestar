@@ -140,15 +140,15 @@
                 @enderror
             </div>
 
-            <!-- salud_mental Preexistente -->
+            <!-- Enfermedad Preexistente -->
             <div class="mb-4 mx-auto px-4 w-9/12">
-                <label for="salud_mental_preexistente" class="block text-sm font-medium">salud_mental Preexistente</label>
-                <select wire:model="salud_mental_preexistente"
+                <label for="enfermedad_preexistente" class="block text-sm font-medium">Posee alguna enfermedad Preexistente</label>
+                <select wire:model="enfermedad_preexistente"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="1">Sí</option>
                     <option value="0">No</option>
                 </select>
-                @error('salud_mental_preexistente')
+                @error('enfermedad_preexistente')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
             </div>
@@ -245,8 +245,8 @@
                 <label for="salud_mental_id" class="block text-sm font-medium">Diagnóstico:</label>
                 <select wire:model="salud_mental_id" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Seleccione una opción</option>
-                    @foreach ($salud_mentales as $salud_mental)
-                        <option value="{{ $salud_mental->id }}">{{ $salud_mental->name }}</option>
+                    @foreach ($salud_mentales as $salud)
+                        <option value="{{ $salud->id }}">{{ $salud->codigo }}-{{ $salud->name }}</option>
                     @endforeach
                 </select>
                 @error('salud_mental_id')
@@ -453,6 +453,19 @@
                     @enderror
             </div>
 
+                        <!-- Mostrar si tipo_entrevista_id es 1 (por ejemplo, para "Anual") -->
+            <div x-show="!(tipo_entrevista_id == 1|| tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 )" class="mb-4 mx-auto px-4 w-9/12">
+                <label for="recomendacion" class="block text-sm font-medium">Se recomienda continuar/realizar tratamiento:</label>
+                <select wire:model="recomendacion" class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                    <option value="" disabled selected>Seleccione una opción</option>
+                    <option value="1">Sí</option>
+                    <option value="0">No</option>
+                </select>
+                @error('recomendacion')
+                    <span class="text-red-500">{{ $message }}</span>
+                @enderror
+            </div>
+
 
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="tecnica_utilizada" class="block text-sm font-medium">Técnicas Utilizadas</label>
@@ -465,7 +478,7 @@
 
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="estado_entevista_id" class="block text-sm font-medium">El Paciente esta Apto</label>
-                <select wire:model="estado_entevista_id"
+                <select wire:model="estado_entrevista_id"
                     class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
                     <option value="">Seleccionar tipo</option>
                     @foreach ($estados_entrevista as $estado)
@@ -522,6 +535,57 @@
     <input type="hidden" wire:model="evolucion_tratamiento" :value="evolucion_tratamiento ?? null">
     <input type="hidden" wire:model="abordaje_id" :value="abordaje_id ?? null">
     <input type="hidden" wire:model="indicacionterapeutica_id" :value="indicacionterapeutica_id ?? null">
+
+    <div x-data="{ abierto: false }" class="mb-6">
+        <!-- Botón para mostrar/ocultar el formulario -->
+        <button @click="abierto = !abierto"
+            class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700 mt-4">
+            <span x-show="!abierto">Agregar miembro</span>
+            <span x-show="abierto">Cerrar formulario</span>
+        </button>
+
+        <!-- Formulario desplegable -->
+        <div x-show="abierto" x-transition class="mt-4 bg-gray-100 p-4 rounded shadow-md">
+            <h3 class="text-lg font-bold mb-2">Nuevo Miembro del Grupo Familiar</h3>
+
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div>
+                    <label>Nombre</label>
+                    <input type="text" wire:model="grupo_familiar.nombre" class="w-full border rounded p-2">
+                    @error('grupo_familiar.nombre') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div>
+                    <label>Edad</label>
+                    <input type="number" wire:model="grupo_familiar.edad" class="w-full border rounded p-2">
+                    @error('grupo_familiar.edad') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                </div>
+
+                <div>
+                    <label>Ocupación</label>
+                    <input type="text" wire:model="grupo_familiar.ocupacion" class="w-full border rounded p-2">
+                </div>
+
+                <div>
+                    <label>Parentesco</label>
+                    <input type="text" wire:model="grupo_familiar.parentesco" class="w-full border rounded p-2">
+                </div>
+
+                <div class="md:col-span-2">
+                    <label>Antecedentes Psiquiátricos</label>
+                    <textarea wire:model="grupo_familiar.antecedentes_psiquiatricos" class="w-full border rounded p-2"></textarea>
+                </div>
+            </div>
+
+            <div class="mt-4">
+                <button wire:click="addMember" class="bg-green-600 text-white px-4 py-2 rounded hover:bg-green-700">
+                    Guardar miembro
+                </button>
+            </div>
+        </div>
+    </div>
+
+
 
     <!-- Botón de guardar -->
     <div class="flex justify-center mb-2 mt-4">

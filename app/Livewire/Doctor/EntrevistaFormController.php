@@ -63,6 +63,7 @@ class EntrevistaFormController extends Component
     public $entrevista;
     public $entrevista_id;
     public $portacion_id = '';
+    public $recomendacion = '';
     public $salud_mental_id = '';
     public $salud_mentales = [];
 
@@ -187,20 +188,19 @@ class EntrevistaFormController extends Component
             $this->realiza_actividades = ($this->realiza_actividades === '') ? null : (int) $this->realiza_actividades;
             $this->actividades = $this->actividades ?? null;
             $this->horas_dormir = $this->horas_dormir ?? null;
-             $this->horas_suficientes = ($this->horas_suficientes === '') ? null : (int) $this->horas_suficientes;
-            $this->actitud_entrevista_id = $this->actitud_entrevista_id ?? null;
+            $this->horas_suficientes = ($this->horas_suficientes === '') ? null : (int) $this->horas_suficientes;
+            $this->actitud_entrevista_id = ($this->actitud_entrevista_id === '' || $this->actitud_entrevista_id === null) ? null: (int) $this->actitud_entrevista_id;
             $this->notas_clinicas = $this->notas_clinicas ?? null;
             $this->tecnica_utilizada = $this->tecnica_utilizada ?? null;
-            $this->indicacionterapeutica_id = $this->indicacionterapeutica_id ?? null;
-            $this->abordaje_id = $this->abordaje_id ?? null;
+            $this->indicacionterapeutica_id = ($this->indicacionterapeutica_id === '' || $this->indicacionterapeutica_id === null) ? null : (int) $this->indicacionterapeutica_id;
+            $this->abordaje_id = ($this->abordaje_id === '' || $this->abordaje_id === null) ? null : (int) $this->abordaje_id;
             $this->derivacion_psiquiatrica = $this->derivacion_psiquiatrica ?? null;
             $this->evolucion_tratamiento = $this->evolucion_tratamiento ?? null;
-            $this->aptitud_reintegro = ($this->aptitud_reintegro === '') ? null : (int) $this->aptitud_reintegro;
-            $this->estado_entrevista_id = $this->estado_entrevista_id ?? null;
-            $this->portacion_id = $this->portacion_id ?? null;
-            $this->salud_mental_id = $this->salud_mental_id ?? null;
-
-
+            $this->aptitud_reintegro = ($this->aptitud_reintegro === '' || $this->aptitud_reintegro === null) ? null : (int) $this->aptitud_reintegro;
+            $this->estado_entrevista_id = ($this->estado_entrevista_id === '' || $this->estado_entrevista_id === null) ? null : (int) $this->estado_entrevista_id;
+            $this->portacion_id = ($this->portacion_id === '' || $this->portacion_id === null) ? null : (int) $this->portacion_id;
+            $this->recomendacion = ($this->recomendacion === '') ? null : (int) $this->recomendacion;
+            $this->salud_mental_id = ($this->salud_mental_id === '' || $this->salud_mental_id === null) ? null : (int) $this->salud_mental_id;
 
             $this->validate([
                 'tipo_entrevista_id' => 'nullable|integer',
@@ -227,14 +227,14 @@ class EntrevistaFormController extends Component
                 'posee_arma' => 'nullable|in:0,1', // Posee arma (sí/no)
                 'posee_sanciones' => 'nullable|in:0,1', // Posee sanciones (sí/no)
                 'motivo_sanciones' => 'nullable|string|max:500', // Motivo de las sanciones
-                'causas_judiciales' => 'nullable|boolean', // Tiene causas judiciales (sí/no)
+                'causas_judiciales' => 'nullable|in:0,1', // Tiene causas judiciales (sí/no)
                 'motivo_causas_judiciales' => 'nullable|string|max:500', // Motivo de las causas judiciales
-                'sosten_de_familia' => 'nullable|boolean', // Sosten de familia
-                'sosten_economico' => 'nullable|boolean', // Sosten económico
-                'tiene_embargos' => 'nullable|boolean', // Sosten económico
-                'enfermedad_preexistente' => 'nullable|boolean', // Enfermedad preexistente
+                'sosten_de_familia' => 'nullable|in:0,1', // Sosten de familia
+                'sosten_economico' => 'nullable|in:0,1', // Sosten económico
+                'tiene_embargos' => 'nullable|in:0,1', // Sosten económico
+                'enfermedad_preexistente' => 'nullable|in:0,1', // Enfermedad preexistente
                 'medicacion' => 'nullable|string|max:500', // Medicación
-                'realizo_tratamiento_psicologico' => 'nullable|boolean', // Realizó tratamiento psicológico
+                'realizo_tratamiento_psicologico' => 'nullable|in:0,1', // Realizó tratamiento psicológico
                 'hace_cuanto_tratamiento_psicologico' => 'nullable|string|max:255', // Hace cuánto tratamiento psicológico
                 'signos_y_sintomas' => 'nullable|string|max:1000', // Signos y síntomas
                 'fecha' => 'nullable|date', // Fecha
@@ -242,16 +242,17 @@ class EntrevistaFormController extends Component
                 'duracion' => 'nullable|string|max:255', // Duración
                 'motivo' => 'nullable|string|max:255', // Motivo
                 'medicacion_recetada' => 'nullable|string|max:500', // Medicación recetada
-                'fuma' => 'nullable|boolean', // Fuma (sí/no)
+                'fuma' => 'nullable|in:0,1', // Fuma (sí/no)
                 'cantidad_fuma' => 'nullable|integer', // Cantidad de cigarrillos si fuma
-                'consume_alcohol' => 'nullable|boolean', // Consume alcohol (sí/no)
+                'consume_alcohol' => 'nullable|in:0,1', // Consume alcohol (sí/no)
                 'frecuencia_alcohol' => 'nullable|string|max:255', // Frecuencia de consumo de alcohol
-                'consume_sustancias' => 'nullable|boolean', // Consume sustancias (sí/no)
+                'consume_sustancias' => 'nullable|in:0,1', // Consume sustancias (sí/no)
                 'tipo_sustancia' => 'nullable|string|max:255', // Tipo de sustancia
-                'realiza_actividades' => 'nullable|boolean', // Realiza actividades (sí/no)
+                'realiza_actividades' => 'nullable|in:0,1', // Realiza actividades (sí/no)
                 'actividades' => 'nullable|string|max:1000', // Descripción de actividades
-                'horas_suficientes' => 'nullable|boolean', // Horas suficientes de sueño (sí/no)
+                'horas_suficientes' => 'nullable|in:0,1', // Horas suficientes de sueño (sí/no)
                 'horas_dormir' => 'nullable|integer|between:0,24', // Horas de sueño
+                'recomendacion' => 'nullable|in:0,1', // Recomendacion (sí/no)
 
             ]);
 
@@ -289,6 +290,7 @@ class EntrevistaFormController extends Component
             $entrevista->horas_suficientes = $this->horas_suficientes ?? null;
             $entrevista->actitud_entrevista_id = $this->actitud_entrevista_id ?? null;
             $entrevista->portacion_id = $this->portacion_id ?? null;
+            $entrevista->recomendacion = $this->recomendacion ?? null;
             $entrevista->salud_mental_id = $this->salud_mental_id ?? null;
             $entrevista->notas_clinicas = $this->notas_clinicas ?? null;
             $entrevista->tecnica_utilizada = $this->tecnica_utilizada ?? null;
@@ -303,6 +305,13 @@ class EntrevistaFormController extends Component
             $entrevista->paciente_id = $this->paciente_id;
 
             $entrevista->save();
+
+            Log::debug('Valores antes de guardar entrevista', [
+    'indicacionterapeutica_id' => $this->indicacionterapeutica_id,
+    'abordaje_id' => $this->abordaje_id,
+    // y todos los campos sospechosos...
+]);
+
 
             $entrevista_id = $entrevista->id;
 
@@ -351,6 +360,7 @@ class EntrevistaFormController extends Component
                 'horas_suficientes',
                 'actitud_entrevista_id',
                 'portacion_id',
+                'recomendacion',
                 'salud_mental_id',
                 'notas_clinicas',
                 'tecnica_utilizada',

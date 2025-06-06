@@ -250,15 +250,15 @@
                 <div x-data="{ tipo_entrevista_id: @entangle('tipo_entrevista_id') }">
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
                     <div class="mb-4">
-                        <label for="salud_mental_preexistente" class="block text-sm font-medium text-gray-700">¿Posee
+                        <label for="enfermedad_preexistente" class="block text-sm font-medium text-gray-700">¿Posee
                             alguna
-                            salud_mental Preexistente?</label>
-                        <select wire:model="salud_mental_preexistente" class="mt-1 p-2 w-full border rounded-md">
+                            enfermmedad Preexistente?</label>
+                        <select wire:model="enfermedad_preexistente" class="mt-1 p-2 w-full border rounded-md">
                             <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
                             <option value="0">No</option>
                         </select>
-                        @error('salud_mental_preexistente')
+                        @error('enfermedad_preexistente')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -275,7 +275,7 @@
                     <div class="mb-4">
                         <label for="realizo_tratamiento_psicologico"
                             class="block text-sm font-medium text-gray-700">¿Realizó
-                            algún tratamiento psicológico?</label>
+                            algún tratamiento psiquiatrico o psicológico?</label>
                         <select wire:model="realizo_tratamiento_psicologico" class="mt-1 p-2 w-full border rounded-md">
                             <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
@@ -366,8 +366,7 @@
                     </div>
 
                     <div class="mb-4">
-                        <label for="cantidad_fuma" class="block text-sm font-medium text-gray-700">Cantidad y
-                            frecuencia con la que fuma</label>
+                        <label for="cantidad_fuma" class="block text-sm font-medium text-gray-700">Cantidad por día:</label>
                         <input type="number" wire:model="cantidad_fuma" class="mt-1 p-2 w-full border rounded-md">
                         @error('cantidad_fuma')
                             <span class="text-red-500">{{ $message }}</span>
@@ -424,7 +423,7 @@
                     <div class="mb-4">
                         <label for="realiza_actividades" class="block text-sm font-medium text-gray-700">Realiza
                             actividades
-                            recreativas?</label>
+                            recreativas o posee otro empleo?</label>
                         <select wire:model="realiza_actividades" class="mt-1 p-2 w-full border rounded-md">
                             <option value="" disabled selected>Seleccione una opción</option>
                             <option value="1">Sí</option>
@@ -506,7 +505,7 @@
                     </div>
 
 
-                    <!-- Mostrar solo si aptitud_reintegro es Sí -->
+
                     <div class="mb-4">
                         <label for="estado_entrevista_id" class="block text-sm font-medium text-gray-700">Estado de la
                             Entrevista:</label>
@@ -543,8 +542,8 @@
                             class="block text-sm font-medium text-gray-700">Diagnóstico:</label>
                         <select wire:model="salud_mental_id" class="mt-1 p-2 w-full border rounded-md">
                             <option value="">Seleccione una opción</option>
-                            @foreach ($salud_mentales as $salud_mental)
-                                <option value="{{ $salud_mental->id }}">{{ $salud_mental->name }}</option>
+                            @foreach ($salud_mentales as $salud)
+                                <option value="{{ $salud->id }}">{{ $salud->codigo }}-{{ $salud->name }}</option>
                             @endforeach
                         </select>
                         @error('salud_mental_id')
@@ -607,6 +606,19 @@
                         @enderror
                     </div>
 
+                                        <!-- Mostrar solo si aptitud_reintegro es Sí -->
+                    <div x-show="!(tipo_entrevista_id == 1|| tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 )" class="mb-4">
+                        <label for="recomendacion" class="block text-sm font-medium text-gray-700">Se recomienda realizar/continuar tratamiento:</label>
+                         <select wire:model="recomendacion" class="mt-1 p-2 w-full border rounded-md">
+                            <option value="" disabled selected>Seleccione una opción</option>
+                            <option value="1">Sí</option>
+                            <option value="0">No</option>
+                        </select>
+                        @error('recomendacion')
+                            <span class="text-red-500">{{ $message }}</span>
+                        @enderror
+                    </div>
+
 
                 </div>
             </div>
@@ -649,11 +661,9 @@
     <!-- Grupo Derecho: 2 elementos -->
     <div class="flex gap-4 items-center mr-6 mb-4">
         <!-- Imagen con link (BCRA) -->
-        <a href="https://www.bcra.gob.ar/BCRAyVos/Situacion_Crediticia.asp" target="_blank" rel="noopener noreferrer"
-            style="display: inline-block; cursor: pointer; border-radius: 0.5rem; box-shadow: 0 2px 6px rgba(0,0,0,0.2); transition: background-color 0.3s;"
-            onmouseover="this.style.backgroundColor='#3b82f6';" onmouseout="this.style.backgroundColor='transparent';">
-            <img src="{{ asset('assets/consultaCrediticia.png') }}" alt="Consultar Situación Crediticia BCRA"
-                style="width: 100px; height: auto; display: block; border-radius: 0.5rem;" />
+        <a href="https://rcta.me/?utm_term=&utm_campaign=RCTA+DNU/+Pmax+/+Reconnect&utm_source=adwords&utm_medium=ppc&hsa_acc=3976412703&hsa_cam=21983270123&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=21983271299&gbraid=0AAAAAp3bv2M-2NoWfjCKXwvQFRekKOKO3&gclid=Cj0KCQjwgIXCBhDBARIsAELC9ZhPejgMuncQuoBdXnlBKYeV4pe06k2knUoVCHSvUOPPzjFGOfIv6vgaAgpOEALw_wcB
+            " target="_blank" class="bg-white rounded-md py-1 px-3 inline-flex items-center justify-center"">
+            <img class="h-[50px]" src="{{ asset('assets/rctaLogo.jpg') }}" alt="">
         </a>
 
         <!-- Botón con imagen OSEF -->

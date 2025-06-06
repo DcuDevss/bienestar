@@ -21,6 +21,10 @@
                             placeholder="'Posee arma ?'" value="{{ $poseeArmaFilterDisplay }}"
                             wire:keydown.enter="resetPage"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-1 pt-1">
+                        <input type="text" wire:model.debounce.300ms="recomendacionFilterDisplay"
+                            placeholder="'Bajo Tratamiento'" value="{{ $recomendacionFilterDisplay }}"
+                            wire:keydown.enter="resetPage"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-1 pt-1 mt-2">
                     </div>
                 </div>
 
@@ -42,6 +46,7 @@
                                     <th scope="col" class="px-4 py-3">Tipo de Entrevista</th>
                                     <th scope="col" class="px-4 py-3">Posee Arma</th>
                                     <th scope="col" class="px-4 py-3">Estado</th>
+                                    <th scope="col" class="px-4 py-3">Bajo Tratamiento</th>
                                     <th scope="col" class="px-4 py-3">#</th>
                                 </tr>
                             </thead>
@@ -109,6 +114,12 @@
                                                     No disponible
                                                 </span>
                                             @endif
+                                        </td>
+                                        <td class="text-center px-4 py-3">
+                                            <span
+                                                class="text-center px-4 py-3 text-white">
+                                                {{ $entrevista->recomendacion ? 'Sí' : 'No' }}
+                                            </span>
                                         </td>
                                         <td class="tiBody px-4 py-1 text-[14px]">
                                             <a class="ml-3 px-4 py-1 text-lg font-extrabold rounded-md bg-[#28cdd3] text-white hover:bg-[#238185]"

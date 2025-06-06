@@ -6,6 +6,8 @@ use Livewire\Component;
 use App\Models\Entrevista;
 use Livewire\WithPagination;
 
+
+
 class PatientEntrevistas extends Component
 {
     use WithPagination;
@@ -13,6 +15,8 @@ class PatientEntrevistas extends Component
     public $search = '';  // Propiedad para la búsqueda
     public $poseeArmaFilter = null; // null significa sin filtro
     public $poseeArmaFilterDisplay;
+    public $recomendacionFilter = null;
+    public $recomendacionFilterDisplay = '';
     public $sortBy = 'entrevistas.id'; // Especificamos la tabla en el ORDER BY
     public $sortDir = 'ASC';
     public $perPage = 8;
@@ -47,11 +51,24 @@ class PatientEntrevistas extends Component
         $this->resetPage(); // Restablece la paginación cuando cambia el filtro
     }
 
+    public function updatedRecomendacionFilterDisplay()
+    {
+        $this->recomendacionFilter = match (strtolower(trim($this->recomendacionFilterDisplay))) {
+            'sí', 'si' => 1,
+            'no' => 0,
+            default => null,
+        };
+
+        $this->resetPage();
+    }
+
     public function mount()
     {
 
-        // Inicializa el valor de la propiedad display en 'sí' o 'no' basado en el valor actual de poseeArmaFilter
+        // Inicializa el valor de la propiedad display en 'sí' o 'no' basado en el valor actual de poseeArmaFiltery el segungdo recomendacionFilter
         $this->poseeArmaFilterDisplay = $this->poseeArmaFilter === 1 ? 'sí' : ($this->poseeArmaFilter === 0 ? 'no' : '');
+        $this->recomendacionFilterDisplay = $this->recomendacionFilter === 1 ? 'sí' : ($this->recomendacionFilter === 0 ? 'no' : '');
+
     }
 
 
@@ -99,6 +116,16 @@ class PatientEntrevistas extends Component
                 } else {
                     // Si el valor de poseeArmaFilter es 1 (sí), solo filtrar los registros con posee_arma = 1
                     $query->where('entrevistas.posee_arma', '=', 1);
+                }
+            })
+            ->when($this->recomendacionFilter !== null, function ($query) {
+                if ($this->recomendacionFilter == 0) {
+                    $query->where(function ($query) {
+                        $query->where('entrevistas.recomendacion', '=', 0)
+                            ->orWhereNull('entrevistas.recomendacion');
+                    });
+                } else {
+                    $query->where('entrevistas.recomendacion', '=', 1);
                 }
             })
             ->orderBy($this->sortBy, $this->sortDir)

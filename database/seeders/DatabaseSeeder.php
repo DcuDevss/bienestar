@@ -41,5 +41,7 @@ class DatabaseSeeder extends Seeder
          $this->call(AbordajeSeeder::class);
          $this->call(ActitudEntrevistaSeeder::class);
          $this->call(TipoEntrevistaSeeder::class);
+         $this->call(EstadoEntrevistaSeeder::class);
+         
     }
 }

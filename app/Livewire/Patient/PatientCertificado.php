@@ -134,6 +134,33 @@ class PatientCertificado extends Component
     $this->render();
 }
 
+public function updatedFechaInicioLicencia()
+{
+    $this->calcularDiasLicencia();
+}
+
+public function updatedFechaFinalizacionLicencia()
+{
+    $this->calcularDiasLicencia();
+}
+
+public function calcularDiasLicencia()
+{
+    if ($this->fecha_inicio_licencia && $this->fecha_finalizacion_licencia) {
+        $inicio = \Carbon\Carbon::parse($this->fecha_inicio_licencia);
+        $fin = \Carbon\Carbon::parse($this->fecha_finalizacion_licencia);
+
+        if ($inicio->lte($fin)) {
+            $this->suma_salud = $inicio->diffInDays($fin) + 1; // incluye ambos días
+        } else {
+            $this->suma_salud = null;
+        }
+    } else {
+        $this->suma_salud = null;
+    }
+}
+
+
 
     public function addNew()
     {

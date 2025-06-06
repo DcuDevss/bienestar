@@ -9,9 +9,6 @@ class Enfermedade extends Model
 {
 
 
-
-
-
     use HasFactory;
     protected $fillable = [
         'name',
@@ -39,6 +36,8 @@ class Enfermedade extends Model
     ->orWhere('name','like','%'.$search.'%');
 
     }*/
+
+
     public static function search($search)
     {
         return empty($search) ? static::query()

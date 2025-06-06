@@ -15,29 +15,25 @@ class InterviewController extends Controller
 
 public function index(Paciente $paciente)
 {
-    // Obtén la última fecha de enfermedad
-    $ultimaFechaEnfermedad = $paciente->disases()->latest('disase_paciente.fecha_finalizacion_licencia')->first();
-  
-   $sumaSalud = $paciente->disases()
-   ->where('disase_paciente.tipolicencia_id', '!=', 'Atención familiar')
-   ->sum('disase_paciente.suma_salud');
+    $tiposLicencia = \App\Models\Tipolicencia::all();
 
-// Calcula la suma de 'suma_salud' solo para los registros con 'Atencion familiar' en 'tipodelicencia'
-$atencionFamiliar = $paciente->disases()
-   ->where('disase_paciente.tipolicencia_id', 'Atención familiar')
-   ->sum('disase_paciente.suma_salud');
-    // Puedes acceder a los detalles
-    if ($ultimaFechaEnfermedad) {
-        $nombre = $ultimaFechaEnfermedad->name;
-        $fechaEnfermedad = $ultimaFechaEnfermedad->pivot->fecha_finalizacion_licencia;
-       // $tipoEnfermedad = $ultimaFechaEnfermedad->pivot->tipo_enfermedad;
+    // Suma individual por cada tipo de licencia
+    $sumasPorTipo = [];
 
-
+    foreach ($tiposLicencia as $tipo) {
+        $sumasPorTipo[$tipo->name] = $paciente->disases()
+            ->where('disase_paciente.tipolicencia_id', $tipo->id)
+            ->sum('disase_paciente.suma_salud');
     }
 
-    $disase=Disase::all();
+    // Última enfermedad
+    $ultimaFechaEnfermedad = $paciente->disases()->latest('disase_paciente.fecha_finalizacion_licencia')->first();
 
-    return view('interviews.index', compact('paciente', 'ultimaFechaEnfermedad', 'disase','sumaSalud','atencionFamiliar'));
+    return view('interviews.index', compact(
+        'paciente',
+        'ultimaFechaEnfermedad',
+        'sumasPorTipo'
+    ));
 }
 
 

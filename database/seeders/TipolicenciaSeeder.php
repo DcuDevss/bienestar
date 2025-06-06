@@ -11,7 +11,7 @@ class TipolicenciaSeeder extends Seeder
     /**
      * Run the database seeds.
      */
-    public function run(): void
+   /* public function run(): void
     {
         Tipolicencia::create(['name'=>'Enfermedad comun']);
         Tipolicencia::create(['name'=>'Enfermedad largo tratamiento']);
@@ -20,6 +20,22 @@ class TipolicenciaSeeder extends Seeder
         Tipolicencia::create(['name'=>'Maternidad']);
         Tipolicencia::create(['name'=>'Nacimiento trabajo']);
         Tipolicencia::create(['name'=>'Salud embarazo']);
+        Tipolicencia::create(['name'=>'Licencia pandemia']);
+        Tipolicencia::create(['name'=>'Dto. 564/18 lic. extraordinaria ley 911-art 9']);
+        Tipolicencia::create(['name'=>'Art']);
+        
+    }*/
+
+     public function run(): void
+    {
+        Tipolicencia::create(['name'=>'Enfermedad comun']);
+        Tipolicencia::create(['name'=>'Por enfermedad o accidente de largo tratamiento, vinculado al servicio']);
+        Tipolicencia::create(['name'=>'Por enfermedad o accidente de largo tratamiento, desvinculado al servicio']);
+        Tipolicencia::create(['name'=>'Atencion familiar']);
+        Tipolicencia::create(['name'=>'Donacion de sangre']);
+        Tipolicencia::create(['name'=>'Maternidad']);
+        Tipolicencia::create(['name'=>'Por lactancia']);
+        Tipolicencia::create(['name'=>'Para donar organos']);
         Tipolicencia::create(['name'=>'Licencia pandemia']);
         Tipolicencia::create(['name'=>'Dto. 564/18 lic. extraordinaria ley 911-art 9']);
         Tipolicencia::create(['name'=>'Art']);

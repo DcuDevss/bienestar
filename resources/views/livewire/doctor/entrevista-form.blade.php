@@ -27,7 +27,7 @@
                 <div x-data="{
                     tipo_entrevista_id: @entangle('tipo_entrevista_id'),
                     portacion_id: @entangle('portacion_id'),
-                    salud_mental_id: @entangle('salud_mental_id'),
+                    salud_mentale_id: @entangle('salud_mentale_id'),
                     posee_arma: @entangle('posee_arma'),
                     posee_sanciones: @entangle('posee_sanciones'),
                     motivo_sanciones: @entangle('motivo_sanciones'),
@@ -538,15 +538,15 @@
 
                     <div x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 11 )"
                         class="mb-4">
-                        <label for="salud_mental_id"
+                        <label for="salud_mentale_id"
                             class="block text-sm font-medium text-gray-700">Diagnóstico:</label>
-                        <select wire:model="salud_mental_id" class="mt-1 p-2 w-full border rounded-md">
+                        <select wire:model="salud_mentale_id" class="mt-1 p-2 w-full border rounded-md">
                             <option value="">Seleccione una opción</option>
                             @foreach ($salud_mentales as $salud)
                                 <option value="{{ $salud->id }}">{{ $salud->codigo }}-{{ $salud->name }}</option>
                             @endforeach
                         </select>
-                        @error('salud_mental_id')
+                        @error('salud_mentale_id')
                             <span class="text-red-500">{{ $message }}</span>
                         @enderror
                     </div>
@@ -623,7 +623,7 @@
                 </div>
             </div>
         </div>
-        <input type="hidden" wire:model="salud_mental_id" :value="salud_mental_id ?? null">
+        <input type="hidden" wire:model="salud_mentale_id" :value="salud_mentale_id ?? null">
         <input type="hidden" wire:model="portacion_id" :value="portacion_id ?? null">
         <input type="hidden" wire:model="posee_arma" :value="posee_arma ?? null">
         <input type="hidden" wire:model="posee_sanciones" :value="posee_sanciones ?? null">

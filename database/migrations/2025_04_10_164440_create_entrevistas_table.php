@@ -49,7 +49,7 @@ return new class extends Migration
         $table->foreignId('abordaje_id')->nullable()->constrained()->onDelete('cascade');
         $table->foreignId('portacion_id')->nullable()->constrained()->onDelete('cascade');
         $table->boolean('recomendacion')->nullable();
-        $table->foreignId('salud_mental_id')->nullable()->constrained()->onDelete('cascade');
+        $table->foreignId('salud_mentale_id')->nullable()->constrained()->onDelete('cascade');
         $table->string('derivacion_psiquiatrica')->nullable();
         $table->text('evolucion_tratamiento')->nullable();
         $table->boolean('aptitud_reintegro')->nullable();

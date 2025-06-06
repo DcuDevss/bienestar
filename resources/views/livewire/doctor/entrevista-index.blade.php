@@ -210,7 +210,7 @@
                                             {{ $entrevista->portacion->name ?? 'Sin Datos' }}
                                         </p>
                                     @endif
-                                    @if (!empty($entrevista->salud_mental_id))
+                                    @if (!empty($entrevista->salud_mentale_id))
                                      <p class="bg-red-300">
                                         <strong>Diagnóstico:</strong>
                                         {{ $entrevista->saludMentale ? $entrevista->saludMentale->name . ' (' . $entrevista->saludMentale->codigo . ')' : 'Sin Datos' }}

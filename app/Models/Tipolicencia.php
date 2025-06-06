@@ -38,11 +38,16 @@ class Tipolicencia extends Model
 
     }
 
-    public function disases_paciente(){
+    /*public function disases_paciente(){
 
         return $this->hasMany(Disase_paciente::class, 'tipolicencia_id');
 
-    }
+    }*/
+    public function disases_paciente()
+{
+    return $this->hasMany(\App\Models\DisasePaciente::class, 'tipolicencia_id');
+}
+
 }
 
 

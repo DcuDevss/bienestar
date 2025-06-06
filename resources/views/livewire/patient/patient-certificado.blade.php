@@ -113,11 +113,19 @@
                     <x-input-error for="horas_salud" />
                 </div>
 
-                <div>
-                    <label for="suma_salud" class="block text-sm font-medium text-gray-700">{{ __('Dias licencia certificado') }}</label>
-                    <input id="suma_salud" class="w-full rounded cursor-pointer" type="number" placeholder="{{ __('ingrese dias certificado') }}" wire:model="suma_salud" />
-                    <x-input-error for="suma_salud" />
-                </div>
+                <div class="mb-4">
+    <label for="suma_salud" class="block text-sm font-medium text-gray-700">
+        Días licencia certificado
+    </label>
+    <input type="number"
+           wire:model="suma_salud"
+           id="suma_salud"
+           readonly
+           class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
+           placeholder="Días calculados automáticamente">
+    @error('suma_salud') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+</div>
+
 
 
 

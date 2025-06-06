@@ -64,7 +64,7 @@ class EntrevistaFormController extends Component
     public $entrevista_id;
     public $portacion_id = '';
     public $recomendacion = '';
-    public $salud_mental_id = '';
+    public $salud_mentale_id = '';
     public $salud_mentales = [];
 
     public $tipos_entrevista;
@@ -200,13 +200,13 @@ class EntrevistaFormController extends Component
             $this->estado_entrevista_id = ($this->estado_entrevista_id === '' || $this->estado_entrevista_id === null) ? null : (int) $this->estado_entrevista_id;
             $this->portacion_id = ($this->portacion_id === '' || $this->portacion_id === null) ? null : (int) $this->portacion_id;
             $this->recomendacion = ($this->recomendacion === '') ? null : (int) $this->recomendacion;
-            $this->salud_mental_id = ($this->salud_mental_id === '' || $this->salud_mental_id === null) ? null : (int) $this->salud_mental_id;
+            $this->salud_mentale_id = ($this->salud_mentale_id === '' || $this->salud_mentale_id === null) ? null : (int) $this->salud_mentale_id;
 
             $this->validate([
                 'tipo_entrevista_id' => 'nullable|integer',
                 'actitud_entrevista_id' => 'nullable|integer',
                 'portacion_id' => 'nullable|integer',
-                'salud_mental_id' => 'nullable|integer',
+                'salud_mentale_id' => 'nullable|integer',
                 'estado_entrevista_id' => 'nullable|integer', // Solo para Postulante o Reintegro
                 'tecnica_utilizada' => 'nullable|string|max:1000',
                 'grupo_familiar' => 'nullable|array', // Validación del array de miembros
@@ -291,7 +291,7 @@ class EntrevistaFormController extends Component
             $entrevista->actitud_entrevista_id = $this->actitud_entrevista_id ?? null;
             $entrevista->portacion_id = $this->portacion_id ?? null;
             $entrevista->recomendacion = $this->recomendacion ?? null;
-            $entrevista->salud_mental_id = $this->salud_mental_id ?? null;
+            $entrevista->salud_mentale_id = $this->salud_mentale_id ?? null;
             $entrevista->notas_clinicas = $this->notas_clinicas ?? null;
             $entrevista->tecnica_utilizada = $this->tecnica_utilizada ?? null;
             $entrevista->indicacionterapeutica_id = $this->indicacionterapeutica_id ?? null;
@@ -361,7 +361,7 @@ class EntrevistaFormController extends Component
                 'actitud_entrevista_id',
                 'portacion_id',
                 'recomendacion',
-                'salud_mental_id',
+                'salud_mentale_id',
                 'notas_clinicas',
                 'tecnica_utilizada',
                 'indicacionterapeutica_id',

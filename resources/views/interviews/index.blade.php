@@ -28,36 +28,45 @@
                                 </div>
                             @endcan
                             <p class=" text-slate-800 font-semibold capitalize">
-                                @if ($sumaSalud)
-                                    <div class="flex text-sm">
-                                        <p class="font-semibold capitalize">{{ __('Salud ') }} </p>
-                                        <p class="font-semibold capitalize"> dias: {{ $sumaSalud }}</p>
-                                    </div>
-                                    <div
-                                        class="{{ $sumaSalud >= 30 ? 'animate-pulse bg-red-500' : ($sumaSalud >= 28 ? 'animate-pulse bg-yellow-500' : '') }} p-2 rounded-md">
-                                        <p class="text-white font-semibold">
-                                            {{ $sumaSalud >= 30 ? '¡Alerta roja! dias de salud cumplidos' : ($sumaSalud >= 28 ? '¡Precaución! llegando al límite de salud' : '') }}
-                                        </p>
-                                    </div>
-                                @else
-                                    <p class="">No posee dias de salud.</p>
-                                @endif
-                            </p>
-                            <p class=" text-slate-800 font-semibold capitalize">
-                                @if ($atencionFamiliar)
-                                    <div class="flex text-sm">
-                                        <p class="px-3  font-semibold capitalize">{{ __('Atencion familiar') }} </p>
-                                        <p class="px-3  font-semibold capitalize">dias: {{ $atencionFamiliar }}</p>
-                                    </div>
-                                    <div
-                                        class="{{ $atencionFamiliar >= 20 ? 'animate-pulse bg-red-500' : ($atencionFamiliar >= 18 ? 'animate-pulse bg-yellow-500' : '') }} p-2 rounded-md mb-2 ">
-                                        <p class="text-white font-semibold">
-                                            {{ $atencionFamiliar >= 20 ? '¡Alerta roja! atendibles cumplidos' : ($atencionFamiliar >= 18 ? '¡Precaución! llegando al límite de atendibles' : '') }}
-                                        </p>
-                                    </div>
-                                @else
-                                    <p>No posee dias de atendible.</p>
-                                @endif
+                               @if (!empty($sumasPorTipo) && array_sum($sumasPorTipo) > 0)
+
+    <div class="text-slate-800 font-semibold capitalize">
+        <h2 class="text-lg text-center mb-2">Licencias Médicas por Tipo</h2>
+
+        @foreach($sumasPorTipo as $tipo => $suma)
+            <div class="flex text-sm justify-between items-center mb-1">
+                <p class="font-semibold capitalize">{{ $tipo }}</p>
+                <p class="font-semibold capitalize">Días: {{ $suma }}</p>
+            </div>
+
+            @if ($tipo === 'Enfermedad comun')
+                @if ($suma >= 30)
+                    <div class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
+                        ¡Alerta roja! días de salud cumplidos
+                    </div>
+                @elseif ($suma >= 28)
+                    <div class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
+                        ¡Precaución! llegando al límite de salud
+                    </div>
+                @endif
+
+            @elseif ($tipo === 'Atencion familiar')
+                @if ($suma >= 20)
+                    <div class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
+                        ¡Alerta roja! atendibles cumplidos
+                    </div>
+                @elseif ($suma >= 18)
+                    <div class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
+                        ¡Precaución! llegando al límite de atendibles
+                    </div>
+                @endif
+            @endif
+        @endforeach
+    </div>
+@else
+    <p>No posee días registrados.</p>
+@endif
+
                             </p>
                             <ul class="bg-gray-300 rounded mt-1 px-3 py-1 text-gray-500">
                                 <li class="flex items-center py-1 capitalize">

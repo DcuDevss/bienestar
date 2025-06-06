@@ -35,7 +35,7 @@ class EditEntrevista extends Component
     public $tipo_entrevista_id= '';
     public $actitud_entrevista_id = '';
     public $portacion_id = '';
-    public $salud_mental_id= '';
+    public $salud_mentale_id= '';
     public $estado_entrevista_id= '';
     public $tecnica_utilizada= '';
     public $notas_clinicas= '';
@@ -90,7 +90,7 @@ class EditEntrevista extends Component
         $this->actitud_entrevista_id = $entrevista->actitud_entrevista_id;
         $this->portacion_id = $entrevista->portacion_id;
         $this->recomendacion = $entrevista->recomendacion;
-        $this->salud_mental_id = $entrevista->salud_mental_id;
+        $this->salud_mentale_id = $entrevista->salud_mentale_id;
         $this->estado_entrevista_id = $entrevista->estado_entrevista_id;
         $this->tecnica_utilizada = $entrevista->tecnica_utilizada;
         $this->notas_clinicas = $entrevista->notas_clinicas;
@@ -236,7 +236,7 @@ class EditEntrevista extends Component
             'actitud_entrevista_id' => 'nullable|integer',
             'portacion_id' => 'nullable|integer',
             'recomendacion' => 'nullable|boolean',
-            'salud_mental_id' => 'nullable|integer',
+            'salud_mentale_id' => 'nullable|integer',
             'estado_entrevista_id' => 'nullable|integer',
             'tecnica_utilizada' => 'nullable|string|max:1000',
             'notas_clinicas' => 'nullable|string|max:1000',
@@ -281,7 +281,7 @@ class EditEntrevista extends Component
                 $entrevista->actitud_entrevista_id = $this->emptyToNull($this->actitud_entrevista_id);
                 $entrevista->portacion_id = $this->emptyToNull($this->portacion_id);
                 $entrevista->recomendacion = $this->emptyToNull($this->recomendacion);
-                $entrevista->salud_mental_id = $this->emptyToNull($this->salud_mental_id);
+                $entrevista->salud_mentale_id = $this->emptyToNull($this->salud_mentale_id);
                 $entrevista->estado_entrevista_id = $this->emptyToNull($this->estado_entrevista_id);
                 $entrevista->tecnica_utilizada = $this->emptyToNull($this->tecnica_utilizada);
                 $entrevista->notas_clinicas = $this->emptyToNull($this->notas_clinicas);

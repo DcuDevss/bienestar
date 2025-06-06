@@ -50,7 +50,7 @@ class Entrevista extends Model
         'aptitud_reintegro',
         'portacion_id',
         'recomendacion',
-        'salud_mental_id',
+        'salud_mentale_id',
         'estado_entrevista_id',
         'paciente_id',
         'user_id',
@@ -128,7 +128,7 @@ class Entrevista extends Model
 
     public function saludmentale()
     {
-        return $this->belongsTo(SaludMentale::class, 'salud_mental_id');
+        return $this->belongsTo(SaludMentale::class, 'salud_mentale_id');
     }
 
 }

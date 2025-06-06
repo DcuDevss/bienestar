@@ -66,7 +66,7 @@ class PatientEntrevistas extends Component
 
         // Consulta principal para obtener las entrevistas con los filtros aplicados
         $entrevistas = Entrevista::query()
-            ->select('entrevistas.*')
+            ->select( 'entrevistas.*','pacientes.apellido_nombre', 'pacientes.estado_id', 'pacientes.id as paciente_id', 'estados.name as estado_nombre')
             ->joinSub($lastEntrevistaSubquery, 'last_entrevista', function ($join) {
                 $join->on('entrevistas.paciente_id', '=', 'last_entrevista.paciente_id')
                     ->whereColumn('entrevistas.created_at', '=', 'last_entrevista.latest_created_at');
@@ -74,6 +74,7 @@ class PatientEntrevistas extends Component
             ->leftJoin('tipo_entrevistas', 'entrevistas.tipo_entrevista_id', '=', 'tipo_entrevistas.id')
             ->leftJoin('estado_entrevistas', 'entrevistas.estado_entrevista_id', '=', 'estado_entrevistas.id')
             ->leftJoin('pacientes', 'entrevistas.paciente_id', '=', 'pacientes.id') // Unir la tabla de pacientes
+            ->leftJoin('estados', 'pacientes.estado_id', '=', 'estados.id')
             ->when($this->search, function ($query) use ($searchLower) {
                 $query->whereRaw('LOWER(entrevistas.created_at) LIKE ?', ['%' . $searchLower . '%'])
                     ->orWhereHas('tipoEntrevista', function ($query) use ($searchLower) {

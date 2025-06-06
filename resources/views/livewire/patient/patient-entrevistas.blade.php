@@ -37,6 +37,7 @@
                                     <th scope="col" class="px-4 py-3">N°</th>
                                     <th scope="col" class="px-4 py-3">Jerarquía</th>
                                     <th scope="col" class="px-4 py-3">Nombre</th>
+                                    <th scope="col" class="px-4 py-3">Revista</th>
                                     <th scope="col" class="px-4 py-3">Fecha/hora de Entrevista</th>
                                     <th scope="col" class="px-4 py-3">Tipo de Entrevista</th>
                                     <th scope="col" class="px-4 py-3">Posee Arma</th>
@@ -52,6 +53,31 @@
                                             {{ $entrevista->paciente->jerarquias->name ?? 'N/A' }}</td>
                                         <td class="text-center px-4 py-3 text-white">
                                             {{ $entrevista->paciente->apellido_nombre }}</td>
+                                        <td class="tiBody px-2 py-1 text-[14px]">
+                                            @if ($entrevista->estado_id == 1)
+                                                <span class="bg-green-600 text-white rounded-md px-4 py-2 text-md text-center inline-block">
+                                                    {{ $entrevista->estado_nombre }}
+                                                </span>
+                                            @elseif ($entrevista->estado_id == 2)
+                                                <span class="text-white bg-gray-600 rounded-md px-4 py-2 text-md text-center inline-block">
+                                                    {{ $entrevista->estado_nombre }}
+                                                </span>
+                                            @elseif ($entrevista->estado_id == 3)
+                                                <span class="text-black bg-yellow-400 rounded-md px-4 py-2 text-md text-center inline-block">
+                                                    {{ $entrevista->estado_nombre }}
+                                                </span>
+                                            @elseif ($entrevista->estado_id == 4)
+                                                <span class="text-white bg-red-700 rounded-md px-4 py-2 text-md text-center inline-block">
+                                                    {{ $entrevista->estado_nombre }}
+                                                </span>
+                                            @elseif ($entrevista->estado_id == 5)
+                                                <span class="text-white bg-black rounded-md px-4 py-2 text-md text-center inline-block">
+                                                    {{ $entrevista->estado_nombre }}
+                                                </span>
+                                            @else
+                                                <span class="text-gray-500">Sin estado</span>
+                                            @endif
+                                        </td>
                                         <td class="text-center px-4 py-3 text-white">{{ $entrevista->created_at }}</td>
                                         <td class="text-center px-4 py-3 text-white">
                                             {{ $entrevista->tipoEntrevista->name ?? 'N/A' }}</td>

@@ -4,30 +4,37 @@
             <div class="bg-gray-800 shadow-md sm:rounded-lg">
                 <!-- Búsqueda con wire:model -->
                 <div class="flex items-center justify-between p-4">
-                    <div class="w-fit">
-                        <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
-                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor" viewbox="0 0 20 20"
-                                xmlns="http://www.w3.org/2000/svg">
-                                <path fill-rule="evenodd"
-                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                    clip-rule="evenodd" />
-                            </svg>
-                        </div>
-                        <!-- Campo de búsqueda con wire:model directamente -->
-                        <input wire:model.debounce.300ms="search" type="text"
-                            class="bg-gray-50 border border-gray-300 mb-2 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-1 pt-1"
-                            placeholder="Buscar..." required="" wire:keydown.enter="resetPage">
-                        <input type="text" wire:model.debounce.300ms="poseeArmaFilterDisplay"
-                            placeholder="'Posee arma ?'" value="{{ $poseeArmaFilterDisplay }}"
-                            wire:keydown.enter="resetPage"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-1 pt-1">
-                        <input type="text" wire:model.debounce.300ms="recomendacionFilterDisplay"
-                            placeholder="'Bajo Tratamiento'" value="{{ $recomendacionFilterDisplay }}"
-                            wire:keydown.enter="resetPage"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-1 pt-1 mt-2">
+            <div class="flex items-center gap-x-3">
+                <!-- Buscar general -->
+                <div class="relative">
+                    <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
+                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
+                            xmlns="http://www.w3.org/2000/svg">
+                            <path fill-rule="evenodd"
+                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                clip-rule="evenodd" />
+                        </svg>
                     </div>
+                    <input wire:model.debounce.300ms="search" type="text"
+                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 pl-10 p-2 w-48"
+                        placeholder="Buscar..." wire:keydown.enter="resetPage">
                 </div>
 
+                <!-- Posee arma -->
+                <input type="text" wire:model.debounce.300ms="poseeArmaFilterDisplay"
+                    placeholder="Posee arma?"
+                    value="{{ $poseeArmaFilterDisplay }}"
+                    wire:keydown.enter="resetPage"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2 w-48">
+
+                <!-- Bajo tratamiento -->
+                <input type="text" wire:model.debounce.300ms="recomendacionFilterDisplay"
+                    placeholder="Bajo tratamiento"
+                    value="{{ $recomendacionFilterDisplay }}"
+                    wire:keydown.enter="resetPage"
+                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2 w-48">
+            </div>
+        </div>
                 @if ($entrevistas->isEmpty())
                     <div class="text-center text-xs uppercase px-4 py-3 text-white">
                         <p>No hay resultados para esta búsqueda.</p>

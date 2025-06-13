@@ -6,14 +6,15 @@
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
-    <title>{{ config('app.name', 'Laravel') }}</title>
+    <title>{{ config('app.name') }}</title>
 
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <!-- Tom Select CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-
+    {{-- favicon --}}
+    <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -207,25 +208,53 @@
             }
         }
 
-        .ts-wrapper {
-            border: 1px solid #4b5563; /* Tailwind gray-600 */
-            border-radius: 0.375rem; /* rounded-md */
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
-            margin-top: 0.25rem; /* mt-1 */
-            width: 100%;
-        }
+.ts-wrapper {
+    border: 1px solid #4b5563; /* gray-600 */
+    border-radius: 0.375rem;
+    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+    margin-top: 0.25rem;
+    width: 100%;
+    background-color: white;
+}
 
-        .ts-wrapper.focus {
-            border-color: #3b82f6; /* focus:border-blue-500 */
-            box-shadow: 0 0 0 1px #3b82f6;
-        }
+/* Cuando está enfocado */
+.ts-wrapper.focus {
+    border-color: #3b82f6;
+    box-shadow: 0 0 0 1px #3b82f6;
+}
 
-        .ts-control {
-            background-color: white;
-            min-height: 2.5rem;
-            border: none !important;
-            box-shadow: none !important;
-        }
+/* Caja visible del input */
+.ts-control {
+    background-color: white;
+    min-height: 2.5rem;
+    border: none !important;
+    box-shadow: none !important;
+    font-size: 0.875rem;
+    color: #111827;
+    font-weight: 600; /* <-- más negrita */
+    padding: 0.5rem 0.75rem;
+}
+
+/* Texto que escribís en el buscador */
+.ts-control input {
+    color: #111827;
+    font-weight: 600; /* <-- más negrita */
+}
+
+/* Opciones dentro del dropdown */
+.ts-dropdown .option {
+    color: #111827;
+    font-size: 0.875rem;
+    font-weight: 600; /* <-- más negrita */
+    padding: 0.5rem 0.75rem;
+}
+
+/* Hover sobre una opción */
+.ts-dropdown .option:hover {
+    background-color: #e5e7eb;
+    color: #000000;
+    cursor: pointer;
+}
     </style>
 
     @livewireStyles

@@ -89,7 +89,7 @@
                                         <td class="text-center px-4 py-3">
                                             <span
                                                 class="inline-block px-2 py-1 text-xs font-semibold
-                                        {{ $entrevista->posee_arma ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
+                                                {{ $entrevista->posee_arma ? 'bg-green-500 text-white' : 'bg-red-500 text-white' }}">
                                                 {{ $entrevista->posee_arma ? 'Sí' : 'No' }}
                                             </span>
                                         </td>
@@ -117,12 +117,13 @@
                                         </td>
                                         <td class="text-center px-4 py-3">
                                             <span
-                                                class="text-center px-4 py-3 text-white">
+                                                class= "inline-block px-2 py-1 text-xs font-semibold
+                                                {{ $entrevista->recomendacion ? 'bg-red-500 text-white' : 'bg-green-500 text-white' }}">
                                                 {{ $entrevista->recomendacion ? 'Sí' : 'No' }}
                                             </span>
                                         </td>
                                         <td class="tiBody px-4 py-1 text-[14px]">
-                                            <a class="ml-3 px-4 py-1 text-lg font-extrabold rounded-md bg-[#28cdd3] text-white hover:bg-[#238185]"
+                                            <a class="ml-3 px-4 py-1 text-lg font-extrabold rounded-md bg-blue-600 text-white hover:bg-blue-500"
                                                 href="{{ route('entrevistas.index', ['paciente_id' => $entrevista->paciente_id]) }}">
                                                 ->
                                             </a>

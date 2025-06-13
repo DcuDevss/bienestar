@@ -208,53 +208,53 @@
             }
         }
 
-.ts-wrapper {
-    border: 1px solid #4b5563; /* gray-600 */
-    border-radius: 0.375rem;
-    box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-    margin-top: 0.25rem;
-    width: 100%;
-    background-color: white;
-}
+        .ts-wrapper {
+            border: 1px solid #4b5563; /* gray-600 */
+            border-radius: 0.375rem;
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+            margin-top: 0.25rem;
+            width: 100%;
+            background-color: white;
+        }
 
-/* Cuando está enfocado */
-.ts-wrapper.focus {
-    border-color: #3b82f6;
-    box-shadow: 0 0 0 1px #3b82f6;
-}
+        /* Cuando está enfocado */
+        .ts-wrapper.focus {
+            border-color: #3b82f6;
+            box-shadow: 0 0 0 1px #3b82f6;
+        }
 
-/* Caja visible del input */
-.ts-control {
-    background-color: white;
-    min-height: 2.5rem;
-    border: none !important;
-    box-shadow: none !important;
-    font-size: 0.875rem;
-    color: #111827;
-    font-weight: 600; /* <-- más negrita */
-    padding: 0.5rem 0.75rem;
-}
+        /* Caja visible del input */
+        .ts-control {
+            background-color: white;
+            min-height: 2.5rem;
+            border: none !important;
+            box-shadow: none !important;
+            font-size: 0.875rem;
+            color: #111827;
+            font-weight: 600; /* <-- más negrita */
+            padding: 0.5rem 0.75rem;
+        }
 
-/* Texto que escribís en el buscador */
-.ts-control input {
-    color: #111827;
-    font-weight: 600; /* <-- más negrita */
-}
+        /* Texto que escribís en el buscador */
+        .ts-control input {
+            color: #111827;
+            font-weight: 600; /* <-- más negrita */
+        }
 
-/* Opciones dentro del dropdown */
-.ts-dropdown .option {
-    color: #111827;
-    font-size: 0.875rem;
-    font-weight: 600; /* <-- más negrita */
-    padding: 0.5rem 0.75rem;
-}
+        /* Opciones dentro del dropdown */
+        .ts-dropdown .option {
+            color: #111827;
+            font-size: 0.875rem;
+            font-weight: 600; /* <-- más negrita */
+            padding: 0.5rem 0.75rem;
+        }
 
-/* Hover sobre una opción */
-.ts-dropdown .option:hover {
-    background-color: #e5e7eb;
-    color: #000000;
-    cursor: pointer;
-}
+        /* Hover sobre una opción */
+        .ts-dropdown .option:hover {
+            background-color: #e5e7eb;
+            color: #000000;
+            cursor: pointer;
+        }
     </style>
 
     @livewireStyles

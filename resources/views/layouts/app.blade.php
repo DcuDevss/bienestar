@@ -11,6 +11,9 @@
     <!-- Fonts -->
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+    <!-- Tom Select CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
+
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
@@ -203,6 +206,26 @@
                 box-shadow: 0 0 0 10px transparent;
             }
         }
+
+        .ts-wrapper {
+            border: 1px solid #4b5563; /* Tailwind gray-600 */
+            border-radius: 0.375rem; /* rounded-md */
+            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05); /* shadow-sm */
+            margin-top: 0.25rem; /* mt-1 */
+            width: 100%;
+        }
+
+        .ts-wrapper.focus {
+            border-color: #3b82f6; /* focus:border-blue-500 */
+            box-shadow: 0 0 0 1px #3b82f6;
+        }
+
+        .ts-control {
+            background-color: white;
+            min-height: 2.5rem;
+            border: none !important;
+            box-shadow: none !important;
+        }
     </style>
 
     @livewireStyles
@@ -236,6 +259,10 @@
     @stack('modals')
 
     @livewireScripts
+
+    <!-- Tom Select JS -->
+    <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+
 
 </body>
 <footer class="text-center py-6 bg-gray-800 font-semibold text-xs text-white shadow-lg fixed bottom-0 left-0 w-full">

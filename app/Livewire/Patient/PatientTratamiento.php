@@ -30,16 +30,26 @@ class PatientTratamiento extends Component
     public $enfermedade_id;
     public $paciente_id;
 
-    public $tipolicencias=[];
-    public $procedencias=[];
-    public $indicacionterapeuticas=[];
-    public $derivacionpsiquiatricas=[];
-    public $enfermedades=[];
+    public $tipolicencias = [];
+    public $procedencias = [];
+    public $indicacionterapeuticas = [];
+    public $derivacionpsiquiatricas = [];
+    public $enfermedades = [];
     public $patient;
-    //public $pacienteId;
+    public $editId;
+    public $edit_consumo_farmacos;
+    public $edit_antecedente_familiar;
+    public $edit_fecha_atencion;
+    public $edit_profesional_enterior;
+    public $edit_motivo_consulta_anterior;
+    public $edit_tipolicencia_id;
+    public $edit_indicacionterapeutica_id;
+    public $edit_derivacionpsiquiatrica_id;
+    public $edit_procedencia_id;
+    public $edit_enfermedade_id;
+    public $edit_profesional_actual;
 
     use WithPagination;
-
 
     #[Url(history:true)]
     public $search = '';
@@ -58,30 +68,23 @@ class PatientTratamiento extends Component
 
     public $pacienteId;
 
-
-
-
     protected $rules = [
-       // 'profesional_actual' => 'nullable|string',
         'consumo_farmacos' => 'nullable|string',
         'antecedente_familiar' => 'nullable|string',
         'fecha_atencion' => 'nullable|date',
         'profesional_enterior' => 'nullable|string',
-        //'fecha_anterior' => 'nullable|date',
         'motivo_consulta_anterior' => 'nullable|string',
-        //'motivo_consulta_actual' => 'nullable|string',
-        'tipolicencia_id' => 'nullable',
-        'indicacionterapeutica_id' => 'nullable',
-        'derivacionpsiquiatrica_id' => 'nullable',
-        'procedencia_id' => 'nullable',
-        'enfermedade_id' => 'nullable',
-        'paciente_id' => 'nullable',
+        'tipolicencia_id' => 'required|exists:tipolicencias,id',
+        'indicacionterapeutica_id' => 'required|exists:indicacionterapeuticas,id',
+        'derivacionpsiquiatrica_id' => 'required|exists:derivacionpsiquiatricas,id',
+        'procedencia_id' => 'required|exists:procedencias,id',
+        'enfermedade_id' => 'required|exists:enfermedades,id',
+        'pacienteId' => 'required|exists:pacientes,id',
     ];
 
     public function mount(Paciente $paciente)
     {
-       // $this->step = 0;
-        $this->tipolicencias = Tipolicencia::all(); // Obtener todos los estados
+        $this->tipolicencias = Tipolicencia::all();
         $this->procedencias = Procedencia::all();
         $this->derivacionpsiquiatricas = Derivacionpsiquiatrica::all();
         $this->indicacionterapeuticas = Indicacionterapeutica::all();
@@ -90,6 +93,11 @@ class PatientTratamiento extends Component
         $this->pacienteId = $paciente->id;
         $this->patient = $paciente;
 
+        $this->tipolicencia_id = null;
+        $this->indicacionterapeutica_id = '';
+        $this->derivacionpsiquiatrica_id = null;
+        $this->procedencia_id = null;
+        $this->enfermedade_id = null;
     }
 
     public function save()
@@ -97,51 +105,103 @@ class PatientTratamiento extends Component
         $this->validate();
 
         $tratamiento = new Tratamiento();
-       // $tratamiento->profesional_actual = $this->profesional_actual;
-        $tratamiento->consumo_farmacos = $this->consumo_farmacos;
-        $tratamiento->antecedente_familiar = $this->antecedente_familiar;
-        $tratamiento->fecha_atencion = $this->fecha_atencion;
-        $tratamiento->profesional_enterior = $this->profesional_enterior;
-        //$tratamiento->fecha_anterior = $this->fecha_anterior;
-        $tratamiento->motivo_consulta_anterior = $this->motivo_consulta_anterior;
-      //  $tratamiento->motivo_consulta_actual = $this->motivo_consulta_actual;
-        $tratamiento->tipolicencia_id = $this->tipolicencia_id;
-        $tratamiento->indicacionterapeutica_id = $this->indicacionterapeutica_id;
-        $tratamiento->derivacionpsiquiatrica_id = $this->derivacionpsiquiatrica_id;
-        $tratamiento->procedencia_id = $this->procedencia_id;
-        $tratamiento->enfermedade_id = $this->enfermedade_id;
-        $tratamiento->paciente_id = $this->pacienteId;
 
-        // Tu lógica para guardar en la base de datos aquí...
+        $tratamiento->consumo_farmacos = ($this->consumo_farmacos === '') ? null : $this->consumo_farmacos;
+        $tratamiento->antecedente_familiar = ($this->antecedente_familiar === '') ? null : $this->antecedente_familiar;
+        $tratamiento->fecha_atencion = ($this->fecha_atencion === '') ? null : $this->fecha_atencion;
+        $tratamiento->profesional_enterior = ($this->profesional_enterior === '') ? null : $this->profesional_enterior;
+        $tratamiento->motivo_consulta_anterior = ($this->motivo_consulta_anterior === '') ? null : $this->motivo_consulta_anterior;
+        $tratamiento->tipolicencia_id = ($this->tipolicencia_id === '') ? null : (int) $this->tipolicencia_id;
+        $tratamiento->indicacionterapeutica_id = ($this->indicacionterapeutica_id === '') ? null : (int) $this->indicacionterapeutica_id;
+        $tratamiento->derivacionpsiquiatrica_id = ($this->derivacionpsiquiatrica_id === '') ? null : (int) $this->derivacionpsiquiatrica_id;
+        $tratamiento->procedencia_id = ($this->procedencia_id === '') ? null : (int) $this->procedencia_id;
+        $tratamiento->enfermedade_id = ($this->enfermedade_id === '') ? null : (int) $this->enfermedade_id;
+        $tratamiento->paciente_id = ($this->pacienteId === '') ? null : (int) $this->pacienteId;
+
         $tratamiento->save();
 
-        // Después de guardar, puedes resetear los campos si lo necesitas
         $this->reset();
     }
 
+    public function openEditModal($id)
+    {
+        $t = Tratamiento::findOrFail($id);
+        $this->editId = $t->id;
+        $this->edit_consumo_farmacos = $t->consumo_farmacos;
+        $this->edit_antecedente_familiar = $t->antecedente_familiar;
+        $this->edit_fecha_atencion = $t->fecha_atencion
+            ? \Carbon\Carbon::parse($t->fecha_atencion)->format('Y-m-d\TH:i')
+            : null;
+        $this->edit_profesional_enterior = $t->profesional_enterior;
+        $this->edit_motivo_consulta_anterior = $t->motivo_consulta_anterior;
+        $this->edit_tipolicencia_id = $t->tipolicencia_id;
+        $this->edit_indicacionterapeutica_id = $t->indicacionterapeutica_id;
+        $this->edit_derivacionpsiquiatrica_id = $t->derivacionpsiquiatrica_id;
+        $this->edit_procedencia_id = $t->procedencia_id;
+        $this->edit_enfermedade_id = $t->enfermedade_id;
+    }
 
+    public function updateTratamiento()
+    {
+        $fechaConvertida = $this->edit_fecha_atencion
+            ? \Carbon\Carbon::createFromFormat('Y-m-d\TH:i', $this->edit_fecha_atencion)->format('Y-m-d H:i:s')
+            : null;
+
+        $t = Tratamiento::findOrFail($this->editId);
+
+        $t->update([
+            'consumo_farmacos' => $this->edit_consumo_farmacos,
+            'antecedente_familiar' => $this->edit_antecedente_familiar,
+            'fecha_atencion' => $fechaConvertida,
+            'profesional_enterior' => $this->edit_profesional_enterior,
+            'motivo_consulta_anterior' => $this->edit_motivo_consulta_anterior,
+            'tipolicencia_id' => $this->edit_tipolicencia_id,
+            'indicacionterapeutica_id' => $this->edit_indicacionterapeutica_id,
+            'derivacionpsiquiatrica_id' => $this->edit_derivacionpsiquiatrica_id,
+            'procedencia_id' => $this->edit_procedencia_id,
+            'enfermedade_id' => $this->edit_enfermedade_id,
+        ]);
+
+        $this->reset([
+            'editId',
+            'edit_consumo_farmacos',
+            'edit_antecedente_familiar',
+            'edit_fecha_atencion',
+            'edit_profesional_enterior',
+            'edit_motivo_consulta_anterior',
+            'edit_tipolicencia_id',
+            'edit_indicacionterapeutica_id',
+            'edit_derivacionpsiquiatrica_id',
+            'edit_procedencia_id',
+            'edit_enfermedade_id',
+        ]);
+    }
+
+    public function delete($id)
+    {
+        $tratamiento = Tratamiento::find($id);
+
+        if ($tratamiento) {
+            $tratamiento->delete();
+            session()->flash('message', 'Tratamiento eliminado correctamente.');
+        }
+    }
 
     public function render()
     {
-       // $tratamientos = Tratamiento::where('paciente_id', $this->pacienteId)->get();
-
         $query = Tratamiento::where('paciente_id', $this->pacienteId);
 
-    if ($this->search) {
-        $query->where(function ($q) {
-            $q->where('profecional_enterior', 'like', '%' . $this->search . '%')
-                ->orWhere('consumo_farmacos', 'like', '%' . $this->search . '%')
-                ->orWhere('fecha_anterior', 'like', '%' . $this->search . '%')
-                ->orWhere('entecedente_familiar', 'like', '%' . $this->search . '%');
-                //->orWhere('dosis', 'like', '%' . $this->search . '%')
-                //->orWhere('fecha_atencion', 'like', '%' . $this->search . '%')
-                //->orWhere('detalles', 'like', '%' . $this->search . '%');
-        });
-    }
+        if ($this->search) {
+            $query->where(function ($q) {
+                $q->where('profesional_enterior', 'like', '%' . $this->search . '%')
+                    ->orWhere('consumo_farmacos', 'like', '%' . $this->search . '%')
+                    ->orWhere('fecha_anterior', 'like', '%' . $this->search . '%')
+                    ->orWhere('entecedente_familiar', 'like', '%' . $this->search . '%');
+            });
+        }
 
-    $tratamientos = $query->orderBy($this->sortBy, $this->sortDir)->paginate($this->perPage);
+        $tratamientos = $query->orderBy($this->sortBy, $this->sortDir)->paginate($this->perPage);
 
         return view('livewire.patient.patient-tratamiento', compact('tratamientos'))->layout('layouts.app');
     }
-
 }

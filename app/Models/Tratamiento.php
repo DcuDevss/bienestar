@@ -15,7 +15,7 @@ class Tratamiento extends Model
         'consumo_farmacos',
         'antecedente_familiar',
         'fecha_inicio',
-        'profesional_anterior',
+        'profesional_enterior',
         'fecha_anterior',
         'motivo_consulta_anterior',
         'motivo_consulta_actual',
@@ -25,6 +25,7 @@ class Tratamiento extends Model
         'procedencia_id',
         'enfermedade_id',
         'paciente_id',
+        'fecha_atencion'
 
 
     ];
@@ -37,7 +38,7 @@ class Tratamiento extends Model
     }
     public function procedencias()
     {
-        return $this->belongsTo('App\Models\Procedencia', 'procendecia_id', 'id');
+        return $this->belongsTo('App\Models\Procedencia', 'procedencia_id', 'id');
     }
     public function derivacionpsiquiatricas()
     {

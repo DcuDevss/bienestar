@@ -152,7 +152,7 @@ class PatientHistorialEnfermedades extends Component
             'nro_osef' => $data['nro_osef'],
             'art' => $data['art'],
             'medicacion' => $data['medicacion'],
-            //'estado_enfermedad' => isset($data['estado_enfermedad']) ? $data['estado_enfermedad'] : true,
+            'dosis'=> $data['dosis'],
             'tipodelicencia' => $data['tipodelicencia'],
         ]);
 
@@ -171,6 +171,7 @@ class PatientHistorialEnfermedades extends Component
             'tipolicencia_id',
             'tipodelicencia',
             'art',
+            'dosis',
             'imgen_enfermedad',
             'pdf_enfermedad',
             'search'

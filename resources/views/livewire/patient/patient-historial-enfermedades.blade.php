@@ -59,10 +59,10 @@
 
                                <td class="mb-0">
                                     @if ($enfermedad->pivot->estado_enfermedad == 1)
-                                    <p><span class="pr-1 font-extrabold text-black">estado de la enfermedad:</span>
+                                    <p><span class="pr-1 font-extrabold text-black"></span>
                                         activa</p>
                                     @else
-                                    <p><span class="pr-1 font-extrabold text-black">estado de la enfermedad:</span>
+                                    <p><span class="pr-1 font-extrabold text-black"></span>
                                         desactiva</p>
                                     @endif
                                 </td>

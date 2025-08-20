@@ -102,7 +102,7 @@ public function addDisase()
 
 
     $this->patient->enfermedades()->attach($data['enfermedade_id'], [
-        //'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'],
+        'name' => $data['name'],
         'fecha_atencion_enfermedad' => $data['fecha_atencion_enfermedad'],
         'detalle_diagnostico' => $data['detalle_diagnostico'],
         'imgen_enfermedad' => $archivoPathEnfermedad,

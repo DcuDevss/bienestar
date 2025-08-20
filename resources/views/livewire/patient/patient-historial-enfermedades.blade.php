@@ -191,8 +191,8 @@
                 <div>
                     <label for="name"
                         class="block text-sm font-medium text-gray-700">{{ __('Nombre del diagnostico') }}</label>
-                    <input id="name" class="w-full rounded cursor-not-allowed bg-gray-200" type="text"
-                        placeholder="{{ __('nombre') }}" wire:model="name" disabled />
+                    <input id="name" class="w-full rounded cursor-pointer" type="text"
+                        placeholder="{{ __('nombre') }}" wire:model="name"/>
                     <x-input-error for="name" />
                 </div>
 

@@ -21,6 +21,7 @@
 
             <div class="">
                 <div class="">
+                    <button class="btn btn-primary">Click me</button>
                     <div class="p-8 border-b border-gray-200 shadow">
                         <table class="divide-y divide-gray-300" id="dataTable">
                             <thead class="bg-black">

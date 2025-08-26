@@ -318,10 +318,10 @@
         <x-slot name="footer">
             <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
                 wire:click="$set('modal',false)">
-                {{ __('cancelar') }}
+                {{ __('Cancelar') }}
             </button>
             <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="editDisase">
-                {{ __('agregar enfermedad') }}
+                {{ __('Editar enfermedad') }}
             </button>
 
         </x-slot>

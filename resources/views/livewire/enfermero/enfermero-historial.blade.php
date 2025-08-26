@@ -149,4 +149,46 @@
     </form>
   </div>
 </div>
+<script>
+  // Escucha el evento Livewire 'notify' y muestra el toast
+  document.addEventListener('livewire:init', () => {
+    Livewire.on('notify', (payload = {}) => {
+      showToast(payload.message || 'Actualizado correctamente', payload.type || 'success');
+    });
+  });
+
+  // Toast minimalista (sin dependencias)
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.padding = '12px 16px';
+    toast.style.borderRadius = '10px';
+    toast.style.boxShadow = '0 8px 20px rgba(0,0,0,0.25)';
+    toast.style.color = '#fff';
+    toast.style.fontWeight = '600';
+    toast.style.zIndex = '9999';
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
+    toast.style.transition = 'opacity 200ms ease, transform 200ms ease';
+    toast.style.background = (type === 'error') ? '#dc2626' : '#16a34a';
+
+    document.body.appendChild(toast);
+
+    requestAnimationFrame(() => {
+      toast.style.opacity = '1';
+      toast.style.transform = 'translateY(0)';
+    });
+
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(8px)';
+      setTimeout(() => toast.remove(), 220);
+    }, 3000);
+  }
+</script>
+
 </div>

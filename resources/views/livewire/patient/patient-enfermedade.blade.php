@@ -64,7 +64,7 @@
                 @if (strlen(trim($this->search)) > 4)
                     <div class="bg-[#dc2626] text-white text-center p-1 rounded-md text-sm">
                         <span>Sin resultados, desea agregarla como nueva enfermedad?</span>
-                        {{--<strong class="">{{ __($this->search) }}</strong>--}}
+                        {{--<strong class="">{{ __($this->searchsdf) }}</strong>--}}
                         <div>
                             <button wire:click="addNew" class="text-black bg-white px-2 py-1 rounded-md hover:bg-[#d1d5db]">
                                 <p>{{ __('Si') }}</p>

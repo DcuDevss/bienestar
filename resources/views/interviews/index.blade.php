@@ -318,10 +318,11 @@
                                         <span>{{ __('Historial de control') }}</span>
                                     </div>
                                 </a>
-                            @endcan
+
                         </li>
                     </ul>
                 </div>
+                 @endcan
             </div>
             <!-- BOTONES 2 -->
             <div class="bg-white rounded-md p-2 mt-1">
@@ -346,10 +347,12 @@
                 </div>
             </div>
             <!-- BOTONES 3 -->
+            @can('users.index')
             <div class="bg-white rounded-md p-2 mt-1">
                 <div>
                     <ul>
                         <!-- TRATAMIENTOS -->
+
                         <li class="py-2 text-center">
                             <a href="{{ route('patient.patient-tratamiento', $paciente->id) }}" class="rounded-md">
                                 <div
@@ -361,7 +364,6 @@
                     </ul>
                 </div>
             </div>
-            @can('users.index')
                 <!-- BOTONES 4 -->
                 <div class="bg-white rounded-md p-2 mt-1">
                     <div>

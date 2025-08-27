@@ -57,13 +57,13 @@
                             <p><span class="pr-1 font-extrabold text-black">dias de licencia:</span>
                             {{ $disase->pivot->suma_auxiliar }}</p>
                         </li>
-                        <li class="mb-0"><span class="pr-1 font-extrabold text-black">Activo:</span>
+{{--                         <li class="mb-0"><span class="pr-1 font-extrabold text-black">Activo:</span>
                             @if($disase->pivot->estado_certificado == 1)
                                 Sí
                             @else
                                 No
                             @endif
-                        </li>
+                        </li> --}}
                         <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">Detalle de enfermedad:</span>
                             {{ $disase->pivot->detalle_certificado }}</p>
@@ -144,22 +144,24 @@
     </x-slot>
     <x-slot name="content">
        <div class="grid grid-cols-2 gap-4">
-                <div>
+ {{--                <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Nombre') }}</label>
                     <input id="name" class="w-full rounded" type="text" placeholder="{{ __('nombre') }}"
                         wire:model.defer="name" />
                     <x-input-error for="name" />
-                </div>
+                </div> --}}
 
                 <div>
                     <label for="editedDisaseName"
-                        class="block text-sm font-medium text-gray-700">{{ __('Nuevo Nombre') }}</label>
+                        class="block text-sm font-medium text-gray-700">{{ __('Nombre del Padecimiento') }}</label>
                     <input id="editedDisaseName" class="w-full rounded" type="text"
                         placeholder="{{ __('Nuevo nombre') }}" wire:model.defer="editedDisaseName" />
                     <x-input-error for="editedDisaseName" />
                 </div>
 
                 <div>
+                    <label for="fecha_presentacion_certificado"
+                        class="block text-sm font-medium text-gray-700">{{ __('Tipo de Licencia') }}</label>
                     <select id="tipolicencia_id" class="w-full rounded cursor-pointer" wire:model="tipolicencia_id">
                         <option value="" selected>{{ __('Seleccione una opción') }}</option>
                         @foreach ($tipolicencias as $licencia)
@@ -209,27 +211,27 @@
                     <input id="suma_salud" class="w-full rounded cursor-pointer" type="number" placeholder="{{ __('ingrese dias certificado') }}" wire:model.defer="suma_salud" />
                     <x-input-error for="suma_salud" />
                 </div>
-
+{{--
                 <div>
                     <label class="flex items-center">
                         <input id="estado_certificado" class="rounded" type="checkbox" wire:model.defer="estado_certificado" />
                         <span class="ml-2">{{ __('Activo') }}</span>
                     </label>
+                </div> --}}
+                <div class="col-span-2 grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="imagen_frente" class="block text-sm font-medium text-gray-700">{{ __('frente certificado') }}</label>
+                        <input id="imagen_frente" class="rounded py-2" type="file" wire:model.defer="imagen_frente"
+                            accept="image/*" />
+                        <x-input-error for="imagen_frente" />
+                    </div>
+                    <div>
+                        <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">{{ __('frente certificado') }}</label>
+                        <input id="imagen_dorso" class="rounded py-2" type="file" wire:model.defer="imagen_dorso"
+                            accept="image/*" />
+                        <x-input-error for="imagen_dorso" />
+                    </div>
                 </div>
-
-                <div>
-                    <label for="imagen_frente" class="block text-sm font-medium text-gray-700">{{ __('frente certificado') }}</label>
-                    <input id="imagen_frente" class="rounded py-2" type="file" wire:model.defer="imagen_frente"
-                        accept="image/*" />
-                    <x-input-error for="imagen_frente" />
-                </div>
-                <div>
-                    <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">{{ __('frente certificado') }}</label>
-                    <input id="imagen_dorso" class="rounded py-2" type="file" wire:model.defer="imagen_dorso"
-                        accept="image/*" />
-                    <x-input-error for="imagen_dorso" />
-                </div>
-
                 <div class="col-span-2">
                     <label for="detalle_certificado"
                         class="block text-sm font-medium text-gray-700">{{ __('detalle del certificado') }}</label>

@@ -32,7 +32,7 @@ class PatientEnfermedade extends Component
 
 
     protected $rules = [
-        'name' => 'nullable',
+        'name' => 'required_without:enfermedade_id|string|min:2',
         'detalle_diagnostico'=>'nullable',
         'fecha_atencion_enfermedad'=>'nullable',
         'fecha_finalizacion_enfermedad'=>'nullable',

@@ -232,14 +232,14 @@
                                 <x-input-error for="nro_osef" />
 
                             </div>
-
+{{--
                             <div>
                                 <label for="estado_enfermedad"
                                     class="block text-sm font-medium text-gray-700">{{ __('estado de la enfermedad') }}</label>
                                 <input id="estado_enfermedad" class="rounded cursor-pointer" type="checkbox"
                                     wire:model="estado_enfermedad" />
                                 <x-input-error for="estado_enfermedad" />
-                            </div>
+                            </div> --}}
                         </div>
 
                         {{--

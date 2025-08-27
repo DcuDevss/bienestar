@@ -249,11 +249,13 @@
                                         <td class="tiBody px-4 py-1 text-gray-300">{{ $tratamiento->tipolicencias->name }}</td>
                                         <td class="tiBody px-4 py-1">
                                         <div class="flex flex-wrap gap-2 justify-center">
+                                            @role('super-admin')
                                             <button onclick="confirm('¿Seguro que desea eliminar este tratamiento?') || event.stopImmediatePropagation()"
                                                 wire:click="delete({{ $tratamiento->id }})"
                                                 class="ml-2 px-4 py-[2px] bg-[#f02f39] hover:bg-[#3973ac] text-white rounded">
                                                 Eliminar
                                             </button>
+                                            @endrole
                                             <button
                                                 @click="editModal = true"
                                                 wire:click="openEditModal({{ $tratamiento->id }})"

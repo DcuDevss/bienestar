@@ -1,12 +1,13 @@
 <?php
-namespace App\Livewire\Enfermero;
 
+namespace App\Livewire\Enfermero;
 
 use App\Models\Controlenfermero;
 use App\Models\Paciente;
 use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
+use Carbon\Carbon;
 
 class EnfermeroHistorial extends Component
 {
@@ -31,7 +32,7 @@ class EnfermeroHistorial extends Component
 
     public $editForm = [];
     public $editModal = false;
-    public $editControl;
+    public $editControl = [];
 
     public function mount(Paciente $paciente)
     {
@@ -41,16 +42,22 @@ class EnfermeroHistorial extends Component
     public function openEditModal($id)
     {
         $control = Controlenfermero::findOrFail($id);
+
         $this->editControl = [
-        'id' => $control->id,
-        'presion' => (int) $control->presion,
-        'glucosa' => (int) $control->glucosa,
-        'temperatura' => (float) $control->temperatura,
-        'dosis' => $control->dosis,
-        'inyectable' => $control->inyectable,
-        'fecha_atencion' => $control->fecha_atencion,
-        'detalles' => $control->detalles,
-    ];
+            'id'             => $control->id,
+            'presion'        => (string) $control->presion,
+            'glucosa'        => (string) $control->glucosa,
+            'temperatura'    => (float) $control->temperatura,
+            'dosis'          => $control->dosis,
+            'inyectable'     => $control->inyectable,
+            'fecha_atencion' => $control->fecha_atencion
+                ? ($control->fecha_atencion instanceof \DateTimeInterface
+                    ? $control->fecha_atencion->format('Y-m-d')
+                    : Carbon::parse($control->fecha_atencion)->format('Y-m-d'))
+                : null,
+            'detalles'       => $control->detalles,
+        ];
+
         $this->editForm = $control->toArray();
         $this->editModal = true;
     }
@@ -58,17 +65,31 @@ class EnfermeroHistorial extends Component
     public function updateTratamiento()
     {
         $control = Controlenfermero::findOrFail($this->editForm['id']);
+
+        $campos = ['presion','glucosa','temperatura','inyectable','dosis','fecha_atencion','detalles'];
+        foreach ($campos as $campo) {
+            if (array_key_exists($campo, $this->editControl)) {
+                $this->editForm[$campo] = $this->editControl[$campo];
+            }
+        }
+
+        if (!empty($this->editForm['fecha_atencion'])) {
+            $this->editForm['fecha_atencion'] = Carbon::parse($this->editForm['fecha_atencion'])->format('Y-m-d');
+        }
+
         $control->update([
-            'presion' => $this->editForm['presion'],
-            'glucosa' => $this->editForm['glucosa'],
-            'temperatura' => $this->editForm['temperatura'],
-            'inyectable' => $this->editForm['inyectable'],
-            'dosis' => $this->editForm['dosis'],
-            'fecha_atencion' => $this->editForm['fecha_atencion'],
-            'detalles' => $this->editForm['detalles'],
+            'presion'        => $this->editForm['presion']        ?? null,
+            'glucosa'        => $this->editForm['glucosa']        ?? null,
+            'temperatura'    => $this->editForm['temperatura']    ?? null,
+            'inyectable'     => $this->editForm['inyectable']     ?? null,
+            'dosis'          => $this->editForm['dosis']          ?? null,
+            'fecha_atencion' => $this->editForm['fecha_atencion'] ?? null,
+            'detalles'       => $this->editForm['detalles']       ?? null,
         ]);
+
         $this->editModal = false;
         session()->flash('message', 'Tratamiento actualizado correctamente.');
+        $this->dispatch('notify', message: 'Tratamiento actualizado correctamente.');
     }
 
     public function delete($id)
@@ -94,6 +115,8 @@ class EnfermeroHistorial extends Component
 
         $controles = $query->orderBy($this->sortBy, $this->sortDir)->paginate($this->perPage);
 
-        return view('livewire.enfermero.enfermero-historial', ['controles' => $controles])->layout('layouts.app');
+        return view('livewire.enfermero.enfermero-historial', [
+            'controles' => $controles
+        ])->layout('layouts.app');
     }
 }

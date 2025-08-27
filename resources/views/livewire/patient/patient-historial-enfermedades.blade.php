@@ -191,8 +191,8 @@
                 <div>
                     <label for="name"
                         class="block text-sm font-medium text-gray-700">{{ __('Nombre del diagnostico') }}</label>
-                    <input id="name" class="w-full rounded cursor-not-allowed bg-gray-200" type="text"
-                        placeholder="{{ __('nombre') }}" wire:model="name" disabled />
+                    <input id="name" class="w-full rounded cursor-pointer" type="text"
+                        placeholder="{{ __('nombre') }}" wire:model="name"/>
                     <x-input-error for="name" />
                 </div>
 
@@ -318,10 +318,10 @@
         <x-slot name="footer">
             <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
                 wire:click="$set('modal',false)">
-                {{ __('cancelar') }}
+                {{ __('Cancelar') }}
             </button>
             <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="editDisase">
-                {{ __('agregar enfermedad') }}
+                {{ __('Editar enfermedad') }}
             </button>
 
         </x-slot>

@@ -36,7 +36,7 @@
                     <label for="fecha_atencion"
                         class="block text-sm font-medium text-gray-700">{{ __('fecha de atencion') }}</label>
                     <input id="fecha_atencion" class="w-full rounded cursor-pointer" type="datetime-local"
-                        placeholder="{{ __(' ingrese fecha de la enfermedad') }}" wire:model="fecha_atencion" />
+                        placeholder="{{ __(' ingrese fecha de atención') }}" wire:model="fecha_atencion" />
                     <x-input-error for="fecha_atencion" />
                 </div>
 

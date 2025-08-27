@@ -325,6 +325,18 @@
 
         </x-slot>
     </x-dialog-modal>
+        <div x-data="{ open:false, msg:'', t:null }"
+            x-on:toast.window="
+                clearTimeout(t);
+                msg = $event.detail?.message || 'Acción realizada';
+                open = true;
+                t = setTimeout(() => open = false, 2500);
+            "
+            x-show="open"
+            x-transition
+            class="fixed top-4 right-4 z-50 rounded-md bg-emerald-600 text-white px-4 py-2 shadow">
+            <span x-text="msg"></span>
+        </div>
     <!-- LIGHTBOX -->
     <script>
         /funcionalidad para ampliar la imagen al darle click y cerrar/

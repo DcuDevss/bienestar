@@ -34,8 +34,8 @@
                         <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">Tipo de licencia:</span>
                                 {{ $tipolicencias->get($disase->pivot->tipolicencia_id)?->name ?? 'No definido' }}
-                            </p>                            
-                            
+                            </p>
+
                         </li>
                         <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">Presentacion de certificado:</span>
@@ -165,11 +165,11 @@
                         @foreach ($tipolicencias as $licencia)
                             <option value="{{ $licencia->id }}">{{ $licencia->name }}</option>
                         @endforeach
-                    </select> 
+                    </select>
                     <x-input-error for="tipolicencia_id" />
-                
-                </div>         
-               
+
+                </div>
+
 
                 <div>
                     <label for="fecha_presentacion_certificado"
@@ -247,10 +247,22 @@
         </button>
         <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="editDisase"
             wire:loading.attr="disabled">
-            {{ __('editar enfermedad') }}
+            {{ __('Editar enfermedad') }}
         </button>
     </x-slot>
 </x-dialog-modal>
+        <div x-data="{ open:false, msg:'', t:null }"
+            x-on:toast.window="
+                clearTimeout(t);
+                msg = $event.detail?.message || 'Acción realizada';
+                open = true;
+                t = setTimeout(() => open = false, 2500);
+            "
+            x-show="open"
+            x-transition
+            class="fixed top-4 right-4 z-50 rounded-md bg-emerald-600 text-white px-4 py-2 shadow">
+            <span x-text="msg"></span>
+        </div>
     <!-- LIGHTBOX -->
     <script>
         /funcionalidad para ampliar la imagen al darle click y cerrar/

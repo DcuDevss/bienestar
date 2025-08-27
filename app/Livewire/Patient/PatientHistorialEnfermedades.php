@@ -158,6 +158,8 @@ class PatientHistorialEnfermedades extends Component
 
         // Cerrar el modal y limpiar los datos
         $this->modal = false;
+        $this->dispatch('toast', type: 'success', message: 'Enfermedad editada correctamente');
+        
         $this->reset([
             'name',
             // 'editedDisaseName',

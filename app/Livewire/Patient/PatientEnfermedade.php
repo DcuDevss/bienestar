@@ -32,24 +32,25 @@ class PatientEnfermedade extends Component
 
 
     protected $rules = [
-        'name' => 'nullable',
-        'detalle_diagnostico'=>'nullable',
-        'fecha_atencion_enfermedad'=>'nullable',
-        'fecha_finalizacion_enfermedad'=>'nullable',
-        'horas_reposo'=>'nullable',
-        'pdf_enfermedad'=>'nullable|file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
-        'imgen_enfermedad'=>'nullable|file',
-        'medicacion'=>'nullable',
-        'dosis'=>'nullable',
-        'motivo_consulta'=>'nullable',
-        'derivacion_psiquiatrica'=>'nullable',
-        'estado_enfermedad'=>'nullable',
-        'art'=>'nullable',
-        'detalle_medicacion'=>'nullable',
-        'nro_osef'=>'nullable',
-        'tipodelicencia'=>'nullable',
-        'enfermedade_id'=>'required',
+        'enfermedade_id'              => 'nullable|exists:enfermedades,id',
+        'name'                        => 'required_without:enfermedade_id|string|min:2',
+        'detalle_diagnostico'         => 'nullable',
+        'fecha_atencion_enfermedad'   => 'nullable|date',
+        'fecha_finalizacion_enfermedad'=> 'nullable|date|after_or_equal:fecha_atencion_enfermedad',
+        'horas_reposo'                => 'nullable|integer',
+        'pdf_enfermedad'              => 'nullable|file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
+        'imgen_enfermedad'            => 'nullable|file|mimes:png,jpg,jpeg,gif|max:8192',
+        'medicacion'                  => 'nullable',
+        'dosis'                       => 'nullable',
+        'motivo_consulta'             => 'nullable',
+        'derivacion_psiquiatrica'     => 'nullable',
+        'estado_enfermedad'           => 'nullable|boolean',
+        'art'                         => 'nullable',
+        'detalle_medicacion'          => 'nullable',
+        'nro_osef'                    => 'nullable',
+        'tipodelicencia'              => 'nullable',
     ];
+
 
    /* public function mount(Paciente $paciente)
     {
@@ -71,79 +72,72 @@ class PatientEnfermedade extends Component
         $this->modal = true;
     }
 
-public function addDisase()
-{
-    $data = $this->validate();
 
-    // Obtener el ID del paciente
-    $patientId = $this->patient->id;
 
-    // Crear el directorio si no existe
-    $directoryPath = "public/archivos_enfermedades/paciente_$patientId";
-    if (!file_exists($directoryPath)) {
-        mkdir($directoryPath, 0777, true);
+    public function addDisase()
+    {
+        $data = $this->validate();
+
+        // 1) Resolver la enfermedad (si no viene id, crearla)
+        if (empty($data['enfermedade_id'])) {
+            $nombre = mb_strtolower(trim($this->name ?? $this->search ?? ''));
+            $enfermedad = Enfermedade::firstOrCreate(
+                ['name' => $nombre],
+                ['slug' => Str::slug($nombre), 'codigo' => '']
+            );
+            $enfermedadeId = $enfermedad->id;
+        } else {
+            $enfermedadeId = $data['enfermedade_id'];
+        }
+
+        // 2) Directorio y archivos (si querés dejá tu versión; esto funciona igual)
+        $patientId = $this->patient->id;
+        $directoryPath = "public/archivos_enfermedades/paciente_$patientId";
+        if (!file_exists($directoryPath)) {
+            mkdir($directoryPath, 0777, true);
+        }
+
+        $archivoPathEnfermedad = isset($data['imgen_enfermedad'])
+            ? $data['imgen_enfermedad']->storeAs($directoryPath, $data['imgen_enfermedad']->getClientOriginalName())
+            : null;
+
+        $archivoPathPDF = isset($data['pdf_enfermedad'])
+            ? $data['pdf_enfermedad']->storeAs($directoryPath, $data['pdf_enfermedad']->getClientOriginalName())
+            : null;
+
+        // 3) Guardar en PIVOTE (SIN 'name')
+        $this->patient->enfermedades()->syncWithoutDetaching([
+            $enfermedadeId => [
+                'fecha_atencion_enfermedad'      => $data['fecha_atencion_enfermedad'] ?? null,
+                'detalle_diagnostico'            => $data['detalle_diagnostico'] ?? null,
+                'imgen_enfermedad'               => $archivoPathEnfermedad,
+                'pdf_enfermedad'                 => $archivoPathPDF,
+                'fecha_finalizacion_enfermedad'  => $data['fecha_finalizacion_enfermedad'] ?? null,
+                'horas_reposo'                   => $data['horas_reposo'] ?? null,
+                'medicacion'                     => $data['medicacion'] ?? null,
+                'dosis'                          => $data['dosis'] ?? null,
+                'motivo_consulta'                => $data['motivo_consulta'] ?? null,
+                'derivacion_psiquiatrica'        => $data['derivacion_psiquiatrica'] ?? null,
+                'estado_enfermedad'              => $data['estado_enfermedad'] ?? 0,
+                'detalle_medicacion'             => $data['detalle_medicacion'] ?? null,
+                'nro_osef'                       => $data['nro_osef'] ?? null,
+                'tipodelicencia'                 => $data['tipodelicencia'] ?? null,
+                'art'                            => $data['art'] ?? null,
+            ],
+        ]);
+
+        // 4) Reset
+        $this->modal = false;
+        $this->reset([
+            'name','detalle_diagnostico','fecha_atencion_enfermedad','fecha_finalizacion_enfermedad',
+            'horas_reposo','dosis','tipolicencia_id','tipodelicencia','art','motivo_consulta',
+            'derivacion_psiquiatrica','estado_enfermedad','imgen_enfermedad','medicacion',
+            'detalle_medicacion','pdf_enfermedad','nro_osef','search','enfermedade_id'
+        ]);
+        $this->paciente_enfermedades = $this->patient->enfermedades()->get();
+        $this->resetValidation();
     }
 
-    // Manejar la carga del archivo
-    if (isset($data['imgen_enfermedad'])) {
-        $archivoPathEnfermedad = $data['imgen_enfermedad']->storeAs($directoryPath, $data['imgen_enfermedad']->getClientOriginalName());
-    } else {
-        $archivoPathEnfermedad = null;
-    }
-
-    if (isset($data['pdf_enfermedad'])) {
-        $archivoPathPDF = $data['pdf_enfermedad']->storeAs($directoryPath, $data['pdf_enfermedad']->getClientOriginalName());
-    } else {
-        $archivoPathPDF = null;
-
-    }
-
-    $this->patient->enfermedades()->attach($data['enfermedade_id'], [
-        'name' => $data['name'],
-        'fecha_atencion_enfermedad' => $data['fecha_atencion_enfermedad'],
-        'detalle_diagnostico' => $data['detalle_diagnostico'],
-        'imgen_enfermedad' => $archivoPathEnfermedad,
-        'pdf_enfermedad' => $archivoPathPDF,
-        'fecha_finalizacion_enfermedad' => $data['fecha_finalizacion_enfermedad'],
-        'horas_reposo' => $data['horas_reposo'],
-        'medicacion' => $data['medicacion'],
-        'dosis' => $data['dosis'],
-        'motivo_consulta' => $data['motivo_consulta'],
-        'derivacion_psiquiatrica' => $data['derivacion_psiquiatrica'],
-        'estado_enfermedad'=>$data['estado_enfermedad'],
-        'detalle_medicacion' => $data['detalle_medicacion'],
-        'nro_osef' => $data['nro_osef'],
-        'tipodelicencia' => $data['tipodelicencia'],
-        'art' => $data['art']
-    ]);
-
-    $this->modal = false;
-    $this->reset([
-        'name',
-        //'fecha_presentacion_certificado',
-        'detalle_diagnostico',
-        'fecha_atencion_enfermedad',
-        'fecha_finalizacion_enfermedad',
-        'horas_reposo',
-        'dosis',
-        'tipolicencia_id',
-        'tipodelicencia',
-        'art',
-        'motivo_consulta',
-        'derivacion_psiquiatrica',
-        'estado_enfermedad',
-        'imgen_enfermedad',
-        'medicacion',
-        'detalle_medicacion',
-        'pdf_enfermedad',
-        'nro_osef',
-        'pdf_enfermedad',
-        'search'
-    ]);
-    $this->paciente_enfermedades = $this->patient->enfermedades()->get();
-    $this->resetValidation();
-    $this->render();
-}
 
     public function addNew()
     {

@@ -124,12 +124,14 @@
                                                 Editar
                                             </a>
                                             <!-- Opción Eliminar -->
+                                            @role('super-admin')
                                             <button
                                                 onclick="confirm('Seguro desea eliminar a este paciente {{ $paciente->apellido_nombre }} ?') || event.stopImmediatePropagation()"
                                                 wire:click="delete({{ $paciente->id }})"
                                                 class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-red-700 hover:bg-red-600">
                                                 Eliminar
                                             </button>
+                                            @endrole
                                         </div>
                                     </td>
 
@@ -171,7 +173,7 @@
 
         <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm">
             <h2 class="text-lg font-bold mb-2 text-gray-700">Pacientes por Tipo de Licencia</h2>
-        
+
             @foreach ($agrupadosPorLicencia as $licencia)
                 <div class="mb-3">
                     <h3 class="font-semibold text-blue-600">{{ $licencia->name }}</h3>
@@ -188,8 +190,8 @@
                 </div>
             @endforeach
         </div>
-        
-        
+
+
     </section>
 
 

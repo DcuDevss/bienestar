@@ -64,7 +64,7 @@
                 @if (strlen(trim($this->search)) > 4)
                     <div class="bg-[#dc2626] text-white text-center p-1 rounded-md text-sm">
                         <span>Sin resultados, desea agregarla como nueva enfermedad?</span>
-                        {{--<strong class="">{{ __($this->search) }}</strong>--}}
+                        {{--<strong class="">{{ __($this->searchsdf) }}</strong>--}}
                         <div>
                             <button wire:click="addNew" class="text-black bg-white px-2 py-1 rounded-md hover:bg-[#d1d5db]">
                                 <p>{{ __('Si') }}</p>
@@ -232,14 +232,14 @@
                                 <x-input-error for="nro_osef" />
 
                             </div>
-
+{{--
                             <div>
                                 <label for="estado_enfermedad"
                                     class="block text-sm font-medium text-gray-700">{{ __('estado de la enfermedad') }}</label>
                                 <input id="estado_enfermedad" class="rounded cursor-pointer" type="checkbox"
                                     wire:model="estado_enfermedad" />
                                 <x-input-error for="estado_enfermedad" />
-                            </div>
+                            </div> --}}
                         </div>
 
                         {{--

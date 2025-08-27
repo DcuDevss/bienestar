@@ -45,11 +45,13 @@
                           class="px-4 py-[2px] bg-yellow-500 hover:bg-yellow-600 text-white rounded">
                     Editar
                   </button>
+                  @role('super-admin')
                   <button onclick="confirm('¿Seguro que desea eliminar este control?') || event.stopImmediatePropagation()"
                           wire:click="delete({{ $control->id }})"
                           class="px-4 py-[2px] bg-[#2d5986] hover:bg-[#3973ac] text-white rounded">
                     Eliminar
                   </button>
+                  @endrole
                 </td>
               </tr>
               @endforeach

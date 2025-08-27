@@ -233,8 +233,8 @@
             <!-- Motivo -->
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="motivo" class="block text-sm font-medium">Motivo</label>
-                <input type="text" wire:model="motivo"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <textarea id="motivo" wire:model="motivo"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                 @error('motivo')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
@@ -292,26 +292,6 @@
                     @endforeach
                 </select>
                 @error('abordaje_id')
-                    <span class="text-red-500">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div x-show="!(tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 10 || tipo_entrevista_id == 11)"
-                class="mb-4 mx-auto px-4 w-9/12">
-                <label for="derivacion_psiquiatrica" class="block text-sm font-medium">Medicación Recetada</label>
-                <input type="text" wire:model="derivacion_psiquiatrica"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                @error('derivacion_psiquiatrica')
-                    <span class="text-red-500">{{ $message }}</span>
-                @enderror
-            </div>
-
-            <div x-show="!(tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 10 || tipo_entrevista_id == 11)"
-                class="mb-4 mx-auto px-4 w-9/12">
-                <label for="evolucion_tratamiento" class="block text-sm font-medium">Medicación Recetada</label>
-                <input type="text" wire:model="evolucion_tratamiento"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
-                @error('evolucion_tratamiento')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
             </div>
@@ -402,8 +382,8 @@
             <!-- Actividades -->
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="actividades" class="block text-sm font-medium">Actividades</label>
-                <input type="text" wire:model="actividades"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <textarea id="actividades" wire:model="actividades"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                 @error('actividades')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
@@ -434,8 +414,8 @@
 
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="notas_clinicas" class="block text-sm font-medium">Notas Clínicas</label>
-                <input type="text" wire:model="notas_clinicas"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <textarea id="notas_clinicas" wire:model="notas_clinicas"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                 @error('notas_clinicas')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
@@ -471,8 +451,8 @@
 
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="tecnica_utilizada" class="block text-sm font-medium">Técnicas Utilizadas</label>
-                <input type="text" wire:model="tecnica_utilizada"
-                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500">
+                <textarea id="tecnica_utilizada" wire:model="tecnica_utilizada"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
                 @error('tecnica_utilizada')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror

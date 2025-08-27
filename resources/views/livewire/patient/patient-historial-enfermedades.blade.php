@@ -48,16 +48,21 @@
                                 <p><span class="pr-1 font-extrabold text-black">fecha de atencion:</span>
                                     {{ $enfermedad->pivot->fecha_atencion_enfermedad }}</p>
                             </li>
-                            <li class="mb-0">
+{{--                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">fecha de finalizacion:</span>
                                     {{ $enfermedad->pivot->fecha_finalizacion_enfermedad }}</p>
-                            </li>
+                            </li> --}}
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">horas de reposo:</span>
                                     {{ $enfermedad->pivot->horas_reposo }}</p>
                             </li>
 
-                               <td class="mb-0">
+                            <li class="mb-0">
+                                <p><span class="pr-1 font-extrabold text-black">art:</span>
+                                    {{ $enfermedad->pivot->art }}</p>
+                            </li>
+
+{{--                                <td class="mb-0">
                                     @if ($enfermedad->pivot->estado_enfermedad == 1)
                                     <p><span class="pr-1 font-extrabold text-black"></span>
                                         activa</p>
@@ -65,7 +70,7 @@
                                     <p><span class="pr-1 font-extrabold text-black"></span>
                                         desactiva</p>
                                     @endif
-                                </td>
+                                </td> --}}
 
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">medicacion:</span>
@@ -78,10 +83,6 @@
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">nro remedio osef:</span>
                                     {{ $enfermedad->pivot->nro_osef }}</p>
-                            </li>
-                            <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">art:</span>
-                                    {{ $enfermedad->pivot->art }}</p>
                             </li>
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">derivacion psiquiatrica:</span>
@@ -225,7 +226,7 @@
                         placeholder="{{ __('fecha atencion') }}" wire:model="fecha_atencion_enfermedad" />
                     <x-input-error for="fecha_atencion_enfermedad" />
                 </div>
-
+{{--
                 <div>
                     <label for="fecha_finalizacion_enfermedad"
                         class="block text-sm font-medium text-gray-700">{{ __('finalización de enfermedad') }}</label>
@@ -233,7 +234,7 @@
                         type="datetime-local" placeholder="{{ __('fecha finalización') }}"
                         wire:model="fecha_finalizacion_enfermedad" />
                     <x-input-error for="fecha_finalizacion_enfermedad" />
-                </div>
+                </div> --}}
 
                 <div>
                     <label for="horas_reposo"
@@ -241,6 +242,13 @@
                     <input id="horas_reposo" class="w-full rounded cursor-pointer" type="number"
                         placeholder="{{ __('ingrese horas de reposo') }}" wire:model="horas_reposo" />
                     <x-input-error for="horas_reposo" />
+                </div>
+
+                <div>
+                    <label for="art" class="block text-sm font-medium text-gray-700">{{ __('art') }}</label>
+                    <input id="art" class="w-full rounded cursor-pointer" type="text"
+                        placeholder="{{ __('ingrese art') }}" wire:model="art" />
+                    <x-input-error for="art" />
                 </div>
             </div>
 
@@ -259,12 +267,6 @@
                     <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
                         wire:model="pdf_enfermedad" accept="image/*" />
                     <x-input-error for="pdf_enfermedad" />
-                </div>
-                <div>
-                    <label for="art" class="block text-sm font-medium text-gray-700">{{ __('art') }}</label>
-                    <input id="art" class="w-full rounded cursor-pointer" type="text"
-                        placeholder="{{ __('ingrese art') }}" wire:model="art" />
-                    <x-input-error for="art" />
                 </div>
             </div>
 

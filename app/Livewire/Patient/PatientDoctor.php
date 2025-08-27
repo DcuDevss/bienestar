@@ -11,12 +11,10 @@ class PatientDoctor extends Component
     use WithPagination;
     public $search="";
 
-
     public function selectDate($doctorId,$specialtyId){
        // $this->emitTo('patient.patient-date','selectDate',$doctorId,$specialtyId);
         $this->dispatch('selectDate',$doctorId,$specialtyId);
     }
-
 
     public function render()
     {

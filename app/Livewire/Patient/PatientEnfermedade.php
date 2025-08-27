@@ -71,8 +71,6 @@ class PatientEnfermedade extends Component
         $this->modal = true;
     }
 
-
-
 public function addDisase()
 {
     $data = $this->validate();
@@ -99,7 +97,6 @@ public function addDisase()
         $archivoPathPDF = null;
 
     }
-
 
     $this->patient->enfermedades()->attach($data['enfermedade_id'], [
         //'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'],
@@ -148,8 +145,6 @@ public function addDisase()
     $this->render();
 }
 
-
-
     public function addNew()
     {
         $newDisase = Enfermedade::create([
@@ -161,9 +156,6 @@ public function addDisase()
         $this->name = $newDisase->name;
         $this->addModalDisase($newDisase->id);
     }
-
-
-
 
     public function render()
     {
@@ -177,6 +169,5 @@ public function addDisase()
 
         return view('livewire.patient.patient-enfermedade', ['enfermedades' => $enfermedades, 'tipolicencias' => $tipolicencias]);
     }
-
 
 }

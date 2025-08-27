@@ -71,7 +71,6 @@ class PatientEntrevistas extends Component
 
     }
 
-
     public function render()
     {
         $searchLower = strtolower($this->search);

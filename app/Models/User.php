@@ -84,8 +84,6 @@ class User extends Authenticatable implements MustVerifyEmail
     }
 
 
-
-
     public function jerarquia()
     {
         return $this->belongsTo('App\Models\Jerarquia', 'jerarquia_id', 'id');
@@ -109,4 +107,5 @@ class User extends Authenticatable implements MustVerifyEmail
     {
         return $this->belongsToMany(Disase::class)->withPivot('year');
     }
+    
 }

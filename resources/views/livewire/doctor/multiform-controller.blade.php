@@ -247,7 +247,7 @@
                                 class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
                             <!-- ALTURA -->
                             <label for="">Altura:</label>
-                            <input type="number" wire:model.lazy="altura" placeholder="altura" step="any"
+                            <input type="text" wire:model.lazy="altura" placeholder="altura" step="any"
                                 class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
                             <label for="">Posee alguna enfermedad preexistente:</label>
                             <input type="text" wire:model.lazy="enfermedad" placeholder="..." step="any"

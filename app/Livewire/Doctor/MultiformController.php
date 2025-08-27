@@ -131,6 +131,7 @@ class MultiformController extends Component
 
 public function submit2()
 {
+
     $this->validate([
         'legajo' => 'required',
         'jerarquia_id' => 'required',
@@ -164,9 +165,10 @@ public function submit2()
 
     public function submit3()
     {
+        
         $this->validate([
             'peso' => 'required',
-            'altura' => 'required',
+            'altura'  => 'required',
             'factore_id'=> 'required',
             'enfermedad'=>'required',
             'remedios'=>'required',

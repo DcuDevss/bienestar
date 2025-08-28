@@ -271,8 +271,8 @@
             </div>
         </section>
         <!-- MENU VERTICAL -->
-        <section class="w-1/4 pr-1">
-            <div class="bg-white rounded-md p-2">
+        <section class="flex-1 px-1">
+            <div class="bg-white p-2 rounded-md">
                 <!-- BOTONES -->
                 <div>
                     <ul class="">
@@ -298,7 +298,7 @@
                  @endcan
             </div>
             <!-- BOTONES 2 -->
-            <div class="bg-white rounded-md p-2 mt-1">
+            <div class="bg-white rounded-md p-2 mt-1 mx-0">
                 <div>
                     <ul>
                         <!-- ADJUNTAR PDF -->
@@ -321,7 +321,7 @@
             </div>
             <!-- BOTONES 3 -->
             @can('users.index')
-            <div class="bg-white rounded-md p-2 mt-1">
+            <div class="bg-white rounded-md p-2 mt-1 mx-0">
                 <div>
                     <ul>
                         <!-- TRATAMIENTOS -->
@@ -338,7 +338,7 @@
                 </div>
             </div>
                 <!-- BOTONES 4 -->
-                <div class="bg-white rounded-md p-2 mt-1">
+                <div class="bg-white rounded-md p-2 mt-1 mx-0">
                     <div>
                         <ul>
                             <!-- REINICIAR DIAS DE LICENCIA -->

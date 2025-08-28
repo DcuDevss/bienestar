@@ -228,33 +228,31 @@
                 @endif
 
                 @if ($step == 2)
-                    <div class="mx-auto w-fit font-semibold text-[19px]">
-                        <p>Familiar:</p>
-                    </div>
-                    <label for="factore_id" class="">Grupo y Factor Sanguineo</label>
-                    <select wire:model.lazy="factore_id"
-                        class="h-9 w-full rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                        <option disabled selected value="">Seleccionar</option>
-                        @foreach ($factores as $factore)
-                            <option value="{{ $factore->id }}" class="text-[#666666]">{{ $factore->name }}</option>
-                        @endforeach
-                    </select>
                     <div class="mx-auto">
+                        <p>Personal:</p>
                         <div class="flex flex-col gap-y-2 p-5 w-[80%] mx-auto">
-                            <!-- PESO -->
-                            <label for="">Peso:</label>
-                            <input type="number" wire:model.lazy="peso" placeholder="peso" step="any"
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                            <!-- ALTURA -->
-                            <label for="">Altura:</label>
-                            <input type="text" wire:model.lazy="altura" placeholder="altura" step="any"
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                            <label for="">Posee alguna enfermedad preexistente:</label>
-                            <input type="text" wire:model.lazy="enfermedad" placeholder="..." step="any"
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                            <label for="">Medicamentos que consume:</label>
-                            <input type="text" wire:model.lazy="remedios" placeholder="..." step="any"
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                            <label for="factore_id" class="">Grupo y Factor Sanguineo</label>
+                                <select wire:model.lazy="factore_id"
+                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                                    <option disabled selected value="">Seleccionar</option>
+                                    @foreach ($factores as $factore)
+                                        <option value="{{ $factore->id }}" class="text-[#666666]">{{ $factore->name }}</option>
+                                    @endforeach
+                                </select>
+                                <!-- PESO -->
+                                <label for="peso">Peso:</label>
+                                <input type="number" wire:model.lazy="peso" placeholder="peso" step="any"
+                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                                <!-- ALTURA -->
+                                <label for="altura">Altura:</label>
+                                <input type="text" wire:model.lazy="altura" placeholder="altura" step="any"
+                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                                <label for="enfermedad">Posee alguna enfermedad preexistente:</label>
+                                <input type="text" wire:model.lazy="enfermedad" placeholder="..." step="any"
+                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                                <label for="remedios">Medicamentos que consume:</label>
+                                <input type="text" wire:model.lazy="remedios" placeholder="..." step="any"
+                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
                         </div>
                     </div>
 

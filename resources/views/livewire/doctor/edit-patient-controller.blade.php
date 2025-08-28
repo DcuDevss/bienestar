@@ -138,7 +138,7 @@
 
                 <div class="col-span-1">
                     <label for="altura" class="block font-medium">Altura</label>
-                    <input type="number" id="altura" wire:model="altura" class="input rounded-md w-full" >
+                    <input type="text" id="altura" wire:model="altura" class="input rounded-md w-full" >
                 </div>
 
                 <div class="col-span-1">

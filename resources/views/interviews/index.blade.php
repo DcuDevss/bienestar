@@ -16,285 +16,258 @@
                 <div class="col-span-1 md:col-span-3">
                     <div>
                         <div class="bg-white p-3 rounded-md">
-
                             <div class="image overflow-hidden flex items-center justify-center">
-                                <img class="h-[200px] mx-auto" src="{{ asset('assets/defaultPicture.jpg') }}" />
+                            <img class="h-[200px] mx-auto" src="{{ asset('assets/defaultPicture.jpg') }}" />
                             </div>
+
                             <h1 class="text-center font-bold text-gray-900 leading-8 my-1">
-                                {{ $paciente->apellido_nombre }}</h1>
+                            {{ $paciente->apellido_nombre }}
+                            </h1>
+
                             @can('users.index')
-                                <div>
-                                    @livewire('interview.interview-reset', ['paciente' => $paciente])
-                                </div>
+                            <div>
+                                @livewire('interview.interview-reset', ['paciente' => $paciente])
+                            </div>
                             @endcan
-                            <p class=" text-slate-800 font-semibold capitalize">
-                               @if (!empty($sumasPorTipo) && array_sum($sumasPorTipo) > 0)
 
-    <div class="text-slate-800 font-semibold capitalize">
-        <h2 class="text-lg text-center mb-2">Licencias Médicas por Tipo</h2>
+                            {{-- LICENCIAS (corrige <p>, filtra días = 0 y balancea if/else) --}}
+                            @php
+                            $sumasFiltradas = collect($sumasPorTipo ?? [])
+                                ->map(fn($v) => (int)$v)
+                                ->filter(fn($v) => $v > 0);
+                            @endphp
 
-        @foreach($sumasPorTipo as $tipo => $suma)
-            <div class="flex text-sm justify-between items-center mb-1">
-                <p class="font-semibold capitalize">{{ $tipo }}</p>
-                <p class="font-semibold capitalize">Días: {{ $suma }}</p>
-            </div>
+                            @if($sumasFiltradas->isNotEmpty())
+                            <div class="text-slate-800 font-semibold capitalize">
+                                <h2 class="text-lg text-center mb-2">Licencias Médicas por Tipo</h2>
 
-            @if ($tipo === 'Enfermedad comun')
-                @if ($suma >= 30)
-                    <div class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
-                        ¡Alerta roja! días de salud cumplidos
-                    </div>
-                @elseif ($suma >= 28)
-                    <div class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
-                        ¡Precaución! llegando al límite de salud
-                    </div>
-                @endif
+                                @foreach($sumasFiltradas as $tipo => $suma)
+                                <div class="flex text-sm justify-between items-center mb-1">
+                                    <p class="font-semibold capitalize">{{ $tipo }}</p>
+                                    <p class="font-semibold capitalize">Días: {{ $suma }}</p>
+                                </div>
 
-            @elseif ($tipo === 'Atencion familiar')
-                @if ($suma >= 20)
-                    <div class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
-                        ¡Alerta roja! atendibles cumplidos
-                    </div>
-                @elseif ($suma >= 18)
-                    <div class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
-                        ¡Precaución! llegando al límite de atendibles
-                    </div>
-                @endif
-            @endif
-        @endforeach
-    </div>
-@else
-    <p>No posee días registrados.</p>
-@endif
+                                @php $tipoNorm = \Illuminate\Support\Str::lower($tipo); @endphp
 
-                            </p>
-                            <ul class="bg-gray-300 rounded mt-1 px-3 py-1 text-gray-500">
-                                <li class="flex items-center py-1 capitalize">
-                                    <span>Estado:</span>
-                                    <span class="ml-auto text-white px-2 py-1 text-sm cursor-pointer rounded">
-
-                                        <td class="px-4">
-                                            @if ($paciente->estado_id == 1)
-                                                <span
-                                                    class="text-white bg-green-600 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
-                                                <!-- Color por defecto -->
-                                            @elseif ($paciente->estado_id == 2)
-                                                <span
-                                                    class="text-white bg-gray-600 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
-                                                <!-- Color rojo medio -->
-                                            @elseif ($paciente->estado_id == 3)
-                                                <span
-                                                    class="text-black bg-yellow-400 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
-                                                <!-- Color azul -->
-                                            @elseif ($paciente->estado_id == 4)
-                                                <span
-                                                    class="text-white bg-red-700 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
-                                                <!-- Color rojo fuerte -->
-                                            @elseif ($paciente->estado_id == 5)
-                                                <span
-                                                    class="text-white bg-black  rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
-                                                <!-- Color amarillo -->
-                                            @else
-                                                <span class=""></span>
-                                                <!-- Color por defecto para otros casos -->
-                                            @endif
-                                        </td>
-                                    </span>
-                                </li>
-
-
-                                <li class="flex items-center py-3 capitalize">
-                                    <div class="flex flex-col">
-                                        <div class="py-1 font-semibold capitalize">
-                                            <span class="">{{ __('ultimo certificado finalizado:') }}</span>
-                                        </div>
-                                        <div>
-                                            @can('doctor')
-                                            @endcan
-                                            <p class="px-1 text-slate-800 font-semibold capitalize">
-                                                @if ($ultimaFechaEnfermedad)
-                                                    <div class="flex justify-between items-center">
-                                                        @php
-                                                            $fechaFinalizacionLicencia = \Carbon\Carbon::createFromFormat(
-                                                                'Y-m-d H:i:s',
-                                                                $ultimaFechaEnfermedad->pivot
-                                                                    ->fecha_finalizacion_licencia,
-                                                            );
-                                                        @endphp
-                                                        <span
-                                                            class="cursor-pointer px-1 rounded-md py-1 bg-slate-900 text-white">
-                                                            {{ $fechaFinalizacionLicencia->format('d/m/Y H:i:s') }}
-                                                        </span>
-                                                    </div>
-                                                @else
-                                                    <p>No posee información de fechas.</p>
-                                                @endif
-                                            </p>
-                                        </div>
+                                @if ($tipoNorm === 'enfermedad comun')
+                                    @if ($suma >= 30)
+                                    <div class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
+                                        ¡Alerta roja! días de salud cumplidos
                                     </div>
-                                </li>
+                                    @elseif ($suma >= 28)
+                                    <div class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
+                                        ¡Precaución! llegando al límite de salud
+                                    </div>
+                                    @endif
+                                @elseif ($tipoNorm === 'atencion familiar')
+                                    @if ($suma >= 20)
+                                    <div class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
+                                        ¡Alerta roja! atendibles cumplidos
+                                    </div>
+                                    @elseif ($suma >= 18)
+                                    <div class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
+                                        ¡Precaución! llegando al límite de atendibles
+                                    </div>
+                                    @endif
+                                @endif
+                                @endforeach
+                            </div>
+                            @else
+                            <p class="text-slate-600">No posee días registrados.</p>
+                            @endif
 
+                            <ul class="bg-gray-300 rounded mt-1 px-3 py-1 text-gray-500">
+                            <li class="flex items-center py-1 capitalize">
+                                <span>Estado:</span>
+                                <span class="ml-auto text-white px-2 py-1 text-sm rounded">
+                                @if ($paciente->estado_id == 1)
+                                    <span class="text-white bg-green-600 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
+                                @elseif ($paciente->estado_id == 2)
+                                    <span class="text-white bg-gray-600 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
+                                @elseif ($paciente->estado_id == 3)
+                                    <span class="text-black bg-yellow-400 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
+                                @elseif ($paciente->estado_id == 4)
+                                    <span class="text-white bg-red-700 rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
+                                @elseif ($paciente->estado_id == 5)
+                                    <span class="text-white bg-black rounded-md px-2 py-1">{{ $paciente->estados->name }}</span>
+                                @else
+                                    <span class="px-2 py-1 rounded-md bg-slate-200 text-slate-700">Sin estado</span>
+                                @endif
+                                </span>
+                            </li>
 
+                            <li class="flex items-center py-3 capitalize w-full">
+                                <div class="flex flex-col w-full">
+                                <div class="py-1 font-semibold capitalize">
+                                    <span>Último certificado finalizado:</span>
+                                </div>
+
+                                <div>
+                                    @if ($ultimaFechaEnfermedad)
+                                    @php
+                                        $fechaFinalizacionLicencia = \Carbon\Carbon::createFromFormat(
+                                        'Y-m-d H:i:s',
+                                        $ultimaFechaEnfermedad->pivot->fecha_finalizacion_licencia
+                                        );
+                                    @endphp
+                                    <div class="flex justify-between items-center">
+                                        <span class="cursor-pointer px-1 rounded-md py-1 bg-slate-900 text-white">
+                                        {{ $fechaFinalizacionLicencia->format('d/m/Y H:i:s') }}
+                                        </span>
+                                    </div>
+                                    @else
+                                    <p>No posee información de fechas.</p>
+                                    @endif
+                                </div>
+                                </div>
+                            </li>
                             </ul>
                         </div>
-                        <!--  -->
-                        <div>
-                            {{--   @livewire('patient.patient-disase', ['paciente' => $paciente->id]) --}}
-                            {{--  @livewire('patient.patient-surgery', ['user' => $user->id]) --}}
-                        </div>
-                        <!--  -->
                     </div>
                 </div>
                 <!-- DATOS PERSONALES -->
-                <div class="col-span-1 md:col-span-9 bg-white rounded p-8">
-                        <div class="grid grid-cols-3 md:grid-cols-3 text-gray-400">
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('nombre:') }}</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->apellido_nombre }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('legajo') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->legajo }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('jerarquia') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->jerarquias->name}}</p>
-                            </div>
-
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('dni') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->dni }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('cuil') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->cuil }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('estado') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->estados->name }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('destino actual') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize whitespace-normal min-w-[200px]">{{ $paciente->destino_actual }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('ciudad') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->ciudad }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('legajo') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->legajo }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('antigüedad') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold ">{{ $paciente->edad }} años.</p>
-
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('sexo') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->sexo }}</p>
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('contacto') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->TelefonoCelular }}</p>
-
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('fecha de nacimiento') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->fecha_nacimiento }}</p>
-
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('email') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->email }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('domicilio') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->domicilio }}</p>
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('peso') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->peso }}</p>
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('altura') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->altura }}</p>
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('grupo y fator sanguineo') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize"><p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->factores ? $paciente->factores->name : 'Sin Datos' }}
-                                </p>
-                                </p>
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('fecha de entrevista medica') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->direccion }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-4 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('medicamentos que consume') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->remedios }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('enfermedad en curso/congenita') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->enfermedad }}</p>
-                            </div>
-
+                <div class="col-span-1 md:col-span-9 bg-white rounded-xl p-6 md:p-8 shadow-sm">
+                        <div class="mb-4">
+                            <h2 class="text-xl text-center font-semibold text-slate-800">Datos del Paciente</h2>
                         </div>
 
-                    <div class="flex flex-1">
+                    <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2 text-sm">
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Nombre</dt>
+                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->apellido_nombre }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Legajo</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->legajo }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Jerarquía</dt>
+                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->jerarquias->name }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">DNI</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->dni }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">CUIL</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->cuil }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Estado</dt>
+                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->estados->name }}</dd>
+                        </div>
+
+                        <div class="sm:col-span-2 border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Destino actual</dt>
+                        <dd class="font-semibold text-slate-800 capitalize break-words">{{ $paciente->destino_actual }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Ciudad</dt>
+                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->ciudad }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Antigüedad</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->edad }} años</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Sexo</dt>
+                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->sexo }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Contacto</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->TelefonoCelular }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Fecha de nacimiento</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->fecha_nacimiento }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Email</dt>
+                        <dd class="font-semibold text-slate-800 break-words">{{ $paciente->email }}</dd>
+                        </div>
+
+                        <div class="sm:col-span-2 border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Domicilio</dt>
+                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->domicilio }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Peso</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->peso }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Altura</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->altura }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Grupo y factor sanguíneo</dt>
+                        <dd class="font-semibold text-slate-800">
+                            {{ $paciente->factores ? $paciente->factores->name : 'Sin datos' }}
+                        </dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Fecha de entrevista médica</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->direccion }}</dd>
+                        </div>
+
+                        <div class="sm:col-span-2 border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Medicamentos que consume</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->remedios }}</dd>
+                        </div>
+
+                        <div class="sm:col-span-2 border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Enfermedad en curso / congénita</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->enfermedad }}</dd>
+                        </div>
+                    </dl>
+
+                    <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
                         @can('psicologo.index')
-                        <a href="{{ route('entrevista.create', $paciente->id)}}"
-                            class="flex-1 px-3 py-3 bg-gray-300 hover:text-gray-600 text-center text-black my-12 mr-4">{{ __('Entrevista ') }}</a>
+                        <a href="{{ route('entrevista.create', $paciente->id) }}"
+                            class="inline-flex items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100 hover:text-slate-700 transition">
+                            Entrevista
+                        </a>
                         @endcan
+
                         <a href="{{ route('patient-certificados.show', $paciente->id) }}"
-                            class="flex-1 px-3 py-3 bg-gray-300 hover:text-gray-600 text-center text-black my-12 mr-4">
-                            {{ __('historial certificados medicos ') }}
+                        class="inline-flex items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100 hover:text-slate-700 transition">
+                        Historial certificados médicos
                         </a>
 
                         @can('patient-enfermedades.show')
-                            <a href="{{ route('patient-enfermedades.show', $paciente->id) }}"
-                                class="flex-1 px-3 py-3 bg-gray-300 mr-2 hover:text-gray-600 text-center text-black my-12">
-                                {{ __('historial atencion medica ') }}
-                            </a>
+                        <a href="{{ route('patient-enfermedades.show', $paciente->id) }}"
+                            class="inline-flex items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100 hover:text-slate-700 transition">
+                            Historial atención médica
+                        </a>
                         @endcan
                     </div>
-                    <div class='flex flex-1'>
-                        <div class="col-span-3 flex-1 md:col-span-2">
-                            @livewire('patient.patient-certificado', ['paciente' => $paciente->id])
+
+                    <div class="mt-4 grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="rounded-md border border-slate-200 p-3">
+                        @livewire('patient.patient-certificado', ['paciente' => $paciente->id])
                         </div>
 
                         @can('patient-enfermedades.show')
-                            <div class="col-span-3 flex-1 md:col-span-2">
-                                @livewire('patient.patient-enfermedade', ['paciente' => $paciente->id])
-                            </div>
+                        <div class="rounded-md border border-slate-200 p-3">
+                            @livewire('patient.patient-enfermedade', ['paciente' => $paciente->id])
+                        </div>
                         @endcan
                     </div>
-                    <div class="grid grid-cols-1 md:grid-cols-3 text-gray-400 gap-4">
-
-                        <div class="col-span-3 md:col-span-2">
-                            {{-- @livewire('patient.patient-interview', ['paciente' => $paciente->id])  --}}
-                        </div>
-
-                        <div class="col-span-3 md:col-span-1">
-                            {{-- @livewire('patient.patient-list-interview', ['user' => $user->id]) --}}
-
-                        </div>
-                    </div>
                 </div>
-
             </div>
         </section>
         <!-- MENU VERTICAL -->
@@ -382,5 +355,6 @@
                 </div>
             @endcan
         </section>
+    </div>
     </div>
 </x-app-layout>

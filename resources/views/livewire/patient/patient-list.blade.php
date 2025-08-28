@@ -180,7 +180,8 @@
                     <ul class="list-disc list-inside">
                         @forelse ($licencia->disases_paciente as $dp)
                             <li class="text-gray-700">
-                                {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
+                                {{ $dp->paciente->jerarquias->name ?? 'Sin jerarquía' }}
+                                - {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
                                 - Finaliza: {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
                             </li>
                         @empty

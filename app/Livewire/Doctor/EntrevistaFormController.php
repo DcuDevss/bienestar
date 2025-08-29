@@ -82,7 +82,7 @@ class EntrevistaFormController extends Component
         $this->paciente_id = $paciente_id;
         $this->paciente = Paciente::find($paciente_id);
 
-        //avento para abrir el modal de adjuntar pdf
+       
 
 
 

@@ -7,14 +7,15 @@ use Livewire\WithFileUploads;
 use App\Models\Paciente;
 use App\Models\PdfPsiquiatra;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PdfPsiquiatraController extends Component
 {
     use WithFileUploads;
 
     public $paciente;
-    public $pdfs = []; // Array para múltiples archivos
-    public $pdfsList;  // Lista de PDFs para mostrar
+    public $pdfs = []; // múltiples archivos
+    public $pdfsList;
 
     public function mount(Paciente $paciente)
     {
@@ -24,7 +25,21 @@ class PdfPsiquiatraController extends Component
 
     public function loadPdfs()
     {
-        $this->pdfsList = $this->paciente->pdfPsiquiatras()->latest()->get();
+        $this->pdfsList = PdfPsiquiatra::where('paciente_id', $this->paciente->id)
+            ->latest()
+            ->get()
+            ->filter(fn ($r) => Storage::disk('public')->exists($r->filepath))
+            ->values();
+    }
+
+
+    /**
+     * Carpeta base para este paciente.
+     * Queda: public/pacientes/{id}/pdfs
+     */
+    protected function storageDir(): string
+    {
+        return "pdfhistoriales/{$this->paciente->id}";
     }
 
     public function uploadPdfs()
@@ -34,18 +49,24 @@ class PdfPsiquiatraController extends Component
         ]);
 
         foreach ($this->pdfs as $pdf) {
-            $path = $pdf->store('pdfs', 'public');
+            $orig  = $pdf->getClientOriginalName();
+            $ext   = $pdf->getClientOriginalExtension();
+            $base  = pathinfo($orig, PATHINFO_FILENAME);
+            $safe  = \Illuminate\Support\Str::slug($base);
+            $name  = $safe.'_'.now()->format('Ymd_His').'_'.\Illuminate\Support\Str::random(6).'.'.$ext;
 
-            PdfPsiquiatra::create([
+            // 👉 misma carpeta que el file-controller
+            $path = $pdf->storeAs($this->storageDir(), $name, 'public');
+
+            \App\Models\PdfPsiquiatra::create([
                 'paciente_id' => $this->paciente->id,
-                'filename' => $pdf->getClientOriginalName(),
-                'filepath' => $path,
+                'filename'    => $orig,
+                'filepath'    => $path,
             ]);
         }
 
         $this->pdfs = [];
         $this->loadPdfs();
-
         session()->flash('message', 'PDFs cargados correctamente.');
     }
 

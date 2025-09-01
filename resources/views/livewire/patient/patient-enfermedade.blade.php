@@ -92,13 +92,53 @@
 
 
                         <div class="grid grid-cols-3 gap-4">
-                            <div>
-                                <label for="name"
-                                    class="block text-sm font-medium text-gray-700">{{ __('Nombre del diagnostico') }}</label>
-                                <input id="name" class="w-full rounded cursor-pointer bg-gray-200"
-                                    type="text" placeholder="{{ __('nombre') }}" wire:model="name" />
-                                <x-input-error for="name" />
+                            <div class="relative"
+                                wire:click.outside="closePicker"
+                                wire:keydown.escape="closePicker">
+
+                            <label for="diag-search" class="block text-sm font-medium text-gray-700">
+                                {{ __('Nombre del diagnostico') }}
+                            </label>
+
+                            <input id="diag-search"
+                                    class="w-full rounded bg-gray-200"
+                                    type="text"
+                                    placeholder="{{ __('buscar enfermedad o crearla') }}"
+                                    wire:model.live="search"
+                                    x-data @focus="$wire.openPicker()" />
+
+                            <x-input-error for="name" />
+
+                            @if ($pickerOpen && trim($search) !== '')
+                                <div class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto
+                                            bg-white border border-slate-200 rounded-md shadow">
+                                <ul class="w-full">
+                                    @forelse($enfermedades as $enfermedad)
+                                    <li class="cursor-pointer px-3 py-2 bg-gray-100 hover:bg-gray-200 text-black my-1 rounded-md">
+                                        <button type="button" class="w-full text-left"
+                                                wire:click="pickEnfermedad({{ $enfermedad->id }})">
+                                        {{ $enfermedad->codigo }}-{{ $enfermedad->name }}
+                                        </button>
+                                    </li>
+                                    @empty
+                                    @if (strlen(trim($search)) > 4)
+                                        <div class="bg-[#dc2626] text-white text-center p-2 rounded-md text-sm">
+                                        <span>Sin resultados, ¿desea agregarla como nueva enfermedad?</span>
+                                        <div class="mt-1">
+                                            <button wire:click="addNew"
+                                                    class="text-black bg-white px-2 py-1 rounded-md hover:bg-gray-200">
+                                            {{ __('Si') }}
+                                            </button>
+                                        </div>
+                                        </div>
+                                    @endif
+                                    @endforelse
+                                </ul>
+                                </div>
+                            @endif
                             </div>
+
+
 
                             <div>
                                 <label for="tipodelicencia"

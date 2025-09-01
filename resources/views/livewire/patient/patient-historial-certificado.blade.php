@@ -134,15 +134,15 @@
             </li>
         </ul>
     </div>
-    <!-- MODAL -->
-<x-dialog-modal wire:model="modal">
-    <x-slot name="title">
-        <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
-            {{ __('agregar afeccion/certificado al historial del paciente') }}
-        </div>
-        <img class="h-32 w-full object-center object-cover" src="{{ asset('assets/disases.jpg') }}" alt="">
-    </x-slot>
-    <x-slot name="content">
+        <!-- MODAL -->
+        <x-dialog-modal wire:model="modal">
+            <x-slot name="title">
+                <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
+                    {{ __('agregar afeccion/certificado al historial del paciente') }}
+                </div>
+                <img class="h-32 w-full object-center object-cover" src="{{ asset('assets/disases.jpg') }}" alt="">
+            </x-slot>
+            <x-slot name="content">
        <div class="grid grid-cols-2 gap-4">
  {{--                <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Nombre') }}</label>
@@ -151,12 +151,39 @@
                     <x-input-error for="name" />
                 </div> --}}
 
-                <div>
-                    <label for="editedDisaseName"
-                        class="block text-sm font-medium text-gray-700">{{ __('Nombre del Padecimiento') }}</label>
-                    <input id="editedDisaseName" class="w-full rounded" type="text"
-                        placeholder="{{ __('Nuevo nombre') }}" wire:model.defer="editedDisaseName" />
-                    <x-input-error for="editedDisaseName" />
+                <div class="relative"
+                    wire:click.outside="closeEditPicker"
+                    wire:keydown.escape="closeEditPicker">
+
+                <label for="editedDisaseName" class="block text-sm font-medium text-gray-700">
+                    {{ __('Nombre del Padecimiento') }}
+                </label>
+
+                <input id="editedDisaseName"
+                        class="w-full rounded"
+                        type="text"
+                        placeholder="{{ __('Nuevo nombre') }}"
+                        wire:model.live="editedDisaseName"
+                        x-data @focus="$wire.openEditPicker()" />
+
+                <x-input-error for="editedDisaseName" />
+
+                @if ($editPickerOpen && trim($editedDisaseName) !== '')
+                    <div class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto bg-white border border-slate-200 rounded-md shadow">
+                    <ul class="w-full">
+                        @forelse($editOptions as $i => $opt)
+                        <li class="cursor-pointer px-3 py-2 bg-gray-50 hover:bg-gray-100 my-1 rounded-md">
+                            <button type="button" class="w-full text-left"
+                                    wire:click="pickEditedDisase({{ $opt['id'] }})">
+                            {{ $opt['name'] }}
+                            </button>
+                        </li>
+                        @empty
+                        <div class="px-3 py-2 text-sm text-slate-500">Sin resultados…</div>
+                        @endforelse
+                    </ul>
+                    </div>
+                @endif
                 </div>
 
                 <div>

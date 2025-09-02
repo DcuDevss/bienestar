@@ -85,7 +85,7 @@
 
                 <!-- Nuevos campos -->
 
-             
+
                 {{----}}  <div>
                     <label for="fecha_atencion2"
                         class="block text-sm font-medium text-gray-700">{{ __('inicio del certificado') }}</label>

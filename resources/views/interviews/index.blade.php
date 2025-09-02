@@ -11,7 +11,7 @@
 
     <div class="container w-[95%] bg-slate-800 rounded-md py-1 flex mx-auto">
         <!-- CERTIFICADO -->
-        <section class="px-1">
+        <section class="flex-1 min-w-0 px-1 md:basis-[calc(100%-27rem)]">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-1">
                 <div class="col-span-1 md:col-span-3">
                     <div>

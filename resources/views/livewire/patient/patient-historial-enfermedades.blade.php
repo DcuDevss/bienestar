@@ -188,12 +188,38 @@
         </x-slot>
         <x-slot name="content">
             <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label for="name"
-                        class="block text-sm font-medium text-gray-700">{{ __('Nombre del diagnostico') }}</label>
-                    <input id="name" class="w-full rounded cursor-pointer" type="text"
-                        placeholder="{{ __('nombre') }}" wire:model="name"/>
-                    <x-input-error for="name" />
+                <div class="relative"
+                    wire:click.outside="closeNamePicker"
+                    wire:keydown.arrow-down.prevent="moveNameDown"
+                    wire:keydown.arrow-up.prevent="moveNameUp"
+                    wire:keydown.enter.prevent="chooseNameHighlighted">
+
+                <label for="name" class="block text-sm font-medium text-gray-700">
+                    {{ __('Nombre del diagnostico') }}
+                </label>
+
+                <input id="name"
+                        class="w-full rounded cursor-pointer"
+                        type="text"
+                        placeholder="{{ __('nombre') }}"
+                        wire:model.live="nameSearch" />
+
+                <x-input-error for="name" />
+
+                @if($namePickerOpen && trim($nameSearch) !== '')
+                    <div class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto
+                                bg-white border border-slate-200 rounded-md shadow">
+                    @forelse($nameOptions as $i => $opt)
+                        <button type="button"
+                                wire:click="pickEnfermedad({{ $opt['id'] }})"
+                                class="w-full text-left px-3 py-2 hover:bg-slate-100 {{ $nameIndex === $i ? 'bg-slate-100' : '' }}">
+                        {{ $opt['codigo'] ?? '' }}@if(!empty($opt['codigo']))-@endif{{ $opt['name'] }}
+                        </button>
+                    @empty
+                        <div class="px-3 py-2 text-sm text-slate-500">Sin resultados…</div>
+                    @endforelse
+                    </div>
+                @endif
                 </div>
 
                 <div>

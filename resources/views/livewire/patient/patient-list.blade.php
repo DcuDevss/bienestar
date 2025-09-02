@@ -170,10 +170,8 @@
     </section>
 
     <section class="seccionTab2 w-fit">@livewire('patient.patient-listfechas')
-
-        <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm">
+        <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm max-h-[36rem] overflow-y-auto">
             <h2 class="text-lg font-bold mb-2 text-gray-700">Pacientes por Tipo de Licencia</h2>
-
             @foreach ($agrupadosPorLicencia as $licencia)
                 <div class="mb-3">
                     <h3 class="font-semibold text-blue-600">{{ $licencia->name }}</h3>
@@ -191,8 +189,6 @@
                 </div>
             @endforeach
         </div>
-
-
     </section>
 
 

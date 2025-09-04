@@ -65,7 +65,7 @@
             <div class="grid grid-cols-2 gap-4">
                 <div>
                     <label for="presion" class="block text-sm font-medium text-gray-700">{{ __('Presion arterial') }}</label>
-                    <input id="presion" class="w-full rounded cursor-not-allowed bg-gray-200" type="text" placeholder="{{ __('presion') }}" wire:model="presion" disabled />
+                    <input id="presion" class="w-full rounded cursor-pointer bg-gray-200" type="text" placeholder="{{ __('presion') }}" wire:model="presion" />
                     <x-input-error for="presion" />
                 </div>
 

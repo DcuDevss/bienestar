@@ -18,7 +18,7 @@
                 <div>
                     <label for="presion"
                         class="block text-sm font-medium text-gray-700">{{ __('Presion arterial') }}</label>
-                    <input id="presion" class="w-full rounded cursor-not-allowed bg-gray-200" type="text"
+                    <input id="presion" class="w-full rounded cursor-pointer bg-gray-200" type="text"
                         placeholder="{{ __('presion') }}" wire:model="presion"/>
                     <x-input-error for="presion" />
                 </div>
@@ -26,7 +26,7 @@
                 <div>
                     <label for="temperatura"
                         class="block text-sm font-medium text-gray-700">{{ __('Temperatura') }}</label>
-                    <input id="temperatura" class="w-full rounded cursor-not-allowed bg-gray-200" type="number"
+                    <input id="temperatura" class="w-full rounded cursor-pointer bg-gray-200" type="number"
                         placeholder="{{ __('temperatura') }}" wire:model="temperatura"/>
                     <x-input-error for="temperatura" />
                 </div>

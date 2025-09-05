@@ -159,14 +159,12 @@
                     </label>
                     <input type="number"
                         wire:model="suma_salud"
-                        id="suma_salud"
+                        id="suma_auxiliar"
                         readonly
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         placeholder="Días calculados automáticamente">
                     @error('suma_salud') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
-
-
 
 
                 <div>

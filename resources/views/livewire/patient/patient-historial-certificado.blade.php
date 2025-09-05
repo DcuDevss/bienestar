@@ -57,7 +57,7 @@
                             <p><span class="pr-1 font-extrabold text-black">dias de licencia:</span>
                             {{ $disase->pivot->suma_auxiliar }}</p>
                         </li>
-{{--                         <li class="mb-0"><span class="pr-1 font-extrabold text-black">Activo:</span>
+                        {{-- <li class="mb-0"><span class="pr-1 font-extrabold text-black">Activo:</span>
                             @if($disase->pivot->estado_certificado == 1)
                                 Sí
                             @else
@@ -234,7 +234,7 @@
                 </div>
 
                 <div>
-                    <label for="suma_salud" class="block text-sm font-medium text-gray-700">{{ __('Dias licencia certificado') }}</label>
+                    <label for="suma_salud" class="block text-sm font-medium text-gray-700">{{ __('Dias licencia') }}</label>
                     <input id="suma_salud" class="w-full rounded cursor-pointer" type="number" placeholder="{{ __('ingrese dias certificado') }}" wire:model.defer="suma_salud" />
                     <x-input-error for="suma_salud" />
                 </div>

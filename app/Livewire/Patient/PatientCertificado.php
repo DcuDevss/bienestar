@@ -8,6 +8,7 @@ use Illuminate\Support\Str;
 use Livewire\Component;
 use App\Models\Tipolicencia;
 use Livewire\WithFileUploads;
+use Carbon\Carbon;
 
 class PatientCertificado extends Component
 {
@@ -25,16 +26,12 @@ class PatientCertificado extends Component
            $disase, $suma_auxiliar;
 
     public $modal = false;
-
-    /** dropdown sugerencias */
     public $pickerOpen = false;
 
     protected $rules = [
-        // permitir elegir de la lista o escribir uno nuevo
         'disase_id'                    => 'nullable|exists:disases,id',
         'name'                         => 'required_without:disase_id|string|min:2',
-
-        'fecha_presentacion_certificado'=>'nullable|date',
+        'fecha_presentacion_certificado' => 'nullable|date',
         'detalle_certificado'          => 'required|string|min:2',
         'fecha_inicio_licencia'        => 'nullable|date',
         'fecha_finalizacion_licencia'  => 'nullable|date|after_or_equal:fecha_inicio_licencia',
@@ -43,7 +40,7 @@ class PatientCertificado extends Component
         'suma_auxiliar'                => 'nullable|integer',
         'imagen_frente'                => 'nullable|file',
         'imagen_dorso'                 => 'nullable|file',
-        'estado_certificado'           => 'nullable|boolean',
+        'estado_certificado'          => 'nullable|boolean',
         'tipolicencia_id'              => 'required|exists:tipolicencias,id',
     ];
 
@@ -53,11 +50,9 @@ class PatientCertificado extends Component
         $this->patient_disases = $paciente->disases;
     }
 
-    /** abrir/cerrar dropdown */
     public function openPicker()  { $this->pickerOpen = true; }
     public function closePicker() { $this->pickerOpen = false; }
 
-    /** al tipear (si bindéas el input a search) */
     public function updatedSearch($value)
     {
         $this->disase_id = null;
@@ -65,7 +60,6 @@ class PatientCertificado extends Component
         $this->pickerOpen = trim($value) !== '';
     }
 
-    /** si preferís bindear a name */
     public function updatedName($value)
     {
         $this->disase_id = null;
@@ -73,7 +67,36 @@ class PatientCertificado extends Component
         $this->pickerOpen = trim($value) !== '';
     }
 
-    /** abrir modal con una ya existente */
+    public function updatedFechaInicioLicencia()
+    {
+        $this->calcularDiasLicencia();
+    }
+
+    public function updatedFechaFinalizacionLicencia()
+    {
+        $this->calcularDiasLicencia();
+    }
+
+    public function calcularDiasLicencia()
+    {
+        if ($this->fecha_inicio_licencia && $this->fecha_finalizacion_licencia) {
+            try {
+                $inicio = Carbon::parse($this->fecha_inicio_licencia);
+                $fin = Carbon::parse($this->fecha_finalizacion_licencia);
+                $dias = $inicio->diffInDays($fin) + 1;
+
+                $this->suma_salud = $dias;
+                $this->suma_auxiliar = $dias;
+            } catch (\Exception $e) {
+                $this->suma_salud = null;
+                $this->suma_auxiliar = null;
+            }
+        } else {
+            $this->suma_salud = null;
+            $this->suma_auxiliar = null;
+        }
+    }
+
     public function addModalDisase($disaseId)
     {
         $disase = Disase::find($disaseId);
@@ -82,17 +105,15 @@ class PatientCertificado extends Component
 
         $this->search = $disase->name;
         $this->pickerOpen = false;
-
         $this->modal = true;
     }
 
-    /** elegir de la lista */
     public function pickDisase($id)
     {
         if ($d = Disase::find($id)) {
             $this->disase_id = $d->id;
-            $this->name      = $d->name;
-            $this->search    = $d->name;
+            $this->name = $d->name;
+            $this->search = $d->name;
             $this->pickerOpen = false;
         }
     }
@@ -101,57 +122,51 @@ class PatientCertificado extends Component
     {
         $data = $this->validate();
 
-        // asegurar disase_id
-        if (empty($data['disase_id'])) {
-            $nombre = mb_strtolower(trim($this->name ?? $this->search ?? ''));
-            $new = Disase::firstOrCreate(
-                ['name' => $nombre],
-                ['slug' => Str::slug($nombre), 'symptoms' => '']
-            );
-            $disaseId = $new->id;
-        } else {
-            $disaseId = $data['disase_id'];
-        }
+        // Crear o reutilizar enfermedad
+        $disaseId = $data['disase_id'] ?? Disase::firstOrCreate(
+            ['name' => mb_strtolower(trim($this->name))],
+            ['slug' => Str::slug($this->name), 'symptoms' => '']
+        )->id;
 
-        // archivos
-        $patientId = $this->patient->id;
-        $dir = "public/archivos_disases/paciente_$patientId";
+        // Guardar archivos
+        $dir = "public/archivos_disases/paciente_{$this->patient->id}";
         if (!file_exists($dir)) mkdir($dir, 0777, true);
 
-        $pathFrente = isset($data['imagen_frente'])
-            ? $data['imagen_frente']->storeAs($dir, $data['imagen_frente']->getClientOriginalName())
-            : null;
+        $pathFrente = $data['imagen_frente']?->storeAs($dir, $data['imagen_frente']->getClientOriginalName());
+        $pathDorso = $data['imagen_dorso']?->storeAs($dir, $data['imagen_dorso']->getClientOriginalName());
 
-        $pathDorso = isset($data['imagen_dorso'])
-            ? $data['imagen_dorso']->storeAs($dir, $data['imagen_dorso']->getClientOriginalName())
-            : null;
+        // Calcular días (de nuevo por si no se actualizó el frontend)
+        $suma_auxiliar = null;
+        if ($data['fecha_inicio_licencia'] && $data['fecha_finalizacion_licencia']) {
+            $suma_auxiliar = Carbon::parse($data['fecha_inicio_licencia'])
+                ->diffInDays(Carbon::parse($data['fecha_finalizacion_licencia'])) + 1;
+        }
 
-        // pivot
+        // Guardar en pivot
         $this->patient->disases()->attach($disaseId, [
-            'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'] ?? null,
-            'fecha_inicio_licencia'          => $data['fecha_inicio_licencia'] ?? null,
+            'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'],
+            'fecha_inicio_licencia'          => $data['fecha_inicio_licencia'],
+            'fecha_finalizacion_licencia'    => $data['fecha_finalizacion_licencia'],
             'detalle_certificado'            => $data['detalle_certificado'],
             'imagen_frente'                  => $pathFrente,
             'imagen_dorso'                   => $pathDorso,
-            'fecha_finalizacion_licencia'    => $data['fecha_finalizacion_licencia'] ?? null,
-            'horas_salud'                    => $data['horas_salud'] ?? null,
-            'suma_salud'                     => $data['suma_salud'] ?? null,
-            'suma_auxiliar'                  => $data['suma_auxiliar'] ?? null,
+            'horas_salud'                    => $data['horas_salud'],
+            'suma_salud'                     => $data['suma_salud'],
+            'suma_auxiliar'                  => $suma_auxiliar,
             'estado_certificado'             => $data['estado_certificado'] ?? true,
-            'tipolicencia_id'                => $this->tipolicencia_id,
+            'tipolicencia_id'                => $data['tipolicencia_id'],
         ]);
 
-        // reset
-        $this->modal = false;
-        $this->pickerOpen = false;
         $this->reset([
             'name','fecha_presentacion_certificado','detalle_certificado','fecha_inicio_licencia',
             'fecha_finalizacion_licencia','horas_salud','suma_salud','suma_auxiliar','tipolicencia_id',
             'tipodelicencia','estado_certificado','imagen_frente','imagen_dorso','search','disase_id'
         ]);
 
-        $this->patient_disases = $this->patient->disases()->get();
+        $this->modal = false;
+        $this->pickerOpen = false;
         $this->resetValidation();
+        $this->patient_disases = $this->patient->disases()->get();
     }
 
     public function addNew()
@@ -169,7 +184,6 @@ class PatientCertificado extends Component
     public function render()
     {
         $tipolicencias = Tipolicencia::all();
-
         $disases = $this->search
             ? Disase::search($this->search)->take(10)->get()
             : collect();

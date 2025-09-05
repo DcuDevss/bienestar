@@ -159,7 +159,11 @@ class PatientHistorialCertificado extends Component
         } else {
             $archivoPathDorso = $disase->pivot->imagen_dorso;
         }
-
+        $suma_auxiliar = null;
+            if (!empty($data['fecha_inicio_licencia']) && !empty($data['fecha_finalizacion_licencia'])) {
+                $suma_auxiliar = \Carbon\Carbon::parse($data['fecha_inicio_licencia'])
+                    ->diffInDays(\Carbon\Carbon::parse($data['fecha_finalizacion_licencia'])) + 1;
+            }
         // Datos del pivot
         $pivotData = [
             'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'],
@@ -169,8 +173,8 @@ class PatientHistorialCertificado extends Component
             'imagen_dorso'                   => $archivoPathDorso,
             'fecha_finalizacion_licencia'    => $data['fecha_finalizacion_licencia'],
             'horas_salud'                    => $data['horas_salud'],
-            'suma_salud'                     => $data['suma_salud'],
-            'suma_auxiliar'                  => $data['suma_auxiliar'],
+            'suma_salud'                     => $suma_auxiliar,
+            'suma_auxiliar'                  => $suma_auxiliar,
             'estado_certificado'             => isset($data['estado_certificado']) ? $data['estado_certificado'] : true,
             'tipolicencia_id'                => $data['tipolicencia_id'],
         ];

@@ -132,19 +132,20 @@
                         </div>
 
                     <dl class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-x-6 gap-y-2 text-sm">
+
+                        <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Jerarquía</dt>
+                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->jerarquias->name }}</dd>
+                        </div>
+
                         <div class="border-b border-slate-100 pb-1">
                         <dt class="text-slate-500 font-medium">Nombre</dt>
                         <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->apellido_nombre }}</dd>
                         </div>
 
                         <div class="border-b border-slate-100 pb-1">
-                        <dt class="text-slate-500 font-medium">Legajo</dt>
-                        <dd class="font-semibold text-slate-800">{{ $paciente->legajo }}</dd>
-                        </div>
-
-                        <div class="border-b border-slate-100 pb-1">
-                        <dt class="text-slate-500 font-medium">Jerarquía</dt>
-                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->jerarquias->name }}</dd>
+                        <dt class="text-slate-500 font-medium">Destino Actual</dt>
+                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->destino_actual }}</dd>
                         </div>
 
                         <div class="border-b border-slate-100 pb-1">
@@ -153,8 +154,19 @@
                         </div>
 
                         <div class="border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Legajo</dt>
+                        <dd class="font-semibold text-slate-800">{{ $paciente->legajo }}</dd>
+                        </div>
+
+                        <div class="border-b border-slate-100 pb-1">
                         <dt class="text-slate-500 font-medium">CUIL</dt>
                         <dd class="font-semibold text-slate-800">{{ $paciente->cuil }}</dd>
+                        </div>
+
+
+                        <div class="sm:col-span-2 border-b border-slate-100 pb-1">
+                        <dt class="text-slate-500 font-medium">Ciudad</dt>
+                        <dd class="font-semibold text-slate-800 capitalize break-words">{{ $paciente->ciudad }}</dd>
                         </div>
 
                         <div class="border-b border-slate-100 pb-1">
@@ -162,18 +174,8 @@
                         <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->estados->name }}</dd>
                         </div>
 
-                        <div class="sm:col-span-2 border-b border-slate-100 pb-1">
-                        <dt class="text-slate-500 font-medium">Destino actual</dt>
-                        <dd class="font-semibold text-slate-800 capitalize break-words">{{ $paciente->destino_actual }}</dd>
-                        </div>
-
                         <div class="border-b border-slate-100 pb-1">
-                        <dt class="text-slate-500 font-medium">Ciudad</dt>
-                        <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->ciudad }}</dd>
-                        </div>
-
-                        <div class="border-b border-slate-100 pb-1">
-                        <dt class="text-slate-500 font-medium">Antigüedad</dt>
+                        <dt class="text-slate-500 font-medium">Edad</dt>
                         <dd class="font-semibold text-slate-800">{{ $paciente->edad }} años</dd>
                         </div>
 

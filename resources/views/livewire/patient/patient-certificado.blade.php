@@ -129,20 +129,20 @@
 
 
                 <div>
-                    <label for="fecha_presentacion_certificado" class="block text-sm font-medium text-gray-700">{{ __('fecha de presentacion del certificado') }}</label>
+                    <label for="fecha_presentacion_certificado" class="block text-sm font-medium text-gray-700">{{ __('Fecha de presentacion del certificado') }}</label>
                     <input id="fecha_presentacion_certificado" class="w-full rounded cursor-pointer" type="date" placeholder="{{ __(' ingrese fecha de la enfermedad') }}" wire:model="fecha_presentacion_certificado" />
                     <x-input-error for="fecha_presentacion_certificado" />
                 </div>
 
                 {{-- Nuevos campos --}}
                 <div>
-                    <label for="fecha_inicio_licencia" class="block text-sm font-medium text-gray-700">{{ __('inicio del certificado') }}</label>
+                    <label for="fecha_inicio_licencia" class="block text-sm font-medium text-gray-700">{{ __('Inicio del certificado') }}</label>
                     <input id="fecha_inicio_licencia" class="w-full rounded cursor-pointer" type="datetime-local" placeholder="{{ __('fecha de inicio') }}" wire:model="fecha_inicio_licencia" />
                     <x-input-error for="fecha_inicio_licencia" />
                 </div>
 
                 <div>
-                    <label for="fecha_finalizacion_licencia" class="block text-sm font-medium text-gray-700">{{ __('finalización de certificado') }}</label>
+                    <label for="fecha_finalizacion_licencia" class="block text-sm font-medium text-gray-700">{{ __('Inialización de certificado') }}</label>
                     <input id="fecha_finalizacion_licencia" class="w-full rounded cursor-pointer" type="datetime-local" placeholder="{{ __('fecha finalización') }}" wire:model="fecha_finalizacion_licencia" />
                     <x-input-error for="fecha_finalizacion_licencia" />
                 </div>
@@ -168,13 +168,13 @@
 
 
                 <div>
-                    <label for="imagen_frente" class="block text-sm font-medium text-gray-700">{{ __('imegen frente') }}</label>
+                    <label for="imagen_frente" class="block text-sm font-medium text-gray-700">{{ __('Imagen frente') }}</label>
                     <input id="imagen_frente" class="rounded py-2 cursor-pointer" type="file" wire:model="imagen_frente" accept="image/*" />
                     <x-input-error for="imagen_frente" />
                 </div>
 
                 <div>
-                    <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">{{ __('imagen dorso') }}</label>
+                    <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">{{ __('Imagen dorso') }}</label>
                     <input id="imagen_dorso" class="rounded py-2 cursor-pointer" type="file" wire:model="imagen_dorso" accept="image/*" />
                     <x-input-error for="imagen_dorso" />
                 </div>
@@ -189,7 +189,7 @@
 
 
                 <div class="col-span-2">
-                    <label for="detalle_certificado" class="block text-sm font-medium text-gray-700">{{ __('detalle del certificado') }}</label>
+                    <label for="detalle_certificado" class="block text-sm font-medium text-gray-700">{{ __('Detalle del certificado') }}</label>
                     <textarea id="detalle_certificado" class="w-full rounded cursor-pointer" rows="5" placeholder="{{ __('ingrese detalle') }}" wire:model="detalle_certificado"></textarea>
                     <x-input-error for="detalle_certificado" />
                 </div>
@@ -201,10 +201,10 @@
         <x-slot name="footer">
             <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
                 wire:click="$set('modal',false)">
-                {{ __('cancelar') }}
+                {{ __('Cancelar') }}
             </button>
             <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="addDisase">
-                {{ __('agregar enfermedad') }}
+                {{ __('Agregar enfermedad') }}
             </button>
 
         </x-slot>

@@ -157,7 +157,8 @@ class Paciente extends Model
             'estado_certificado',
             'tipodelicencia',
             'tipolicencia_id' // agregado acá
-        );
+        )
+        ->withTimestamps();
     }
 
     public function entrevistas()

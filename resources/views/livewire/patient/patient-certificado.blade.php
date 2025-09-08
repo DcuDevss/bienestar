@@ -179,12 +179,12 @@
                     <x-input-error for="imagen_dorso" />
                 </div>
 
-                <div>
+{{--                 <div>
                     <label class="flex items-center">
                         <input id="estado_certificado" class="rounded cursor-pointer" type="checkbox" wire:model="estado_certificado" />
                         <span class="ml-2">{{ __('Estado') }}</span>
                     </label>
-                </div>
+                </div> --}}
 
 
 

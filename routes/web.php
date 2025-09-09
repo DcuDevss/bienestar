@@ -15,6 +15,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\RoleController;
 
 use App\Http\Controllers\Doctor\CurriculumController;
+use App\Http\Controllers\NuevoUsuarioController;
 use App\Http\Controllers\Psicologo\PsicologoController;
 use App\Http\Controllers\PdfController;
 //use App\Http\Controllers\Interviews\InterviewController;
@@ -172,6 +173,10 @@ Route::get('/interviews/detail/{interview}', [InterviewController::class, 'detai
 
 Route::get('/enfermero/enfermero-historial/{paciente}', EnfermeroHistorial::class)->middleware('can:enfermero.enfermero-historial')->name('enfermero.enfermero-historial');
 
-Route::resource('users', UserController::class)->only('index', 'edit', 'update');
+Route::resource('users', UserController::class)->only('index', 'edit', 'update', 'destroy');
 Route::resource('roles', RoleController::class)->names('admin-roles');
 //Route::get('/reservar-turno', TurnoReservation::class);
+
+//Nuevo usuario
+Route::get('nuevo_usuario', [NuevoUsuarioController::class,'create'])->name('new-user');
+Route::post('nuevo_usuario', [NuevoUsuarioController::class,'store'])->name('new-user.store');

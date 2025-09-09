@@ -330,7 +330,7 @@
 
 
             @can('users.index')
-                <div class="relative mt-5" x-data="{ open: false }">
+                {{-- <div class="relative mt-5" x-data="{ open: false }">
 
                     <button @click="open = !open"
                         class="inline-flex items-center justify-center float-right mr-4 px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition group">
@@ -353,6 +353,12 @@
                         <a href="{{ route('admin-roles.index') }}"
                             class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500">Crud de roles</a>
                     </div>
+                </div> --}}
+                <div class="relative mt-5  text-white">
+                    <a href="{{ route('users.index') }}" 
+                        class="px-3 py-2 bg-blue-600 rounded-md">
+                        Administrador
+                    </a>
                 </div>
             @endcan
 

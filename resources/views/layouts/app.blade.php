@@ -23,7 +23,7 @@
     <!-- Styles -->
     <style>
         body {
-            padding-bottom: 80px;
+            /* padding-bottom: 80px; */
             /* Ajusta el tamaño según el footer */
         }
 

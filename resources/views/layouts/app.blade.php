@@ -14,12 +14,12 @@
     <!-- Tom Select CSS -->
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
     {{-- favicon --}}
-    <link rel="icon" href="{{ asset('favicon.png') }}" type="image/png">
+    <link rel="icon" href="{{ asset('favicon.png') }}?v={{ config('app.version') }}" type="image/png">
 
     <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
-    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
+    <link rel="stylesheet" href="{{ asset('css/all.min.css') }}?v={{ config('app.version') }}">
     <!-- Styles -->
     <style>
         body {
@@ -260,7 +260,7 @@
     @livewireStyles
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
     <!--  -->
-    <script src="{{ asset('js/all.min.js') }}" defer></script>
+    <script src="{{ asset('js/all.min.js') }}?v={{ config('app.version') }}" defer></script>
 
 </head>
 

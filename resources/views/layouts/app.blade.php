@@ -20,249 +20,252 @@
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">
-    <!-- Styles -->
-    <style>
-        body {
-            /* padding-bottom: 80px; */
-            /* Ajusta el tamaño según el footer */
-        }
 
-        /* LIGHTBOX */
-        /* Estilos para la imagen ampliada */
-        .image-container {
-            position: relative;
-        }
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
+    <!--  -->
+    <script src="{{ asset('js/all.min.js') }}" defer></script>
+    @livewireStyles
+</head>
+<!-- Styles -->
+<style>
+    body {
+        /* padding-bottom: 80px; */
+        /* Ajusta el tamaño según el footer */
+    }
 
-        #image {
-            cursor: pointer;
-        }
+    /* LIGHTBOX */
+    /* Estilos para la imagen ampliada */
+    .image-container {
+        position: relative;
+    }
 
-        .full-image-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background-color: rgba(0, 0, 0, 0.8);
-            z-index: 9999;
-            display: none;
-        }
+    #image {
+        cursor: pointer;
+    }
 
-        .full-image-container {
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            height: 100%;
-            transform: translate(-50%, -50%);
-            text-align: center;
-        }
+    .full-image-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background-color: rgba(0, 0, 0, 0.8);
+        z-index: 9999;
+        display: none;
+    }
 
-        .full-image-container img {
-            max-width: 90%;
-            max-height: 90%;
-        }
+    .full-image-container {
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        height: 100%;
+        transform: translate(-50%, -50%);
+        text-align: center;
+    }
 
-        .action-button {
-            margin-top: 10px;
-            padding: 5px 10px;
-            background-color: #fff;
-            color: #000;
-            border: none;
-            cursor: pointer;
-        }
+    .full-image-container img {
+        max-width: 90%;
+        max-height: 90%;
+    }
 
-        /* estilos paginacion */
+    .action-button {
+        margin-top: 10px;
+        padding: 5px 10px;
+        background-color: #fff;
+        color: #000;
+        border: none;
+        cursor: pointer;
+    }
 
-        /* FORMULARIO NUEVO PERSONAL inputs */
-        /* input:focus,
+    /* estilos paginacion */
+
+    /* FORMULARIO NUEVO PERSONAL inputs */
+    /* input:focus,
         select:focus {
             outline: none !important;
             border-color: #2d5986 !important;
             box-shadow: none !important;
         } */
-        /* stepbar FORM NUEVO PERSONAL*/
-        .stepBar {
-            transition: background-color 1s ease;
+    /* stepbar FORM NUEVO PERSONAL*/
+    .stepBar {
+        transition: background-color 1s ease;
+    }
+
+    .hr-transition {
+        transition: background-color 2.5s;
+    }
+
+    /* step form */
+    .step-transition {
+        transition: opacity 4.3s ease-in-out;
+        opacity: 1;
+    }
+
+    .step-active {
+        opacity: 3;
+    }
+
+    /* MEDIAQUERYS TABLAS */
+    @media (max-width: 1550px) {
+
+        /* PADRETABLAS */
+        .padreTablas {
+            padding-left: 6px;
+            padding-right: 6px;
         }
 
-        .hr-transition {
-            transition: background-color 2.5s;
+        /* TABLA 1 */
+        .agre {
+            color: ;
         }
 
-        /* step form */
-        .step-transition {
-            transition: opacity 4.3s ease-in-out;
-            opacity: 1;
+        .seccionTab {
+            margin: 0 auto;
         }
 
-        .step-active {
-            opacity: 3;
+        .teGead {
+            font-size: 12px;
         }
 
-        /* MEDIAQUERYS TABLAS */
-        @media (max-width: 1550px) {
-
-            /* PADRETABLAS */
-            .padreTablas {
-                padding-left: 6px;
-                padding-right: 6px;
-            }
-
-            /* TABLA 1 */
-            .agre {
-                color: ;
-            }
-
-            .seccionTab {
-                margin: 0 auto;
-            }
-
-            .teGead {
-                font-size: 12px;
-            }
-
-            .tiBody {
-                font-size: 12px;
-                padding-top: 4px;
-                padding-bottom: 4px;
-            }
-
-            /* TABLA 2 */
-            .seccionTab2 {
-                font-size: 11px;
-            }
-
-            .subTab2 {
-                max-height: 532px;
-            }
-
-            .teGead2 {
-                font-size: 10px;
-                padding-top: 2px;
-                padding-bottom: 2px;
-            }
-
-            .fak {
-                font-size: 10px;
-                padding-top: 14px;
-                padding-bottom: 14px;
-            }
+        .tiBody {
+            font-size: 12px;
+            padding-top: 4px;
+            padding-bottom: 4px;
         }
 
-        footer {
-            position: fixed;
+        /* TABLA 2 */
+        .seccionTab2 {
+            font-size: 11px;
+        }
+
+        .subTab2 {
+            max-height: 532px;
+        }
+
+        .teGead2 {
+            font-size: 10px;
+            padding-top: 2px;
+            padding-bottom: 2px;
+        }
+
+        .fak {
+            font-size: 10px;
+            padding-top: 14px;
+            padding-bottom: 14px;
+        }
+    }
+
+    footer {
+        /* position: fixed;
             bottom: 0;
-            left: 0;
-            width: 100%;
-            background-color: #2d3748;
-            /* Fondo oscuro */
-            color: white;
-            /* Color del texto */
-            font-size: 0.875rem;
-            /* Tamaño de fuente más pequeño */
-            padding: 1.5rem 0;
-            /* Espaciado vertical */
-            text-align: center;
-            box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
-            /* Sombra sutil para separación */
-            z-index: 1000;
-            /* Asegura que quede por encima del contenido */
+            left: 0; */
+        width: 100%;
+        background-color: #2d3748;
+        /* Fondo oscuro */
+        color: white;
+        /* Color del texto */
+        font-size: 0.875rem;
+        /* Tamaño de fuente más pequeño */
+        padding: 1.5rem 0;
+        /* Espaciado vertical */
+        text-align: center;
+        box-shadow: 0px -2px 5px rgba(0, 0, 0, 0.1);
+        /* Sombra sutil para separación */
+        z-index: 1000;
+        /* Asegura que quede por encima del contenido */
+    }
+
+    footer p {
+        margin: 0;
+        /* Elimina márgenes */
+        font-size: 0.875rem;
+        /* Tamaño de fuente ajustado */
+    }
+
+
+
+    @keyframes pulseYellow {
+
+        0%,
+        100% {
+            background-color: #f6e05e;
+            /* Color amarillo */
+            box-shadow: 0 0 0 0px #f6e05e;
         }
 
-        footer p {
-            margin: 0;
-            /* Elimina márgenes */
-            font-size: 0.875rem;
-            /* Tamaño de fuente ajustado */
+        50% {
+            background-color: transparent;
+            box-shadow: 0 0 0 10px transparent;
+        }
+    }
+
+    @keyframes pulseRed {
+
+        0%,
+        100% {
+            background-color: #ef4444;
+            /* Color rojo */
+            box-shadow: 0 0 0 0px #ef4444;
         }
 
-
-
-        @keyframes pulseYellow {
-
-            0%,
-            100% {
-                background-color: #f6e05e;
-                /* Color amarillo */
-                box-shadow: 0 0 0 0px #f6e05e;
-            }
-
-            50% {
-                background-color: transparent;
-                box-shadow: 0 0 0 10px transparent;
-            }
+        50% {
+            background-color: transparent;
+            box-shadow: 0 0 0 10px transparent;
         }
+    }
 
-        @keyframes pulseRed {
+    .ts-wrapper {
+        border: 1px solid #4b5563;
+        /* gray-600 */
+        border-radius: 0.375rem;
+        box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
+        margin-top: 0.25rem;
+        width: 100%;
+        background-color: white;
+    }
 
-            0%,
-            100% {
-                background-color: #ef4444;
-                /* Color rojo */
-                box-shadow: 0 0 0 0px #ef4444;
-            }
+    /* Cuando está enfocado */
+    .ts-wrapper.focus {
+        border-color: #3b82f6;
+        box-shadow: 0 0 0 1px #3b82f6;
+    }
 
-            50% {
-                background-color: transparent;
-                box-shadow: 0 0 0 10px transparent;
-            }
-        }
+    /* Caja visible del input */
+    .ts-control {
+        background-color: white;
+        min-height: 2.5rem;
+        border: none !important;
+        box-shadow: none !important;
+        font-size: 0.875rem;
+        color: #111827;
+        font-weight: 600;
+        /* <-- más negrita */
+        padding: 0.5rem 0.75rem;
+    }
 
-        .ts-wrapper {
-            border: 1px solid #4b5563; /* gray-600 */
-            border-radius: 0.375rem;
-            box-shadow: 0 1px 2px 0 rgba(0, 0, 0, 0.05);
-            margin-top: 0.25rem;
-            width: 100%;
-            background-color: white;
-        }
+    /* Texto que escribís en el buscador */
+    .ts-control input {
+        color: #111827;
+        font-weight: 600;
+        /* <-- más negrita */
+    }
 
-        /* Cuando está enfocado */
-        .ts-wrapper.focus {
-            border-color: #3b82f6;
-            box-shadow: 0 0 0 1px #3b82f6;
-        }
+    /* Opciones dentro del dropdown */
+    .ts-dropdown .option {
+        color: #111827;
+        font-size: 0.875rem;
+        font-weight: 600;
+        /* <-- más negrita */
+        padding: 0.5rem 0.75rem;
+    }
 
-        /* Caja visible del input */
-        .ts-control {
-            background-color: white;
-            min-height: 2.5rem;
-            border: none !important;
-            box-shadow: none !important;
-            font-size: 0.875rem;
-            color: #111827;
-            font-weight: 600; /* <-- más negrita */
-            padding: 0.5rem 0.75rem;
-        }
-
-        /* Texto que escribís en el buscador */
-        .ts-control input {
-            color: #111827;
-            font-weight: 600; /* <-- más negrita */
-        }
-
-        /* Opciones dentro del dropdown */
-        .ts-dropdown .option {
-            color: #111827;
-            font-size: 0.875rem;
-            font-weight: 600; /* <-- más negrita */
-            padding: 0.5rem 0.75rem;
-        }
-
-        /* Hover sobre una opción */
-        .ts-dropdown .option:hover {
-            background-color: #e5e7eb;
-            color: #000000;
-            cursor: pointer;
-        }
-    </style>
-
-    @livewireStyles
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
-    <!--  -->
-    <script src="{{ asset('js/all.min.js') }}" defer></script>
-
-</head>
+    /* Hover sobre una opción */
+    .ts-dropdown .option:hover {
+        background-color: #e5e7eb;
+        color: #000000;
+        cursor: pointer;
+    }
+</style>
 
 <body class="font-sans antialiased">
     <x-banner />
@@ -287,14 +290,14 @@
 
     @stack('modals')
 
-    @livewireScripts
+    
 
     <!-- Tom Select JS -->
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 
-
+    @livewireScripts
 </body>
-<footer class="text-center py-6 bg-gray-800 font-semibold text-xs text-white shadow-lg fixed bottom-0 left-0 w-full">
+<footer class="text-center py-6 bg-gray-800 font-semibold text-xs text-white shadow-lg ">
     <p>&copy; 2025 Policía de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>
 </footer>
 

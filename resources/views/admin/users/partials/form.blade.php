@@ -1,8 +1,6 @@
 @csrf
 <div class="grid grid-cols-5 gap-4">
 
-
-
 <div class="mb-4 col-span-2">
    <x-label class="italic my-2 capitalize" value="{{ __('nombre y apellido del usuario') }}" for="name"/>
    <input type="text" name="name" class="w-full rounded bg-slate-100" placeholder="{{ __('ingrese nombre y apellido') }}"value="{{ old('name',$user->name) }}"/>

@@ -29,7 +29,6 @@
                             </a>
                         </div>
                     </div>
-
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-gray-500 ">

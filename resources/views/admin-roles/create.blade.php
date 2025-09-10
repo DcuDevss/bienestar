@@ -1,64 +1,17 @@
 <x-app-layout>
     <div class="flex">
         {{-- SIDE BAR --}}
-        <div class="w-64 min-h-screen bg-gray-800 text-white flex flex-col">
-            <div class="flex-1 overflow-y-auto">
-                <div class="px-4 py-6">
-                    <h2 class="text-lg font-semibold mb-4">Administrar</h2>
-                    <nav class="space-y-1">
-                        {{-- USUARIOS --}}
-                        <a href="#proyecto1"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 7h18M3 12h18m-7 5h7" />
-                            </svg>
-                            USUARIOS
-                        </a>
-                        <a href="{{ route('users.index') }}"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="3" />
-                            </svg>
-                            Lista de usuarios
-                        </a>
-                        <a href="{{ route('users.index') }}"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="3" />
-                            </svg>
-                            Crear nuevo usuario
-                        </a>
-                        {{-- ROLES --}}
-                        <a href="#proyecto1"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 7h18M3 12h18m-7 5h7" />
-                            </svg>
-                            ROLES
-                        </a>
-                        <a href="{{ route('admin-roles.index') }}"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="3" />
-                            </svg>
-                            Lista de Roles
-                        </a>
-                    </nav>
-                </div>
-            </div>
-        </div>
+        <x-side-bar></x-side-bar>
 
-        <div class="pt-5 pb-12 bg-white dark:bg-gray-100 mt-10 mx-auto">
-            <div class="max-w-7xl mx-auto sm:px-6 lg:px-8 ">
+        <div class="pt-5 pb-12  mt-10 mx-auto">
+            <div class=" bg-gray-700 text-white py-5 rounded-md max-w-7xl mx-auto sm:px-6 lg:px-8 ">
                 <div class="mb-4">
                     <form action="{{ route('admin-roles.store') }}" method="post">
                         @csrf
 
                         <div class="mb-4">
                             <h2 class="text-2xl text-center">Crear nuevo Rol</h2>
-                            <label class="block text-blue-800 font-bold mb-2" for="inline-full-name">
+                            <label class="block  font-bold mb-2" for="inline-full-name">
                                 Nombre
                             </label>
                             <input name="name"
@@ -71,7 +24,7 @@
                             @enderror
                         </div>
 
-                        <h1 class="text-blue-800"><strong>Lista de Permisos</strong></h1>
+                        <h1 class=""><strong>Lista de Permisos</strong></h1>
                         <div class="grid grid-cols-2">
                             @foreach ($permissions as $permission)
                                 <div>

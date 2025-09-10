@@ -9,7 +9,7 @@
         </button>
     </form> --}}
 
-    <div class="container w-[95%] bg-slate-800 rounded-md py-1 flex mx-auto">
+    <div class="container w-[95%] bg-slate-800 rounded-md py-1 flex mx-auto mb-12">
         <!-- CERTIFICADO -->
         <section class="px-1">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-1">
@@ -28,44 +28,47 @@
                                 </div>
                             @endcan
                             <p class=" text-slate-800 font-semibold capitalize">
-                               @if (!empty($sumasPorTipo) && array_sum($sumasPorTipo) > 0)
+                                @if (!empty($sumasPorTipo) && array_sum($sumasPorTipo) > 0)
 
-    <div class="text-slate-800 font-semibold capitalize">
-        <h2 class="text-lg text-center mb-2">Licencias Médicas por Tipo</h2>
+                                    <div class="text-slate-800 font-semibold capitalize">
+                                        <h2 class="text-lg text-center mb-2">Licencias Médicas por Tipo</h2>
 
-        @foreach($sumasPorTipo as $tipo => $suma)
-            <div class="flex text-sm justify-between items-center mb-1">
-                <p class="font-semibold capitalize">{{ $tipo }}</p>
-                <p class="font-semibold capitalize">Días: {{ $suma }}</p>
-            </div>
+                                        @foreach ($sumasPorTipo as $tipo => $suma)
+                                            <div class="flex text-sm justify-between items-center mb-1">
+                                                <p class="font-semibold capitalize">{{ $tipo }}</p>
+                                                <p class="font-semibold capitalize">Días: {{ $suma }}</p>
+                                            </div>
 
-            @if ($tipo === 'Enfermedad comun')
-                @if ($suma >= 30)
-                    <div class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
-                        ¡Alerta roja! días de salud cumplidos
-                    </div>
-                @elseif ($suma >= 28)
-                    <div class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
-                        ¡Precaución! llegando al límite de salud
-                    </div>
-                @endif
-
-            @elseif ($tipo === 'Atencion familiar')
-                @if ($suma >= 20)
-                    <div class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
-                        ¡Alerta roja! atendibles cumplidos
-                    </div>
-                @elseif ($suma >= 18)
-                    <div class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
-                        ¡Precaución! llegando al límite de atendibles
-                    </div>
-                @endif
-            @endif
-        @endforeach
-    </div>
-@else
-    <p>No posee días registrados.</p>
-@endif
+                                            @if ($tipo === 'Enfermedad comun')
+                                                @if ($suma >= 30)
+                                                    <div
+                                                        class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
+                                                        ¡Alerta roja! días de salud cumplidos
+                                                    </div>
+                                                @elseif ($suma >= 28)
+                                                    <div
+                                                        class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
+                                                        ¡Precaución! llegando al límite de salud
+                                                    </div>
+                                                @endif
+                                            @elseif ($tipo === 'Atencion familiar')
+                                                @if ($suma >= 20)
+                                                    <div
+                                                        class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
+                                                        ¡Alerta roja! atendibles cumplidos
+                                                    </div>
+                                                @elseif ($suma >= 18)
+                                                    <div
+                                                        class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
+                                                        ¡Precaución! llegando al límite de atendibles
+                                                    </div>
+                                                @endif
+                                            @endif
+                                        @endforeach
+                                    </div>
+                                @else
+                                    <p>No posee días registrados.</p>
+                                @endif
 
                             </p>
                             <ul class="bg-gray-300 rounded mt-1 px-3 py-1 text-gray-500">
@@ -147,117 +150,169 @@
                 </div>
                 <!-- DATOS PERSONALES -->
                 <div class="col-span-1 md:col-span-9 bg-white rounded p-8">
-                        <div class="grid grid-cols-3 md:grid-cols-3 text-gray-400">
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('nombre:') }}</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->apellido_nombre }}</p>
-                            </div>
+                    <div class="grid grid-cols-3 md:grid-cols-3 text-gray-400">
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('nombre:') }}</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">
+                                {{ $paciente->apellido_nombre }}</p>
+                        </div>
 
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('legajo') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->legajo }}</p>
-                            </div>
+                        <div class="flex">
+                            <div
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('legajo') }} : </div>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->legajo }}</p>
+                        </div>
 
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('jerarquia') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->jerarquias->name}}</p>
-                            </div>
+                        <div class="flex">
+                            <div
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('jerarquia') }} : </div>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">
+                                {{ $paciente->jerarquias->name }}</p>
+                        </div>
 
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('dni') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->dni }}</p>
-                            </div>
+                        <div class="flex">
+                            <div
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('dni') }} : </div>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->dni }}</p>
+                        </div>
 
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('cuil') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->cuil }}</p>
-                            </div>
+                        <div class="flex">
+                            <div
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('cuil') }} : </div>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->cuil }}</p>
+                        </div>
 
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('estado') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->estados->name }}</p>
-                            </div>
+                        <div class="flex">
+                            <div
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('estado') }} : </div>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->estados->name }}
+                            </p>
+                        </div>
 
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('destino actual') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize whitespace-normal min-w-[200px]">{{ $paciente->destino_actual }}</p>
-                            </div>
+                        <div class="flex">
+                            <div
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('destino actual') }} : </div>
+                            <p
+                                class="px-3 py-1 text-slate-800 font-semibold capitalize whitespace-normal min-w-[200px]">
+                                {{ $paciente->destino_actual }}</p>
+                        </div>
 
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('ciudad') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->ciudad }}</p>
-                            </div>
+                        <div class="flex">
+                            <div
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('ciudad') }} : </div>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->ciudad }}</p>
+                        </div>
 
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('legajo') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->legajo }}</p>
-                            </div>
+                        <div class="flex">
+                            <div
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('legajo') }} : </div>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->legajo }}</p>
+                        </div>
 
-                            <div class="flex">
-                                <div class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('antigüedad') }} : </div>
-                                <p class="px-3 py-1 text-slate-800 font-semibold ">{{ $paciente->edad }} años.</p>
+                        <div class="flex">
+                            <div
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('antigüedad') }} : </div>
+                            <p class="px-3 py-1 text-slate-800 font-semibold ">{{ $paciente->edad }} años.</p>
 
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('sexo') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->sexo }}</p>
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('contacto') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->TelefonoCelular }}</p>
+                        </div>
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('sexo') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->sexo }}</p>
+                        </div>
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('contacto') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">
+                                {{ $paciente->TelefonoCelular }}</p>
 
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('fecha de nacimiento') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->fecha_nacimiento }}</p>
-
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('email') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->email }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('domicilio') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->domicilio }}</p>
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('peso') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->peso }}</p>
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('altura') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->altura }}</p>
-                            </div>
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('grupo y fator sanguineo') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize"><p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->factores ? $paciente->factores->name : 'Sin Datos' }}
-                                </p>
-                                </p>
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('fecha de entrevista medica') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->direccion }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-4 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('medicamentos que consume') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->remedios }}</p>
-                            </div>
-
-                            <div class="flex">
-                                <p class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">{{ __('enfermedad en curso/congenita') }} :</p>
-                                <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->enfermedad }}</p>
-                            </div>
+                        </div>
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('fecha de nacimiento') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">
+                                {{ $paciente->fecha_nacimiento }}</p>
 
                         </div>
 
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('email') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->email }}</p>
+                        </div>
+
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('domicilio') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->domicilio }}</p>
+                        </div>
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('peso') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->peso }}</p>
+                        </div>
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('altura') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->altura }}</p>
+                        </div>
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('grupo y fator sanguineo') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">
+                                {{ $paciente->factores ? $paciente->factores->name : 'Sin Datos' }}
+                            </p>
+                            </p>
+                        </div>
+
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('fecha de entrevista medica') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->direccion }}</p>
+                        </div>
+
+                        <div class="flex">
+                            <p
+                                class="px-4 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('medicamentos que consume') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->remedios }}</p>
+                        </div>
+
+                        <div class="flex">
+                            <p
+                                class="px-3 py-1 font-semibold underline decoration-thick decoration-blue-500 capitalize">
+                                {{ __('enfermedad en curso/congenita') }} :</p>
+                            <p class="px-3 py-1 text-slate-800 font-semibold capitalize">{{ $paciente->enfermedad }}
+                            </p>
+                        </div>
+
+                    </div>
+
                     <div class="flex flex-1">
                         @can('psicologo.index')
-                        <a href="{{ route('entrevista.create', $paciente->id)}}"
-                            class="flex-1 px-3 py-3 bg-gray-300 hover:text-gray-600 text-center text-black my-12 mr-4">{{ __('Entrevista ') }}</a>
+                            <a href="{{ route('entrevista.create', $paciente->id) }}"
+                                class="flex-1 px-3 py-3 bg-gray-300 hover:text-gray-600 text-center text-black my-12 mr-4">{{ __('Entrevista ') }}</a>
                         @endcan
                         <a href="{{ route('patient-certificados.show', $paciente->id) }}"
                             class="flex-1 px-3 py-3 bg-gray-300 hover:text-gray-600 text-center text-black my-12 mr-4">

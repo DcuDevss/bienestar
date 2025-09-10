@@ -48,16 +48,21 @@
                                 <p><span class="pr-1 font-extrabold text-black">fecha de atencion:</span>
                                     {{ $enfermedad->pivot->fecha_atencion_enfermedad }}</p>
                             </li>
-                            <li class="mb-0">
+{{--                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">fecha de finalizacion:</span>
                                     {{ $enfermedad->pivot->fecha_finalizacion_enfermedad }}</p>
-                            </li>
+                            </li> --}}
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">horas de reposo:</span>
                                     {{ $enfermedad->pivot->horas_reposo }}</p>
                             </li>
 
-                               <td class="mb-0">
+                            <li class="mb-0">
+                                <p><span class="pr-1 font-extrabold text-black">art:</span>
+                                    {{ $enfermedad->pivot->art }}</p>
+                            </li>
+
+{{--                                <td class="mb-0">
                                     @if ($enfermedad->pivot->estado_enfermedad == 1)
                                     <p><span class="pr-1 font-extrabold text-black"></span>
                                         activa</p>
@@ -65,7 +70,7 @@
                                     <p><span class="pr-1 font-extrabold text-black"></span>
                                         desactiva</p>
                                     @endif
-                                </td>
+                                </td> --}}
 
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">medicacion:</span>
@@ -78,10 +83,6 @@
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">nro remedio osef:</span>
                                     {{ $enfermedad->pivot->nro_osef }}</p>
-                            </li>
-                            <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">art:</span>
-                                    {{ $enfermedad->pivot->art }}</p>
                             </li>
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">derivacion psiquiatrica:</span>
@@ -127,7 +128,6 @@
                                             </div>
                                         </div>
                                     </div>
-
                                 </li>
 
 
@@ -188,12 +188,38 @@
         </x-slot>
         <x-slot name="content">
             <div class="grid grid-cols-2 gap-4">
-                <div>
-                    <label for="name"
-                        class="block text-sm font-medium text-gray-700">{{ __('Nombre del diagnostico') }}</label>
-                    <input id="name" class="w-full rounded cursor-pointer" type="text"
-                        placeholder="{{ __('nombre') }}" wire:model="name"/>
-                    <x-input-error for="name" />
+                <div class="relative"
+                    wire:click.outside="closeNamePicker"
+                    wire:keydown.arrow-down.prevent="moveNameDown"
+                    wire:keydown.arrow-up.prevent="moveNameUp"
+                    wire:keydown.enter.prevent="chooseNameHighlighted">
+
+                <label for="name" class="block text-sm font-medium text-gray-700">
+                    {{ __('Nombre del diagnostico') }}
+                </label>
+
+                <input id="name"
+                        class="w-full rounded cursor-pointer"
+                        type="text"
+                        placeholder="{{ __('nombre') }}"
+                        wire:model.live="nameSearch" />
+
+                <x-input-error for="name" />
+
+                @if($namePickerOpen && trim($nameSearch) !== '')
+                    <div class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto
+                                bg-white border border-slate-200 rounded-md shadow">
+                    @forelse($nameOptions as $i => $opt)
+                        <button type="button"
+                                wire:click="pickEnfermedad({{ $opt['id'] }})"
+                                class="w-full text-left px-3 py-2 hover:bg-slate-100 {{ $nameIndex === $i ? 'bg-slate-100' : '' }}">
+                        {{ $opt['codigo'] ?? '' }}@if(!empty($opt['codigo']))-@endif{{ $opt['name'] }}
+                        </button>
+                    @empty
+                        <div class="px-3 py-2 text-sm text-slate-500">Sin resultados…</div>
+                    @endforelse
+                    </div>
+                @endif
                 </div>
 
                 <div>
@@ -226,7 +252,7 @@
                         placeholder="{{ __('fecha atencion') }}" wire:model="fecha_atencion_enfermedad" />
                     <x-input-error for="fecha_atencion_enfermedad" />
                 </div>
-
+{{--
                 <div>
                     <label for="fecha_finalizacion_enfermedad"
                         class="block text-sm font-medium text-gray-700">{{ __('finalización de enfermedad') }}</label>
@@ -234,7 +260,7 @@
                         type="datetime-local" placeholder="{{ __('fecha finalización') }}"
                         wire:model="fecha_finalizacion_enfermedad" />
                     <x-input-error for="fecha_finalizacion_enfermedad" />
-                </div>
+                </div> --}}
 
                 <div>
                     <label for="horas_reposo"
@@ -242,6 +268,13 @@
                     <input id="horas_reposo" class="w-full rounded cursor-pointer" type="number"
                         placeholder="{{ __('ingrese horas de reposo') }}" wire:model="horas_reposo" />
                     <x-input-error for="horas_reposo" />
+                </div>
+
+                <div>
+                    <label for="art" class="block text-sm font-medium text-gray-700">{{ __('art') }}</label>
+                    <input id="art" class="w-full rounded cursor-pointer" type="text"
+                        placeholder="{{ __('ingrese art') }}" wire:model="art" />
+                    <x-input-error for="art" />
                 </div>
             </div>
 
@@ -260,12 +293,6 @@
                     <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
                         wire:model="pdf_enfermedad" accept="image/*" />
                     <x-input-error for="pdf_enfermedad" />
-                </div>
-                <div>
-                    <label for="art" class="block text-sm font-medium text-gray-700">{{ __('art') }}</label>
-                    <input id="art" class="w-full rounded cursor-pointer" type="text"
-                        placeholder="{{ __('ingrese art') }}" wire:model="art" />
-                    <x-input-error for="art" />
                 </div>
             </div>
 
@@ -318,14 +345,26 @@
         <x-slot name="footer">
             <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
                 wire:click="$set('modal',false)">
-                {{ __('cancelar') }}
+                {{ __('Cancelar') }}
             </button>
             <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="editDisase">
-                {{ __('agregar enfermedad') }}
+                {{ __('Editar enfermedad') }}
             </button>
 
         </x-slot>
     </x-dialog-modal>
+        <div x-data="{ open:false, msg:'', t:null }"
+            x-on:toast.window="
+                clearTimeout(t);
+                msg = $event.detail?.message || 'Acción realizada';
+                open = true;
+                t = setTimeout(() => open = false, 2500);
+            "
+            x-show="open"
+            x-transition
+            class="fixed top-4 right-4 z-50 rounded-md bg-emerald-600 text-white px-4 py-2 shadow">
+            <span x-text="msg"></span>
+        </div>
     <!-- LIGHTBOX -->
     <script>
         /funcionalidad para ampliar la imagen al darle click y cerrar/

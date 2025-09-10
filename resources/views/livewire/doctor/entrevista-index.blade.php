@@ -340,6 +340,11 @@
                                     @endif
                                 </div>
                             </div>
+                                    <!-- Adjuntar PDFs -->
+                            <a href="{{ route('entrevistas.pdf-psiquiatra', $paciente) }}"
+                                class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto">
+                                Adjuntar PDFs
+                            </a>
 
                             <a class="px-4 py-2 mt-4 text-center bg-purple-500 text-white rounded-md shadow-md hover:bg-purple-600 focus:outline-none"
                                 href="{{ route('entrevistas.edit', ['entrevista_id' => $entrevista->id]) }}">

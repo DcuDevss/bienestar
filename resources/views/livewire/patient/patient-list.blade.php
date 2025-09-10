@@ -35,7 +35,7 @@
                     <table class="w-full text-left text-gray-500 ">
                         <thead class=" text-xs text-white uppercase bg-gray-900">
                             <tr class="teGead text-[14px]">
-                                <th scope="col" class="px-4 py-3">N°</th>
+                                {{-- <th scope="col" class="px-4 py-3">N°</th> --}}
                                 <th scope="col" class="px-4 py-3">Apellido y nombre</th>
                                 <th scope="col" class="px-4 py-3">DNI</th>
                                 <th scope="col" class="px-4 py-3">legajo</th>
@@ -54,11 +54,9 @@
                         <tbody class="">
                             @foreach ($pacientes as $paciente)
                                 <tr wire:key="{{ $paciente->id }}" class="border-b border-gray-700 hover:bg-[#204060]">
-                                    <th
-                                        class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-nowrap dark:text-white">
-                                        {{ $paciente->id }}</th>
-                                    <th
-                                        class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
+                                    {{-- <th class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-nowrap dark:text-white">
+                                        {{ $paciente->id }}</th> --}}
+                                    <th class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
                                         {{ $paciente->apellido_nombre }}</th>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->dni }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->legajo }}</td>
@@ -124,12 +122,14 @@
                                                 Editar
                                             </a>
                                             <!-- Opción Eliminar -->
+                                            @role('super-admin')
                                             <button
                                                 onclick="confirm('Seguro desea eliminar a este paciente {{ $paciente->apellido_nombre }} ?') || event.stopImmediatePropagation()"
                                                 wire:click="delete({{ $paciente->id }})"
                                                 class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-red-700 hover:bg-red-600">
                                                 Eliminar
                                             </button>
+                                            @endrole
                                         </div>
                                     </td>
 
@@ -168,17 +168,16 @@
     </section>
 
     <section class="seccionTab2 w-fit">@livewire('patient.patient-listfechas')
-
-        <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm">
+        <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm max-h-[36rem] overflow-y-auto">
             <h2 class="text-lg font-bold mb-2 text-gray-700">Pacientes por Tipo de Licencia</h2>
-        
             @foreach ($agrupadosPorLicencia as $licencia)
                 <div class="mb-3">
                     <h3 class="font-semibold text-blue-600">{{ $licencia->name }}</h3>
                     <ul class="list-disc list-inside">
                         @forelse ($licencia->disases_paciente as $dp)
                             <li class="text-gray-700">
-                                {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
+                                {{ $dp->paciente->jerarquias->name ?? 'Sin jerarquía' }}
+                                - {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
                                 - Finaliza: {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
                             </li>
                         @empty
@@ -188,8 +187,6 @@
                 </div>
             @endforeach
         </div>
-        
-        
     </section>
 
 

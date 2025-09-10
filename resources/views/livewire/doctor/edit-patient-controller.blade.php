@@ -1,12 +1,6 @@
 <div class="container mx-auto p-4">
     <h2 class="text-2xl font-semibold mb-4 text-center">Editar Paciente</h2>
 
-    @if (session()->has('message'))
-        <div class="mb-4 p-2 text-green-600 bg-green-100 rounded">
-            {{ session('message') }}
-        </div>
-    @endif
-
     <form wire:submit.prevent="submit" class="space-y-4">
 
         <!-- Información del paciente -->
@@ -144,7 +138,7 @@
 
                 <div class="col-span-1">
                     <label for="altura" class="block font-medium">Altura</label>
-                    <input type="number" id="altura" wire:model="altura" class="input rounded-md w-full" >
+                    <input type="text" id="altura" wire:model="altura" class="input rounded-md w-full" >
                 </div>
 
                 <div class="col-span-1">
@@ -172,9 +166,60 @@
 
 
         <div class="px-4 mt-6">
+                @if (session()->has('message'))
+        <div class="mb-4 p-2 text-green-600 bg-green-100 rounded">
+            {{ session('message') }}
+        </div>
+    @endif
             <button type="submit" class="bg-blue-500 text-white py-2 px-6 rounded-md hover:bg-blue-600">
                 Actualizar Paciente
             </button>
         </div>
+
     </form>
+
+
+    @if (session()->has('message'))
+        <div class="mb-4 p-2 text-green-600 bg-green-100 rounded">
+            {{ session('message') }}
+        </div>
+    @endif
+<script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('notify', data => {
+            showToast(data.message);
+        });
+    });
+
+    function showToast(message) {
+        const toast = document.createElement('div');
+        toast.innerText = message;
+        toast.style.position = 'fixed';
+        toast.style.bottom = '20px';
+        toast.style.right = '20px';
+        toast.style.background = '#16a34a';   // verde
+        toast.style.color = '#fff';
+        toast.style.padding = '12px 20px';
+        toast.style.borderRadius = '8px';
+        toast.style.boxShadow = '0 4px 6px rgba(0,0,0,0.2)';
+        toast.style.zIndex = 9999;
+        toast.style.fontWeight = 'bold';
+        toast.style.opacity = '0';
+        toast.style.transition = 'opacity 0.3s ease';
+
+        document.body.appendChild(toast);
+
+        // animar aparición
+        requestAnimationFrame(() => {
+            toast.style.opacity = '1';
+        });
+
+        // remover después de 3s
+        setTimeout(() => {
+            toast.style.opacity = '0';
+            setTimeout(() => toast.remove(), 300);
+        }, 3000);
+    }
+</script>
+
 </div>

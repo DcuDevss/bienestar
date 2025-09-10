@@ -18,7 +18,7 @@
                 <div>
                     <label for="presion"
                         class="block text-sm font-medium text-gray-700">{{ __('Presion arterial') }}</label>
-                    <input id="presion" class="w-full rounded cursor-not-allowed bg-gray-200" type="text"
+                    <input id="presion" class="w-full rounded cursor-pointer bg-gray-200" type="text"
                         placeholder="{{ __('presion') }}" wire:model="presion"/>
                     <x-input-error for="presion" />
                 </div>
@@ -26,7 +26,7 @@
                 <div>
                     <label for="temperatura"
                         class="block text-sm font-medium text-gray-700">{{ __('Temperatura') }}</label>
-                    <input id="temperatura" class="w-full rounded cursor-not-allowed bg-gray-200" type="number"
+                    <input id="temperatura" class="w-full rounded cursor-pointer bg-gray-200" type="number"
                         placeholder="{{ __('temperatura') }}" wire:model="temperatura"/>
                     <x-input-error for="temperatura" />
                 </div>
@@ -36,7 +36,7 @@
                     <label for="fecha_atencion"
                         class="block text-sm font-medium text-gray-700">{{ __('fecha de atencion') }}</label>
                     <input id="fecha_atencion" class="w-full rounded cursor-pointer" type="datetime-local"
-                        placeholder="{{ __(' ingrese fecha de la enfermedad') }}" wire:model="fecha_atencion" />
+                        placeholder="{{ __(' ingrese fecha de atención') }}" wire:model="fecha_atencion" />
                     <x-input-error for="fecha_atencion" />
                 </div>
 

@@ -36,26 +36,30 @@
     </form>
 
     {{-- Historial de PDFs --}}
+{{-- Historial de PDFs (psiquiatra) --}}
     <h3 class="text-lg font-semibold mb-3">Historial de PDFs</h3>
 
     @if($pdfsList->isEmpty())
-        <p class="text-gray-600">No hay PDFs adjuntados para esta entrevista.</p>
+    <p class="text-gray-600">No hay PDFs adjuntados por el psiquiatra.</p>
     @else
-        <ul class="list-disc list-inside space-y-2">
-            @foreach ($pdfsList as $pdf)
-                <li class="flex items-center justify-between">
-                    <a href="{{ route('pdf.show', basename($pdf->filepath)) }}" target="_blank" class="text-blue-600 hover:text-blue-400 font-semibold">
-                        {{ $pdf->filename }}
-                    </a>
-                    <button wire:click="eliminarPdf({{ $pdf->id }})"
-                            onclick="confirm('¿Está seguro de eliminar este PDF?') || event.stopImmediatePropagation()"
-                            class="ml-4 px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm">
-                        Eliminar
-                    </button>
-                </li>
-            @endforeach
-        </ul>
+    <ul class="list-disc list-inside space-y-2">
+        @foreach ($pdfsList as $pdf)
+        <li class="flex items-center justify-between">
+            <a href="{{ route('pdf.show', ['filename' => basename($pdf->filepath), 'pid' => $paciente->id]) }}"
+            target="_blank"
+            class="text-blue-600 hover:text-blue-400 font-semibold">
+            {{ $pdf->filename }}
+            </a>
+            <button wire:click="eliminarPdf({{ $pdf->id }})"
+                    onclick="confirm('¿Está seguro de eliminar este PDF?') || event.stopImmediatePropagation()"
+                    class="ml-4 px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm">
+            Eliminar
+            </button>
+        </li>
+        @endforeach
+    </ul>
     @endif
+
 
     <div class="flex justify-center mb-2 mt-4">
         <button type="button" onclick="window.history.back()"

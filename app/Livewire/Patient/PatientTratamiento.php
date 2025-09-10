@@ -119,6 +119,7 @@ class PatientTratamiento extends Component
         $tratamiento->paciente_id = ($this->pacienteId === '') ? null : (int) $this->pacienteId;
 
         $tratamiento->save();
+        $this->dispatch('notify', message: 'Tratamiento creado correctamente.', type: 'success');
 
         $this->reset();
     }
@@ -195,8 +196,8 @@ class PatientTratamiento extends Component
             $query->where(function ($q) {
                 $q->where('profesional_enterior', 'like', '%' . $this->search . '%')
                     ->orWhere('consumo_farmacos', 'like', '%' . $this->search . '%')
-                    ->orWhere('fecha_anterior', 'like', '%' . $this->search . '%')
-                    ->orWhere('entecedente_familiar', 'like', '%' . $this->search . '%');
+                    ->orWhere('fecha_atencion', 'like', '%' . $this->search . '%')
+                    ->orWhere('antecedente_familiar', 'like', '%' . $this->search . '%');
             });
         }
 

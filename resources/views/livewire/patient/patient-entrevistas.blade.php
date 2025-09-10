@@ -45,7 +45,7 @@
                         <table class="w-full text-center text-gray-500">
                             <thead class="text-xs text-white uppercase bg-gray-900">
                                 <tr class="teGead text-[14px]">
-                                    <th scope="col" class="px-4 py-3">N°</th>
+                                    {{-- <th scope="col" class="px-4 py-3">N°</th> --}}
                                     <th scope="col" class="px-4 py-3">Jerarquía</th>
                                     <th scope="col" class="px-4 py-3">Nombre</th>
                                     <th scope="col" class="px-4 py-3">Revista</th>
@@ -60,7 +60,7 @@
                             <tbody>
                                 @foreach ($entrevistas as $entrevista)
                                     <tr class="border-b border-gray-700 hover:bg-[#204060]">
-                                        <td class="text-center px-4 py-3 text-white">{{ $entrevista->paciente_id }}</td>
+                                        {{-- <td class="text-center px-4 py-3 text-white">{{ $entrevista->paciente_id }}</td> --}}
                                         <td class="text-center px-4 py-3 text-white">
                                             {{ $entrevista->paciente->jerarquias->name ?? 'N/A' }}</td>
                                         <td class="text-center px-4 py-3 text-white">

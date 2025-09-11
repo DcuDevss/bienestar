@@ -30,7 +30,7 @@
                             </div>
                             @endcan
 
-                            {{-- LICENCIAS (corrige <p>, filtra días = 0 y balancea if/else) --}}
+                            {{-- LICENCIAS (corrige <p>, filtra días = 0 y balancea if/else) y mas cambios--}}
                             @php
                             $sumasFiltradas = collect($sumasPorTipo ?? [])
                                 ->map(fn($v) => (int)$v)

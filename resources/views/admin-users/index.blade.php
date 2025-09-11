@@ -5,11 +5,7 @@
         {{-- CONTENT --}}
         <div class="w-full bg-white dark:bg-gray-100">
             <div class=" mx-auto sm:px-6 lg:px-8">
-                {{-- <x-slot name="header">
-                    <h2 class="font-semibold text-xl text-red-500 leading-tight">
-                        {{ __('LISTAS DE ROLES: ') }}
-                    </h2>
-                </x-slot> --}}
+                
                 @if (session('info'))
                     <div class="bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
                         <p class="font-bold">Mensaje!!</p>
@@ -28,14 +24,14 @@
                     <form action="{{ route('new-user.store') }}" method="POST" autocomplete="off"
                         class="w-[60%] mx-auto ">
                         @csrf
-                        <div class="rounded-lg shadow-lg p-10 w-fit mx-auto flex flex-col items-center gap-y-8">
-                            <h1 class="text-2xl font-bold text-gray-900 mb-1">Crear nuevo usuario</h1>
+                        <div class="bg-gray-700 text-white rounded-lg shadow-lg p-10 w-fit mx-auto flex flex-col items-center gap-y-8">
+                            <h1 class="text-2xl font-bold  mb-1">Crear nuevo usuario</h1>
                             <div class="grid grid-cols-2 gap-x-8">
                                 {{-- COLUMN 1 --}}
                                 <div class="flex flex-col gap-y-5">
                                     {{-- Nombre --}}
                                     <div>
-                                        <label htmlFor="name" class="block text-sm font-medium text-gray-700">
+                                        <label htmlFor="name" class="block text-sm font-medium ">
                                             Nombre
                                         </label>
                                         <input id="name" type="text" value="" name="name"
@@ -49,7 +45,7 @@
 
                                     {{-- Contraseña --}}
                                     <div>
-                                        <label htmlFor="password" class="block text-sm font-medium text-gray-700">
+                                        <label htmlFor="password" class="block text-sm font-medium ">
                                             Contraseña
                                         </label>
                                         <input id="password" type="password" value="" name="password"
@@ -66,7 +62,7 @@
                                 <div class="flex flex-col gap-y-5">
                                     {{-- Email --}}
                                     <div>
-                                        <label htmlFor="email" class="block text-sm font-medium text-gray-700">
+                                        <label htmlFor="email" class="block text-sm font-medium ">
                                             Email
                                         </label>
                                         <input id="email" type="email" value="" name="email"
@@ -81,7 +77,7 @@
                                     {{-- Repetir Contraseña --}}
                                     <div>
                                         <label htmlFor="password_confirmation"
-                                            class="block text-sm font-medium text-gray-700">
+                                            class="block text-sm font-medium ">
                                             Confirmar contraseña
                                         </label>
                                         <input id="password_confirmation" type="password" value="" tabindex="4"

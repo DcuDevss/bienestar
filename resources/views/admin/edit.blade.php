@@ -1,62 +1,15 @@
 <x-app-layout>
     <div class="flex">
         {{-- SIDE BAR --}}
-        <div class="w-64 min-h-screen bg-gray-800 text-white flex flex-col">
-            <div class="flex-1 overflow-y-auto">
-                <div class="px-4 py-6">
-                    <h2 class="text-lg font-semibold mb-4">Administrar</h2>
-                    <nav class="space-y-1">
-                        {{-- USUARIOS --}}
-                        <a href="#proyecto1"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 7h18M3 12h18m-7 5h7" />
-                            </svg>
-                            USUARIOS
-                        </a>
-                        <a href="{{ route('users.index') }}"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="3" />
-                            </svg>
-                            Lista de usuarios
-                        </a>
-                        <a href="{{ route('users.index') }}"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="3" />
-                            </svg>
-                            Crear nuevo usuario
-                        </a>
-                        {{-- ROLES --}}
-                        <a href="#proyecto1"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
-                                    d="M3 7h18M3 12h18m-7 5h7" />
-                            </svg>
-                            ROLES
-                        </a>
-                        <a href="{{ route('admin-roles.index') }}"
-                            class="flex items-center px-3 py-2 text-sm font-medium rounded-md hover:bg-gray-700 transition-colors">
-                            <svg class="w-5 h-5 mr-3" fill="currentColor" viewBox="0 0 24 24">
-                                <circle cx="12" cy="12" r="3" />
-                            </svg>
-                            Lista de Roles
-                        </a>
-                    </nav>
-                </div>
-            </div>
-        </div>
-        <div class="py-5 w-full bg-white dark:bg-gray-100 mt-10">
+        <x-side-bar></x-side-bar>
+        <div class="py-5 w-full bg-white dark:bg-gray-100 mt-6">
             <div class=" mx-auto sm:px-6 lg:px-8">
                 {{-- <x-slot name="header">
                     <h2 class="font-semibold text-xl text-red-500 leading-tight">
                         {{ __('EDITAR ROLES: ') }}
                     </h2>
                 </x-slot> --}}
-                <h2 class="text-center">Editar Roles</h2>
+                <h2 class="text-center text-2xl pb-4 font-semibold">Editar perfil</h2>
                 @if (session('info'))
                     <div class="bg-blue-100 border-t border-b border-blue-500 text-blue-700 px-4 py-3" role="alert">
                         <p class="font-bold">Mensaje!!</p>
@@ -65,34 +18,36 @@
                 @endif
 
                 <div class=" flex flex-col items-center">
-                    <div class="mb-4">
-                        <label class="block text-blue-800 font-bold mb-2" for="inline-full-name">
-                            Nombre
-                        </label>
-                        <input
-                            class="w-fit bg-gray-200 appearance-none border-2 border-gray-200 rounded  py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
-                            id="inline-full-name" type="text" value="{{ $user->name }}">
-                    </div>
-
-                    <div class="mb-4">
+                    
+                    <div class="bg-gray-800 text-white rounded-md mb-4 shadow-lg border w-fit mx-auto py-5 px-10">
+                        <div class="mb-4 flex gap-x-4 items-center justify-start">
+                            <label class="mt-2 block  font-bold mb-2" for="inline-full-name">
+                                Nombre:
+                            </label>
+                            <input
+                                class="w-fit bg-gray-200 appearance-none border-2 border-gray-200 rounded  py-2 px-4 text-gray-700 leading-tight focus:outline-none focus:bg-white focus:border-purple-500"
+                                id="inline-full-name" type="text" value="{{ $user->name }}">
+                        </div>
                         <form action="{{ route('users.update', $user) }}" method="post">
                             @method('put')
                             @csrf
-                            @foreach ($roles as $role)
-                                <div>
-                                    <label>
-                                        <input type="checkbox" name="roles[]" value="{{ $role->id }}"
-                                            {{ $user->hasRole($role->name) ? 'checked' : '' }}>
-                                        {{ $role->name }}
-                                    </label>
-                                </div>
-                            @endforeach
+                            <div class="grid grid-cols-2 gap-2">
+                                @foreach ($roles as $role)
+                                    <div>
+                                        <label>
+                                            <input type="checkbox" name="roles[]" value="{{ $role->id }}"
+                                                {{ $user->hasRole($role->name) ? 'checked' : '' }}>
+                                            {{ $role->name }}
+                                        </label>
+                                    </div>
+                                @endforeach
+                            </div>
 
                             <div class="mt-4">
                                 <button
-                                    class="bg-purple-500  hover:bg-purple-400 focus:shadow-outline focus:outline-none text-black font-bold py-2 px-4 rounded"
+                                    class="mx-auto w-full bg-blue-700  hover:bg-blue-600 focus:shadow-outline focus:outline-none text-white font-bold py-2 px-4 rounded"
                                     type="submit">
-                                    Actualizar Roles
+                                    Actualizar Perfil
                                 </button>
                             </div>
                         </form>

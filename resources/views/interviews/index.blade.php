@@ -9,7 +9,7 @@
         </button>
     </form> --}}
 
-    <div class="container w-[95%] bg-slate-800 rounded-md py-1 flex mx-auto mb-12">
+    <div class="container w-[95%] bg-slate-800 rounded-md py-1 flex mx-auto">
         <!-- CERTIFICADO -->
         <section class="flex-1 min-w-0 px-1 md:basis-[calc(100%-27rem)]">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-1">
@@ -48,48 +48,6 @@
                                 </div>
 
                                 @php $tipoNorm = \Illuminate\Support\Str::lower($tipo); @endphp
-                            <p class=" text-slate-800 font-semibold capitalize">
-                                @if (!empty($sumasPorTipo) && array_sum($sumasPorTipo) > 0)
-
-                                    <div class="text-slate-800 font-semibold capitalize">
-                                        <h2 class="text-lg text-center mb-2">Licencias Médicas por Tipo</h2>
-
-                                        @foreach ($sumasPorTipo as $tipo => $suma)
-                                            <div class="flex text-sm justify-between items-center mb-1">
-                                                <p class="font-semibold capitalize">{{ $tipo }}</p>
-                                                <p class="font-semibold capitalize">Días: {{ $suma }}</p>
-                                            </div>
-
-                                            @if ($tipo === 'Enfermedad comun')
-                                                @if ($suma >= 30)
-                                                    <div
-                                                        class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
-                                                        ¡Alerta roja! días de salud cumplidos
-                                                    </div>
-                                                @elseif ($suma >= 28)
-                                                    <div
-                                                        class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
-                                                        ¡Precaución! llegando al límite de salud
-                                                    </div>
-                                                @endif
-                                            @elseif ($tipo === 'Atencion familiar')
-                                                @if ($suma >= 20)
-                                                    <div
-                                                        class="animate-pulse bg-red-500 text-white p-2 rounded-md mb-2">
-                                                        ¡Alerta roja! atendibles cumplidos
-                                                    </div>
-                                                @elseif ($suma >= 18)
-                                                    <div
-                                                        class="animate-pulse bg-yellow-500 text-black p-2 rounded-md mb-2">
-                                                        ¡Precaución! llegando al límite de atendibles
-                                                    </div>
-                                                @endif
-                                            @endif
-                                        @endforeach
-                                    </div>
-                                @else
-                                    <p>No posee días registrados.</p>
-                                @endif
 
                                 @if ($tipoNorm === 'enfermedad comun')
                                     @if ($suma >= 30)

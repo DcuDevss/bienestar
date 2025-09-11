@@ -36,7 +36,7 @@
                                         </label>
                                         <input id="name" type="text" value="" name="name"
                                             tabindex="1"
-                                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            class="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                             placeholder="Ingrese su nombre" />
                                         @error('name')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -50,7 +50,7 @@
                                         </label>
                                         <input id="password" type="password" value="" name="password"
                                             tabindex="3"
-                                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            class="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                             placeholder="Ingrese su contraseña" />
                                         @error('password')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -67,7 +67,7 @@
                                         </label>
                                         <input id="email" type="email" value="" name="email"
                                             tabindex="2"
-                                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            class=" text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                             placeholder="Ingrese su email" />
                                         @error('email')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
@@ -82,7 +82,7 @@
                                         </label>
                                         <input id="password_confirmation" type="password" value="" tabindex="4"
                                             name="password_confirmation"
-                                            class="mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
+                                            class="text-black mt-1 block w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 sm:text-sm"
                                             placeholder="Confirme su contraseña" />
                                         @error('password_confirmation')
                                             <p class="mt-1 text-sm text-red-600">{{ $message }}</p>

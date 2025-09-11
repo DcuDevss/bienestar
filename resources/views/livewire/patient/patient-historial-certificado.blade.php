@@ -34,8 +34,8 @@
                         <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">Tipo de licencia:</span>
                                 {{ $tipolicencias->get($disase->pivot->tipolicencia_id)?->name ?? 'No definido' }}
-                            </p>                            
-                            
+                            </p>
+
                         </li>
                         <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">Presentacion de certificado:</span>
@@ -57,13 +57,13 @@
                             <p><span class="pr-1 font-extrabold text-black">dias de licencia:</span>
                             {{ $disase->pivot->suma_auxiliar }}</p>
                         </li>
-                        <li class="mb-0"><span class="pr-1 font-extrabold text-black">Activo:</span>
+                        {{-- <li class="mb-0"><span class="pr-1 font-extrabold text-black">Activo:</span>
                             @if($disase->pivot->estado_certificado == 1)
                                 Sí
                             @else
                                 No
                             @endif
-                        </li>
+                        </li> --}}
                         <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">Detalle de enfermedad:</span>
                             {{ $disase->pivot->detalle_certificado }}</p>
@@ -134,46 +134,75 @@
             </li>
         </ul>
     </div>
-    <!-- MODAL -->
-<x-dialog-modal wire:model="modal">
-    <x-slot name="title">
-        <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
-            {{ __('agregar afeccion/certificado al historial del paciente') }}
-        </div>
-        <img class="h-32 w-full object-center object-cover" src="{{ asset('assets/disases.jpg') }}" alt="">
-    </x-slot>
-    <x-slot name="content">
+        <!-- MODAL -->
+        <x-dialog-modal wire:model="modal">
+            <x-slot name="title">
+                <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
+                    {{ __('agregar afeccion/certificado al historial del paciente') }}
+                </div>
+                <img class="h-32 w-full object-center object-cover" src="{{ asset('assets/disases.jpg') }}" alt="">
+            </x-slot>
+            <x-slot name="content">
        <div class="grid grid-cols-2 gap-4">
-                <div>
+ {{--                <div>
                     <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Nombre') }}</label>
                     <input id="name" class="w-full rounded" type="text" placeholder="{{ __('nombre') }}"
                         wire:model.defer="name" />
                     <x-input-error for="name" />
+                </div> --}}
+
+                <div class="relative"
+                    wire:click.outside="closeEditPicker"
+                    wire:keydown.escape="closeEditPicker">
+
+                <label for="editedDisaseName" class="block text-sm font-medium text-gray-700">
+                    {{ __('Nombre del Padecimiento') }}
+                </label>
+
+                <input id="editedDisaseName"
+                        class="w-full rounded"
+                        type="text"
+                        placeholder="{{ __('Nuevo nombre') }}"
+                        wire:model.live="editedDisaseName"
+                        x-data @focus="$wire.openEditPicker()" />
+
+                <x-input-error for="editedDisaseName" />
+
+                @if ($editPickerOpen && trim($editedDisaseName) !== '')
+                    <div class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto bg-white border border-slate-200 rounded-md shadow">
+                    <ul class="w-full">
+                        @forelse($editOptions as $i => $opt)
+                        <li class="cursor-pointer px-3 py-2 bg-gray-50 hover:bg-gray-100 my-1 rounded-md">
+                            <button type="button" class="w-full text-left"
+                                    wire:click="pickEditedDisase({{ $opt['id'] }})">
+                            {{ $opt['name'] }}
+                            </button>
+                        </li>
+                        @empty
+                        <div class="px-3 py-2 text-sm text-slate-500">Sin resultados…</div>
+                        @endforelse
+                    </ul>
+                    </div>
+                @endif
                 </div>
 
                 <div>
-                    <label for="editedDisaseName"
-                        class="block text-sm font-medium text-gray-700">{{ __('Nuevo Nombre') }}</label>
-                    <input id="editedDisaseName" class="w-full rounded" type="text"
-                        placeholder="{{ __('Nuevo nombre') }}" wire:model.defer="editedDisaseName" />
-                    <x-input-error for="editedDisaseName" />
-                </div>
-
-                <div>
+                    <label for="fecha_presentacion_certificado"
+                        class="block text-sm font-medium text-gray-700">{{ __('Tipo de Licencia') }}</label>
                     <select id="tipolicencia_id" class="w-full rounded cursor-pointer" wire:model="tipolicencia_id">
                         <option value="" selected>{{ __('Seleccione una opción') }}</option>
                         @foreach ($tipolicencias as $licencia)
                             <option value="{{ $licencia->id }}">{{ $licencia->name }}</option>
                         @endforeach
-                    </select> 
+                    </select>
                     <x-input-error for="tipolicencia_id" />
-                
-                </div>         
-               
+
+                </div>
+
 
                 <div>
                     <label for="fecha_presentacion_certificado"
-                        class="block text-sm font-medium text-gray-700">{{ __('fecha de presentacion del certificado') }}</label>
+                        class="block text-sm font-medium text-gray-700">{{ __('Fecha de presentacion del certificado') }}</label>
                     <input id="fecha_presentacion_certificado" class="w-full rounded" type="date"
                         placeholder="{{ __(' ingrese fecha de la enfermedad') }}"
                         wire:model.defer="fecha_presentacion_certificado" />
@@ -182,7 +211,7 @@
 
                 <div>
                     <label for="fecha_inicio_licencia"
-                        class="block text-sm font-medium text-gray-700">{{ __('inicio del certificado') }}</label>
+                        class="block text-sm font-medium text-gray-700">{{ __('Inicio del certificado') }}</label>
                     <input id="fecha_inicio_licencia" class="w-full rounded" type="datetime-local"
                         placeholder="{{ __('fecha de inicio') }}" wire:model.defer="fecha_inicio_licencia" />
                     <x-input-error for="fecha_inicio_licencia" />
@@ -190,7 +219,7 @@
 
                 <div>
                     <label for="fecha_finalizacion_licencia"
-                        class="block text-sm font-medium text-gray-700">{{ __('finalización de certificado') }}</label>
+                        class="block text-sm font-medium text-gray-700">{{ __('Finalización de certificado') }}</label>
                     <input id="fecha_finalizacion_licencia" class="w-full rounded" type="datetime-local"
                         placeholder="{{ __('fecha finalización') }}" wire:model.defer="fecha_finalizacion_licencia" />
                     <x-input-error for="fecha_finalizacion_licencia" />
@@ -205,34 +234,34 @@
                 </div>
 
                 <div>
-                    <label for="suma_salud" class="block text-sm font-medium text-gray-700">{{ __('Dias licencia certificado') }}</label>
+                    <label for="suma_salud" class="block text-sm font-medium text-gray-700">{{ __('Dias licencia') }}</label>
                     <input id="suma_salud" class="w-full rounded cursor-pointer" type="number" placeholder="{{ __('ingrese dias certificado') }}" wire:model.defer="suma_salud" />
                     <x-input-error for="suma_salud" />
                 </div>
-
+{{--
                 <div>
                     <label class="flex items-center">
                         <input id="estado_certificado" class="rounded" type="checkbox" wire:model.defer="estado_certificado" />
                         <span class="ml-2">{{ __('Activo') }}</span>
                     </label>
+                </div> --}}
+                <div class="col-span-2 grid grid-cols-2 gap-4">
+                    <div>
+                        <label for="imagen_frente" class="block text-sm font-medium text-gray-700">{{ __('Frente certificado') }}</label>
+                        <input id="imagen_frente" class="rounded py-2" type="file" wire:model.defer="imagen_frente"
+                            accept="image/*" />
+                        <x-input-error for="imagen_frente" />
+                    </div>
+                    <div>
+                        <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">{{ __('Frente certificado') }}</label>
+                        <input id="imagen_dorso" class="rounded py-2" type="file" wire:model.defer="imagen_dorso"
+                            accept="image/*" />
+                        <x-input-error for="imagen_dorso" />
+                    </div>
                 </div>
-
-                <div>
-                    <label for="imagen_frente" class="block text-sm font-medium text-gray-700">{{ __('frente certificado') }}</label>
-                    <input id="imagen_frente" class="rounded py-2" type="file" wire:model.defer="imagen_frente"
-                        accept="image/*" />
-                    <x-input-error for="imagen_frente" />
-                </div>
-                <div>
-                    <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">{{ __('frente certificado') }}</label>
-                    <input id="imagen_dorso" class="rounded py-2" type="file" wire:model.defer="imagen_dorso"
-                        accept="image/*" />
-                    <x-input-error for="imagen_dorso" />
-                </div>
-
                 <div class="col-span-2">
                     <label for="detalle_certificado"
-                        class="block text-sm font-medium text-gray-700">{{ __('detalle del certificado') }}</label>
+                        class="block text-sm font-medium text-gray-700">{{ __('Detalle del certificado') }}</label>
                     <textarea id="detalle_certificado" class="w-full rounded" value="" rows="5"
                         placeholder="{{ __('ingrese detalle') }}" wire:model.defer="detalle_certificado"></textarea>
                     <x-input-error for="detalle_certificado" />
@@ -243,14 +272,26 @@
     <x-slot name="footer">
         <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
             wire:click="$set('modal', false)">
-            {{ __('cancelar') }}
+            {{ __('Cancelar') }}
         </button>
         <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="editDisase"
             wire:loading.attr="disabled">
-            {{ __('editar enfermedad') }}
+            {{ __('Editar enfermedad') }}
         </button>
     </x-slot>
 </x-dialog-modal>
+        <div x-data="{ open:false, msg:'', t:null }"
+            x-on:toast.window="
+                clearTimeout(t);
+                msg = $event.detail?.message || 'Acción realizada';
+                open = true;
+                t = setTimeout(() => open = false, 2500);
+            "
+            x-show="open"
+            x-transition
+            class="fixed top-4 right-4 z-50 rounded-md bg-emerald-600 text-white px-4 py-2 shadow">
+            <span x-text="msg"></span>
+        </div>
     <!-- LIGHTBOX -->
     <script>
         /funcionalidad para ampliar la imagen al darle click y cerrar/

@@ -249,11 +249,13 @@
                                         <td class="tiBody px-4 py-1 text-gray-300">{{ $tratamiento->tipolicencias->name }}</td>
                                         <td class="tiBody px-4 py-1">
                                         <div class="flex flex-wrap gap-2 justify-center">
+                                            @role('super-admin')
                                             <button onclick="confirm('¿Seguro que desea eliminar este tratamiento?') || event.stopImmediatePropagation()"
                                                 wire:click="delete({{ $tratamiento->id }})"
                                                 class="ml-2 px-4 py-[2px] bg-[#f02f39] hover:bg-[#3973ac] text-white rounded">
                                                 Eliminar
                                             </button>
+                                            @endrole
                                             <button
                                                 @click="editModal = true"
                                                 wire:click="openEditModal({{ $tratamiento->id }})"
@@ -375,6 +377,40 @@
             </div>
         </section>
         {{--   <section class="seccionTab2 w-fit">@livewire('patient.patient-listfechas')</section> --}}
+            <script>
+  document.addEventListener('livewire:init', () => {
+    Livewire.on('notify', (payload = {}) => {
+      showToast(payload.message || 'Operación realizada', payload.type || 'success');
+    });
+  });
+
+  function showToast(message, type = 'success') {
+    const toast = document.createElement('div');
+    toast.textContent = message;
+    toast.style.position = 'fixed';
+    toast.style.bottom = '20px';
+    toast.style.right = '20px';
+    toast.style.padding = '12px 16px';
+    toast.style.borderRadius = '10px';
+    toast.style.boxShadow = '0 8px 20px rgba(0,0,0,0.25)';
+    toast.style.color = '#fff';
+    toast.style.fontWeight = '600';
+    toast.style.zIndex = '9999';
+    toast.style.opacity = '0';
+    toast.style.transform = 'translateY(8px)';
+    toast.style.transition = 'opacity 200ms ease, transform 200ms ease';
+    toast.style.background = (type === 'error') ? '#dc2626' : '#16a34a';
+    document.body.appendChild(toast);
+    requestAnimationFrame(() => { toast.style.opacity = '1'; toast.style.transform = 'translateY(0)'; });
+    setTimeout(() => {
+      toast.style.opacity = '0';
+      toast.style.transform = 'translateY(8px)';
+      setTimeout(() => toast.remove(), 220);
+    }, 3000);
+  }
+</script>
+
     </div>
+
 </div>
 

@@ -651,12 +651,6 @@
         @else
             <p>No se encontró el paciente.</p>
         @endif
-
-        <!-- Adjuntar PDFs -->
-        <a href="{{ route('entrevistas.pdf-psiquiatra', $paciente) }}"
-            class="bg-yellow-500 hover:bg-yellow-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto">
-            Adjuntar PDFs
-        </a>
     </div>
 
     <!-- Grupo Derecho: 2 elementos -->

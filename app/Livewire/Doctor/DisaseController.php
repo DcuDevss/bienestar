@@ -45,15 +45,20 @@ class DisaseController extends Component
     public function addDisase()
     {
         $this->validate();
-        $disase = Disase::create([
-            'name' => mb_strtolower($this->name),
-            'slug' => Str::slug($this->name),
+
+        Disase::create([
+            'name'     => mb_strtolower($this->name),
+            'slug'     => Str::slug($this->name),
             'symptoms' => mb_strtolower($this->symptoms),
         ]);
-        $this->reset(['name', 'symptoms']);
-        $this->render();
-        $this->modal = false;
+
+        // Limpio y cierro
+        $this->reset(['name', 'symptoms', 'modal']);
+
+        // Opcional: toast
+        $this->dispatch('notify', message: 'Enfermedad creada');
     }
+
 
 
 
@@ -67,14 +72,18 @@ class DisaseController extends Component
 
     public function update(Disase $disase)
     {
-        $this->validate();
-        $disase->name = mb_strtolower($this->name);
-        $disase->slug = Str::slug($this->name);
-        $disase->symptoms = mb_strtolower($this->symptoms);
-        $disase->save();
-        $this->reset(['name', 'symptoms']);
-        $this->modalEdit = false;
-        $this->render();
+    $this->validate();
+
+    $disase = Disase::findOrFail($this->disaseId);
+    $disase->name     = mb_strtolower($this->name);
+    $disase->slug     = Str::slug($this->name);
+    $disase->symptoms = mb_strtolower($this->symptoms);
+    $disase->save();
+
+    $this->reset(['name', 'symptoms', 'disaseId', 'modalEdit']);
+
+    // opcional: notificación
+    $this->dispatch('notify', message: 'Enfermedad actualizada');
     }
 
     public function delete(Disase $disase)

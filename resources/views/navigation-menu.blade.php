@@ -306,10 +306,10 @@
                                 <a href="{{ route('oficinas.index') }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Oficina de trabajo</a>
                             @endcan
-                            @can('diadetrabajos.index')
+{{--                             @can('diadetrabajos.index')
                                 <a href="{{ route('diadetrabajos.index') }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Horario laboral</a>
-                            @endcan
+                            @endcan --}}
                             @can('curriculum.index')
                                 <a href="{{ route('curriculum.index') }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Curriculum</a>

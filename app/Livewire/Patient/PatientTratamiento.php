@@ -6,7 +6,7 @@ use App\Models\DerivacionPsiquiatrica;
 use App\Models\Enfermedade;
 use App\Models\IndicacionTerapeutica;
 use App\Models\Procedencia;
-use App\Models\TipoLicencia;
+use App\Models\Tipolicencia;
 use App\Models\Tratamiento;
 use Livewire\Component;
 use App\Models\Paciente;

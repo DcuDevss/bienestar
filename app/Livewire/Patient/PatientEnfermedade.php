@@ -6,7 +6,7 @@ use Livewire\Component;
 use App\Models\Enfermedade;
 use App\Models\Paciente;
 use Illuminate\Support\Str;
-use App\Models\TipoLicencia;
+use App\Models\Tipolicencia;
 use Livewire\WithFileUploads;
 
 class PatientEnfermedade extends Component

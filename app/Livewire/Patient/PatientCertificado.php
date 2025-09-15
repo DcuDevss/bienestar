@@ -9,6 +9,8 @@ use Livewire\Component;
 use App\Models\Tipolicencia;
 use Livewire\WithFileUploads;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Storage;
+
 
 class PatientCertificado extends Component
 {
@@ -129,11 +131,14 @@ class PatientCertificado extends Component
         )->id;
 
         // Guardar archivos
-        $dir = "public/archivos_disases/paciente_{$this->patient->id}";
-        if (!file_exists($dir)) mkdir($dir, 0777, true);
+        $dir = "archivos_disases/paciente_{$this->patient->id}"; // sin "public/" al inicio
+        Storage::disk('public')->makeDirectory($dir);
 
-        $pathFrente = $data['imagen_frente']?->storeAs($dir, $data['imagen_frente']->getClientOriginalName());
-        $pathDorso = $data['imagen_dorso']?->storeAs($dir, $data['imagen_dorso']->getClientOriginalName());
+        $pathFrente = $data['imagen_frente']
+            ?->storeAs($dir, $data['imagen_frente']->getClientOriginalName(), 'public');
+
+        $pathDorso  = $data['imagen_dorso']
+            ?->storeAs($dir, $data['imagen_dorso']->getClientOriginalName(), 'public');
 
         // Calcular días (de nuevo por si no se actualizó el frontend)
         $suma_auxiliar = null;

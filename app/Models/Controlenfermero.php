@@ -23,7 +23,7 @@ class ControlEnfermero extends Model
     public function scopeSearch($query, $value)
     {
         $query->where('id', 'like', "%{$value}%")
-            ->orWhere('presion', 'like', "%{$value}%")
+            ->orWhere('presionn', 'like', "%{$value}%")
             ->orWhere('temperatura', 'like', "%{$value}%")
             ->orWhere('glucosa', 'like', "%{$value}%")
             ->orWhere('fecha_actual', 'like', "%{$value}%")

@@ -11,10 +11,10 @@ class DiaDeTrabajo extends Model
 
     use HasFactory;
 
-    protected $guarded = [];//esto agarra todos los campos y no tener que escribirlos.
+    protected $guarded = [];//esto agarraa todos los campos y no tener que escribirlos.
 
 
-    public static function addWorkdays(){//aqui creamos los 7 regiatros necesarios para cad doctor cada doctor debe tener un registro por dia
+    public static function addWorkdays(){//aqui creamoss los 7 regiatros necesarios para cad doctor cada doctor debe tener un registro por dia
         for($i=0; $i<7;$i++){
             Diadetrabajo::create([
                 'active' =>false,

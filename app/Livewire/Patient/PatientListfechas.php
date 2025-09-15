@@ -7,7 +7,7 @@ use Livewire\Component;
 use Livewire\WithPagination;
 use Livewire\Attributes\Url;
 
-class PatientListfechas extends Component
+class PatientListFechas extends Component
 {
     use WithPagination;
 

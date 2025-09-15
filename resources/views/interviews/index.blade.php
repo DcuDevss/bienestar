@@ -29,7 +29,7 @@
                                 @livewire('interview.interview-reset', ['paciente' => $paciente])
                             </div>
                             @endcan
-
+                            {{-- comentario de prueba --}}
                             {{-- LICENCIAS (corrige <p>, filtra días = 0 y balancea if/else) y mas cambios--}}
                             @php
                             $sumasFiltradas = collect($sumasPorTipo ?? [])

@@ -1,4 +1,4 @@
-<div class="padreTablas flex gap-x-2 px-6">
+<div class="padreTablas flex gap-x-2 px-6 mb-8">
 
     <section class="seccionTab xl:mx-auto lg:mx-auto w-[95%]">
         <div class="mx-auto text-[12px]">
@@ -29,7 +29,6 @@
                             </a>
                         </div>
                     </div>
-
                 </div>
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-gray-500 ">
@@ -170,15 +169,21 @@
     <section class="seccionTab2 w-fit">@livewire('patient.patient-listfechas')
         <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm max-h-[36rem] overflow-y-auto">
             <h2 class="text-lg font-bold mb-2 text-gray-700">Pacientes por Tipo de Licencia</h2>
+
             @foreach ($agrupadosPorLicencia as $licencia)
                 <div class="mb-3">
                     <h3 class="font-semibold text-blue-600">{{ $licencia->name }}</h3>
                     <ul class="list-disc list-inside">
                         @forelse ($licencia->disases_paciente as $dp)
                             <li class="text-gray-700">
+
                                 {{ $dp->paciente->jerarquias->name ?? 'Sin jerarquía' }}
                                 - {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
                                 - Finaliza: {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
+                                {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
+                                - Finaliza:
+                                {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
+
                             </li>
                         @empty
                             <li class="text-gray-500">Sin pacientes registrados</li>

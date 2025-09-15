@@ -7,7 +7,7 @@ use App\Models\Hora;
 use App\Models\Oficina;
 use Livewire\Component;
 
-class DiadetrabajoController extends Component
+class DiaDeTrabajoController extends Component
 {
     public $officesEmpty = false;
     public $day,$ms,$me,$as,$ae,$es,$ee,$mo,$ao,$eo,$mp,$ap,$ep,$dia,$active=false;

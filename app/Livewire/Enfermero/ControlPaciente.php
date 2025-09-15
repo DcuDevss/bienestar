@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Enfermero;
 
-use App\Models\Controlenfermero;
+use App\Models\ControlEnfermero;
 use App\Models\Paciente;
 use Livewire\Component;
 

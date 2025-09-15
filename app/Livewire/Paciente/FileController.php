@@ -5,7 +5,7 @@
 namespace App\Livewire\Paciente;
 
 use App\Models\Paciente;
-use App\Models\Pdfhistorial;
+use App\Models\PdfHistorial;
 use Livewire\Component;
 use Livewire\WithFileUploads;
 

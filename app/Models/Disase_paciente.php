@@ -5,7 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Disase_paciente extends Model
+class Disase_Paciente extends Model
 {
     use HasFactory;
     protected $fillable =['tipolicencia_id'];

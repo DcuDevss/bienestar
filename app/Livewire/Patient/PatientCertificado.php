@@ -6,7 +6,7 @@ use App\Models\Disase;
 use App\Models\Paciente;
 use Illuminate\Support\Str;
 use Livewire\Component;
-use App\Models\Tipolicencia;
+use App\Models\TipoLicencia;
 use Livewire\WithFileUploads;
 use Carbon\Carbon;
 

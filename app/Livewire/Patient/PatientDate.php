@@ -3,7 +3,7 @@
 namespace App\Livewire\Patient;
 
 use App\Models\Appoinment;
-use App\Models\Diadetrabajo;
+use App\Models\DiaDetrabajo;
 use App\Models\Hora;
 use Livewire\Component;
 use Carbon\Carbon;

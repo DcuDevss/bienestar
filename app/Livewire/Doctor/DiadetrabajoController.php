@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Doctor;
 
-use App\Models\Diadetrabajo;
+use App\Models\DiadeTrabajo;
 use App\Models\Hora;
 use App\Models\Oficina;
 use Livewire\Component;

@@ -11,7 +11,7 @@ class Indicacionterapeutica extends Model
 
     protected $fillable = ['name'];
 
-    // Relación inversa con la tabla Entrevistas
+    // Relación inversa con la tabla Entrevistass
     public function entrevistas()
     {
         return $this->hasMany(Entrevista::class);

@@ -9,7 +9,7 @@ class Tratamientopaciente extends Model
 {
     use HasFactory;
 
-    // Dentro del modelo Tratamientopaciente
+    // Dentro del modelo Tratamientopacientee
 public function enfermedadePaciente()
 {
     return $this->belongsTo(EnfermedadePacien::class, 'enfermedade_paciente_id');

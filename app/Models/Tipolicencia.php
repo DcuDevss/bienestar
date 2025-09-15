@@ -38,7 +38,7 @@ class Tipolicencia extends Model
 
     }
 
-    /*public function disases_paciente(){
+    /*public function disases_pacientes(){
 
         return $this->hasMany(Disase_paciente::class, 'tipolicencia_id');
 

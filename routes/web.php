@@ -21,7 +21,7 @@ use App\Http\Controllers\PdfController;
 //use App\Http\Controllers\Interviews\InterviewController;
 use App\Http\Livewire\Paciente\PdfViewer as PacientePdfViewer;
 use App\Livewire\Paciente\PdfViewer;
-use App\Livewire\Doctor\DiadetrabajoController;
+use App\Livewire\Doctor\DiaDeTrabajoController;
 use App\Livewire\Doctor\DisaseController;
 use App\Livewire\Doctor\EnfermedadeController;
 use App\Livewire\Doctor\MultiformController;
@@ -131,7 +131,7 @@ Route::get('get', function () {
 })->name('doctor.index');
 
 Route::get('/oficinas', OficinaController::class)->middleware('can:oficinas.index')->name('oficinas.index');
-Route::get('/diadetrabajos', DiadetrabajoController::class)->middleware('can:diadetrabajos.index')->name('diadetrabajos.index');
+Route::get('/diadetrabajos', DiaDeTrabajoController::class)->middleware('can:diadetrabajos.index')->name('diadetrabajos.index');
 Route::get('/curriculum', [CurriculumController::class, 'index'])->middleware('can:curriculum.index')->name('curriculum.index');
 Route::get('/interviews/{paciente}', [InterviewController::class, 'index'])->middleware('can:interviews.index')->name('interviews.index');
 Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])->name('reset-sums'); // web.php

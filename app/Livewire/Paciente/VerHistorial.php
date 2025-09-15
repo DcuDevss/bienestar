@@ -3,7 +3,7 @@
 namespace App\Livewire\Paciente;
 
 use App\Models\Paciente;
-use App\Models\PdfHistorial;
+use App\Models\Pdfhistorial;
 use App\Models\PdfPsiquiatra;
 use Livewire\Component;
 use Illuminate\Support\Facades\Storage;

@@ -24,8 +24,8 @@ class NuevoUsuarioController extends Controller
         $request->validate([
             'name' => 'required',
             'email' => 'required|email|unique:users',
-            'password' => 'required|confirmed',
-            // 'password_confirmation' => 'required',
+            // 'email' => ['required', 'unique:users'],
+            'password' => 'required|confirmed'
         ]);
 
         $usuario = new User();

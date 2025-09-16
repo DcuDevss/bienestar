@@ -12,8 +12,7 @@ class UserIndex extends Component
 
     public function render()
     {
-        $users= User::paginate();
-
+        $users = User::all();
 
         return view('livewire.admin.user-index',compact('users'));
     }

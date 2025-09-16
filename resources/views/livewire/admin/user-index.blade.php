@@ -48,9 +48,9 @@
                     <table class="w-full text-left text-gray-500" id="miTabla">
                         <thead class="text-xs text-white uppercase bg-gray-900">
                             <tr class="teGead text-[14px]">
-                                <th scope="col" class="px-4 py-3" style="text-align: center;">
+                                {{-- <th scope="col" class="px-4 py-3" style="text-align: center;">
                                     ID
-                                </th>
+                                </th> --}}
                                 <th scope="col" class="px-4 py-3">
                                     Name
                                 </th>
@@ -69,9 +69,10 @@
                         <tbody class="bg-gray-800">
                             @foreach ($users as $user)
                                 <tr class="border-b border-gray-700 hover:bg-[#204060]">
-                                    <td style="text-align: center;"
+                                    {{-- <td style="text-align: center;"
                                         class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-nowrap dark:text-white">
-                                        {{ $user->id }}</td>
+                                        {{ $user->id }}
+                                    </td> --}}
                                     <td
                                         class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
                                         {{ $user->name }}</td>
@@ -113,6 +114,8 @@
     <script>
         $(document).ready(function() {
             $('#miTabla').DataTable({
+                // paging: false,
+                // pageLength: 50, 
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
                 }

@@ -5,10 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Indicacionterapeutica extends Model
+class IndicacionTerapeutica extends Model
 {
     use HasFactory;
 
+    protected $table = 'indicacionterapeuticas';
+    
     protected $fillable = ['name'];
 
     // Relación inversa con la tabla Entrevistass

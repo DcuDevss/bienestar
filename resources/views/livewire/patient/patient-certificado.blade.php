@@ -142,7 +142,7 @@
                 </div>
 
                 <div>
-                    <label for="fecha_finalizacion_licencia" class="block text-sm font-medium text-gray-700">{{ __('Inialización de certificado') }}</label>
+                    <label for="fecha_finalizacion_licencia" class="block text-sm font-medium text-gray-700">{{ __('Finalización de certificado') }}</label>
                     <input id="fecha_finalizacion_licencia" class="w-full rounded cursor-pointer" type="datetime-local" placeholder="{{ __('fecha finalización') }}" wire:model="fecha_finalizacion_licencia" />
                     <x-input-error for="fecha_finalizacion_licencia" />
                 </div>

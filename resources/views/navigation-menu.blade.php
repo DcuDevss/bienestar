@@ -302,18 +302,18 @@
                         <div x-show="open" @click.away="open = false"
                             class="absolute z-10 right-0 mt-9 py-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg">
                             <!-- Opciones del menú -->
-                            @can('oficinas.index')
+                            {{-- @can('oficinas.index')
                                 <a href="{{ route('oficinas.index') }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Oficina de trabajo</a>
-                            @endcan
+                            @endcan --}}
 {{--                             @can('diadetrabajos.index')
                                 <a href="{{ route('diadetrabajos.index') }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Horario laboral</a>
                             @endcan --}}
-                            @can('curriculum.index')
+                            {{-- @can('curriculum.index')
                                 <a href="{{ route('curriculum.index') }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Curriculum</a>
-                            @endcan
+                            @endcan --}}
                             @can('disases.index')
                                 <a href="{{ route('disases.index') }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Enfermedades</a>
@@ -482,9 +482,9 @@
                                 {{ __('Manage Account') }}
                             </div>
 
-                            <x-dropdown-link href="{{ route('profile.show') }}">
+                            {{-- <x-dropdown-link href="{{ route('profile.show') }}">
                                 {{ __('Profile') }}
-                            </x-dropdown-link>
+                            </x-dropdown-link> --}}
 
                             @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
                                 <x-dropdown-link href="{{ route('api-tokens.index') }}">

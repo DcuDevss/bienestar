@@ -10,10 +10,10 @@ class IndicacionTerapeutica extends Model
     use HasFactory;
 
     protected $table = 'indicacionterapeuticas';
-    
+
     protected $fillable = ['name'];
 
-    // Relación inversa con la tabla Entrevistass
+    // Relación inversa con la tabla Entrevistasss
     public function entrevistas()
     {
         return $this->hasMany(Entrevista::class);

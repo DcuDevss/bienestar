@@ -43,14 +43,10 @@
         <div class="w-full px-4 mx-auto pb-12">
             <h2 class="text-center text-2xl font-semibold py-6">Lista de usuarios</h2>
             <div class="bg-gray-800 mx-auto p-4 rounded-md text-[12px] text-white w-[80%]">
-                {{-- <button class="btn btn-primary">Click me</button> --}}
                 <div class=" border-b border-gray-200 shadow">
                     <table class="w-full text-left text-gray-500" id="miTabla">
                         <thead class="text-xs text-white uppercase bg-gray-900">
                             <tr class="teGead text-[14px]">
-                                {{-- <th scope="col" class="px-4 py-3" style="text-align: center;">
-                                    ID
-                                </th> --}}
                                 <th scope="col" class="px-4 py-3">
                                     Name
                                 </th>

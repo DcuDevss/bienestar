@@ -229,6 +229,7 @@
 
 
 ]) --}}
+
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
@@ -244,22 +245,30 @@
                 <div class="hidden sm:-my-px sm:ml-10 sm:flex" x-data="{ open: false }">
                     <div class="relative mt-5">
                         <!-- Dropdown Button -->
-                        <button @click="open = !open" class="inline-flex items-center justify-center float-right mr-4 px-3 py-2 bg-orange-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-400 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition group">
+                        <button @click="open = !open"
+                            class="inline-flex items-center justify-center float-right mr-4 px-3 py-2 bg-orange-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-orange-400 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition group">
                             Seleccionar
-                            <svg x-bind:class="{ 'rotate-180': open }" class="w-4 h-4 ml-1 -mr-1 transform transition-transform ease-in-out duration-200" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7"></path>
+                            <svg x-bind:class="{ 'rotate-180': open }"
+                                class="w-4 h-4 ml-1 -mr-1 transform transition-transform ease-in-out duration-200"
+                                fill="none" stroke="currentColor" viewBox="0 0 24 24"
+                                xmlns="http://www.w3.org/2000/svg">
+                                <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7">
+                                </path>
                             </svg>
                         </button>
 
                         <!-- Dropdown Menu -->
-                        <div x-show="open" @click.away="open = false" class="absolute z-10 right-0 mt-9 w-32 bg-white border border-gray-300 rounded-md shadow-lg">
+                        <div x-show="open" @click.away="open = false"
+                            class="absolute z-10 right-0 mt-9 w-32 bg-white border border-gray-300 rounded-md shadow-lg">
                             <!-- Enlace a Pacientes -->
-                            <a href="{{ route('dashboard') }}" class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
+                            <a href="{{ route('dashboard') }}"
+                                class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
                                 Pacientes
                             </a>
 
                             <!-- Enlace a Entrevistas -->
-                            <a href="{{ route('patient.patient.patient-entrevistas') }}" class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
+                            <a href="{{ route('patient.patient.patient-entrevistas') }}"
+                                class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
                                 Entrevistas
                             </a>
                         </div>
@@ -306,7 +315,7 @@
                                 <a href="{{ route('oficinas.index') }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Oficina de trabajo</a>
                             @endcan --}}
-{{--                             @can('diadetrabajos.index')
+                            {{--                             @can('diadetrabajos.index')
                                 <a href="{{ route('diadetrabajos.index') }}"
                                     class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Horario laboral</a>
                             @endcan --}}
@@ -355,8 +364,7 @@
                     </div>
                 </div> --}}
                 <div class="relative mt-5  text-white">
-                    <a href="{{ route('users.index') }}" 
-                        class="px-3 py-2 bg-blue-600 rounded-md">
+                    <a href="{{ route('users.index') }}" class="px-3 py-2 bg-blue-600 rounded-md">
                         Administrador
                     </a>
                 </div>
@@ -456,8 +464,7 @@
                                 <button
                                     class="flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-300 transition">
                                     <img class="h-8 w-8 rounded-full object-cover"
-                                        src="{{ Auth::user()->profile_photo_url }}"
-                                        alt="{{ Auth::user()->name }}" />
+                                        src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->name }}" />
                                 </button>
                             @else
                                 <span class="inline-flex rounded-md">
@@ -466,8 +473,7 @@
                                         {{ Auth::user()->name }}
 
                                         <svg class="ms-2 -me-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                            fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                                            stroke="currentColor">
+                                            fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor">
                                             <path stroke-linecap="round" stroke-linejoin="round"
                                                 d="M19.5 8.25l-7.5 7.5-7.5-7.5" />
                                         </svg>
@@ -495,13 +501,13 @@
                             <div class="border-t border-gray-200"></div>
 
                             <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}" x-data>
+                            <form method="POST" action="{{ route('logout') }}" x-data id="logout-form">
                                 @csrf
-
-                                <x-dropdown-link href="{{ route('logout') }}" @click.prevent="$root.submit();">
+                                <x-dropdown-link href="{{ route('logout') }}" id="logout-button">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
                             </form>
+
                         </x-slot>
                     </x-dropdown>
                 </div>
@@ -614,4 +620,29 @@
             </div>
         </div>
     </div>
+    <script>
+        document.addEventListener("DOMContentLoaded", () => {
+            const logoutBtn = document.getElementById("logout-button");
+            const logoutForm = document.getElementById("logout-form");
+
+            logoutBtn.addEventListener("click", function(e) {
+                e.preventDefault();
+
+                Swal.fire({
+                    title: '¿Cerrar sesión?',
+                    text: "Vas a salir de tu cuenta.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Sí, cerrar sesión',
+                    cancelButtonText: 'Cancelar'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        logoutForm.submit();
+                    }
+                });
+            });
+        });
+    </script>
 </nav>

@@ -45,9 +45,12 @@
 
 
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">fecha de atencion:</span>
-                                    {{ $enfermedad->pivot->fecha_atencion_enfermedad }}</p>
+                                <p>
+                                    <span class="pr-1 font-extrabold text-black">Fecha de atención:</span>
+                                    {{ \Carbon\Carbon::parse($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s') }}
+                                </p>
                             </li>
+
 {{--                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">fecha de finalizacion:</span>
                                     {{ $enfermedad->pivot->fecha_finalizacion_enfermedad }}</p>

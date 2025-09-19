@@ -242,22 +242,22 @@
                         </div>
                         <div class="flex text-sm">
                             <p class="px-3 pb-1 font-semibold capitalize">{{ __('grupo y fator sangineo') }} :</p>
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->direccion }}</p>
+                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->factore_id }}</p>
                         </div>
 
                         <div class="flex text-sm">
                             <p class="px-3 pb-1 font-semibold capitalize">{{ __('fecha de entrevista medica') }} :</p>
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->direccion }}</p>
+                            <p class="px-3 pb-1 font-semibold capitalize">{{ \Carbon\Carbon::parse($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s') }}</p>
                         </div>
 
                         <div class="flex text-sm">
                             <p class="px-3 pb-1 font-semibold capitalize">{{ __('remedios que toma') }} :</p>
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->direccion }}</p>
+                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->remedios }}</p>
                         </div>
 
                         <div class="flex text-sm">
                             <p class="px-3 pb-1 font-semibold capitalize">{{ __('enfermedad en curso/congenita') }} :</p>
-                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->direccion }}</p>
+                            <p class="px-3 pb-1 font-semibold capitalize">{{ $paciente->enfermedad }}</p>
                         </div>
 
                     </div>

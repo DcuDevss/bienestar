@@ -95,35 +95,35 @@
                                             <span class=""></span>
                                             <!-- Color por defecto para otros casos -->
                                         @endif
-                                        <td class="px-4 py-3 text-gray-900
-                                        @php
-                                            $ultimaEnfermedad = $paciente->disases->last();
-                                        @endphp
-                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
-                                            @php
-                                                $fechaFinalizacionLicencia = \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia);
-                                            @endphp
-                                            @if ($fechaFinalizacionLicencia->startOfDay() == \Carbon\Carbon::now()->startOfDay())
-                                                bg-yellow-200 bg-opacity-50 animate-pulse /* Amarillo con transparencia y animación de pulso */
-                                            @endif
-                                        @endif
-                                        rounded-md font-semibold text-xs text-white uppercase tracking-widest  focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition"
-                                    >
-                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
-                                            {{ $ultimaEnfermedad->pivot->fecha_finalizacion_licencia }}
-                                        @else
-                                            Sin fecha
-                                        @endif
                                     </td>
+                                    @php
+                                        $ultimaEnfermedad = $paciente->disases->last();
+                                        $fechaFinalizacionLicencia = null;
 
+                                        if ($ultimaEnfermedad?->pivot?->fecha_finalizacion_licencia) {
+                                            $raw = $ultimaEnfermedad->pivot->fecha_finalizacion_licencia;
 
+                                            try {
+                                                // Caso típico: columna datetime (Y-m-d H:i:s)
+                                                $fechaFinalizacionLicencia = \Carbon\Carbon::createFromFormat('Y-m-d H:i:s', $raw);
+                                            } catch (\Exception $e) {
+                                                try {
+                                                    // Caso alternativo: columna date (Y-m-d)
+                                                    $fechaFinalizacionLicencia = \Carbon\Carbon::createFromFormat('Y-m-d', $raw);
+                                                } catch (\Exception $e) {
+                                                    // Último recurso: parse genérico
+                                                    $fechaFinalizacionLicencia = \Carbon\Carbon::parse($raw);
+                                                }
+                                            }
+                                        }
+                                    @endphp
 
-
-
-
-
-
-
+                                    <td class="px-4 py-3 text-gray-900
+                                        {{ $fechaFinalizacionLicencia?->isSameDay(now()) ? 'bg-yellow-200 bg-opacity-50 animate-pulse' : '' }}
+                                        rounded-md font-semibold text-xs tracking-widest transition"
+                                    >
+                                        {{ $fechaFinalizacionLicencia ? $fechaFinalizacionLicencia->format('d-m-Y') : 'Sin fecha' }}
+                                    </td>
                                     <td class="px-4 py-3">
                                         <button
                                             onclick="confirm('Seguro desea eliminar a este paciente {{ $paciente->apellido_nombre }} ?') || event.stopImmediatePropagation()"

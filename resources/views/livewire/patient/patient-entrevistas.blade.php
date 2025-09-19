@@ -90,7 +90,9 @@
                                                 <span class="text-gray-500">Sin estado</span>
                                             @endif
                                         </td>
-                                        <td class="text-center px-4 py-3 text-white">{{ $entrevista->created_at }}</td>
+                                        <td class="text-center px-4 py-3 text-white">
+                                            {{ $entrevista->created_at->format('d-m-Y H:i:s') }}
+                                        </td>
                                         <td class="text-center px-4 py-3 text-white">
                                             {{ $entrevista->tipoEntrevista->name ?? 'N/A' }}</td>
                                         <td class="text-center px-4 py-3">

@@ -38,21 +38,28 @@
 
                         </li>
                         <li class="mb-0">
-                            <p><span class="pr-1 font-extrabold text-black">Presentacion de certificado:</span>
-                            {{ $disase->pivot->fecha_presentacion_certificado }}</p>
+                            <p>
+                                <span class="pr-1 font-extrabold text-black">Presentacion de certificado:</span>
+                                {{ \Carbon\Carbon::parse($disase->pivot->fecha_presentacion_certificado)->format('d-m-Y H:i:s') }}
+                            </p>
                         </li>
                         <li class="mb-0">
-                            <p><span class="pr-1 font-extrabold text-black">Inicio de licencia:</span>
-                            {{ $disase->pivot->fecha_inicio_licencia }}</p>
+                            <p>
+                                <span class="pr-1 font-extrabold text-black">Inicio de licencia:</span>
+                                {{ \Carbon\Carbon::parse($disase->pivot->fecha_inicio_licencia)->format('d-m-Y H:i:s') }}
+                            </p>
                         </li>
                         <li class="mb-0">
-                            <p><span class="pr-1 font-extrabold text-black">Finalizacion:</span>
-                            {{ $disase->pivot->fecha_finalizacion_licencia }}</p>
+                            <p>
+                                <span class="pr-1 font-extrabold text-black">Finalizacion:</span>
+                                {{ \Carbon\Carbon::parse($disase->pivot->fecha_finalizacion_licencia)->format('d-m-Y H:i:s') }}
+                            </p>
                         </li>
-                        <li class="mb-0">
+
+                        {{-- <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">Horas salud:</span>
                             {{ $disase->pivot->horas_salud }}</p>
-                        </li>
+                        </li> --}}
                         <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">dias de licencia:</span>
                             {{ $disase->pivot->suma_auxiliar }}</p>

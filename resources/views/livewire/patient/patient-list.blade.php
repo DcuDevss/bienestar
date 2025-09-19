@@ -92,19 +92,23 @@
                                     <td
                                         class="tiBody px-4 py-3
                                         @php $ultimaEnfermedad = $paciente->disases->last(); @endphp
-                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia) @php
+                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
+                                            @php
                                                 $fechaFinalizacionLicencia = \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia);
                                             @endphp
                                             @if ($fechaFinalizacionLicencia->startOfDay() == \Carbon\Carbon::now()->startOfDay())
-                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse /* Amarillo con transparencia y animación de pulso */ @endif
+                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse /* Amarillo con transparencia y animación de pulso */
+                                            @endif
                                         @endif
-                                        font-semibold text-xs text-white uppercase tracking-widest  focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition">
+                                        font-semibold text-xs text-white uppercase tracking-widest focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition"
+                                    >
                                         @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
-                                            {{ $ultimaEnfermedad->pivot->fecha_finalizacion_licencia }}
+                                            {{ \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia)->format('d-m-Y H:i:s') }}
                                         @else
                                             Sin fecha
                                         @endif
                                     </td>
+
                                     <td class="tiBody px-4 py-1 text-[14px] relative">
                                         <!-- Botón de opciones (Desplegable) -->
                                         <button onclick="toggleDropdown(event, {{ $paciente->id }})"

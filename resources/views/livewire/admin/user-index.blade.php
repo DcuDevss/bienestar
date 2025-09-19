@@ -53,7 +53,6 @@
                                 <th scope="col" class="px-4 py-3">
                                     Email
                                 </th>
-
                                 <th scope="col" class="px-4 py-3">
                                     Edit
                                 </th>
@@ -65,10 +64,6 @@
                         <tbody class="bg-gray-800">
                             @foreach ($users as $user)
                                 <tr class="border-b border-gray-700 hover:bg-[#204060]">
-                                    {{-- <td style="text-align: center;"
-                                        class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-nowrap dark:text-white">
-                                        {{ $user->id }}
-                                    </td> --}}
                                     <td
                                         class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
                                         {{ $user->name }}</td>

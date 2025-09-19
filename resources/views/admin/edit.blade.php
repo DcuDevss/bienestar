@@ -24,7 +24,7 @@
                                             Datos de cuenta:
                                         </h3>
                                     </div>
-                                    {{-- BLOQUE 1 --}}
+                                    {{-- BLOQUEE 1 --}}
                                     <div class="px-3">
                                         {{-- NOMBRE --}}
                                         <div class="mb-4 flex gap-x-4 items-center justify-between">

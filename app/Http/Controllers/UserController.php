@@ -46,7 +46,7 @@ class UserController extends Controller
         $user->name = $request->name;
         $user->email = $request->email;
 
-        // Solo actualiza la contraseña si se proporcionó una nueva
+        // Solo actualiza la contraseña si se proporcionó una nuevaa
         if ($request->filled('password')) {
             $user->password = bcrypt($request->password);
         }

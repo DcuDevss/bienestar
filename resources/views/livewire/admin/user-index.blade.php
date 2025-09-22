@@ -78,7 +78,8 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST" onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
+                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                            onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">
@@ -105,8 +106,8 @@
     <script>
         $(document).ready(function() {
             $('#miTabla').DataTable({
-                // paging: false,
-                // pageLength: 50, 
+                pageLength: 8, //  arranca con 8 resultados
+                lengthMenu: [8, 10, 25, 50, 100],
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
                 }

@@ -180,6 +180,8 @@
             <input type="hidden" wire:model="disase_id">
         </x-slot>
 
+
+
         <x-slot name="footer">
             <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
                 wire:click="$set('modal',false)">
@@ -191,5 +193,16 @@
 
         </x-slot>
     </x-dialog-modal>
+    @if (session()->has('success'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 3000)"
+            class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 transition"
+        >
+            {{ session('success') }}
+        </div>
+    @endif
+
 </div>
 

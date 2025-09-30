@@ -354,13 +354,11 @@
                     <div>
                         <ul>
                             <!-- REINICIAR DIAS DE LICENCIA -->
-                            <li class="py-2 text-center">
-                                <a href="">
-                                    <div
-                                        class="mx-auto w-[89%]  bg-black text-white rounded-md transform transition-transform hover:scale-105">
-                                        @livewire('interview.interview-general')
-                                    </div>
-                                </a>
+                           <li class="py-2 text-center">
+                                <div
+                                    class="mx-auto w-[89%] bg-black text-white rounded-md transform transition-transform hover:scale-105">
+                                    <livewire:interview.interview-general :paciente="$paciente" />
+                                </div>
                             </li>
                         </ul>
                     </div>

@@ -53,7 +53,7 @@ public function getOficinaAttribute(){
 
 
 public function user(){
-    return $this->belongsTo(User::class); // Asegúrate de especificar la clave foránea correctamente
+    return $this->belongsTo(User::class); //oka Asegúrate de especificar la clave foránea correctamente
 }
 
 

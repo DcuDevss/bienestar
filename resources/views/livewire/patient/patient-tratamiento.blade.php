@@ -240,7 +240,9 @@
                                         </th>
                                         <td class="tiBody px-4 py-1 text-gray-300">{{ $tratamiento->consumo_farmacos }}</td>
                                         <td class="tiBody px-4 py-1 text-gray-300">{{ $tratamiento->antecedente_familiar }}</td>
-                                        <td class="tiBody px-4 py-1 text-gray-300">{{ $tratamiento->fecha_atencion }}</td>
+                                        <td class="tiBody px-4 py-1 text-gray-300">
+                                            {{ \Carbon\Carbon::parse($tratamiento->fecha_atencion)->format('d-m-Y H:i:s') }}
+                                        </td>
                                         <td class="tiBody px-4 py-1 text-gray-300">{{ $tratamiento->motivo_consulta_anterior }}</td>
                                         <td class="tiBody px-4 py-1 text-gray-300">{{ $tratamiento->indicacionterapeuticas->name }}</td>
                                         <td class="tiBody px-4 py-1 text-gray-300">{{ $tratamiento->derivacionpsiquiatricas->name }}</td>

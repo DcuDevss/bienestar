@@ -191,7 +191,7 @@
 
                         <div class="border-b border-slate-100 pb-1">
                         <dt class="text-slate-500 font-medium">Fecha de nacimiento</dt>
-                        <dd class="font-semibold text-slate-800">{{ $paciente->fecha_nacimiento }}</dd>
+                        <dd class="font-semibold text-slate-800">{{ \Carbon\Carbon::parse($paciente->fecha_nacimiento)->format('d-m-Y') }}</dd>
                         </div>
 
                         <div class="border-b border-slate-100 pb-1">
@@ -223,7 +223,17 @@
 
                         <div class="border-b border-slate-100 pb-1">
                         <dt class="text-slate-500 font-medium">Fecha de entrevista médica</dt>
-                        <dd class="font-semibold text-slate-800">{{ $paciente->direccion }}</dd>
+                        @php
+                            $ultimaEnfermedad = $paciente->enfermedades->last();
+                            $fechaAtencion = $ultimaEnfermedad?->pivot?->fecha_atencion_enfermedad;
+                        @endphp
+
+                        <dd class="font-semibold text-slate-800">
+                            {{ $fechaAtencion
+                                ? \Carbon\Carbon::parse($fechaAtencion)->format('d-m-Y H:i:s')
+                                : 'Sin fecha' }}
+                        </dd>
+
                         </div>
 
                         <div class="sm:col-span-2 border-b border-slate-100 pb-1">

@@ -43,6 +43,7 @@ use App\Livewire\Patient\PatientHistorialCertificado;
 use App\Livewire\Patient\PatientHistorialEnfermedades;
 use App\Livewire\Patient\PatientTratamiento;
 use App\Livewire\Patient\PatientEntrevistas;
+use App\Livewire\Auditorias\AuditoriaList;
 use App\Models\Paciente;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -136,6 +137,8 @@ Route::get('/curriculum', [CurriculumController::class, 'index'])->middleware('c
 Route::get('/interviews/{paciente}', [InterviewController::class, 'index'])->middleware('can:interviews.index')->name('interviews.index');
 Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])->name('reset-sums'); // web.php
 Route::get('/pdfs/{filename}', [PdfController::class, 'show'])->name('pdf.show');
+Route::get('/auditorias', AuditoriaList::class)->name('auditorias.index');
+
 
 
 

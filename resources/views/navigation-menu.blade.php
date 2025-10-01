@@ -329,6 +329,10 @@
                             @endcan
                             <a href="{{ route('multiform.index') }}"
                                 class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Formulario</a>
+                            @role('super-admin')
+                            <a href="{{ route('auditorias.index') }}"
+                            class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Auditorías</a>
+                            @endrole
                         </div>
                     </div>
                 </div>

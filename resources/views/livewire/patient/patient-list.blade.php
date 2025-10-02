@@ -20,6 +20,13 @@
                                 placeholder="Buscar..." required="">
 
                         </div>
+
+                        @role('super-admin')
+                            <div class="">
+                                <livewire:interview.interview-reset-all />
+                            </div>
+                        @endrole
+
                         <!-- BOTON AGREGAR -->
                         <div class="">
                             <a href="{{ route('multiform.index') }}"

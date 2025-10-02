@@ -1,4 +1,9 @@
 <x-app-layout>
+        @if (session()->has('success'))
+            <div class="mb-2 px-4 py-2 bg-green-600 text-white rounded-md text-center">
+                {{ session('success') }}
+            </div>
+        @endif
     <section class="mt-6">
         <h1 class="text-center text-2xl font-semibold text-slate-800 py-1">{{ __('Datos del paciente') }}</h1>
     </section>
@@ -282,6 +287,7 @@
                 </div>
             </div>
         </section>
+
         <!-- MENU VERTICAL -->
         <section class="flex-1 px-1">
             <div class="bg-white p-2 rounded-md">
@@ -354,13 +360,11 @@
                     <div>
                         <ul>
                             <!-- REINICIAR DIAS DE LICENCIA -->
-                            <li class="py-2 text-center">
-                                <a href="">
-                                    <div
-                                        class="mx-auto w-[89%]  bg-black text-white rounded-md transform transition-transform hover:scale-105">
-                                        @livewire('interview.interview-general')
-                                    </div>
-                                </a>
+                           <li class="py-2 text-center">
+                                <div
+                                    class="mx-auto w-[89%] bg-black text-white rounded-md transform transition-transform hover:scale-105">
+                                    <livewire:interview.interview-general :paciente="$paciente" />
+                                </div>
                             </li>
                         </ul>
                     </div>

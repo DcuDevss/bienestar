@@ -192,6 +192,8 @@
             <input type="hidden" wire:model="disase_id">
         </x-slot>
 
+
+
         <x-slot name="footer">
             @if (session('error'))
                 <div class="bg-red-500 text-white p-3 rounded-lg mb-4" style="font-size: 14px;">
@@ -209,4 +211,15 @@
 
         </x-slot>
     </x-dialog-modal>
+    @if (session()->has('success'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 3000)"
+            class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 transition"
+        >
+            {{ session('success') }}
+        </div>
+    @endif
+
 </div>

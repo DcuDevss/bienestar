@@ -191,11 +191,12 @@ class PatientCertificado extends Component
             'search',
             'disase_id'
         ]);
-
+        session()->flash('success', 'Certificado agegado correctamente.');
         $this->modal = false;
         $this->pickerOpen = false;
         $this->resetValidation();
         $this->patient_disases = $this->patient->disases()->get();
+
     }
 
     /**

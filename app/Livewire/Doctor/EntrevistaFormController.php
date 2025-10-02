@@ -82,7 +82,7 @@ class EntrevistaFormController extends Component
         $this->paciente_id = $paciente_id;
         $this->paciente = Paciente::find($paciente_id);
 
-       
+
 
 
 
@@ -306,6 +306,10 @@ class EntrevistaFormController extends Component
 
             $entrevista->save();
 
+
+
+            session()->flash('message', 'Entrevista registrada con éxito.');
+
             Log::debug('Valores antes de guardar entrevista', [
     'indicacionterapeutica_id' => $this->indicacionterapeutica_id,
     'abordaje_id' => $this->abordaje_id,
@@ -372,13 +376,14 @@ class EntrevistaFormController extends Component
                 'estado_entrevista_id',
                 'paciente_id',
             ]);
+
+
         } catch (\Exception $e) {
             Log::error('Error al guardar la entrevista: ' . $e->getMessage());
             session()->flash('error', 'Error al guardar la entrevista.');
         }
 
 
-        session()->flash('message', 'Entrevista registrada con éxito.');
     }
 
     public function render()

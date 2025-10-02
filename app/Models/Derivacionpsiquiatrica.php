@@ -5,13 +5,13 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Derivacionpsiquiatrica extends Model
+class DerivacionPsiquiatrica extends Model
 {
     use HasFactory;
     protected $fillable=['name'];
     public function tratamientos(){
 
-        return $this->hasMany(Derivacionpsiquiatrica::class, 'derivacionpsiquiatrica_id');
+        return $this->hasMany(DerivacionPsiquiatrica::class, 'Derivacionpsiquiatrica_id');
 
     }
 }

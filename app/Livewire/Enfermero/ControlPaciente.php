@@ -33,7 +33,7 @@ class ControlPaciente extends Component
     {
         $this->pacienteId = $paciente->id;
         $this->patient = $paciente;
-       // $this->patient_enfermedades = $paciente->enfermedadPacientes;
+       // $this->patient_enfermedades = $paciente->enfermedadPacientess;
     }
 
     public function addNew()
@@ -45,8 +45,8 @@ class ControlPaciente extends Component
     {
         $this->validate();
 
-        // Crear el registro de Controlenfermero
-        $control = Controlenfermero::create([
+        // Crear el registro de ControlEnfermero
+        $control = ControlEnfermero::create([
             'presion' => $this->presion,
             'fecha_atencion' => $this->fecha_atencion,
             'glucosa' => $this->glucosa,

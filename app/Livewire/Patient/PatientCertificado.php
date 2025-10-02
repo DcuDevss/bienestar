@@ -191,7 +191,7 @@ class PatientCertificado extends Component
             ['slug' => Str::slug($this->name), 'symptoms' => '']
         )->id;
 
-        // Carpeta destino
+        // Carpeta destinoa
         $dir = "archivos_disases/paciente_{$this->patient->id}";
         Storage::disk('public')->makeDirectory($dir);
 

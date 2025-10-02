@@ -142,7 +142,7 @@ class PatientHistorialEnfermedades extends Component
 
         // Imagen
         if (isset($data['imgen_enfermedad'])) {
-            $archivoPath = $data['imgen_enfermedad']->storeAs($directoryPath, $data['imgen_enfermedad']->getClientOriginalName());
+            $archivoPath = $data['imgen_enfermedad']->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName());
             if (!str_starts_with($data['imgen_enfermedad']->getMimeType(), 'image/')) {
                 $this->addError('imgen_enfermedad', 'El imgen_enfermedad debe ser una imagen.');
                 return;
@@ -158,7 +158,7 @@ class PatientHistorialEnfermedades extends Component
                 $this->addError('pdf_enfermedad', 'El pdf_enfermedad debe ser un archivo PDF.');
                 return;
             }
-            $archivoPathDorso = $data['pdf_enfermedad']->storeAs($directoryPath, $data['pdf_enfermedad']->getClientOriginalName());
+            $archivoPathDorso = $data['pdf_enfermedad']->storeAs($dir, $data['pdf_enfermedad']->getClientOriginalName());
         } else {
             $enfActual = $enfActual ?? $paciente->enfermedades()->findOrFail($this->original_enfermedade_id);
             $archivoPathDorso = $enfActual->pivot->pdf_enfermedad;

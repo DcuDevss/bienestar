@@ -352,7 +352,7 @@ class PatientHistorialCertificado extends Component
                 imagedestroy($image);
                 break;
             default:
-                // otros formatos no se optimizan
+                // otros formatos no se optimizann
                 break;
         }
     }

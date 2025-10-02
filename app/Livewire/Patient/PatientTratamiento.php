@@ -86,7 +86,7 @@ class PatientTratamiento extends Component
     {
         $this->tipolicencias = Tipolicencia::all();
         $this->procedencias = Procedencia::all();
-        $this->derivacionpsiquiatricas = Derivacionpsiquiatrica::all();
+        $this->derivacionpsiquiatricas = DerivacionPsiquiatrica::all();
         $this->indicacionterapeuticas = Indicacionterapeutica::all();
         $this->enfermedades = Enfermedade::all();
 

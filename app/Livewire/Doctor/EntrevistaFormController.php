@@ -203,11 +203,11 @@ class EntrevistaFormController extends Component
             $this->salud_mentale_id = ($this->salud_mentale_id === '' || $this->salud_mentale_id === null) ? null : (int) $this->salud_mentale_id;
 
             $this->validate([
-                'tipo_entrevista_id' => 'nullable|integer',
+                'tipo_entrevista_id' => 'required|integer',
                 'actitud_entrevista_id' => 'nullable|integer',
                 'portacion_id' => 'nullable|integer',
                 'salud_mentale_id' => 'nullable|integer',
-                'estado_entrevista_id' => 'nullable|integer', // Solo para Postulante o Reintegro
+                'estado_entrevista_id' => 'required|integer', // Solo para Postulante o Reintegro
                 'tecnica_utilizada' => 'nullable|string|max:1000',
                 'grupo_familiar' => 'nullable|array', // Validación del array de miembros
                 'notas_clinicas' => 'nullable|string|max:1000', // Validación de notas clínicas
@@ -380,7 +380,8 @@ class EntrevistaFormController extends Component
 
         } catch (\Exception $e) {
             Log::error('Error al guardar la entrevista: ' . $e->getMessage());
-            session()->flash('error', 'Error al guardar la entrevista.');
+            $this->dispatch('toast', type: 'error', message: '⚠️ Complete los campos obligatorios antes de guardar.');
+            session()->flash('error', 'Error al guardar la entrevista, complete los capos Tipo de Entrevista y Estado de la Entrevista.');
         }
 
 

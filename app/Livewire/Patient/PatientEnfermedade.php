@@ -8,6 +8,7 @@ use App\Models\Paciente;
 use Illuminate\Support\Str;
 use App\Models\Tipolicencia;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
 
 class PatientEnfermedade extends Component
 {
@@ -120,18 +121,12 @@ class PatientEnfermedade extends Component
 
         // 2) Archivos
         $patientId = $this->patient->id;
-        $directoryPath = "public/archivos_enfermedades/paciente_$patientId";
-        if (!file_exists($directoryPath)) {
-            mkdir($directoryPath, 0777, true);
-        }
+        $dir = "archivos_enfermedades/paciente_{$this->patient->id}";
+        Storage::disk('public')->makeDirectory($dir);
 
-        $archivoPathEnfermedad = isset($data['imgen_enfermedad'])
-            ? $data['imgen_enfermedad']->storeAs($directoryPath, $data['imgen_enfermedad']->getClientOriginalName())
-            : null;
+        $archivoPathEnfermedad = $data['imgen_enfermedad']?->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName(), 'public');
+        $archivoPathPDF = $data['pdf_enfermedad']?->storeAs($dir, $data['pdf_enfermedad']->getClientOriginalName(), 'public');
 
-        $archivoPathPDF = isset($data['pdf_enfermedad'])
-            ? $data['pdf_enfermedad']->storeAs($directoryPath, $data['pdf_enfermedad']->getClientOriginalName())
-            : null;
 
         // 3) Guardar pivote
         $this->patient->enfermedades()->syncWithoutDetaching([

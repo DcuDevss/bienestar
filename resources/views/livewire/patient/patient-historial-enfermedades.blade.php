@@ -1,5 +1,5 @@
-<div class="">
-    <section class="w-full max-w-7xl mx-auto bg-gray-100 text-gray-600 h-screen px-4 py-1">
+<div class="min-h-screen">
+    <section class="w-full max-w-7xl mx-auto bg-gray-100 text-gray-600 px-4 py-1">
         <!-- REGISTROS DATA-TABLES -->
         <div class="w-full  bg-white p-2">
             <!-- HEADER -->
@@ -16,11 +16,13 @@
                 <div class="float-right mr-2 flex gap-x-2">
                     <a href="https://prescriptorweb.ddaval.com.ar/" target="_blank">
                         <button class="bg-blue-600 rounded-md py-1 px-3">
-                            <img class="h-[25px]" src="https://osef.gob.ar/assets/images/osef-logotipo.png" alt="">
+                            <img class="h-[25px]" src="https://osef.gob.ar/assets/images/osef-logotipo.png"
+                                alt="">
                         </button>
                     </a>
                     <a href="https://prescriptorweb.ddaval.com.ar/" target="_blank">
-                        <img class="h-[34px]" src="https://seeklogo.com/images/L/la-caja-logo-BBE553844B-seeklogo.com.png" alt="">
+                        <img class="h-[34px]"
+                            src="https://seeklogo.com/images/L/la-caja-logo-BBE553844B-seeklogo.com.png" alt="">
                     </a>
                 </div>
             </div>
@@ -39,8 +41,8 @@
                             </li>
 
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">motivo consulta:</span>
-                                    {{ $enfermedad->pivot->motivo_consulta}} </p>
+                                <p><span class="pr-1 font-extrabold text-black">Motivo consulta:</span>
+                                    {{ $enfermedad->pivot->motivo_consulta }} </p>
                             </li>
 
 
@@ -51,21 +53,21 @@
                                 </p>
                             </li>
 
-{{--                             <li class="mb-0">
+                            {{--                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">fecha de finalizacion:</span>
                                     {{ $enfermedad->pivot->fecha_finalizacion_enfermedad }}</p>
                             </li> --}}
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">horas de reposo:</span>
+                                <p><span class="pr-1 font-extrabold text-black">Horas de reposo:</span>
                                     {{ $enfermedad->pivot->horas_reposo }}</p>
                             </li>
 
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">art:</span>
+                                <p><span class="pr-1 font-extrabold text-black">A.R.T:</span>
                                     {{ $enfermedad->pivot->art }}</p>
                             </li>
 
-{{--                                <td class="mb-0">
+                            {{--                                <td class="mb-0">
                                     @if ($enfermedad->pivot->estado_enfermedad == 1)
                                     <p><span class="pr-1 font-extrabold text-black"></span>
                                         activa</p>
@@ -76,62 +78,65 @@
                                 </td> --}}
 
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">medicacion:</span>
+                                <p><span class="pr-1 font-extrabold text-black">Medicacion:</span>
                                     {{ $enfermedad->pivot->medicacion }}</p>
                             </li>
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">dosis:</span>
+                                <p><span class="pr-1 font-extrabold text-black">Dosis:</span>
                                     {{ $enfermedad->pivot->dosis }}</p>
                             </li>
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">nro remedio osef:</span>
+                                <p><span class="pr-1 font-extrabold text-black">Nro. remedio osef:</span>
                                     {{ $enfermedad->pivot->nro_osef }}</p>
                             </li>
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">derivacion psiquiatrica:</span>
-                                {{ $enfermedad->pivot->derivacion_psiquiatrica }}</p>
+                                <p><span class="pr-1 font-extrabold text-black">Derivacion psiquiatrica:</span>
+                                    {{ $enfermedad->pivot->derivacion_psiquiatrica }}</p>
                             </li>
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">detalle de la enfermedad:</span></p>
+                                <p><span class="pr-1 font-extrabold text-black">Detalle de la enfermedad:</span></p>
                                 <div class="h-[40px] overflow-auto">{{ $enfermedad->pivot->detalle_diagnostico }}</div>
                             </li>
                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">detalle de la medicacion:</span></p>
+                                <p><span class="pr-1 font-extrabold text-black">Detalle de la medicacion:</span></p>
                                 <div class="h-[40px] overflow-auto">{{ $enfermedad->pivot->detalle_medicacion }}</div>
                             </li>
                             <!-- IMAGEN -->
-                                <li class="text-center py-6 font-bold">
-                                    <p><span class="pr-1 font-extrabold text-black">Archivo adjunto:</span></p>
-                                    <div class="flex justify-center gap-x-1">
-                                        <!-- IMG -->
-                                        <div>
-                                            @if ($enfermedad->pivot->imgen_enfermedad)
-                                                <img src="{{ Storage::url($enfermedad->pivot->imgen_enfermedad) }}" alt="Imagen"
-                                                    id="image" onclick="showFullImage(this)" class="w-24 h-24 text-center">
-                                                <!-- Plantilla para la imagen ampliada -->
-                                                <div id="full-image-overlay" class="full-image-overlay">
-                                                    <div class="full-image-container">
-                                                        <img id="full-image" src="" alt="Imagen Ampliada">
-                                                        <button id="close-button" class="action-button"
-                                                            onclick="closeFullImage()">Cerrar</button>
-                                                    </div>
+                            <li class="text-center py-6 font-bold">
+                                <p><span class="pr-1 font-extrabold text-black">Archivo adjunto:</span></p>
+                                <div class="flex justify-center gap-x-1">
+                                    <!-- IMG -->
+                                    <div>
+                                        @if ($enfermedad->pivot->imgen_enfermedad)
+                                            <img src="{{ Storage::url($enfermedad->pivot->imgen_enfermedad) }}"
+                                                alt="Imagen" id="image" onclick="showFullImage(this)"
+                                                class="w-24 h-24 text-center">
+                                            <!-- Plantilla para la imagen ampliada -->
+                                            <div id="full-image-overlay" class="full-image-overlay">
+                                                <div class="full-image-container">
+                                                    <img id="full-image" src="" alt="Imagen Ampliada">
+                                                    <button id="close-button" class="action-button"
+                                                        onclick="closeFullImage()">Cerrar</button>
                                                 </div>
-                                            @else
-                                                Sin Archivo
-                                            @endif
-                                        </div>
-                                        <!-- PDF -->
-                                        <div class="text-center font-bold">
-                                            <div class="flex flex-col items-center">
-                                                <a href="{{ Storage::url($enfermedad->pivot->pdf_enfermedad) }}" target="_blank">
-                                                    <img src="{{ asset('assets/pdf.png') }}" alt="PDF Icon" class="w-12 h-16">
-                                                </a>
-                                                <span class="text-sm text-center px-2 whitespace-normal max-w-[160px] truncate">{{ pathinfo($enfermedad->pivot->pdf_enfermedad, PATHINFO_FILENAME) }}</span>
-
                                             </div>
+                                        @else
+                                            Sin Archivo
+                                        @endif
+                                    </div>
+                                    <!-- PDF -->
+                                    <div class="text-center font-bold">
+                                        <div class="flex flex-col items-center">
+                                            <a href="{{ Storage::url($enfermedad->pivot->pdf_enfermedad) }}"
+                                                target="_blank">
+                                                <img src="{{ asset('assets/pdf.png') }}" alt="PDF Icon"
+                                                    class="w-12 h-16">
+                                            </a>
+                                            <span
+                                                class="text-sm text-center px-2 whitespace-normal max-w-[160px] truncate">{{ pathinfo($enfermedad->pivot->pdf_enfermedad, PATHINFO_FILENAME) }}</span>
                                         </div>
                                     </div>
-                                </li>
+                                </div>
+                            </li>
 
 
 
@@ -141,18 +146,16 @@
                                     Editar
                                 </button>
 
-                               {{-- <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade_paciente_id' => $enfermedad->pivot->id]) }}"
+                                {{-- <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade_paciente_id' => $enfermedad->pivot->id]) }}"
                                     class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
                                     Control Historial
                                 </a> --}}
 
 
-                                 {{--  <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade'=> $enfermedad->id]) }}"
+                                {{--  <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade'=> $enfermedad->id]) }}"
                                     class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
                                     Control Historial
-                                 </a>--}}
-
-
+                                 </a> --}}
 
 
                                 {{--  <td class="py-2 px-4 border-b">
@@ -177,7 +180,6 @@
                 </li>
             </ul>
         </div>
-
     </section>
     <!-- MODAL -->
     <x-dialog-modal wire:model="modal">
@@ -191,38 +193,35 @@
         </x-slot>
         <x-slot name="content">
             <div class="grid grid-cols-2 gap-4">
-                <div class="relative"
-                    wire:click.outside="closeNamePicker"
-                    wire:keydown.arrow-down.prevent="moveNameDown"
-                    wire:keydown.arrow-up.prevent="moveNameUp"
+                <div class="relative" wire:click.outside="closeNamePicker"
+                    wire:keydown.arrow-down.prevent="moveNameDown" wire:keydown.arrow-up.prevent="moveNameUp"
                     wire:keydown.enter.prevent="chooseNameHighlighted">
 
-                <label for="name" class="block text-sm font-medium text-gray-700">
-                    {{ __('Nombre del diagnostico') }}
-                </label>
+                    <label for="name" class="block text-sm font-medium text-gray-700">
+                        {{ __('Nombre del diagnostico') }}
+                    </label>
 
-                <input id="name"
-                        class="w-full rounded cursor-pointer"
-                        type="text"
-                        placeholder="{{ __('nombre') }}"
-                        wire:model.live="nameSearch" />
+                    <input id="name" class="w-full rounded cursor-pointer" type="text"
+                        placeholder="{{ __('nombre') }}" wire:model.live="nameSearch" />
 
-                <x-input-error for="name" />
+                    <x-input-error for="name" />
 
-                @if($namePickerOpen && trim($nameSearch) !== '')
-                    <div class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto
+                    @if ($namePickerOpen && trim($nameSearch) !== '')
+                        <div
+                            class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto
                                 bg-white border border-slate-200 rounded-md shadow">
-                    @forelse($nameOptions as $i => $opt)
-                        <button type="button"
-                                wire:click="pickEnfermedad({{ $opt['id'] }})"
-                                class="w-full text-left px-3 py-2 hover:bg-slate-100 {{ $nameIndex === $i ? 'bg-slate-100' : '' }}">
-                        {{ $opt['codigo'] ?? '' }}@if(!empty($opt['codigo']))-@endif{{ $opt['name'] }}
-                        </button>
-                    @empty
-                        <div class="px-3 py-2 text-sm text-slate-500">Sin resultados…</div>
-                    @endforelse
-                    </div>
-                @endif
+                            @forelse($nameOptions as $i => $opt)
+                                <button type="button" wire:click="pickEnfermedad({{ $opt['id'] }})"
+                                    class="w-full text-left px-3 py-2 hover:bg-slate-100 {{ $nameIndex === $i ? 'bg-slate-100' : '' }}">
+                                    {{ $opt['codigo'] ?? '' }}@if (!empty($opt['codigo']))
+                                        -
+                                    @endif{{ $opt['name'] }}
+                                </button>
+                            @empty
+                                <div class="px-3 py-2 text-sm text-slate-500">Sin resultados…</div>
+                            @endforelse
+                        </div>
+                    @endif
                 </div>
 
                 <div>
@@ -255,7 +254,7 @@
                         placeholder="{{ __('fecha atencion') }}" wire:model="fecha_atencion_enfermedad" />
                     <x-input-error for="fecha_atencion_enfermedad" />
                 </div>
-{{--
+                {{--
                 <div>
                     <label for="fecha_finalizacion_enfermedad"
                         class="block text-sm font-medium text-gray-700">{{ __('finalización de enfermedad') }}</label>
@@ -291,11 +290,18 @@
                 </div>
 
                 <div>
+                    {{-- <label for="pdf_enfermedad"
+                        class="block text-sm font-medium text-gray-700">{{ __('pdff') }}</label>
+                    <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
+                        wire:model="pdf_enfermedad" accept="image/.pdf" />
+                    <x-input-error for="pdf_enfermedad" /> --}}
+                    {{--  --}}
                     <label for="pdf_enfermedad"
                         class="block text-sm font-medium text-gray-700">{{ __('pdf') }}</label>
                     <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
-                        wire:model="pdf_enfermedad" accept="image/*" />
+                        wire:model="pdf_enfermedad" accept="image/.pdf" />
                     <x-input-error for="pdf_enfermedad" />
+                    {{--  --}}
                 </div>
             </div>
 
@@ -356,18 +362,18 @@
 
         </x-slot>
     </x-dialog-modal>
-        <div x-data="{ open:false, msg:'', t:null }"
-            x-on:toast.window="
+
+    <div x-data="{ open: false, msg: '', t: null }"
+        x-on:toast.window="
                 clearTimeout(t);
                 msg = $event.detail?.message || 'Acción realizada';
                 open = true;
                 t = setTimeout(() => open = false, 2500);
             "
-            x-show="open"
-            x-transition
-            class="fixed top-4 right-4 z-50 rounded-md bg-emerald-600 text-white px-4 py-2 shadow">
-            <span x-text="msg"></span>
-        </div>
+        x-show="open" x-transition
+        class="fixed top-4 right-4 z-50 rounded-md bg-emerald-600 text-white px-4 py-2 shadow">
+        <span x-text="msg"></span>
+    </div>
     <!-- LIGHTBOX -->
     <script>
         /funcionalidad para ampliar la imagen al darle click y cerrar/

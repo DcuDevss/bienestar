@@ -99,10 +99,10 @@ class PatientHistorialEnfermedades extends Component
 
             $this->modal = true;
 
-// Inicializa el autocomplete SIN pisar la escritura del usuario
-$this->nameSearch = '';           // <- importante para que empiece limpio
-$this->namePickerOpen = false;
-$this->nameOptions = [];
+            // Inicializa el autocomplete SIN pisar la escritura del usuario
+            $this->nameSearch = '';           // <- importante para que empiece limpio
+            $this->namePickerOpen = false;
+            $this->nameOptions = [];
 
             // Inicializa el autocomplete con el nombre actual
             $this->openNamePicker();
@@ -205,8 +205,12 @@ $this->nameOptions = [];
             'pdf_enfermedad',
             'search',
             // Autocomplete modal
-            'nameSearch','namePickerOpen','nameOptions','nameIndex',
-            'pivotId','original_enfermedade_id',
+            'nameSearch',
+            'namePickerOpen',
+            'nameOptions',
+            'nameIndex',
+            'pivotId',
+            'original_enfermedade_id',
         ]);
 
         // Recargar lista
@@ -217,15 +221,15 @@ $this->nameOptions = [];
 
     // ====== Autocomplete del campo "Nombre" dentro del modal ======
 
- public function openNamePicker()
-{
-    // solo precarga si está vacío; NO pisar lo que el usuario ya escribió
-    if ($this->nameSearch === '' && !empty($this->name)) {
-        $this->nameSearch = $this->name;
+    public function openNamePicker()
+    {
+        // solo precarga si está vacío; NO pisar lo que el usuario ya escribió
+        if ($this->nameSearch === '' && !empty($this->name)) {
+            $this->nameSearch = $this->name;
+        }
+        $this->namePickerOpen = true;
+        $this->updatedNameSearch($this->nameSearch);
     }
-    $this->namePickerOpen = true;
-    $this->updatedNameSearch($this->nameSearch);
-}
 
 
     public function closeNamePicker()
@@ -233,32 +237,32 @@ $this->nameOptions = [];
         $this->namePickerOpen = false;
     }
 
-public function updatedNameSearch($value)
-{
-    $this->enfermedade_id = null; // hasta que elijan una opción
-    $q = trim((string)$value);
+    public function updatedNameSearch($value)
+    {
+        $this->enfermedade_id = null; // hasta que elijan una opción
+        $q = trim((string)$value);
 
-    if ($q === '') {
-        $this->nameOptions = [];
-        $this->namePickerOpen = false;
+        if ($q === '') {
+            $this->nameOptions = [];
+            $this->namePickerOpen = false;
+            $this->nameIndex = 0;
+            return;
+        }
+
+        // Usa el MISMO motor que el buscador de arriba (Scout).
+        // Si no usás Scout, avisá y te lo cambio a "where like".
+        $this->nameOptions = \App\Models\Enfermedade::search($q)
+            ->take(10)
+            ->get()
+            ->map(fn($e) => [
+                'id'     => $e->id,
+                'name'   => $e->name,
+                'codigo' => $e->codigo ?? null,
+            ])->toArray();
+
+        $this->namePickerOpen = !empty($this->nameOptions);
         $this->nameIndex = 0;
-        return;
     }
-
-    // Usa el MISMO motor que el buscador de arriba (Scout).
-    // Si no usás Scout, avisá y te lo cambio a "where like".
-    $this->nameOptions = \App\Models\Enfermedade::search($q)
-        ->take(10)
-        ->get()
-        ->map(fn($e) => [
-            'id'     => $e->id,
-            'name'   => $e->name,
-            'codigo' => $e->codigo ?? null,
-        ])->toArray();
-
-    $this->namePickerOpen = !empty($this->nameOptions);
-    $this->nameIndex = 0;
-}
 
 
 

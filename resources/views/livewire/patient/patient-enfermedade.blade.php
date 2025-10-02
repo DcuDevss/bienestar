@@ -32,28 +32,6 @@
     </header>
     <div class="bg-white px-3">
 
-        {{--  <ul class="w-full">
-
-            @forelse($enfermedades as $enfermedad)
-                <li class="cursor-pointer px-2 py-1 bg-gray-400 hover:bg-gray-500 text-black my-2 bolck rounded-md"><a
-                        wire:click="addModalDisase({{ $enfermedad->id }})">{{ $enfermedad->name }}:
-                        </a></li>
-            @empty
-                @if (strlen(trim($this->search)) > 4)
-                    <h3 class="bg-red-500 text-white p-2 w-full mt-2 text-center font-bold">
-                        {{ __('no search result') }}</h3>
-                    <div class="bg-blue-500 text-white text-center p-2 my-2">
-                        <button wire:click="addNew">{{ __(' quires agregar esta nueva enfermedad?') }}
-                            <br>
-                            <strong class="text-xl">{{ __($this->search) }}</strong>
-                            <br>
-                            <p>{{ __('listar ...?') }}</p>
-                        </button>
-
-                    </div>
-                @endif
-            @endforelse
-        </ul> --}}
         <ul class="w-full">
             @forelse($enfermedades as $enfermedad)
                 <li class="cursor-pointer px-3 py-2 bg-gray-400 hover:bg-gray-500 text-black my-2 bolck rounded-md">
@@ -225,7 +203,7 @@
                                 <label for="pdf_enfermedad"
                                     class="block text-sm font-medium text-gray-700">{{ __('pdf') }}</label>
                                 <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
-                                    wire:model="pdf_enfermedad" accept="image/*" />
+                                    wire:model="pdf_enfermedad" accept="image/.pdf" />
                                 <x-input-error for="pdf_enfermedad" />
                             </div>
 

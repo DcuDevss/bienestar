@@ -8,6 +8,8 @@ use Illuminate\Support\Str;
 use Livewire\Attributes\Url;
 use Livewire\WithPagination;
 use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Log;
+
 
 class PatientHistorialCertificado extends Component
 {
@@ -327,7 +329,7 @@ class PatientHistorialCertificado extends Component
     /**
      * Optimiza la imagen reduciendo su peso (sobrescribe el archivo)
      */
-    private function optimizarImagen($path)
+    /* private function optimizarImagen($path)
     {
         if (!file_exists($path)) return;
 
@@ -355,8 +357,77 @@ class PatientHistorialCertificado extends Component
                 // otros formatos no se optimizan
                 break;
         }
-    }
+    } */
 
+
+    /**
+     * Optimiza la imagen reduciendo su peso (sobrescribe el archivo)
+     */
+
+    private function optimizarImagen($path)
+    {
+        if (!file_exists($path)) {
+            Log::warning("optimizarImagen: archivo no encontrado", [
+                'path' => $path,
+            ]);
+            return;
+        }
+
+        $info = pathinfo($path);
+        $extension = strtolower($info['extension']);
+
+        // Obtener info de la imagen
+        $imageInfo = getimagesize($path);
+        $width = $imageInfo[0] ?? null;
+        $height = $imageInfo[1] ?? null;
+        $mime = $imageInfo['mime'] ?? null;
+        $filesize = filesize($path);
+
+        Log::info("optimizarImagen: procesando archivo", [
+            'path'      => $path,
+            'extension' => $extension,
+            'mime'      => $mime,
+            'width'     => $width,
+            'height'    => $height,
+            'filesize'  => round($filesize / 1024, 2) . ' KB',
+        ]);
+
+        switch ($extension) {
+            case 'png':
+                Log::info("optimizarImagen: optimizando PNG");
+                $image = imagecreatefrompng($path);
+                imagejpeg($image, $path, 60);
+                imagedestroy($image);
+                break;
+            case 'jpg':
+            case 'jpeg':
+                Log::info("optimizarImagen: optimizando JPG/JPEG");
+                $image = imagecreatefromjpeg($path);
+                imagejpeg($image, $path, 60);
+                imagedestroy($image);
+                break;
+            case 'webp':
+                Log::info("optimizarImagen: optimizando WEBP");
+                $image = imagecreatefromwebp($path);
+                imagejpeg($image, $path, 60);
+                imagedestroy($image);
+                break;
+            default:
+                Log::info("optimizarImagen: formato no soportado", [
+                    'extension' => $extension
+                ]);
+                break;
+        }
+
+        // Log después de optimizar
+        clearstatcache(); // refrescar info de archivo
+        $newSize = filesize($path);
+        Log::info("optimizarImagen: archivo optimizado", [
+            'path'         => $path,
+            'new_filesize' => round($newSize / 1024, 2) . ' KB',
+            'reduction'    => round((1 - $newSize / $filesize) * 100, 2) . '%'
+        ]);
+    }
 
 
     /*  separador > */

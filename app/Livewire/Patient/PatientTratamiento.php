@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Patient;
 
-use App\Models\DerivacionPsiquiatrica;
+use App\Models\Derivacionpsiquiatrica;
 use App\Models\Enfermedade;
 use App\Models\IndicacionTerapeutica;
 use App\Models\Procedencia;
@@ -86,7 +86,7 @@ class PatientTratamiento extends Component
     {
         $this->tipolicencias = Tipolicencia::all();
         $this->procedencias = Procedencia::all();
-        $this->derivacionpsiquiatricas = DerivacionPsiquiatrica::all();
+        $this->derivacionpsiquiatricas = Derivacionpsiquiatrica::all();
         $this->indicacionterapeuticas = Indicacionterapeutica::all();
         $this->enfermedades = Enfermedade::all();
 

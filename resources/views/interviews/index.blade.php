@@ -293,6 +293,11 @@
             <div class="bg-white p-2 rounded-md">
                 <!-- BOTONES -->
                 <div>
+                     @if (session()->has('success'))
+                       <div class="mb-2 px-4 py-2 bg-green-600 text-white rounded-md text-center">
+                            {{ session('success') }}
+                        </div>
+                     @endif
                     <ul class="">
                         <!-- CONTROL PACIENTE -->
                         <li class="py-2 text-center">

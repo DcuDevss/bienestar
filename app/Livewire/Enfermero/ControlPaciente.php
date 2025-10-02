@@ -68,12 +68,12 @@ class ControlPaciente extends Component
             'dosis',
             'paciente_id',
         ]);
-
+    // Mostrar un mensaje de éxito
+        session()->flash('message', 'Registro creado exitosamente.');
         // Cerrar el modal
         $this->modal = false;
 
-        // Mostrar un mensaje de éxito
-        session()->flash('message', 'Registro creado exitosamente.');
+
     }
 
 

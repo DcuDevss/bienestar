@@ -196,6 +196,7 @@ class PatientHistorialEnfermedades extends Component
             $paciente->enfermedades()->updateExistingPivot($enfermedadeId, $pivotData);
         }
 
+
         $this->modal = false;
         $this->dispatch('toast', type: 'success', message: 'Enfermedad editada correctamente');
 

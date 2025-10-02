@@ -1,4 +1,9 @@
 <x-app-layout>
+        @if (session()->has('success'))
+            <div class="mb-2 px-4 py-2 bg-green-600 text-white rounded-md text-center">
+                {{ session('success') }}
+            </div>
+        @endif
     <section class="mt-6">
         <h1 class="text-center text-2xl font-semibold text-slate-800 py-1">{{ __('Datos del paciente') }}</h1>
     </section>
@@ -282,6 +287,7 @@
                 </div>
             </div>
         </section>
+
         <!-- MENU VERTICAL -->
         <section class="flex-1 px-1">
             <div class="bg-white p-2 rounded-md">

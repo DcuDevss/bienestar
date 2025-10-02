@@ -24,6 +24,7 @@
                     </a>
                 </div>
             </div>
+            
             <!-- CARD -->
             <div class="flex gap-x-4 h-full">
                 @if ($enfermedades->isNotEmpty())

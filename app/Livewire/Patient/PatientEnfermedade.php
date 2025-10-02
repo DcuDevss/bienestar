@@ -148,7 +148,7 @@ class PatientEnfermedade extends Component
                 'art'                            => $data['art'] ?? null,
             ],
         ]);
-
+        session()->flash('success', 'Atencion medica agregada correctamente.');
         // 4) Reset + cerrar modal + cerrar picker
         $this->modal = false;
         $this->pickerOpen = false;
@@ -162,6 +162,7 @@ class PatientEnfermedade extends Component
 
         $this->paciente_enfermedades = $this->patient->enfermedades()->get();
         $this->resetValidation();
+
     }
 
     public function addNew()

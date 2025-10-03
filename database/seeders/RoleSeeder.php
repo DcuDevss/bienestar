@@ -32,7 +32,7 @@ class RoleSeeder extends Seeder
        Permission::create(['name'=> 'diadetrabajos.index','description'=>'solo ve el doctor el super-admin, admin-jefe.'])->syncRoles([$role1,$role2,$role4]);
        Permission::create(['name'=> 'curriculum.index','description'=>'solo ve el doctor y super-admin, admin-jefe.'])->syncRoles([$role1,$role2,$role4]);
 
-       Permission::create(['name'=> 'interviews.index','lo ven todos los roles'])->syncRoles([$role1,$role2,$role3,$role4,$role5,$role6,$role7,$role8]);
+       Permission::create(['name'=> 'interviews.index','lo ven todoos los roles'])->syncRoles([$role1,$role2,$role3,$role4,$role5,$role6,$role7,$role8]);
        Permission::create(['name'=> 'disases.index','description'=>'solo ven super-admin, doctor, enfermero'])->syncRoles([$role1,$role2,$role4,$role7]);
        Permission::create(['name'=> 'multiform.index','description'=>'solo ven algunos '])->syncRoles([$role1,$role2,$role3,$role4,$role5,$role7,$role8]);
        Permission::create(['name'=> 'patient-certificados.show','description'=>'solo ven algunos'])->syncRoles([$role1,$role2,$role3,$role4,$role5,$role6,$role7]);

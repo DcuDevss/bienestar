@@ -381,7 +381,7 @@ class EntrevistaFormController extends Component
         } catch (\Exception $e) {
             Log::error('Error al guardar la entrevista: ' . $e->getMessage());
             $this->dispatch('toast', type: 'error', message: '⚠️ Complete los campos obligatorios antes de guardar.');
-            session()->flash('error', 'Error al guardar la entrevista, complete los capos Tipo de Entrevista y Estado de la Entrevista.');
+            session()->flash('error', 'Error al guardar la entrevista, complete los campos Tipo de Entrevista y Estado de la Entrevista.');
         }
 
 

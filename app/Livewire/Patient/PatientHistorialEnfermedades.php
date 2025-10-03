@@ -266,7 +266,6 @@ class PatientHistorialEnfermedades extends Component
         $this->updatedNameSearch($this->nameSearch);
     }
 
-
     public function closeNamePicker()
     {
         $this->namePickerOpen = false;
@@ -298,8 +297,6 @@ class PatientHistorialEnfermedades extends Component
         $this->namePickerOpen = !empty($this->nameOptions);
         $this->nameIndex = 0;
     }
-
-
 
     public function updatedName($value)
     {

@@ -293,6 +293,11 @@
             <div class="bg-white p-2 rounded-md">
                 <!-- BOTONES -->
                 <div>
+                     @if (session()->has('success'))
+                       <div class="mb-2 px-4 py-2 bg-green-600 text-white rounded-md text-center">
+                            {{ session('success') }}
+                        </div>
+                     @endif
                     <ul class="">
                         <!-- CONTROL PACIENTE -->
                         <li class="py-2 text-center">
@@ -344,7 +349,7 @@
                     <ul>
                         <!-- TRATAMIENTOS -->
 
-                        <li class="py-2 text-center">
+                      {{--   <li class="py-2 text-center">
                             <a href="{{ route('patient.patient-tratamiento', $paciente->id) }}" class="rounded-md">
                                 <div
                                     class="mx-auto px-4 py-3 w-[89%] bg-slate-800 text-white rounded-md transform transition-transform hover:scale-105">
@@ -352,7 +357,7 @@
                                 </div>
                             </a>
                         </li>
-                    </ul>
+                    </ul> --}}
                 </div>
             </div>
                 <!-- BOTONES 4 -->

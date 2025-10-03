@@ -5,7 +5,7 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\ActitudEntrevista;
-use App\Models\Derivacionpsiquiatrica;
+use App\Models\DerivacionPsiquiatrica;
 use App\Models\Estado;
 use App\Models\EstadoEntrevista;
 use App\Models\Portacion;

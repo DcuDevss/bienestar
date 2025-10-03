@@ -191,7 +191,7 @@ class Paciente extends Model
         return $this->hasMany(Enfermero::class);
     }
 
-    public function controlenfermeros()
+    public function ControlEnfermeros()
     {
         return $this->hasMany(Controlenfermero::class);
     }

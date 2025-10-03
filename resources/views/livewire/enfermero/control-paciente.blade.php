@@ -1,4 +1,9 @@
 <div class="">
+    @if (session()->has('message'))
+    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded relative mb-3">
+        {{ session('message') }}
+    </div>
+    @endif
     <!-- BOTON -->
     <div class="">
         <button class="bg-slate-800 text-white px-3 py-3 rounded-md w-[90%] transform transition-transform hover:scale-105" wire:click="addNew">Control paciente</button>

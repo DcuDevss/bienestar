@@ -90,7 +90,7 @@ class PdfViewer extends Component
         return $pdf->stream('pdf-viewer.pdf');
     }
 
-    public function render()
+    public function reender()
     {
         $pdfs = Pdfhistorial::where('paciente_id', $this->pacienteId)->get();
         return view('livewire.paciente.pdf-viewer', ['pdfs' => $pdfs])->layout('layouts.doctor');

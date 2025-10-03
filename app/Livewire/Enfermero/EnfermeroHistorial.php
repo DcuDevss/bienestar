@@ -8,7 +8,7 @@ use Livewire\Attributes\Url;
 use Livewire\Component;
 use Livewire\WithPagination;
 use Carbon\Carbon;
-
+/* c */
 class EnfermeroHistorial extends Component
 {
     use WithPagination;
@@ -41,7 +41,7 @@ class EnfermeroHistorial extends Component
 
     public function openEditModal($id)
     {
-        $control = Controlenfermero::findOrFail($id);
+        $control = ControlEnfermero::findOrFail($id);
 
         $this->editControl = [
             'id'             => $control->id,
@@ -64,7 +64,7 @@ class EnfermeroHistorial extends Component
 
     public function updateTratamiento()
     {
-        $control = Controlenfermero::findOrFail($this->editForm['id']);
+        $control = ControlEnfermero::findOrFail($this->editForm['id']);
 
         $campos = ['presion','glucosa','temperatura','inyectable','dosis','fecha_atencion','detalles'];
         foreach ($campos as $campo) {
@@ -94,12 +94,12 @@ class EnfermeroHistorial extends Component
 
     public function delete($id)
     {
-        Controlenfermero::findOrFail($id)->delete();
+        ControlEnfermero::findOrFail($id)->delete();
     }
 
     public function render()
     {
-        $query = Controlenfermero::where('paciente_id', $this->pacienteId);
+        $query = ControlEnfermero::where('paciente_id', $this->pacienteId);
 
         if ($this->search) {
             $query->where(function ($q) {

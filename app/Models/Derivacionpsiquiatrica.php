@@ -11,7 +11,7 @@ class Derivacionpsiquiatrica extends Model
     protected $fillable=['name'];
     public function tratamientos(){
 
-        return $this->hasMany(Derivacionpsiquiatrica::class, 'derivacionpsiquiatrica_id');
+        return $this->hasMany(Derivacionpsiquiatrica::class, 'Derivacionpsiquiatrica_id');
 
     }
 }

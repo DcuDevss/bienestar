@@ -147,6 +147,7 @@ class PatientHistorialEnfermedades extends Component
         // Imagen
         // ====================
         if (isset($data['imgen_enfermedad'])) {
+            $archivoPath = $data['imgen_enfermedad']->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName());
             if (!str_starts_with($data['imgen_enfermedad']->getMimeType(), 'image/')) {
                 $this->addError('imgen_enfermedad', 'El imgen_enfermedad debe ser una imagen.');
                 return;

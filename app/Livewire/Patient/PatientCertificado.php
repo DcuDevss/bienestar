@@ -284,6 +284,60 @@ class PatientCertificado extends Component
         }
     }
 
+    /*Nuevo Metodo*//* 
+    private function optimizarImagen($file, $dir)
+    {
+        if (!$file) return null;
+
+        try {
+            $extension = strtolower($file->getClientOriginalExtension());
+            $filename  = uniqid() . '_' . $file->getClientOriginalName();
+            $path      = storage_path("app/public/{$dir}/{$filename}");
+
+            switch ($extension) {
+                case 'png':
+                    $image = @imagecreatefrompng($file->getRealPath()); // @ suprime warning
+                    if (!$image) {
+                        throw new \Exception("Archivo PNG inválido o corrupto");
+                    }
+                    imagejpeg($image, $path, 60);
+                    imagedestroy($image);
+                    $filename = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
+                    return "{$dir}/{$filename}";
+
+                case 'jpg':
+                case 'jpeg':
+                    $image = @imagecreatefromjpeg($file->getRealPath());
+                    if (!$image) {
+                        throw new \Exception("Archivo JPG inválido o corrupto");
+                    }
+                    imagejpeg($image, $path, 60);
+                    imagedestroy($image);
+                    return "{$dir}/{$filename}";
+
+                case 'webp':
+                    $image = @imagecreatefromwebp($file->getRealPath());
+                    if (!$image) {
+                        throw new \Exception("Archivo WEBP inválido o corrupto");
+                    }
+                    imagejpeg($image, $path, 60);
+                    imagedestroy($image);
+                    $filename = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
+                    return "{$dir}/{$filename}";
+
+                default:
+                    return $file->storeAs($dir, $filename, 'public');
+            }
+        } catch (\Throwable $e) {
+            \Log::error("Error optimizando imagen: {$e->getMessage()}", [
+                'file' => $file->getClientOriginalName()
+            ]);
+
+            // Lanza excepción controlada para manejarla en el flujo principal
+            throw new \Exception("La imagen '{$file->getClientOriginalName()}' está dañada o no es válida.");
+        }
+    } */
+
     /* separador */
 
     public function addNew()

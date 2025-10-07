@@ -53,8 +53,17 @@ class FileController extends Component
             $nombreArchivo = $archivo->getClientOriginalName();
 
             // Construir la ruta de almacenamiento con el ID del paciente
-            $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreArchivo, 'public');
+            $timestamp = now()->format('Ymd_His'); // Ejemplo: 20251007_1020
+            $nombreArchivo = $archivo->getClientOriginalName();
+            $nombreFinal = $timestamp . '_' . $nombreArchivo;
 
+            $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreFinal, 'public');
+
+            /* $nombreUnico = uniqid() . '_' . $archivo->getClientOriginalName();
+            $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreUnico, 'public'); */
+
+            /* $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreArchivo, 'public');
+ */
             // Crear un nuevo registro en la base de datos para cada archivo
             Pdfhistorial::create([
                 'file' => $ruta,

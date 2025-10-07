@@ -56,6 +56,7 @@ class PatientCertificado extends Component
     {
         $this->pickerOpen = true;
     }
+    
     public function closePicker()
     {
         $this->pickerOpen = false;

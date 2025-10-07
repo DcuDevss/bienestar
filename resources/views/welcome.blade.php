@@ -54,7 +54,7 @@
                             @endif
                         </div>
 
-                        <form method="POST" action="{{ route('login') }}" class="float-left">
+                        <form method="POST" action="{{ route('login') }}" novalidate class="float-left">
                             @csrf
 
                             <div>

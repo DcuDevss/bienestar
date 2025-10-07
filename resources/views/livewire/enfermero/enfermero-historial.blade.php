@@ -37,7 +37,7 @@
                 <td class="tiBody px-4 py-1 text-gray-300">{{ $control->temperatura }}</td>
                 <td class="tiBody px-4 py-1 text-gray-300">{{ $control->inyectable }}</td>
                 <td class="tiBody px-4 py-1 text-gray-300">{{ $control->dosis }}</td>
-                <td class="tiBody px-4 py-1 text-gray-300">{{ $control->fecha_atencion }}</td>
+                <td class="tiBody px-4 py-1 text-gray-300">{{ \Carbon\Carbon::parse($control->fecha_atencion)->format('d-m-Y H:i:s') }}</td>
                 <td class="tiBody px-4 py-1 text-gray-300">{{ $control->detalles }}</td>
                 <td class="tiBody px-4 py-1 flex flex-wrap gap-2">
                   <button @click="editModal = true"

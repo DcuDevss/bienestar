@@ -1,4 +1,10 @@
 <div>
+    @if (session()->has('success'))
+    <div class="mb-2 px-4 py-2 bg-green-600 text-white rounded-md text-center">
+        {{ session('success') }}
+    </div>
+    @endif
+
     <header class="px-3  bg-white">
         <h2 class="font-bold text-center text-gray-800  text-2xl mb-2 flex items-center">
             {{-- <span class="text-red-700">

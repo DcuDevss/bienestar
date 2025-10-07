@@ -1,3 +1,9 @@
+@if (session()->has('success'))
+    <div class="mb-2 px-4 py-2 bg-green-600 text-white text-sm rounded">
+        {{ session('success') }}
+    </div>
+@endif
+
 <div class="py-3 rounded-md bg-black text-center" >
     <td class="tiBody px-2 py-1 mt-2">
         <button

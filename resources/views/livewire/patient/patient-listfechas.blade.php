@@ -41,7 +41,7 @@
                                 rounded-md font-semibold text-xs text-white uppercase tracking-widest
                             ">
                                 @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
-                                    {{ $fechaFinalizacionLicencia->format('Y-m-d') }}
+                                    {{ $fechaFinalizacionLicencia->format('Y-m-d H:i:s') }}
                                 @else
                                     Sin fecha
                                 @endif

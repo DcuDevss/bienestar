@@ -82,7 +82,7 @@ class EntrevistaFormController extends Component
         $this->paciente_id = $paciente_id;
         $this->paciente = Paciente::find($paciente_id);
 
-       
+
 
 
 
@@ -203,11 +203,11 @@ class EntrevistaFormController extends Component
             $this->salud_mentale_id = ($this->salud_mentale_id === '' || $this->salud_mentale_id === null) ? null : (int) $this->salud_mentale_id;
 
             $this->validate([
-                'tipo_entrevista_id' => 'nullable|integer',
+                'tipo_entrevista_id' => 'required|integer',
                 'actitud_entrevista_id' => 'nullable|integer',
                 'portacion_id' => 'nullable|integer',
                 'salud_mentale_id' => 'nullable|integer',
-                'estado_entrevista_id' => 'nullable|integer', // Solo para Postulante o Reintegro
+                'estado_entrevista_id' => 'required|integer', // Solo para Postulante o Reintegro
                 'tecnica_utilizada' => 'nullable|string|max:1000',
                 'grupo_familiar' => 'nullable|array', // Validación del array de miembros
                 'notas_clinicas' => 'nullable|string|max:1000', // Validación de notas clínicas
@@ -306,6 +306,10 @@ class EntrevistaFormController extends Component
 
             $entrevista->save();
 
+
+
+            session()->flash('message', 'Entrevista registrada con éxito.');
+
             Log::debug('Valores antes de guardar entrevista', [
     'indicacionterapeutica_id' => $this->indicacionterapeutica_id,
     'abordaje_id' => $this->abordaje_id,
@@ -372,13 +376,15 @@ class EntrevistaFormController extends Component
                 'estado_entrevista_id',
                 'paciente_id',
             ]);
+
+
         } catch (\Exception $e) {
             Log::error('Error al guardar la entrevista: ' . $e->getMessage());
-            session()->flash('error', 'Error al guardar la entrevista.');
+            $this->dispatch('toast', type: 'error', message: '⚠️ Complete los campos obligatorios antes de guardar.');
+            session()->flash('error', 'Error al guardar la entrevista, complete los campos Tipo de Entrevista y Estado de la Entrevista.');
         }
 
 
-        session()->flash('message', 'Entrevista registrada con éxito.');
     }
 
     public function render()

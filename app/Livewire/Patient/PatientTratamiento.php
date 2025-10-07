@@ -2,7 +2,7 @@
 
 namespace App\Livewire\Patient;
 
-use App\Models\DerivacionPsiquiatrica;
+use App\Models\Derivacionpsiquiatrica;
 use App\Models\Enfermedade;
 use App\Models\IndicacionTerapeutica;
 use App\Models\Procedencia;

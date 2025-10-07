@@ -43,21 +43,16 @@
         <div class="w-full px-4 mx-auto pb-12">
             <h2 class="text-center text-2xl font-semibold py-6">Lista de usuarios</h2>
             <div class="bg-gray-800 mx-auto p-4 rounded-md text-[12px] text-white w-[80%]">
-                {{-- <button class="btn btn-primary">Click me</button> --}}
                 <div class=" border-b border-gray-200 shadow">
                     <table class="w-full text-left text-gray-500" id="miTabla">
                         <thead class="text-xs text-white uppercase bg-gray-900">
                             <tr class="teGead text-[14px]">
-                                {{-- <th scope="col" class="px-4 py-3" style="text-align: center;">
-                                    ID
-                                </th> --}}
                                 <th scope="col" class="px-4 py-3">
                                     Name
                                 </th>
                                 <th scope="col" class="px-4 py-3">
                                     Email
                                 </th>
-
                                 <th scope="col" class="px-4 py-3">
                                     Edit
                                 </th>
@@ -69,10 +64,6 @@
                         <tbody class="bg-gray-800">
                             @foreach ($users as $user)
                                 <tr class="border-b border-gray-700 hover:bg-[#204060]">
-                                    {{-- <td style="text-align: center;"
-                                        class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-nowrap dark:text-white">
-                                        {{ $user->id }}
-                                    </td> --}}
                                     <td
                                         class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
                                         {{ $user->name }}</td>
@@ -87,7 +78,8 @@
                                         </a>
                                     </td>
                                     <td>
-                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST">
+                                        <form action="{{ route('users.destroy', $user->id) }}" method="POST"
+                                            onsubmit="return confirm('¿Estás seguro de que deseas eliminar este usuario?');">
                                             @csrf
                                             @method('DELETE')
                                             <button type="submit" class="btn btn-danger">
@@ -114,8 +106,8 @@
     <script>
         $(document).ready(function() {
             $('#miTabla').DataTable({
-                // paging: false,
-                // pageLength: 50, 
+                pageLength: 8, //  arranca con 8 resultados
+                lengthMenu: [8, 10, 25, 50, 100],
                 language: {
                     url: 'https://cdn.datatables.net/plug-ins/1.10.25/i18n/Spanish.json'
                 }

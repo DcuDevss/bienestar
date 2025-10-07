@@ -3,13 +3,6 @@
 
     <header class="px-3 bg-white">
         <h2 class="font-bold text-center text-gray-800 capitalize text-2xl mb-2 flex items-center">
-            {{--<span class="text-red-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                </svg>
-            </span>--}}
             <div class="">
                 <img src="https://cdn-icons-png.flaticon.com/512/3216/3216342.png" alt="" class="h-[34px]">
             </div>
@@ -142,7 +135,7 @@
                 </div>
 
                 <div>
-                    <label for="fecha_finalizacion_licencia" class="block text-sm font-medium text-gray-700">{{ __('Inialización de certificado') }}</label>
+                    <label for="fecha_finalizacion_licencia" class="block text-sm font-medium text-gray-700">{{ __('Finalización de certificado') }}</label>
                     <input id="fecha_finalizacion_licencia" class="w-full rounded cursor-pointer" type="datetime-local" placeholder="{{ __('fecha finalización') }}" wire:model="fecha_finalizacion_licencia" />
                     <x-input-error for="fecha_finalizacion_licencia" />
                 </div>
@@ -166,7 +159,6 @@
                     @error('suma_salud') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
                 </div>
 
-
                 <div>
                     <label for="imagen_frente" class="block text-sm font-medium text-gray-700">{{ __('Imagen frente') }}</label>
                     <input id="imagen_frente" class="rounded py-2 cursor-pointer" type="file" wire:model="imagen_frente" accept="image/*" />
@@ -179,15 +171,6 @@
                     <x-input-error for="imagen_dorso" />
                 </div>
 
-{{--                 <div>
-                    <label class="flex items-center">
-                        <input id="estado_certificado" class="rounded cursor-pointer" type="checkbox" wire:model="estado_certificado" />
-                        <span class="ml-2">{{ __('Estado') }}</span>
-                    </label>
-                </div> --}}
-
-
-
                 <div class="col-span-2">
                     <label for="detalle_certificado" class="block text-sm font-medium text-gray-700">{{ __('Detalle del certificado') }}</label>
                     <textarea id="detalle_certificado" class="w-full rounded cursor-pointer" rows="5" placeholder="{{ __('ingrese detalle') }}" wire:model="detalle_certificado"></textarea>
@@ -196,6 +179,7 @@
             </div>
             <input type="hidden" wire:model="disase_id">
         </x-slot>
+
 
 
         <x-slot name="footer">
@@ -209,5 +193,16 @@
 
         </x-slot>
     </x-dialog-modal>
+    @if (session()->has('success'))
+        <div
+            x-data="{ show: true }"
+            x-show="show"
+            x-init="setTimeout(() => show = false, 3000)"
+            class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 transition"
+        >
+            {{ session('success') }}
+        </div>
+    @endif
+
 </div>
 

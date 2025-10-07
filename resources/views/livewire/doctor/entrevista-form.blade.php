@@ -670,6 +670,32 @@
 </div>
 
     </form>
+    <div
+        x-data="{ show: true }"
+        x-show="show"
+        x-transition
+        x-init="setTimeout(() => show = false, 6000)"
+        class="fixed top-5 right-5 z-50"
+    >
+        @if (session('message'))
+            <div class="bg-green-600 text-white px-4 py-3 rounded shadow">
+                {{ session('message') }}
+            </div>
+        @endif
+
+        @if (session('error'))
+            <div class="bg-red-600 text-white px-4 py-3 rounded shadow">
+                {{ session('error') }}
+            </div>
+        @endif
+
+        @if ($errors->any())
+            <div class="bg-red-600 text-white px-4 py-3 rounded shadow">
+                ⚠️ Complete los campos obligatorios en el formulario.
+            </div>
+        @endif
+    </div>
+
     <div>
 </div>
 

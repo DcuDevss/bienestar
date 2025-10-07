@@ -9,7 +9,7 @@ use Livewire\WithPagination;
 class UserIndex extends Component
 {
     use WithPagination;
-
+    
     public function render()
     {
         $users = User::all();

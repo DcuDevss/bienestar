@@ -2,57 +2,76 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Spatie\Permission\PermissionRegistrar;
 use Spatie\Permission\Models\Role;
-//use Spatie\Permission\Contracts\Role;
 use Spatie\Permission\Models\Permission;
 
 class RoleSeeder extends Seeder
 {
-    /**
-     * Run the database seeds.
-     */
     public function run(): void
     {
-        $role1 = Role::create(['name' => 'super-admin']);
-        $role2 = Role::create(['name' => 'admin-jefe']);
-        $role3 = Role::create(['name' => 'administrativo']);
-        $role4 = Role::create(['name' => 'doctor']);
-        $role5 = Role::create(['name' => 'psicologa']);
-        $role6 = Role::create(['name' => 'nutricionista']);
-        $role7 = Role::create(['name' => 'enfermero']);
-        $role8 = Role::create(['name' => 'profesorgym']);
-        $role9 = Role::create(['name' => 'user_policia']);
-        $role10 = Role::create(['name' => 'user_civil']);
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
 
+        // Crear roles (idempotente) con guard 'web'
+        $R = [];
+        foreach ([
+            'super-admin',
+            'admin-jefe',
+            'administrativo',
+            'doctor',
+            'psicologa',
+            'nutricionista',
+            'enfermero',
+            'profesorgym',
+            'user_policia',
+            'user_civil',
+        ] as $name) {
+            $R[$name] = Role::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
+        }
 
-        Permission::create(['name' => 'users.index'])->syncRoles([$role1,$role2]);
-        Permission::create(['name' => 'users.edit'])->syncRoles([$role1,$role2]);
-        Permission::create(['name'=> 'users.update'])->syncRoles([$role1,$role2]);
-       // Permission::create(['name'=> 'users.show'])->syncRoles([$role1,$role2]);
+        // Sets de permisos por rol (por NOMBRE)
+        $adminJefe = [
+            'users.index','users.edit','users.update',
+            'roles.index','roles.edit','roles.create','roles.show',
+            'oficinas.index','diadetrabajos.index','curriculum.index',
+            'interviews.index','disases.index','multiform.index',
+            'patient-certificados.show','patient-enfermedades.show','patient-certificado.edit',
+            'paciente.ver-historial','psicologo.index','enfermero.enfermero-historial',
+        ];
 
-        Permission::create(['name' => 'roles.index'])->syncRoles([$role1,$role2]);
-        Permission::create(['name' => 'roles.edit'])->syncRoles([$role1,$role2]);
-        Permission::create(['name'=> 'roles.create'])->syncRoles([$role1,$role2]);
-        Permission::create(['name'=> 'roles.show'])->syncRoles([$role1,$role2]);
+        $administrativo = [
+            'oficinas.index','diadetrabajos.index','curriculum.index',
+            'interviews.index','disases.index','multiform.index',
+            'patient-certificados.show','patient-enfermedades.show',
+            'paciente.ver-historial',
+        ];
 
+        $doctor = [
+            'interviews.index',
+            'patient-certificados.show','patient-enfermedades.show','patient-certificado.edit',
+            'paciente.ver-historial',
+        ];
 
-        Permission::create(['name' => 'oficinas.index'])->syncRoles([$role1, $role2, $role4, $role7]);
-        Permission::create(['name' => 'diadetrabajos.index'])->syncRoles([$role1, $role2, $role4]);
-        Permission::create(['name' => 'curriculum.index'])->syncRoles([$role1, $role2, $role4]);
+        $psico     = ['psicologo.index','interviews.index','paciente.ver-historial'];
+        $nutri     = ['interviews.index','paciente.ver-historial'];
+        $enfermero = ['enfermero.enfermero-historial','paciente.ver-historial'];
+        $profeGym  = ['interviews.index','paciente.ver-historial'];
 
-        Permission::create(['name' => 'interviews.index'])->syncRoles([$role1, $role2, $role3, $role4, $role5, $role6, $role7, $role8]);
-        Permission::create(['name' => 'disases.index'])->syncRoles([$role1, $role2, $role4, $role7]);
-        Permission::create(['name' => 'multiform.index'])->syncRoles([$role1, $role2, $role3, $role4, $role5, $role7, $role8]);
-        Permission::create(['name' => 'patient-certificados.show'])->syncRoles([$role1, $role2, $role3, $role4, $role5, $role6, $role7]);
-        Permission::create(['name' => 'patient-enfermedades.show'])->syncRoles([$role1, $role2, $role4]);
-        Permission::create(['name' => 'patient-certificado.edit'])->syncRoles([$role1, $role2, $role4]);
-        Permission::create(['name' => 'paciente.ver-historial'])->syncRoles([$role1, $role2, $role3, $role4, $role5, $role6, $role7]);
+        // Asignaciones (colecciones por nombre)
+        $R['super-admin']->syncPermissions(Permission::where('guard_name', 'web')->get());
+        $R['admin-jefe']->syncPermissions(Permission::whereIn('name', $adminJefe)->get());
+        $R['administrativo']->syncPermissions(Permission::whereIn('name', $administrativo)->get());
+        $R['doctor']->syncPermissions(Permission::whereIn('name', $doctor)->get());
+        $R['psicologa']->syncPermissions(Permission::whereIn('name', $psico)->get());
+        $R['nutricionista']->syncPermissions(Permission::whereIn('name', $nutri)->get());
+        $R['enfermero']->syncPermissions(Permission::whereIn('name', $enfermero)->get());
+        $R['profesorgym']->syncPermissions(Permission::whereIn('name', $profeGym)->get());
 
-        Permission::create(['name' => 'psicologo.index'])->syncRoles([$role1, $role2, $role5]);
+        // Usuarios finales por ahora sin permisos
+        $R['user_policia']->syncPermissions([]);
+        $R['user_civil']->syncPermissions([]);
 
-        Permission::create(['name' => 'enfermero.enfermero-historial'])->syncRoles([$role1, $role2, $role4,$role7]);
-      
+        app()[PermissionRegistrar::class]->forgetCachedPermissions();
     }
 }

@@ -179,7 +179,7 @@ class PatientHistorialCertificado extends Component
 
 
     /** Buscar sugerencias al tipear en el input del modal */
- 
+
 
     public function updatedEditedDisaseName($value)
     {
@@ -315,21 +315,21 @@ class PatientHistorialCertificado extends Component
     /* separador < */
 
     /** Guardar cambios */
-  
 
-public function editDisase()
-{
-    Log::info('Inicio de editDisase', [
-        'pacienteId' => $this->pacienteId,
-        'original_disase_id' => $this->original_disase_id,
-        'disase_id' => $this->disase_id,
-        'editedDisaseName' => $this->editedDisaseName,
-        'certificado_id' => $this->certificado_id ?? null,
-    ]);
 
-    $data = $this->validate();
+    public function editDisase()
+    {
+        Log::info('Inicio de editDisase', [
+            'pacienteId' => $this->pacienteId,
+            'original_disase_id' => $this->original_disase_id,
+            'disase_id' => $this->disase_id,
+            'editedDisaseName' => $this->editedDisaseName,
+            'certificado_id' => $this->certificado_id ?? null,
+        ]);
 
-    $paciente = \App\Models\Paciente::find($this->pacienteId);
+        $data = $this->validate();
+
+        $paciente = \App\Models\Paciente::find($this->pacienteId);
         if (!$paciente) {
             Log::error('Paciente no encontrado al guardar editDisase', ['pacienteId' => $this->pacienteId]);
             return;
@@ -347,60 +347,60 @@ public function editDisase()
             return;
         }
 
-    $dir = "public/archivos_disases/paciente_{$paciente->id}";
+        $dir = "public/archivos_disases/paciente_{$paciente->id}";
 
-    // imagen frente
-    if (isset($data['imagen_frente'])) {
-        if (!str_starts_with($data['imagen_frente']->getMimeType(), 'image/')) {
-            $this->addError('imagen_frente', 'El imagen_frente debe ser una imagen.');
-            return;
+        // imagen frente
+        if (isset($data['imagen_frente'])) {
+            if (!str_starts_with($data['imagen_frente']->getMimeType(), 'image/')) {
+                $this->addError('imagen_frente', 'El imagen_frente debe ser una imagen.');
+                return;
+            }
+
+            $archivoPath = $data['imagen_frente']->storeAs($dir, $data['imagen_frente']->getClientOriginalName());
+
+            $this->optimizarImagen(storage_path('app/' . $archivoPath));
+        } else {
+            $archivoPath = $disase->pivot->imagen_frente;
         }
 
-        $archivoPath = $data['imagen_frente']->storeAs($dir, $data['imagen_frente']->getClientOriginalName());
+        // imagen dorso
+        if (isset($data['imagen_dorso'])) {
+            if (!str_starts_with($data['imagen_dorso']->getMimeType(), 'image/')) {
+                $this->addError('imagen_dorso', 'El imagen_dorso debe ser una imagen.');
+                return;
+            }
 
-        $this->optimizarImagen(storage_path('app/' . $archivoPath));
-    } else {
-        $archivoPath = $disase->pivot->imagen_frente;
-    }
+            $archivoPathDorso = $data['imagen_dorso']->storeAs($dir, $data['imagen_dorso']->getClientOriginalName());
 
-    // imagen dorso
-    if (isset($data['imagen_dorso'])) {
-        if (!str_starts_with($data['imagen_dorso']->getMimeType(), 'image/')) {
-            $this->addError('imagen_dorso', 'El imagen_dorso debe ser una imagen.');
-            return;
+            $this->optimizarImagen(storage_path('app/' . $archivoPathDorso));
+        } else {
+            $archivoPathDorso = $disase->pivot->imagen_dorso;
         }
 
-        $archivoPathDorso = $data['imagen_dorso']->storeAs($dir, $data['imagen_dorso']->getClientOriginalName());
+        $suma_auxiliar = null;
+        if (!empty($data['fecha_inicio_licencia']) && !empty($data['fecha_finalizacion_licencia'])) {
+            $suma_auxiliar = Carbon::parse($data['fecha_inicio_licencia'])
+                ->diffInDays(Carbon::parse($data['fecha_finalizacion_licencia'])) + 1;
+        }
 
-        $this->optimizarImagen(storage_path('app/' . $archivoPathDorso));
-    } else {
-        $archivoPathDorso = $disase->pivot->imagen_dorso;
-    }
+        $pivotData = [
+            'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'],
+            'fecha_inicio_licencia'          => $data['fecha_inicio_licencia'],
+            'detalle_certificado'            => $data['detalle_certificado'],
+            'imagen_frente'                  => $archivoPath,
+            'imagen_dorso'                   => $archivoPathDorso,
+            'fecha_finalizacion_licencia'   => $data['fecha_finalizacion_licencia'],
+            'horas_salud'                   => $data['horas_salud'],
+            'suma_salud'                    => $suma_auxiliar,
+            'suma_auxiliar'                 => $suma_auxiliar,
+            'estado_certificado'            => $data['estado_certificado'] ?? true,
+            'tipolicencia_id'               => $data['tipolicencia_id'],
+        ];
 
-    $suma_auxiliar = null;
-    if (!empty($data['fecha_inicio_licencia']) && !empty($data['fecha_finalizacion_licencia'])) {
-        $suma_auxiliar = Carbon::parse($data['fecha_inicio_licencia'])
-            ->diffInDays(Carbon::parse($data['fecha_finalizacion_licencia'])) + 1;
-    }
+        Log::info('Datos para actualizar pivot', ['pivotData' => $pivotData]);
 
-    $pivotData = [
-        'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'],
-        'fecha_inicio_licencia'          => $data['fecha_inicio_licencia'],
-        'detalle_certificado'            => $data['detalle_certificado'],
-        'imagen_frente'                  => $archivoPath,
-        'imagen_dorso'                   => $archivoPathDorso,
-        'fecha_finalizacion_licencia'   => $data['fecha_finalizacion_licencia'],
-        'horas_salud'                   => $data['horas_salud'],
-        'suma_salud'                    => $suma_auxiliar,
-        'suma_auxiliar'                 => $suma_auxiliar,
-        'estado_certificado'            => $data['estado_certificado'] ?? true,
-        'tipolicencia_id'               => $data['tipolicencia_id'],
-    ];
-
-    Log::info('Datos para actualizar pivot', ['pivotData' => $pivotData]);
-
-    $changed = ($this->disase_id != $this->original_disase_id);
-    Log::info('¿Cambio de disase?', ['changed' => $changed]);
+        $changed = ($this->disase_id != $this->original_disase_id);
+        Log::info('¿Cambio de disase?', ['changed' => $changed]);
 
         try {
             if ($changed) {
@@ -438,39 +438,39 @@ public function editDisase()
             return;
         }
 
-    // cerrar modal / limpiar
-    $this->modal = false;
-    $this->dispatch('toast', type: 'success', message: 'Padecimiento actualizado correctamente');
+        // cerrar modal / limpiar
+        $this->modal = false;
+        $this->dispatch('toast', type: 'success', message: 'Padecimiento actualizado correctamente');
 
-    $this->reset([
-        'name',
-        'editedDisaseName',
-        'fecha_presentacion_certificado',
-        'detalle_certificado',
-        'fecha_inicio_licencia',
-        'fecha_finalizacion_licencia',
-        'horas_salud',
-        'suma_salud',
-        'suma_auxiliar',
-        'tipolicencia_id',
-        'estado_certificado',
-        'imagen_frente',
-        'imagen_dorso',
-        'search',
-        'editPickerOpen',
-        'editOptions',
-        'editIndex',
-        'original_disase_id',
+        $this->reset([
+            'name',
+            'editedDisaseName',
+            'fecha_presentacion_certificado',
+            'detalle_certificado',
+            'fecha_inicio_licencia',
+            'fecha_finalizacion_licencia',
+            'horas_salud',
+            'suma_salud',
+            'suma_auxiliar',
+            'tipolicencia_id',
+            'estado_certificado',
+            'imagen_frente',
+            'imagen_dorso',
+            'search',
+            'editPickerOpen',
+            'editOptions',
+            'editIndex',
+            'original_disase_id',
             // no resetear certificado_id aquí si querés depurarlo, sino descomentá:
-        //'certificado_id'
+            //'certificado_id'
         ]);
 
-    $this->patient_disases = $paciente->disases()->get();
-    $this->resetValidation();
+        $this->patient_disases = $paciente->disases()->get();
+        $this->resetValidation();
 
-    Log::info('Finalización de editDisase');
-    $this->render();
-}
+        Log::info('Finalización de editDisase');
+        $this->render();
+    }
 
 
     /**

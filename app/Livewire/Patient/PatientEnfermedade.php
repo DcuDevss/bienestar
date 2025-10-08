@@ -9,6 +9,7 @@ use Illuminate\Support\Str;
 use App\Models\Tipolicencia;
 use Livewire\WithFileUploads;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\Log;
 
 class PatientEnfermedade extends Component
 {
@@ -21,15 +22,14 @@ class PatientEnfermedade extends Component
     public $disaseId;
 
     public $name, $fecha_enfermedad, $tipo_enfermedad, $fecha_finalizacion, $fecha_atencion, $activo, $tipolicencia_id,
-           $disase_id, $paciente_enfermedades, $patient, $disase, $archivo, $enfermedade;
+        $disase_id, $paciente_enfermedades, $patient, $disase, $archivo, $enfermedade;
 
     public $modal = false;
 
     public $detalle_diagnostico, $fecha_atencion_enfermedad, $fecha_finalizacion_enfermedad, $horas_reposo, $pdf_enfermedad,
-           $imgen_enfermedad, $medicacion, $dosis, $detalle_medicacion, $nro_osef, $tipodelicencia, $enfermedade_id, $art, $motivo_consulta,
-           $estado_enfermedad, $derivacion_psiquiatrica;
+        $imgen_enfermedad, $medicacion, $dosis, $detalle_medicacion, $nro_osef, $tipodelicencia, $enfermedade_id, $art, $motivo_consulta,
+        $estado_enfermedad, $derivacion_psiquiatrica;
 
-    /** 👇 controla visibilidad del dropdown en el modal */
     public $pickerOpen = false;
 
     protected $rules = [
@@ -56,81 +56,91 @@ class PatientEnfermedade extends Component
     {
         $this->patient = $paciente;
         $this->paciente_enfermedades = $paciente->enfermedades;
+
+        Log::info('📋 Componente montado PatientEnfermedade', [
+            'paciente_id' => $paciente->id,
+            'total_enfermedades' => $this->paciente_enfermedades->count(),
+        ]);
     }
 
-    /** Abre/cierra el picker manualmente (focus / click afuera / Esc) */
-    public function openPicker()  { $this->pickerOpen = true; }
-    public function closePicker() { $this->pickerOpen = false; }
+    public function openPicker()
+    {
+        $this->pickerOpen = true;
+    }
+    public function closePicker()
+    {
+        $this->pickerOpen = false;
+    }
 
-    /** Al tipear en el buscador global (primer input o el del modal si lo bindéas a $search) */
     public function updatedSearch($value)
     {
-        $this->enfermedade_id = null;       // required_without
-        $this->name = $value;               // si luego crean nueva
+        Log::debug('🔄 updatedSearch()', ['valor' => $value]);
+        $this->enfermedade_id = null;
+        $this->name = $value;
         $this->pickerOpen = trim($value) !== '';
     }
 
-    /** Al tipear en el input “name” del modal (si bindéas el input a name) */
     public function updatedName($value)
     {
+        Log::debug('🔄 updatedName()', ['valor' => $value]);
         $this->enfermedade_id = null;
-        $this->search = $value;             // render() traerá $enfermedades
+        $this->search = $value;
         $this->pickerOpen = trim($value) !== '';
     }
 
-    /** Elegir desde la lista (cierra el dropdown) */
     public function pickEnfermedad($id)
     {
+        Log::debug('🩻 Enfermedad seleccionada', ['id' => $id]);
         if ($e = Enfermedade::find($id)) {
             $this->enfermedade_id = $e->id;
             $this->name           = $e->name;
             $this->search         = $e->name;
-            $this->pickerOpen     = false;  // 👈 importante
+            $this->pickerOpen     = false;
         }
     }
 
-    /** Abrir modal desde la lista inicial */
     public function addModalDisase($enfermedadeId)
     {
+        Log::info('🩺 Abriendo modal enfermedad', ['enfermedade_id' => $enfermedadeId]);
         $enfermedade = Enfermedade::find($enfermedadeId);
         $this->name = $enfermedade->name;
         $this->enfermedade_id = $enfermedade->id;
-
-        // Si querés que NO se abra la lista automáticamente al abrir el modal:
         $this->search = $enfermedade->name;
-        $this->pickerOpen = false;          // 👈 evita que tape otros inputs
-
+        $this->pickerOpen = false;
         $this->modal = true;
     }
 
     public function addDisase()
     {
-        $data = $this->validate();
+        Log::info('🧾 Iniciando registro de atención médica');
+        try {
+            $data = $this->validate();
+            Log::debug('📋 Datos validados correctamente', $data);
 
-        // 1) Resolver enfermedad
-        if (empty($data['enfermedade_id'])) {
-            $nombre = mb_strtolower(trim($this->name ?? $this->search ?? ''));
-            $enfermedad = Enfermedade::firstOrCreate(
-                ['name' => $nombre],
-                ['slug' => Str::slug($nombre), 'codigo' => '']
-            );
-            $enfermedadeId = $enfermedad->id;
-        } else {
-            $enfermedadeId = $data['enfermedade_id'];
-        }
+            // 1️⃣ Resolver enfermedad
+            if (empty($data['enfermedade_id'])) {
+                $nombre = mb_strtolower(trim($this->name ?? $this->search ?? ''));
+                $enfermedad = Enfermedade::firstOrCreate(
+                    ['name' => $nombre],
+                    ['slug' => Str::slug($nombre), 'codigo' => '']
+                );
+                $enfermedadeId = $enfermedad->id;
+            } else {
+                $enfermedadeId = $data['enfermedade_id'];
+            }
 
-        // 2) Archivos
-        $patientId = $this->patient->id;
-        $dir = "archivos_enfermedades/paciente_{$this->patient->id}";
-        Storage::disk('public')->makeDirectory($dir);
+            // 2️⃣ Archivos
+            $dir = "archivos_enfermedades/paciente_{$this->patient->id}";
+            Storage::disk('public')->makeDirectory($dir);
+            $archivoPathEnfermedad = $data['imgen_enfermedad']?->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName(), 'public');
+            $archivoPathPDF = $data['pdf_enfermedad']?->storeAs($dir, $data['pdf_enfermedad']->getClientOriginalName(), 'public');
 
-        $archivoPathEnfermedad = $data['imgen_enfermedad']?->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName(), 'public');
-        $archivoPathPDF = $data['pdf_enfermedad']?->storeAs($dir, $data['pdf_enfermedad']->getClientOriginalName(), 'public');
+            // 3️⃣ Verificar si ya existe el mismo tipo de enfermedad
+            $yaExiste = $this->patient->enfermedades()
+                ->wherePivot('enfermedade_id', $enfermedadeId)
+                ->exists();
 
-
-        // 3) Guardar pivote
-        $this->patient->enfermedades()->syncWithoutDetaching([
-            $enfermedadeId => [
+            $pivotData = [
                 'fecha_atencion_enfermedad'      => $data['fecha_atencion_enfermedad'] ?? null,
                 'detalle_diagnostico'            => $data['detalle_diagnostico'] ?? null,
                 'imgen_enfermedad'               => $archivoPathEnfermedad,
@@ -146,23 +156,57 @@ class PatientEnfermedade extends Component
                 'nro_osef'                       => $data['nro_osef'] ?? null,
                 'tipodelicencia'                 => $data['tipodelicencia'] ?? null,
                 'art'                            => $data['art'] ?? null,
-            ],
-        ]);
-        session()->flash('success', 'Atencion medica agregada correctamente.');
-        // 4) Reset + cerrar modal + cerrar picker
-        $this->modal = false;
-        $this->pickerOpen = false;
+            ];
 
-        $this->reset([
-            'name','detalle_diagnostico','fecha_atencion_enfermedad','fecha_finalizacion_enfermedad',
-            'horas_reposo','dosis','tipolicencia_id','tipodelicencia','art','motivo_consulta',
-            'derivacion_psiquiatrica','estado_enfermedad','imgen_enfermedad','medicacion',
-            'detalle_medicacion','pdf_enfermedad','nro_osef','search','enfermedade_id'
-        ]);
+            if ($yaExiste) {
+                Log::info('⚠️ El paciente ya tiene esta enfermedad, creando un nuevo registro adicional');
+                $this->patient->enfermedades()->attach($enfermedadeId, $pivotData);
+            } else {
+                Log::info('✅ Nueva enfermedad asociada al paciente');
+                $this->patient->enfermedades()->attach($enfermedadeId, $pivotData);
+            }
 
-        $this->paciente_enfermedades = $this->patient->enfermedades()->get();
-        $this->resetValidation();
+            Log::info('💾 Atención médica registrada correctamente', [
+                'paciente_id' => $this->patient->id,
+                'enfermedade_id' => $enfermedadeId,
+            ]);
 
+            $this->modal = false;
+            $this->pickerOpen = false;
+            $this->reset([
+                'name',
+                'detalle_diagnostico',
+                'fecha_atencion_enfermedad',
+                'fecha_finalizacion_enfermedad',
+                'horas_reposo',
+                'dosis',
+                'tipolicencia_id',
+                'tipodelicencia',
+                'art',
+                'motivo_consulta',
+                'derivacion_psiquiatrica',
+                'estado_enfermedad',
+                'imgen_enfermedad',
+                'medicacion',
+                'detalle_medicacion',
+                'pdf_enfermedad',
+                'nro_osef',
+                'search',
+                'enfermedade_id'
+            ]);
+
+            $this->paciente_enfermedades = $this->patient->enfermedades()->get();
+            $this->resetValidation();
+
+            session()->flash('success', 'Atención médica agregada correctamente.');
+        } catch (\Exception $e) {
+            Log::error('❌ Error al agregar atención médica', [
+                'mensaje' => $e->getMessage(),
+                'linea' => $e->getLine(),
+                'archivo' => $e->getFile(),
+            ]);
+            session()->flash('error', 'Ocurrió un error al agregar la atención médica.');
+        }
     }
 
     public function addNew()
@@ -180,7 +224,6 @@ class PatientEnfermedade extends Component
     public function render()
     {
         $tipolicencias = Tipolicencia::all();
-
         $enfermedades = $this->search
             ? Enfermedade::search($this->search)->take(10)->get()
             : collect();

@@ -145,6 +145,7 @@ class Paciente extends Model
     public function disases()
     {
         return $this->belongsToMany(Disase::class)->withPivot(
+            'id', // <-- esto es fundamental para actualizar por certificado
             'fecha_presentacion_certificado',
             'detalle_certificado',
             'fecha_inicio_licencia',
@@ -264,4 +265,12 @@ class Paciente extends Model
         return $this->hasMany(PdfPsiquiatra::class);
     }
 
+    /*Agregado*/
+    public function disasePivotById($certificadoId)
+    {
+        // Devuelve el pivot correspondiente al certificado
+        return $this->disases->first(function ($disase) use ($certificadoId) {
+            return $disase->pivot->id == $certificadoId;
+        })?->pivot;
+    }
 }

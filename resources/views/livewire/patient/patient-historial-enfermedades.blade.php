@@ -1,18 +1,13 @@
-<div class="">
+<div class="livewire-root-container">
     <section class="w-full max-w-7xl mx-auto bg-gray-100 text-gray-600 h-screen px-4 py-1">
-        <!-- REGISTROS DATA-TABLES -->
-        <div class="w-full  bg-white p-2">
-            <!-- HEADER -->
-            <div class=" bg-white px-2 py-1 flex justify-between w-full">
+        <div class="w-full bg-white p-2">
+            <div class="bg-white px-2 py-1 flex justify-between w-full">
                 <div class="flex gap-x-2">
-                    <!-- TITULO -->
                     <h2 class="font-bold text-[#6366f1] text-2xl">{{ __('Historial de enfermedades:') }}</h2>
-                    <!-- BUSCADOR -->
                     <input
                         class="rounded h-[34px] bg-[#edf2f7] border-none focus:ring-2 focus:ring-[#6366f1] focus:border-transparent"
                         type="text" placeholder="{{ __('Buscar...') }}" wire:model.live="search" />
                 </div>
-                <!-- BOTONES OSEF & LA CAJA -->
                 <div class="float-right mr-2 flex gap-x-2">
                     <a href="https://prescriptorweb.ddaval.com.ar/" target="_blank">
                         <button class="bg-blue-600 rounded-md py-1 px-3">
@@ -24,12 +19,11 @@
                     </a>
                 </div>
             </div>
-            
-            <!-- CARD -->
+
             <div class="flex gap-x-4 h-full">
                 @if ($enfermedades->isNotEmpty())
                     @foreach ($enfermedades as $enfermedad)
-                        <ul class="max-w-[28%]  h-auto shadow-2xl rounded-md px-5 py-5 mx-auto text-[14px] relative">
+                        <ul class="max-w-[28%] h-auto shadow-2xl rounded-md px-5 py-5 mx-auto text-[14px] relative">
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">Nombre:</span>
                                     {{ $enfermedad->name }}</p>
@@ -44,18 +38,12 @@
                                     {{ $enfermedad->pivot->motivo_consulta}} </p>
                             </li>
 
-
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de atención:</span>
                                     {{ \Carbon\Carbon::parse($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s') }}
                                 </p>
                             </li>
-
-{{--                             <li class="mb-0">
-                                <p><span class="pr-1 font-extrabold text-black">fecha de finalizacion:</span>
-                                    {{ $enfermedad->pivot->fecha_finalizacion_enfermedad }}</p>
-                            </li> --}}
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">horas de reposo:</span>
                                     {{ $enfermedad->pivot->horas_reposo }}</p>
@@ -65,16 +53,6 @@
                                 <p><span class="pr-1 font-extrabold text-black">art:</span>
                                     {{ $enfermedad->pivot->art }}</p>
                             </li>
-
-{{--                                <td class="mb-0">
-                                    @if ($enfermedad->pivot->estado_enfermedad == 1)
-                                    <p><span class="pr-1 font-extrabold text-black"></span>
-                                        activa</p>
-                                    @else
-                                    <p><span class="pr-1 font-extrabold text-black"></span>
-                                        desactiva</p>
-                                    @endif
-                                </td> --}}
 
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">medicacion:</span>
@@ -90,7 +68,7 @@
                             </li>
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">derivacion psiquiatrica:</span>
-                                {{ $enfermedad->pivot->derivacion_psiquiatrica }}</p>
+                                    {{ $enfermedad->pivot->derivacion_psiquiatrica }}</p>
                             </li>
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">detalle de la enfermedad:</span></p>
@@ -100,74 +78,51 @@
                                 <p><span class="pr-1 font-extrabold text-black">detalle de la medicacion:</span></p>
                                 <div class="h-[40px] overflow-auto">{{ $enfermedad->pivot->detalle_medicacion }}</div>
                             </li>
-                            <!-- IMAGEN -->
-                                <li class="text-center py-6 font-bold">
-                                    <p><span class="pr-1 font-extrabold text-black">Archivo adjunto:</span></p>
-                                    <div class="flex justify-center gap-x-1">
-                                        <!-- IMG -->
-                                        <div>
-                                            @if ($enfermedad->pivot->imgen_enfermedad)
-                                                <img src="{{ Storage::url($enfermedad->pivot->imgen_enfermedad) }}" alt="Imagen"
-                                                    id="image" onclick="showFullImage(this)" class="w-24 h-24 text-center">
-                                                <!-- Plantilla para la imagen ampliada -->
-                                                <div id="full-image-overlay" class="full-image-overlay">
-                                                    <div class="full-image-container">
-                                                        <img id="full-image" src="" alt="Imagen Ampliada">
-                                                        <button id="close-button" class="action-button"
-                                                            onclick="closeFullImage()">Cerrar</button>
-                                                    </div>
+                            <li class="text-center py-6 font-bold">
+                                <p><span class="pr-1 font-extrabold text-black">Archivo adjunto:</span></p>
+                                <div class="flex justify-center gap-x-1">
+                                    <div>
+                                        @if ($enfermedad->pivot->imgen_enfermedad)
+                                            <img src="{{ Storage::url($enfermedad->pivot->imgen_enfermedad) }}" alt="Imagen"
+                                                id="image" onclick="showFullImage(this)" class="w-24 h-24 text-center">
+                                            <div id="full-image-overlay" class="full-image-overlay">
+                                                <div class="full-image-container">
+                                                    <img id="full-image" src="" alt="Imagen Ampliada">
+                                                    <button id="close-button" class="action-button"
+                                                        onclick="closeFullImage()">Cerrar</button>
                                                 </div>
+                                            </div>
+                                        @else
+                                            Sin Archivo
+                                        @endif
+                                    </div>
+                                    <div class="text-center font-bold">
+                                        <div class="flex flex-col items-center">
+                                            @if ($enfermedad->pivot->pdf_enfermedad)
+                                            <a href="{{ Storage::url($enfermedad->pivot->pdf_enfermedad) }}" target="_blank">
+                                                <img src="{{ asset('assets/pdf.png') }}" alt="PDF Icon" class="w-12 h-16">
+                                            </a>
+                                            <span class="text-sm text-center px-2 whitespace-normal max-w-[160px] truncate">{{ pathinfo($enfermedad->pivot->pdf_enfermedad, PATHINFO_FILENAME) }}</span>
                                             @else
-                                                Sin Archivo
+                                                Sin PDF
                                             @endif
                                         </div>
-                                        <!-- PDF -->
-                                        <div class="text-center font-bold">
-                                            <div class="flex flex-col items-center">
-                                                <a href="{{ Storage::url($enfermedad->pivot->pdf_enfermedad) }}" target="_blank">
-                                                    <img src="{{ asset('assets/pdf.png') }}" alt="PDF Icon" class="w-12 h-16">
-                                                </a>
-                                                <span class="text-sm text-center px-2 whitespace-normal max-w-[160px] truncate">{{ pathinfo($enfermedad->pivot->pdf_enfermedad, PATHINFO_FILENAME) }}</span>
-
-                                            </div>
-                                        </div>
                                     </div>
-                                </li>
-
-
+                                </div>
+                            </li>
 
                             <div class="botonEditar pt-2 flex justify-center w-full absolute bottom-2 left-0 right-0">
-                                <button wire:click="editModalDisase({{ $enfermedad->id }})"
-                                    class=" bg-[#667eea] text-white hover:white hover:bg-[#5a67d8] px-2 py-1 text-[13px] font-normal rounded-md cursor-pointer">
+                                <button 
+                                    wire:click="editModalDisase({{ $paciente->id }}, {{ $enfermedad->id }}, {{ $enfermedad->pivot->id }})" 
+                                    class="btn btn-sm btn-info bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded">
                                     Editar
                                 </button>
-
-                               {{-- <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade_paciente_id' => $enfermedad->pivot->id]) }}"
-                                    class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
-                                    Control Historial
-                                </a> --}}
-
-
-                                 {{--  <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade'=> $enfermedad->id]) }}"
-                                    class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
-                                    Control Historial
-                                 </a>--}}
-
-
-
-
-                                {{--  <td class="py-2 px-4 border-b">
-                                <a href="{{ route('patient.patient-historial', ['paciente' => $tratamiento->paciente_id, 'tratamiento' => $tratamiento->id]) }}"
-                                    class="text-blue-500 hover:underline">Crear</a>
-                            </td> --}}
-
                             </div>
-
                         </ul>
                     @endforeach
                 @else
                     <ul>
-                        <li class="pl-2" colspan="8">No hay enfermedades registradas para este paciente.</td>
+                        <li class="pl-2" colspan="8">No hay enfermedades registradas para este paciente.</li>
                     </ul>
                 @endif
             </div>
@@ -180,7 +135,7 @@
         </div>
 
     </section>
-    <!-- MODAL -->
+
     <x-dialog-modal wire:model="modal">
 
         <x-slot name="title">
@@ -212,7 +167,7 @@
 
                 @if($namePickerOpen && trim($nameSearch) !== '')
                     <div class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto
-                                bg-white border border-slate-200 rounded-md shadow">
+                                 bg-white border border-slate-200 rounded-md shadow">
                     @forelse($nameOptions as $i => $opt)
                         <button type="button"
                                 wire:click="pickEnfermedad({{ $opt['id'] }})"
@@ -256,16 +211,6 @@
                         placeholder="{{ __('fecha atencion') }}" wire:model="fecha_atencion_enfermedad" />
                     <x-input-error for="fecha_atencion_enfermedad" />
                 </div>
-{{--
-                <div>
-                    <label for="fecha_finalizacion_enfermedad"
-                        class="block text-sm font-medium text-gray-700">{{ __('finalización de enfermedad') }}</label>
-                    <input id="fecha_finalizacion_enfermedad" class="w-full rounded cursor-pointer"
-                        type="datetime-local" placeholder="{{ __('fecha finalización') }}"
-                        wire:model="fecha_finalizacion_enfermedad" />
-                    <x-input-error for="fecha_finalizacion_enfermedad" />
-                </div> --}}
-
                 <div>
                     <label for="horas_reposo"
                         class="block text-sm font-medium text-gray-700">{{ __('Horas de reposo') }}</label>
@@ -295,7 +240,7 @@
                     <label for="pdf_enfermedad"
                         class="block text-sm font-medium text-gray-700">{{ __('pdf') }}</label>
                     <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
-                        wire:model="pdf_enfermedad" accept="image/*" />
+                        wire:model="pdf_enfermedad" accept="application/pdf" />
                     <x-input-error for="pdf_enfermedad" />
                 </div>
             </div>
@@ -357,22 +302,22 @@
 
         </x-slot>
     </x-dialog-modal>
-        <div x-data="{ open:false, msg:'', t:null }"
-            x-on:toast.window="
-                clearTimeout(t);
-                msg = $event.detail?.message || 'Acción realizada';
-                open = true;
-                t = setTimeout(() => open = false, 2500);
-            "
-            x-show="open"
-            x-transition
-            class="fixed top-4 right-4 z-50 rounded-md bg-emerald-600 text-white px-4 py-2 shadow">
-            <span x-text="msg"></span>
-        </div>
-    <!-- LIGHTBOX -->
-    <script>
-        /funcionalidad para ampliar la imagen al darle click y cerrar/
+    
+    <div x-data="{ open:false, msg:'', t:null }"
+        x-on:toast.window="
+            clearTimeout(t);
+            msg = $event.detail?.message || 'Acción realizada';
+            open = true;
+            t = setTimeout(() => open = false, 2500);
+        "
+        x-show="open"
+        x-transition
+        class="fixed top-4 right-4 z-50 rounded-md bg-emerald-600 text-white px-4 py-2 shadow">
+        <span x-text="msg"></span>
+    </div>
 
+    <script>
+        // Funcionalidad para ampliar la imagen al darle click y cerrar
         function showFullImage(image) {
             var fullImageOverlay = document.getElementById('full-image-overlay');
             var fullImage = document.getElementById('full-image');

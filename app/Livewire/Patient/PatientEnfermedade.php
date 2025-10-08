@@ -19,39 +19,51 @@ class PatientEnfermedade extends Component
     public $perPage = 5;
     public $sortAsc = true;
     public $sortField = 'name';
-    public $disaseId;
 
-    public $name, $fecha_enfermedad, $tipo_enfermedad, $fecha_finalizacion, $fecha_atencion, $activo, $tipolicencia_id,
-        $disase_id, $paciente_enfermedades, $patient, $disase, $archivo, $enfermedade;
+    public $name, $fecha_enfermedad, $tipo_enfermedad, $fecha_finalizacion, $fecha_atencion, $activo;
+    public $tipolicencia_id, $disase_id, $paciente_enfermedades, $patient, $disase, $archivo, $enfermedade;
 
     public $modal = false;
 
-    public $detalle_diagnostico, $fecha_atencion_enfermedad, $fecha_finalizacion_enfermedad, $horas_reposo, $pdf_enfermedad,
-        $imgen_enfermedad, $medicacion, $dosis, $detalle_medicacion, $nro_osef, $tipodelicencia, $enfermedade_id, $art, $motivo_consulta,
-        $estado_enfermedad, $derivacion_psiquiatrica;
+    // Propiedades del formulario de atención/historial (Pivot Data)
+    public $detalle_diagnostico, $fecha_atencion_enfermedad, $fecha_finalizacion_enfermedad, $horas_reposo;
+
+    // Propiedades para la subida de archivos (serán objetos TemporaryUploadedFile)
+    public $pdf_enfermedad;
+    public $imgen_enfermedad;
+
+    public $medicacion, $dosis, $detalle_medicacion, $nro_osef, $tipodelicencia, $enfermedade_id, $art, $motivo_consulta;
+    public $estado_enfermedad, $derivacion_psiquiatrica;
 
     public $pickerOpen = false;
 
     protected $rules = [
-        'enfermedade_id'                => 'nullable|exists:enfermedades,id',
-        'name'                          => 'required_without:enfermedade_id|string|min:2',
-        'detalle_diagnostico'           => 'nullable',
-        'fecha_atencion_enfermedad'     => 'nullable|date',
+        'enfermedade_id' => 'nullable|exists:enfermedades,id',
+        'name' => 'required_without:enfermedade_id|string|min:2',
+        'detalle_diagnostico' => 'nullable|string',
+        'fecha_atencion_enfermedad' => 'nullable|date',
+        // Validar que la fecha finalización sea igual o posterior a la de atención
         'fecha_finalizacion_enfermedad' => 'nullable|date|after_or_equal:fecha_atencion_enfermedad',
-        'horas_reposo'                  => 'nullable|integer',
-        'pdf_enfermedad'                => 'nullable|file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
-        'imgen_enfermedad'              => 'nullable|file|mimes:png,jpg,jpeg,gif|max:8192',
-        'medicacion'                    => 'nullable',
-        'dosis'                         => 'nullable',
-        'motivo_consulta'               => 'nullable',
-        'derivacion_psiquiatrica'       => 'nullable',
-        'estado_enfermedad'             => 'nullable|boolean',
-        'art'                           => 'nullable',
-        'detalle_medicacion'            => 'nullable',
-        'nro_osef'                      => 'nullable',
-        'tipodelicencia'                => 'nullable',
+        'horas_reposo' => 'nullable|integer|min:0',
+
+        // Reglas para la subida de archivos
+        'pdf_enfermedad' => 'nullable|file|mimes:pdf|max:10240', // 10MB
+        'imgen_enfermedad' => 'nullable|file|mimes:png,jpg,jpeg,gif|max:8192', // 8MB
+
+        'medicacion' => 'nullable|string',
+        'dosis' => 'nullable|string',
+        'motivo_consulta' => 'nullable|string',
+        'derivacion_psiquiatrica' => 'nullable|boolean', // Asumiendo que es un checkbox/boolean
+        'estado_enfermedad' => 'nullable|boolean', // Asumiendo que es un checkbox/boolean
+        'art' => 'nullable|string',
+        'detalle_medicacion' => 'nullable|string',
+        'nro_osef' => 'nullable|string',
+        'tipodelicencia' => 'nullable|string',
     ];
 
+    /**
+     * @param Paciente $paciente Inyección del modelo Paciente
+     */
     public function mount(Paciente $paciente)
     {
         $this->patient = $paciente;
@@ -61,12 +73,17 @@ class PatientEnfermedade extends Component
             'paciente_id' => $paciente->id,
             'total_enfermedades' => $this->paciente_enfermedades->count(),
         ]);
+
+        // Inicializar booleanos a 0 para consistencia si no hay valor
+        $this->estado_enfermedad = 0;
+        $this->derivacion_psiquiatrica = 0;
     }
 
     public function openPicker()
     {
         $this->pickerOpen = true;
     }
+
     public function closePicker()
     {
         $this->pickerOpen = false;
@@ -103,6 +120,30 @@ class PatientEnfermedade extends Component
     {
         Log::info('🩺 Abriendo modal enfermedad', ['enfermedade_id' => $enfermedadeId]);
         $enfermedade = Enfermedade::find($enfermedadeId);
+        if (!$enfermedade) {
+            $this->dispatch('toast', type: 'error', message: 'Enfermedad no encontrada.');
+            return;
+        }
+
+        // Resetear solo las propiedades del formulario antes de abrir el modal
+        $this->reset([
+            'detalle_diagnostico',
+            'fecha_atencion_enfermedad',
+            'fecha_finalizacion_enfermedad',
+            'horas_reposo',
+            'pdf_enfermedad',
+            'imgen_enfermedad',
+            'medicacion',
+            'dosis',
+            'detalle_medicacion',
+            'nro_osef',
+            'tipodelicencia',
+            'art',
+            'motivo_consulta',
+            'estado_enfermedad',
+            'derivacion_psiquiatrica'
+        ]);
+
         $this->name = $enfermedade->name;
         $this->enfermedade_id = $enfermedade->id;
         $this->search = $enfermedade->name;
@@ -117,54 +158,62 @@ class PatientEnfermedade extends Component
             $data = $this->validate();
             Log::debug('📋 Datos validados correctamente', $data);
 
-            // 1️⃣ Resolver enfermedad
-            if (empty($data['enfermedade_id'])) {
+            // 1️⃣ Resolver enfermedad (Crear si no existe o usar ID existente)
+            if (empty($this->enfermedade_id)) {
                 $nombre = mb_strtolower(trim($this->name ?? $this->search ?? ''));
+                if (empty($nombre)) {
+                    throw new \Exception("Debe ingresar el nombre de la enfermedad o seleccionarlo.");
+                }
+
                 $enfermedad = Enfermedade::firstOrCreate(
                     ['name' => $nombre],
                     ['slug' => Str::slug($nombre), 'codigo' => '']
                 );
                 $enfermedadeId = $enfermedad->id;
             } else {
-                $enfermedadeId = $data['enfermedade_id'];
+                $enfermedadeId = $this->enfermedade_id;
             }
 
-            // 2️⃣ Archivos
+            // 2️⃣ Archivos (Guardar con nombre único)
             $dir = "archivos_enfermedades/paciente_{$this->patient->id}";
             Storage::disk('public')->makeDirectory($dir);
-            $archivoPathEnfermedad = $data['imgen_enfermedad']?->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName(), 'public');
-            $archivoPathPDF = $data['pdf_enfermedad']?->storeAs($dir, $data['pdf_enfermedad']->getClientOriginalName(), 'public');
 
-            // 3️⃣ Verificar si ya existe el mismo tipo de enfermedad
-            $yaExiste = $this->patient->enfermedades()
-                ->wherePivot('enfermedade_id', $enfermedadeId)
-                ->exists();
+            $archivoPathEnfermedad = null;
+            if (isset($data['imgen_enfermedad']) && $data['imgen_enfermedad'] instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                $extension = $data['imgen_enfermedad']->getClientOriginalExtension();
+                $nombreArchivoUnico = Str::random(20) . '.' . $extension;
+                $archivoPathEnfermedad = $data['imgen_enfermedad']->storeAs($dir, $nombreArchivoUnico, 'public');
+            }
 
+            $archivoPathPDF = null;
+            if (isset($data['pdf_enfermedad']) && $data['pdf_enfermedad'] instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
+                $extensionDorso = $data['pdf_enfermedad']->getClientOriginalExtension();
+                $nombreArchivoUnicoDorso = Str::random(20) . '.' . $extensionDorso;
+                $archivoPathPDF = $data['pdf_enfermedad']->storeAs($dir, $nombreArchivoUnicoDorso, 'public');
+            }
+
+            // 3️⃣ Datos del registro (Pivot Data)
             $pivotData = [
-                'fecha_atencion_enfermedad'      => $data['fecha_atencion_enfermedad'] ?? null,
-                'detalle_diagnostico'            => $data['detalle_diagnostico'] ?? null,
-                'imgen_enfermedad'               => $archivoPathEnfermedad,
-                'pdf_enfermedad'                 => $archivoPathPDF,
-                'fecha_finalizacion_enfermedad'  => $data['fecha_finalizacion_enfermedad'] ?? null,
-                'horas_reposo'                   => $data['horas_reposo'] ?? null,
-                'medicacion'                     => $data['medicacion'] ?? null,
-                'dosis'                          => $data['dosis'] ?? null,
-                'motivo_consulta'                => $data['motivo_consulta'] ?? null,
-                'derivacion_psiquiatrica'        => $data['derivacion_psiquiatrica'] ?? null,
-                'estado_enfermedad'              => $data['estado_enfermedad'] ?? 0,
-                'detalle_medicacion'             => $data['detalle_medicacion'] ?? null,
-                'nro_osef'                       => $data['nro_osef'] ?? null,
-                'tipodelicencia'                 => $data['tipodelicencia'] ?? null,
-                'art'                            => $data['art'] ?? null,
+                'fecha_atencion_enfermedad' => $data['fecha_atencion_enfermedad'] ?? null,
+                'detalle_diagnostico' => $data['detalle_diagnostico'] ?? null,
+                'imgen_enfermedad' => $archivoPathEnfermedad, // Usando ruta con nombre único
+                'pdf_enfermedad' => $archivoPathPDF, // Usando ruta con nombre único
+                'fecha_finalizacion_enfermedad' => $data['fecha_finalizacion_enfermedad'] ?? null,
+                'horas_reposo' => $data['horas_reposo'] ?? null,
+                'medicacion' => $data['medicacion'] ?? null,
+                'dosis' => $data['dosis'] ?? null,
+                'motivo_consulta' => $data['motivo_consulta'] ?? null,
+                'derivacion_psiquiatrica' => $data['derivacion_psiquiatrica'] ?? 0,
+                'estado_enfermedad' => $data['estado_enfermedad'] ?? 0,
+                'detalle_medicacion' => $data['detalle_medicacion'] ?? null,
+                'nro_osef' => $data['nro_osef'] ?? null,
+                'tipodelicencia' => $data['tipodelicencia'] ?? null,
+                'art' => $data['art'] ?? null,
             ];
 
-            if ($yaExiste) {
-                Log::info('⚠️ El paciente ya tiene esta enfermedad, creando un nuevo registro adicional');
-                $this->patient->enfermedades()->attach($enfermedadeId, $pivotData);
-            } else {
-                Log::info('✅ Nueva enfermedad asociada al paciente');
-                $this->patient->enfermedades()->attach($enfermedadeId, $pivotData);
-            }
+            // 4️⃣ Adjuntar la enfermedad (creando un nuevo registro de historial)
+            // Ya no necesitas verificar si ya existe. Cada llamada attach es un nuevo registro/atención.
+            $this->patient->enfermedades()->attach($enfermedadeId, $pivotData);
 
             Log::info('💾 Atención médica registrada correctamente', [
                 'paciente_id' => $this->patient->id,
@@ -173,6 +222,8 @@ class PatientEnfermedade extends Component
 
             $this->modal = false;
             $this->pickerOpen = false;
+
+            // 5️⃣ Resetear todas las propiedades del formulario
             $this->reset([
                 'name',
                 'detalle_diagnostico',
@@ -195,27 +246,39 @@ class PatientEnfermedade extends Component
                 'enfermedade_id'
             ]);
 
+            // Actualizar la lista de enfermedades del paciente para refrescar la vista
             $this->paciente_enfermedades = $this->patient->enfermedades()->get();
             $this->resetValidation();
 
             session()->flash('success', 'Atención médica agregada correctamente.');
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            Log::warning('⚠️ Error de validación al agregar atención médica', $e->errors());
+            throw $e; // Re-lanza la excepción para que Livewire la maneje
         } catch (\Exception $e) {
             Log::error('❌ Error al agregar atención médica', [
                 'mensaje' => $e->getMessage(),
                 'linea' => $e->getLine(),
                 'archivo' => $e->getFile(),
             ]);
-            session()->flash('error', 'Ocurrió un error al agregar la atención médica.');
+            session()->flash('error', 'Ocurrió un error al agregar la atención médica: ' . $e->getMessage());
         }
     }
 
     public function addNew()
     {
-        $newDisase = Enfermedade::create([
-            'name' => mb_strtolower($this->search),
-            'slug' => Str::slug($this->search),
-            'codigo' => '',
-        ]);
+        Log::info('➕ Creando nueva enfermedad base');
+        $nombre = mb_strtolower(trim($this->search));
+
+        if (empty($nombre)) {
+            session()->flash('error', 'Debe ingresar un nombre para la nueva enfermedad.');
+            return;
+        }
+
+        $newDisase = Enfermedade::firstOrCreate(
+            ['name' => $nombre],
+            ['slug' => Str::slug($nombre), 'codigo' => '']
+        );
+
         $this->enfermedade = $newDisase;
         $this->name = $newDisase->name;
         $this->addModalDisase($newDisase->id);
@@ -224,12 +287,17 @@ class PatientEnfermedade extends Component
     public function render()
     {
         $tipolicencias = Tipolicencia::all();
-        $enfermedades = $this->search
-            ? Enfermedade::search($this->search)->take(10)->get()
+
+        // Asegurar que la búsqueda se haga solo si hay texto y no si ya se seleccionó un ID
+        $enfermedades = ($this->search && !$this->enfermedade_id)
+            ? Enfermedade::where('name', 'like', '%' . $this->search . '%')
+            ->orWhere('codigo', 'like', '%' . $this->search . '%')
+            ->take(10)
+            ->get()
             : collect();
 
         return view('livewire.patient.patient-enfermedade', [
-            'enfermedades'  => $enfermedades,
+            'enfermedades' => $enfermedades,
             'tipolicencias' => $tipolicencias
         ]);
     }

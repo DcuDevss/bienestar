@@ -200,43 +200,8 @@ class PatientCertificado extends Component
         $this->patient_disases = $this->patient->disases()->get();
     }
 
-    /**
-     * Optimiza la imagen reduciendo su peso y guardándola en disco
-     */
-    /* private function optimizarImagen($file, $dir)
-    {
-        if (!$file) return null;
 
-        $extension = strtolower($file->getClientOriginalExtension());
-        $filename  = uniqid() . '_' . $file->getClientOriginalName();
-        $path      = storage_path("app/public/{$dir}/{$filename}");
-
-        switch ($extension) {
-            case 'png':
-                $image = imagecreatefrompng($file->getRealPath());
-                imagejpeg($image, $path, 60);
-                imagedestroy($image);
-                $filename = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
-                return "{$dir}/{$filename}";
-
-            case 'jpg':
-            case 'jpeg':
-                $image = imagecreatefromjpeg($file->getRealPath());
-                imagejpeg($image, $path, 60);
-                imagedestroy($image);
-                return "{$dir}/{$filename}";
-
-            case 'webp':
-                $image = imagecreatefromwebp($file->getRealPath());
-                imagejpeg($image, $path, 60);
-                imagedestroy($image);
-                $filename = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
-                return "{$dir}/{$filename}";
-
-            default:
-                return $file->storeAs($dir, $filename, 'public');
-        }
-    }
+    /* separador */
 
     public function addNew()
     {

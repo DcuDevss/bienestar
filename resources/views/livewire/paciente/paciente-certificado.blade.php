@@ -136,15 +136,24 @@
         </x-slot>
 
         <x-slot name="footer">
-            <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
-                wire:click="$set('modal',false)">
-                {{ __('cancelar') }}
-            </button>
-            <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3"
-                wire:click="addEnfermedade">
-                {{ __('agregar enfermedad') }}
-            </button>
-        </x-slot>
+    <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
+        wire:click="$set('modal', false)">
+        {{ __('cancelar') }}
+    </button>
+
+    @if ($certificado_id)
+        <button class="bg-yellow-500 text-white hover:bg-yellow-400 px-4 py-2 rounded mx-3"
+            wire:click="updateEnfermedade">
+            {{ __('actualizar enfermedad') }}
+        </button>
+    @else
+        <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3"
+            wire:click="addEnfermedade">
+            {{ __('agregar enfermedad') }}
+        </button>
+    @endif
+</x-slot>
+
     </x-dialog-modal>
 
 </div>

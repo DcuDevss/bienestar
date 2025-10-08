@@ -11,7 +11,6 @@ use Livewire\WithFileUploads;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Storage;
 
-
 class PatientCertificado extends Component
 {
     use WithFileUploads;
@@ -52,6 +51,7 @@ class PatientCertificado extends Component
         $this->patient_disases = $paciente->disases;
     }
 
+    // Métodos para control picker (buscador)
     public function openPicker()
     {
         $this->pickerOpen = true;
@@ -75,6 +75,7 @@ class PatientCertificado extends Component
         $this->pickerOpen = trim($value) !== '';
     }
 
+    // Calcular días licencia automáticamente
     public function updatedFechaInicioLicencia()
     {
         $this->calcularDiasLicencia();
@@ -126,87 +127,36 @@ class PatientCertificado extends Component
         }
     }
 
-    /* public function addDisase()
-    {
-        $data = $this->validate();
-
-        // Crear o reutilizar enfermedad
-        $disaseId = $data['disase_id'] ?? Disase::firstOrCreate(
-            ['name' => mb_strtolower(trim($this->name))],
-            ['slug' => Str::slug($this->name), 'symptoms' => '']
-        )->id;
-
-        // Guardar archivos
-        $dir = "archivos_disases/paciente_{$this->patient->id}"; // sin "public/" al inicio
-        Storage::disk('public')->makeDirectory($dir);
-
-        $pathFrente = $data['imagen_frente']
-            ?->storeAs($dir, $data['imagen_frente']->getClientOriginalName(), 'public');
-
-        $pathDorso  = $data['imagen_dorso']
-            ?->storeAs($dir, $data['imagen_dorso']->getClientOriginalName(), 'public');
-
-        // Calcular días (de nuevo por si no se actualizó el frontend)
-        $suma_auxiliar = null;
-        if ($data['fecha_inicio_licencia'] && $data['fecha_finalizacion_licencia']) {
-            $suma_auxiliar = Carbon::parse($data['fecha_inicio_licencia'])
-                ->diffInDays(Carbon::parse($data['fecha_finalizacion_licencia'])) + 1;
-        }
-
-        // Guardar en pivot
-        $this->patient->disases()->attach($disaseId, [
-            'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'],
-            'fecha_inicio_licencia'          => $data['fecha_inicio_licencia'],
-            'fecha_finalizacion_licencia'    => $data['fecha_finalizacion_licencia'],
-            'detalle_certificado'            => $data['detalle_certificado'],
-            'imagen_frente'                  => $pathFrente,
-            'imagen_dorso'                   => $pathDorso,
-            'horas_salud'                    => $data['horas_salud'],
-            'suma_salud'                     => $data['suma_salud'],
-            'suma_auxiliar'                  => $suma_auxiliar,
-            'estado_certificado'             => $data['estado_certificado'] ?? true,
-            'tipolicencia_id'                => $data['tipolicencia_id'],
-        ]);
-
-        $this->reset([
-            'name','fecha_presentacion_certificado','detalle_certificado','fecha_inicio_licencia',
-            'fecha_finalizacion_licencia','horas_salud','suma_salud','suma_auxiliar','tipolicencia_id',
-            'tipodelicencia','estado_certificado','imagen_frente','imagen_dorso','search','disase_id'
-        ]);
-
-        $this->modal = false;
-        $this->pickerOpen = false;
-        $this->resetValidation();
-        $this->patient_disases = $this->patient->disases()->get();
-    } */
-
-        /* separador */
+    // Función para agregar un nuevo certificado con unique_key para evitar pisadas
     public function addDisase()
     {
         $data = $this->validate();
 
-        // Crear o reutilizar enfermedad
+        // Crear o reutilizar enfermedad (sin cambiar nombre)
         $disaseId = $data['disase_id'] ?? Disase::firstOrCreate(
             ['name' => mb_strtolower(trim($this->name))],
             ['slug' => Str::slug($this->name), 'symptoms' => '']
         )->id;
 
-        // Carpeta destinoa
+        // Carpeta destino para archivos
         $dir = "archivos_disases/paciente_{$this->patient->id}";
         Storage::disk('public')->makeDirectory($dir);
 
-        // Optimizar y guardar imágenes
+        // Guardar imágenes optimizadas
         $pathFrente = $this->optimizarImagen($data['imagen_frente'], $dir);
         $pathDorso  = $this->optimizarImagen($data['imagen_dorso'], $dir);
 
-        // Calcular días
+        // Calcular días licencia (reconfirmar)
         $suma_auxiliar = null;
         if ($data['fecha_inicio_licencia'] && $data['fecha_finalizacion_licencia']) {
             $suma_auxiliar = Carbon::parse($data['fecha_inicio_licencia'])
                 ->diffInDays(Carbon::parse($data['fecha_finalizacion_licencia'])) + 1;
         }
 
-        // Guardar en pivot
+        // Crear clave única con fecha y hora actual para evitar pisadas
+        $uniqueKey = now()->format('YmdHis');
+
+        // Guardar en pivot con unique_key
         $this->patient->disases()->attach($disaseId, [
             'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'],
             'fecha_inicio_licencia'          => $data['fecha_inicio_licencia'],
@@ -219,8 +169,10 @@ class PatientCertificado extends Component
             'suma_auxiliar'                  => $suma_auxiliar,
             'estado_certificado'             => $data['estado_certificado'] ?? true,
             'tipolicencia_id'                => $data['tipolicencia_id'],
+            /* 'unique_key'                    => $uniqueKey, */
         ]);
 
+        // Resetear campos
         $this->reset([
             'name',
             'fecha_presentacion_certificado',
@@ -238,12 +190,13 @@ class PatientCertificado extends Component
             'search',
             'disase_id'
         ]);
-        session()->flash('success', 'Certificado agegado correctamente.');
+        session()->flash('success', 'Certificado agregado correctamente.');
         $this->modal = false;
         $this->pickerOpen = false;
         $this->resetValidation();
-        $this->patient_disases = $this->patient->disases()->get();
 
+        // Recargar relaciones para mostrar los certificados actualizados
+        $this->patient_disases = $this->patient->disases()->get();
     }
 
     /**
@@ -257,88 +210,32 @@ class PatientCertificado extends Component
         $filename  = uniqid() . '_' . $file->getClientOriginalName();
         $path      = storage_path("app/public/{$dir}/{$filename}");
 
-        // Crear recurso según extensión
         switch ($extension) {
             case 'png':
                 $image = imagecreatefrompng($file->getRealPath());
-                // convertir a JPEG con compresión
                 imagejpeg($image, $path, 60);
                 imagedestroy($image);
                 $filename = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
                 return "{$dir}/{$filename}";
+
             case 'jpg':
             case 'jpeg':
                 $image = imagecreatefromjpeg($file->getRealPath());
                 imagejpeg($image, $path, 60);
                 imagedestroy($image);
                 return "{$dir}/{$filename}";
+
             case 'webp':
                 $image = imagecreatefromwebp($file->getRealPath());
                 imagejpeg($image, $path, 60);
                 imagedestroy($image);
                 $filename = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
                 return "{$dir}/{$filename}";
+
             default:
-                // Si no lo reconozco, lo guardo normal
                 return $file->storeAs($dir, $filename, 'public');
         }
     }
-
-    /*Nuevo Metodo*//* 
-    private function optimizarImagen($file, $dir)
-    {
-        if (!$file) return null;
-
-        try {
-            $extension = strtolower($file->getClientOriginalExtension());
-            $filename  = uniqid() . '_' . $file->getClientOriginalName();
-            $path      = storage_path("app/public/{$dir}/{$filename}");
-
-            switch ($extension) {
-                case 'png':
-                    $image = @imagecreatefrompng($file->getRealPath()); // @ suprime warning
-                    if (!$image) {
-                        throw new \Exception("Archivo PNG inválido o corrupto");
-                    }
-                    imagejpeg($image, $path, 60);
-                    imagedestroy($image);
-                    $filename = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
-                    return "{$dir}/{$filename}";
-
-                case 'jpg':
-                case 'jpeg':
-                    $image = @imagecreatefromjpeg($file->getRealPath());
-                    if (!$image) {
-                        throw new \Exception("Archivo JPG inválido o corrupto");
-                    }
-                    imagejpeg($image, $path, 60);
-                    imagedestroy($image);
-                    return "{$dir}/{$filename}";
-
-                case 'webp':
-                    $image = @imagecreatefromwebp($file->getRealPath());
-                    if (!$image) {
-                        throw new \Exception("Archivo WEBP inválido o corrupto");
-                    }
-                    imagejpeg($image, $path, 60);
-                    imagedestroy($image);
-                    $filename = pathinfo($filename, PATHINFO_FILENAME) . '.jpg';
-                    return "{$dir}/{$filename}";
-
-                default:
-                    return $file->storeAs($dir, $filename, 'public');
-            }
-        } catch (\Throwable $e) {
-            \Log::error("Error optimizando imagen: {$e->getMessage()}", [
-                'file' => $file->getClientOriginalName()
-            ]);
-
-            // Lanza excepción controlada para manejarla en el flujo principal
-            throw new \Exception("La imagen '{$file->getClientOriginalName()}' está dañada o no es válida.");
-        }
-    } */
-
-    /* separador */
 
     public function addNew()
     {

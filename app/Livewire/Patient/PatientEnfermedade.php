@@ -49,7 +49,7 @@ class PatientEnfermedade extends Component
         'medicacion' => 'nullable|string',
         'dosis' => 'nullable|string',
         'motivo_consulta' => 'nullable|string',
-        'derivacion_psiquiatrica' => 'nullable',
+        'derivacion_psiquiatrica' => 'nullable|boolean',
         'estado_enfermedad' => 'nullable|boolean',
         'art' => 'nullable|string',
         'detalle_medicacion' => 'nullable|string',

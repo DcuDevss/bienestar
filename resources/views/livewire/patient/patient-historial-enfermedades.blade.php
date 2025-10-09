@@ -68,7 +68,14 @@
                             </li>
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">derivacion psiquiatrica:</span>
-                                    {{ $enfermedad->pivot->derivacion_psiquiatrica }}</p>
+                                    {{-- {{ $enfermedad->pivot->derivacion_psiquiatrica }}</p> --}}
+                                    @if ($enfermedad->pivot->derivacion_psiquiatrica == 0)
+                                    NO
+                                    @else
+                                    SI
+
+                          
+                                    @endif
                             </li>
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">detalle de la enfermedad:</span></p>

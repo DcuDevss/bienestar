@@ -173,8 +173,8 @@
                                 <select id="derivacion_psiquiatrica" class="w-full rounded cursor-pointer"
                                     wire:model="derivacion_psiquiatrica">
                                     <option value="" selected>{{ __('Seleccione una opción') }}</option>
-                                    <option value="no">{{ __('no') }}</option>
-                                    <option value="si">{{ __('si') }}</option>
+                                    <option value="0">{{ __('no') }}</option>
+                                    <option value="1">{{ __('si') }}</option>
                                 </select>
                                 <x-input-error for="derivacion_psiquiatrica" />
                             </div>

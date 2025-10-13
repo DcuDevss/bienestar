@@ -31,7 +31,8 @@
             <div class="flex gap-x-4 h-full">
                 @if ($enfermedades->isNotEmpty())
                     @foreach ($enfermedades as $enfermedad)
-                        <ul class="max-w-[28%]  h-auto shadow-2xl rounded-md px-5 py-5 mx-auto text-[14px] relative">
+                        <ul style="min-width: 300px!important;"
+                            class="max-w-[28%] h-auto shadow-2xl rounded-md px-5 py-5 mx-auto text-[14px] relative">
                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">Nombre:</span>
                                     {{ $enfermedad->name }}</p>
@@ -291,12 +292,6 @@
                 </div>
 
                 <div>
-                    {{-- <label for="pdf_enfermedad"
-                        class="block text-sm font-medium text-gray-700">{{ __('pdff') }}</label>
-                    <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
-                        wire:model="pdf_enfermedad" accept="image/.pdf" />
-                    <x-input-error for="pdf_enfermedad" /> --}}
-                    {{--  --}}
                     <label for="pdf_enfermedad"
                         class="block text-sm font-medium text-gray-700">{{ __('pdf') }}</label>
                     <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"

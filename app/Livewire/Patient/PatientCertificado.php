@@ -252,7 +252,6 @@ class PatientCertificado extends Component
     private function optimizarImagen($file, $dir)
     {
         if (!$file) return null;
-
         $extension = strtolower($file->getClientOriginalExtension());
         $filename  = uniqid() . '_' . $file->getClientOriginalName();
         $path      = storage_path("app/public/{$dir}/{$filename}");

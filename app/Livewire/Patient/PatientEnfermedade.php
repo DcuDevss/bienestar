@@ -148,7 +148,13 @@ class PatientEnfermedade extends Component
                 'art'                            => $data['art'] ?? null,
             ],
         ]);
-        session()->flash('success', 'Atencion medica agregada correctamente.');
+        $this->dispatch(
+            'swal',
+            title: 'Agregado',
+            text:  'Atención médica agregada correctamente.',
+            icon:  'success'
+        );
+
         // 4) Reset + cerrar modal + cerrar picker
         $this->modal = false;
         $this->pickerOpen = false;

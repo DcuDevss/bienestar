@@ -154,6 +154,7 @@ class EditEntrevista extends Component
         }
     }
 
+
     // Método para guardar los cambios en el miembro editado
     public function saveMember()
     {
@@ -183,9 +184,6 @@ class EditEntrevista extends Component
                 // Recargar la lista de miembros
                 $entrevista = Entrevista::find($this->entrevista_id);
                 $this->miembros = $entrevista->grupoFamiliar;  // Recargar los miembros para reflejar los cambios
-
-                // Mostrar mensaje de éxito
-                session()->flash('message', 'Miembro editado exitosamente.');
 
                 // Limpiar el estado de edición
                 $this->editIndex = null;
@@ -217,7 +215,6 @@ class EditEntrevista extends Component
         $this->grupo_familiar = [];
         $this->miembros = Entrevista::find($this->entrevista_id)->grupoFamiliar;
 
-        session()->flash('message', 'Miembro agregado exitosamente.');
     }
 
     //funcion para acepar valores null
@@ -323,7 +320,8 @@ class EditEntrevista extends Component
             $entrevista->save();
 
             // Mostrar mensaje de éxito
-            session()->flash('success', 'La entrevista ha sido actualizada correctamente.');
+           session()->flash('message', 'Entrevista editada con éxito.');
+
         }
     }
 

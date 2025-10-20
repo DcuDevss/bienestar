@@ -139,7 +139,12 @@ class EntrevistaFormController extends Component
         ];
 
         // Mensaje de éxito
-        session()->flash('message', 'Miembro agregado exitosamente.');
+        $this->dispatch(
+            'swal',
+            title: 'Agregado',
+            text:  'Miembro agregado exitosamente.',
+            icon:  'success'
+        );
     }
 
 
@@ -150,7 +155,12 @@ class EntrevistaFormController extends Component
         array_splice($this->miembros, $index, 1);
 
         // Mensaje de éxito
-        session()->flash('message', 'Miembro eliminado exitosamente.');
+        $this->dispatch(
+            'swal',
+            title: 'Eliminado',
+            text:  'Miembro eliminado exitosamente.',
+            icon:  'success'
+        );
     }
 
     public function submit()
@@ -308,7 +318,13 @@ class EntrevistaFormController extends Component
 
 
 
-            session()->flash('message', 'Entrevista registrada con éxito.');
+            $this->dispatch(
+                'swal',
+                title: 'Guardado',
+                text:  'Entrevista registrada con éxito.',
+                icon:  'success'
+            );
+
 
             Log::debug('Valores antes de guardar entrevista', [
     'indicacionterapeutica_id' => $this->indicacionterapeutica_id,
@@ -380,8 +396,12 @@ class EntrevistaFormController extends Component
 
         } catch (\Exception $e) {
             Log::error('Error al guardar la entrevista: ' . $e->getMessage());
-            $this->dispatch('toast', type: 'error', message: '⚠️ Complete los campos obligatorios antes de guardar.');
-            session()->flash('error', 'Error al guardar la entrevista, complete los campos Tipo de Entrevista y Estado de la Entrevista.');
+            $this->dispatch(
+                'swal',
+                title: 'Revisá los campos',
+                text:  'Completá Tipo de Entrevista y Estado de la Entrevista.',
+                icon:  'error'
+            );
         }
 
 

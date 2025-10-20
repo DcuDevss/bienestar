@@ -13,7 +13,8 @@
             </span>
         </h2>
         <ul class="w-full">
-            <input class="w-full rounded mb-4" type="text" placeholder="buscar enfermedad o crearla" wire:model.live="search" />
+            <input class="w-full rounded mb-4" type="text" placeholder="buscar enfermedad o crearla"
+                wire:model.live="search" />
             @foreach ($patient_enfermedades as $pd)
                 <li class="mb-1">
                     <div class="flex justify-between items-center">
@@ -50,7 +51,7 @@
 
         <x-slot name="title">
             <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
-                {{ __('agregar certificado al historial del paciente') }}
+                {{ __('agregar certificado al historial del paciente 123') }}
             </div>
             <img class="h-32 w-full object-center object-cover" src="{{ asset('assets/disases.jpg') }}" alt="">
         </x-slot>
@@ -64,7 +65,7 @@
                     <x-input-error for="name" />
                 </div>
 
-              {{--   <div>
+                {{--   <div>
                     <label for="tipodelicencia" class="block text-sm font-medium text-gray-700">{{ __('Tipo de Licencia') }}</label>
                     <select id="tipodelicencia" class="w-full rounded cursor-pointer" wire:model="tipodelicencia">
                         <option value="" selected>{{ __('Seleccione una opción') }}</option>
@@ -81,19 +82,18 @@
                     <input id="fecha_enfermedad" class="w-full rounded cursor-pointer" type="date"
                         placeholder="{{ __(' ingrese fecha de la enfermedad') }}" wire:model="fecha_enfermedad" />
                     <x-input-error for="fecha_enfermedad" />
-                </div>--}}
+                </div> --}}
 
                 <!-- Nuevos campos -->
 
-
-                {{----}}  <div>
+                {{-- --}} <div>
                     <label for="fecha_atencion2"
                         class="block text-sm font-medium text-gray-700">{{ __('inicio del certificado') }}</label>
                     <input id="fecha_atencion2" class="w-full rounded cursor-pointer" type="datetime-local"
                         placeholder="{{ __('fecha de inicio') }}" wire:model="fecha_atencion2" />
                     <x-input-error for="fecha_atencion2" />
                 </div>
-                 {{--
+                {{--
                 <div>
                     <label for="fecha_finalizacion"
                         class="block text-sm font-medium text-gray-700">{{ __('finalización de certificado') }}</label>
@@ -104,7 +104,7 @@
 
                 <div>
                     <label for="horas_reposo2"
-                        class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica') }}</label>
+                        class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica33') }}</label>
                     <input id="horas_reposo2" class="w-full rounded cursor-pointer" type="text"
                         placeholder="{{ __('ingrese horas de salud') }}" wire:model="horas_reposo2" />
                     <x-input-error for="horas_reposo2" />
@@ -136,15 +136,24 @@
         </x-slot>
 
         <x-slot name="footer">
-            <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
-                wire:click="$set('modal',false)">
-                {{ __('cancelar') }}
-            </button>
-            <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3"
-                wire:click="addEnfermedade">
-                {{ __('agregar enfermedad') }}
-            </button>
-        </x-slot>
+    <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
+        wire:click="$set('modal', false)">
+        {{ __('cancelar') }}
+    </button>
+
+    @if ($certificado_id)
+        <button class="bg-yellow-500 text-white hover:bg-yellow-400 px-4 py-2 rounded mx-3"
+            wire:click="updateEnfermedade">
+            {{ __('actualizar enfermedad') }}
+        </button>
+    @else
+        <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3"
+            wire:click="addEnfermedade">
+            {{ __('agregar enfermedad') }}
+        </button>
+    @endif
+</x-slot>
+
     </x-dialog-modal>
 
 </div>

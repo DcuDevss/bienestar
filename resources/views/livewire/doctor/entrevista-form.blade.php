@@ -655,7 +655,7 @@
 
     <!-- Grupo Derecho: 2 elementos -->
     <div class="flex gap-4 items-center mr-6 mb-4">
-        <!-- Imagen con link (BCRA) -->
+        <!-- Imagen con link (RCTA) -->
         <a href="https://rcta.me/?utm_term=&utm_campaign=RCTA+DNU/+Pmax+/+Reconnect&utm_source=adwords&utm_medium=ppc&hsa_acc=3976412703&hsa_cam=21983270123&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=21983271299&gbraid=0AAAAAp3bv2M-2NoWfjCKXwvQFRekKOKO3&gclid=Cj0KCQjwgIXCBhDBARIsAELC9ZhPejgMuncQuoBdXnlBKYeV4pe06k2knUoVCHSvUOPPzjFGOfIv6vgaAgpOEALw_wcB
             " target="_blank" class="bg-white rounded-md py-1 px-3 inline-flex items-center justify-center"">
             <img class="h-[50px]" src="{{ asset('assets/rctaLogo.jpg') }}" alt="">
@@ -670,46 +670,37 @@
 </div>
 
     </form>
-    <div
-        x-data="{ show: true }"
-        x-show="show"
-        x-transition
-        x-init="setTimeout(() => show = false, 6000)"
-        class="fixed top-5 right-5 z-50"
-    >
-        @if (session('message'))
-            <div class="bg-green-600 text-white px-4 py-3 rounded shadow">
-                {{ session('message') }}
-            </div>
-        @endif
-
-        @if (session('error'))
-            <div class="bg-red-600 text-white px-4 py-3 rounded shadow">
-                {{ session('error') }}
-            </div>
-        @endif
-
-        @if ($errors->any())
-            <div class="bg-red-600 text-white px-4 py-3 rounded shadow">
-                ⚠️ Complete los campos obligatorios en el formulario.
-            </div>
-        @endif
-    </div>
-
-    <div>
-</div>
 
 </div>
  {{-- Botón para abrir el modal --}}
-
-
-
-
-
-
 <script>
     function toggleCard(id) {
         const card = document.getElementById(id);
         card.classList.toggle('hidden');
     }
 </script>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener('livewire:init', () => {
+    Livewire.on('swal', function () {
+      let payload = {};
+      if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
+        payload = arguments[0]; // args nombrados desde $this->dispatch(...)
+      } else {
+        payload = { title: arguments[0] ?? '', text: arguments[1] ?? '', icon: arguments[2] ?? 'info' };
+      }
+
+      const { title = 'Listo', text = '', html = null, icon = 'success', timer = 3000 } = payload;
+
+      Swal.fire({
+        title, text, html, icon,
+        timer,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timerProgressBar: true,
+      });
+    });
+  });
+</script>
+

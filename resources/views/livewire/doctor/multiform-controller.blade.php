@@ -184,8 +184,15 @@
                         <div class="flex flex-col gap-y-2 p-5 w-[80%] mx-auto">
                             <!-- CIUDAD -->
                             <label for="">Ciudad:</label>
-                            <input type="text" placeholder="..." wire:model.lazy="ciudad"
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                            {{-- <input type="text" placeholder="..." wire:model.lazy="ciudad"
+                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]"> --}}
+                            <select wire:model="ciudad_id" id="ciudad_id"
+                                class="block w-full  rounded-md">
+                                <option value="">Seleccione una ciudad</option>
+                                @foreach ($ciudades as $ciudad)
+                                    <option value="{{ $ciudad->id }}">{{ $ciudad->nombre }}</option>
+                                @endforeach
+                            </select>
                             <!-- EDAD -->
                             <label for="">Edad:</label>
                             <input type="number" placeholder="..." wire:model.lazy="edad"
@@ -232,27 +239,28 @@
                         <p>Personal:</p>
                         <div class="flex flex-col gap-y-2 p-5 w-[80%] mx-auto">
                             <label for="factore_id" class="">Grupo y Factor Sanguineo</label>
-                                <select wire:model.lazy="factore_id"
-                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                                    <option disabled selected value="">Seleccionar</option>
-                                    @foreach ($factores as $factore)
-                                        <option value="{{ $factore->id }}" class="text-[#666666]">{{ $factore->name }}</option>
-                                    @endforeach
-                                </select>
-                                <!-- PESO -->
-                                <label for="peso">Peso:</label>
-                                <input type="number" wire:model.lazy="peso" placeholder="peso" step="any"
-                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                                <!-- ALTURA -->
-                                <label for="altura">Altura:</label>
-                                <input type="text" wire:model.lazy="altura" placeholder="altura" step="any"
-                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                                <label for="enfermedad">Posee alguna enfermedad preexistente:</label>
-                                <input type="text" wire:model.lazy="enfermedad" placeholder="..." step="any"
-                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                                <label for="remedios">Medicamentos que consume:</label>
-                                <input type="text" wire:model.lazy="remedios" placeholder="..." step="any"
-                                    class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                            <select wire:model.lazy="factore_id"
+                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                                <option disabled selected value="">Seleccionar</option>
+                                @foreach ($factores as $factore)
+                                    <option value="{{ $factore->id }}" class="text-[#666666]">{{ $factore->name }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            <!-- PESO -->
+                            <label for="peso">Peso:</label>
+                            <input type="number" wire:model.lazy="peso" placeholder="peso" step="any"
+                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                            <!-- ALTURA -->
+                            <label for="altura">Altura:</label>
+                            <input type="text" wire:model.lazy="altura" placeholder="altura" step="any"
+                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                            <label for="enfermedad">Posee alguna enfermedad preexistente:</label>
+                            <input type="text" wire:model.lazy="enfermedad" placeholder="..." step="any"
+                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                            <label for="remedios">Medicamentos que consume:</label>
+                            <input type="text" wire:model.lazy="remedios" placeholder="..." step="any"
+                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
                         </div>
                     </div>
 
@@ -301,11 +309,12 @@
             </div>
         </form>
         @if ($registroCompletado)
-        <div class="mt-4">
-            <a href="{{ route('interviews.index', $this->customer->id) }}" class="bg-blue-500 text-white px-4 py-2 rounded">
-                Acceder a Historia clínica
-            </a>
-        </div>
+            <div class="mt-4">
+                <a href="{{ route('interviews.index', $this->customer->id) }}"
+                    class="bg-blue-500 text-white px-4 py-2 rounded">
+                    Acceder a Historia clínica
+                </a>
+            </div>
         @endif
 
         <div class="mt-4 ml-14 ">
@@ -315,3 +324,36 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('livewire:init', () => {
+  Livewire.on('swal', ({ title = '', text = '', icon = 'success', timer = 2000, toast = true, position = 'top-end' } = {}) => {
+    Swal.fire({
+      title, text, icon,
+      toast, position, timer,
+      showConfirmButton: !toast,
+    });
+  });
+
+  Livewire.on('confirm', ({
+    title = '¿Estás seguro?',
+    text = 'Esta acción no se puede deshacer.',
+    icon = 'warning',
+    confirmText = 'Sí, continuar',
+    cancelText = 'Cancelar',
+    action = null,
+    params = {}
+  } = {}) => {
+    Swal.fire({
+      title, text, icon,
+      showCancelButton: true,
+      confirmButtonText: confirmText,
+      cancelButtonText: cancelText,
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed && action) {
+        Livewire.dispatch(action, params);
+      }
+    });
+  });
+});
+</script>

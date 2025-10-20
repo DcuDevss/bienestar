@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace App\Livewire\Paciente;
 
 use App\Models\Paciente;
@@ -22,12 +20,11 @@ class FileController extends Component
         $pdfhistorial_id, $patient_enfermedades, $patient, $pdfhistorial, $archivo, $tipodelicencia;
 
     public $modal = false;
-
     public $archivos = [];
     public $pacienteId;
 
     protected $rules = [
-        'archivos.*' => 'file|mimes:pdf,png,jpg,jpeg,gif|max:10240', // Acepta PDF e imágenes, máximo 10 MB por archivo
+        'archivos.*' => 'file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
         'pacienteId' => 'required|exists:pacientes,id',
     ];
 
@@ -47,25 +44,24 @@ class FileController extends Component
     {
         $this->validate();
 
-        // Subir y almacenar los archivos PDF e imágenes
         foreach ($this->archivos as $archivo) {
-            // Obtener el nombre original del archivo
             $nombreArchivo = $archivo->getClientOriginalName();
+            $timestamp = now()->format('Ymd_His');
+            $nombreFinal = $timestamp . '_' . $nombreArchivo;
 
-            // Construir la ruta de almacenamiento con el ID del paciente
-            $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreArchivo, 'public');
+            $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreFinal, 'public');
 
-            // Crear un nuevo registro en la base de datos para cada archivo
-            Pdfhistorial::create([
+            PdfHistorial::create([
                 'file' => $ruta,
                 'paciente_id' => $this->pacienteId,
             ]);
         }
 
-        // Limpiar el campo de archivos después de la carga exitosa
         $this->archivos = [];
         $this->modal = false;
-        session()->flash('message', 'Archivos subidos exitosamente.');
+
+        // ✅ SweetAlert de éxito
+        $this->dispatch('swal', title: 'Cargado', text: 'Archivo(s) subido(s) correctamente.', icon: 'success');
     }
 
     public function render()

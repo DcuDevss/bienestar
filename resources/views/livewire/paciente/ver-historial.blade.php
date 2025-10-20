@@ -1,13 +1,5 @@
 <div class="p-4 bg-white rounded shadow-md max-w-3xl mx-auto mt-4">
 
-    {{-- mensajes --}}
-    @if (session()->has('message'))
-        <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">{{ session('message') }}</div>
-    @endif
-    @if (session()->has('error'))
-        <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">{{ session('error') }}</div>
-    @endif
-
     {{-- buscador --}}
     <div class="mb-4 flex items-center gap-2">
         <input type="text" wire:model.debounce.400ms="search"
@@ -50,6 +42,37 @@
                                 class="px-2 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm">
                             Descargar
                         </button>
+                      <button
+                        x-data
+                        @click.prevent="
+                            Swal.fire({
+                            title: '¿Eliminar archivo?',
+                            text: 'Esta acción no se puede deshacer.',
+                            icon: 'warning',
+                            showCancelButton: true,
+                            confirmButtonText: 'Sí, eliminar',
+                            cancelButtonText: 'Cancelar',
+                            reverseButtons: true
+                            }).then((r) => {
+                            if (r.isConfirmed) {
+                                $wire.deleteByPath('{{ $item['path'] }}').then(() => {
+                                Swal.fire({
+                                    title: 'Eliminado',
+                                    text: 'El archivo fue eliminado correctamente.',
+                                    icon: 'success',
+                                    timer: 1800,
+                                    toast: true,
+                                    position: 'top-end',
+                                    showConfirmButton: false,
+                                    timerProgressBar: true
+                                });
+                                });
+                            }
+                            });
+                        "
+                        class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm">
+                        Eliminar
+                    </button>
                     </div>
                 </li>
             @endforeach
@@ -70,3 +93,35 @@
     @endif
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('alpine:init', () => {
+        Alpine.data('confirmDelete', (filename) => ({
+            confirm() {
+                Swal.fire({
+                    title: '¿Eliminar archivo?',
+                    text: "Esta acción no se puede deshacer.",
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#d33',
+                    cancelButtonColor: '#3085d6',
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar',
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        $wire.delete(filename);
+                        Swal.fire({
+                            title: 'Eliminado',
+                            text: 'El archivo fue eliminado correctamente.',
+                            icon: 'success',
+                            timer: 2000,
+                            showConfirmButton: false,
+                            toast: true,
+                            position: 'top-end'
+                        });
+                    }
+                });
+            }
+        }))
+    });
+</script>

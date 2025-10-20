@@ -48,7 +48,7 @@ class PatientHistorialEnfermedades extends Component
     public $original_enfermedade_id = null;
 
     protected $rules = [
-        'enfermedade_id'=> 'nullable',
+        'enfermedade_id' => 'nullable',
         'name' => 'nullable',
         'detalle_diagnostico' => 'nullable',
         'fecha_atencion_enfermedad' => 'nullable',
@@ -133,38 +133,60 @@ class PatientHistorialEnfermedades extends Component
         $paciente = Paciente::find($this->pacienteId);
         if (!$paciente) return;
 
-        // 👇 Fallback: si $this->enfermedade_id viene null, usamos el original
+        // Fallback: si $this->enfermedade_id viene null, usamos el original
         $enfermedadeId = $this->enfermedade_id ?? $this->original_enfermedade_id;
 
         // Directorio para archivos
         $dir = "archivos_enfermedades/paciente_{$paciente->id}";
         Storage::disk('public')->makeDirectory($dir);
 
+        // Enfermedad actual para reutilizar archivos si no se suben nuevos
+        $enfActual = $paciente->enfermedades()->findOrFail($this->original_enfermedade_id);
+
+        // ====================
         // Imagen
+        // ====================
         if (isset($data['imgen_enfermedad'])) {
             $archivoPath = $data['imgen_enfermedad']->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName());
             if (!str_starts_with($data['imgen_enfermedad']->getMimeType(), 'image/')) {
                 $this->addError('imgen_enfermedad', 'El imgen_enfermedad debe ser una imagen.');
                 return;
             }
+
+            // Borrar imagen anterior si existe
+            if ($enfActual->pivot->imgen_enfermedad && Storage::disk('public')->exists($enfActual->pivot->imgen_enfermedad)) {
+                Storage::disk('public')->delete($enfActual->pivot->imgen_enfermedad);
+            }
+
+            // Guardar nueva
+            $archivoPath = $data['imgen_enfermedad']->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName(), 'public');
         } else {
-            $enfActual = $paciente->enfermedades()->findOrFail($this->original_enfermedade_id);
             $archivoPath = $enfActual->pivot->imgen_enfermedad;
         }
 
+        // ====================
         // PDF
+        // ====================
         if (isset($data['pdf_enfermedad'])) {
             if ($data['pdf_enfermedad']->getMimeType() !== 'application/pdf') {
                 $this->addError('pdf_enfermedad', 'El pdf_enfermedad debe ser un archivo PDF.');
                 return;
             }
-            $archivoPathDorso = $data['pdf_enfermedad']->storeAs($dir, $data['pdf_enfermedad']->getClientOriginalName());
+
+            // Borrar PDF anterior si existe
+            if ($enfActual->pivot->pdf_enfermedad && Storage::disk('public')->exists($enfActual->pivot->pdf_enfermedad)) {
+                Storage::disk('public')->delete($enfActual->pivot->pdf_enfermedad);
+            }
+
+            // Guardar nuevo
+            $archivoPathDorso = $data['pdf_enfermedad']->storeAs($dir, $data['pdf_enfermedad']->getClientOriginalName(), 'public');
         } else {
-            $enfActual = $enfActual ?? $paciente->enfermedades()->findOrFail($this->original_enfermedade_id);
             $archivoPathDorso = $enfActual->pivot->pdf_enfermedad;
         }
 
+        // ====================
         // Datos del pivot
+        // ====================
         $pivotData = [
             'fecha_atencion_enfermedad'     => $data['fecha_atencion_enfermedad'],
             'detalle_medicacion'            => $data['detalle_medicacion'],
@@ -180,6 +202,9 @@ class PatientHistorialEnfermedades extends Component
             'tipodelicencia'                => $data['tipodelicencia'],
         ];
 
+        // ====================
+        // Guardar cambios
+        // ====================
         $changedDisease = ($enfermedadeId != $this->original_enfermedade_id);
 
         if ($changedDisease) {
@@ -196,32 +221,44 @@ class PatientHistorialEnfermedades extends Component
             $paciente->enfermedades()->updateExistingPivot($enfermedadeId, $pivotData);
         }
 
-
         $this->modal = false;
         $this->dispatch('toast', type: 'success', message: 'Enfermedad editada correctamente');
+        $this->dispatch(
+            'swal',
+            title: 'Actualizado',
+            text:  'La enfermedad fue editada correctamente.',
+            icon:  'success'
+        );
+
 
         $this->reset([
-            'name','fecha_atencion_enfermedad','detalle_diagnostico','detalle_medicacion',
-            'fecha_finalizacion_enfermedad','horas_reposo','medicacion','nro_osef',
-            'tipolicencia_id','tipodelicencia','art','dosis','imgen_enfermedad','pdf_enfermedad',
-            'search','nameSearch','namePickerOpen','nameOptions','nameIndex',
-            'pivotId','original_enfermedade_id',
-        ]);
-
-        $this->patient_disases = $paciente->enfermedades()->get();
-        $this->resetValidation();
-
-        $this->reset([
-            'name','fecha_atencion_enfermedad','detalle_diagnostico','detalle_medicacion',
-            'fecha_finalizacion_enfermedad','horas_reposo','medicacion','nro_osef',
-            'tipolicencia_id','tipodelicencia','art','dosis','imgen_enfermedad',
-            'pdf_enfermedad','search','nameSearch','namePickerOpen','nameOptions',
-            'nameIndex','pivotId','original_enfermedade_id',
+            'name',
+            'fecha_atencion_enfermedad',
+            'detalle_diagnostico',
+            'detalle_medicacion',
+            'fecha_finalizacion_enfermedad',
+            'horas_reposo',
+            'medicacion',
+            'nro_osef',
+            'tipolicencia_id',
+            'tipodelicencia',
+            'art',
+            'dosis',
+            'imgen_enfermedad',
+            'pdf_enfermedad',
+            'search',
+            'nameSearch',
+            'namePickerOpen',
+            'nameOptions',
+            'nameIndex',
+            'pivotId',
+            'original_enfermedade_id',
         ]);
 
         $this->patient_disases = $paciente->enfermedades()->get();
         $this->resetValidation();
     }
+
 
 
     // ====== Autocomplete del campo "Nombre" dentro del modal ======
@@ -235,7 +272,6 @@ class PatientHistorialEnfermedades extends Component
         $this->namePickerOpen = true;
         $this->updatedNameSearch($this->nameSearch);
     }
-
 
     public function closeNamePicker()
     {
@@ -268,8 +304,6 @@ class PatientHistorialEnfermedades extends Component
         $this->namePickerOpen = !empty($this->nameOptions);
         $this->nameIndex = 0;
     }
-
-
 
     public function updatedName($value)
     {

@@ -10,7 +10,8 @@
             <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
                 {{ __('agregar control al paciente') }}
             </div>
-            <img class="h-32 w-full object-center " src="https://www.universidadviu.com/sites/universidadviu.com/files/styles/img_style_19_7_480/public/images/proceso-de-atenci%C3%B3n-de-enfermer%C3%ADa2.jpg?itok=mmbDlCTJ" alt="">
+            <img src="{{ asset('assets/controlEnfermero.webp') }}" class="h-32 w-full object-center object-cover">
+
         </x-slot>
 
         <x-slot name="content">

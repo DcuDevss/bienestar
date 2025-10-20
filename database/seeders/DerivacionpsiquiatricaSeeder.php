@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 class DerivacionpsiquiatricaSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the database seeeds.
      */
     public function run(): void
     {

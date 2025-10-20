@@ -8,7 +8,7 @@ use Illuminate\Database\Seeder;
 class ControlenfermeroSeeder extends Seeder
 {
     /**
-     * Run the database seeds.
+     * Run the daatabase seeds.
      */
     public function run(): void
     {

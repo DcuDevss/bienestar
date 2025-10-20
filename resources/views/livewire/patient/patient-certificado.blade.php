@@ -217,3 +217,35 @@
     @endif
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('livewire:init', () => {
+  Livewire.on('swal', function () {
+    let payload = {};
+    if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
+      payload = arguments[0]; // named args: { title, text, html, icon, ... }
+    } else if (arguments.length >= 1) {
+      payload = { title: arguments[0], text: arguments[1], icon: arguments[2] }; // posicional
+    }
+
+    let { title = '', text = '', html = null, icon = 'info', timer, toast = true, position = 'top-end' } = payload;
+
+    // Si por error llega un objeto en text, lo convertimos a HTML legible
+    if (typeof text !== 'string' && text != null) {
+      try {
+        const pretty = JSON.stringify(text, null, 2);
+        html = html || `<pre style="text-align:left;white-space:pre-wrap;margin:0">${pretty}</pre>`;
+        text = '';
+      } catch {}
+    }
+
+    Swal.fire({
+      title, text, html, icon,
+      timer: timer ?? 2200,
+      toast, position,
+      showConfirmButton: false,
+    });
+  });
+});
+</script>
+

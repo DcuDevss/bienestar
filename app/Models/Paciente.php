@@ -166,6 +166,11 @@ class Paciente extends Model
             ->withTimestamps();
     }
 
+    public function ciudades()
+    {
+        return $this->belongsTo(\App\Models\Ciudade::class, 'ciudad_id', 'id');
+    }
+
     public function entrevistas()
     {
         return $this->hasMany(Entrevista::class, 'paciente_id');

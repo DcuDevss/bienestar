@@ -72,7 +72,7 @@
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
                                         {{ $paciente->destino_actual }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300 text-center">
-                                        {{ $paciente->ciudad->nombre ?? 'Sin ciudad' }}</td>
+                                        {{ $paciente->ciudad_id ? $paciente->ciudades->nombre : 'No asignado' }}</td>
                                     <td class="tiBody px-2 py-1 text-[14px]">
                                         @if ($paciente->estado_id == 1)
                                             <span
@@ -131,14 +131,48 @@
                                                 Editar
                                             </a>
                                             <!-- Opción Eliminar -->
-                                            @role('super-admin')
-                                                <button
-                                                    onclick="confirm('Seguro desea eliminar a este paciente {{ $paciente->apellido_nombre }} ?') || event.stopImmediatePropagation()"
-                                                    wire:click="delete({{ $paciente->id }})"
-                                                    class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-red-700 hover:bg-red-600">
-                                                    Eliminar
-                                                </button>
-                                            @endrole
+                                       @role('super-admin')
+                                            <button
+                                            type="button"
+                                            x-data="{ nombre: @js($paciente->apellido_nombre) }"
+                                            x-on:click="
+                                                Swal.fire({
+                                                title: '¿Eliminar paciente?',
+                                                html: `Se eliminará <b>${nombre}</b>. Esta acción no se puede deshacer.`,
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Sí, eliminar',
+                                                cancelButtonText: 'Cancelar',
+                                                reverseButtons: true,
+                                                focusCancel: true
+                                                }).then((res) => {
+                                                if (res.isConfirmed) {
+                                                    $wire.delete({{ $paciente->id }})
+                                                    .then(() => {
+                                                        Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'Eliminado',
+                                                        text: `Se eliminó ${nombre}.`,
+                                                        timer: 1800,
+                                                        showConfirmButton: false,
+                                                        toast: true,
+                                                        position: 'top-end'
+                                                        });
+                                                    })
+                                                    .catch(() => {
+                                                        Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Error',
+                                                        text: 'No se pudo eliminar el paciente.'
+                                                        });
+                                                    });
+                                                }
+                                                });
+                                            "
+                                            class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-red-700 hover:bg-red-600">
+                                            Eliminar
+                                            </button>
+                                        @endrole
                                         </div>
                                     </td>
 
@@ -191,10 +225,6 @@
                                 - {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
                                 - Finaliza:
                                 {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
-                                {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
-                                - Finaliza:
-                                {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
-
                             </li>
                         @empty
                             <li class="text-gray-500">Sin pacientes registrados</li>
@@ -222,4 +252,42 @@
         const dropdown = document.getElementById(`dropdown-${patientId}`);
         dropdown.classList.toggle('hidden');
     }
+</script>
+{{-- script sweet alert --}}
+<script>
+    document.addEventListener('livewire:init', () => {
+    // Confirmación genérica (para dispatch('confirm'))
+    Livewire.on('confirm', (data) => {
+        Swal.fire({
+        title: data.title ?? '',
+        text: data.text ?? '',
+        html: data.html ?? null,
+        icon: data.icon ?? 'question',
+        showCancelButton: true,
+        confirmButtonText: data.confirmText ?? 'Confirmar',
+        cancelButtonText: data.cancelText ?? 'Cancelar',
+        reverseButtons: true,
+        focusCancel: true,
+        }).then((result) => {
+        if (result.isConfirmed && data.action) {
+            const p = data.params || {};
+            Livewire.dispatch(data.action, p.id ?? p);
+        }
+        });
+    });
+
+    // Toast/alert genérico (para dispatch('swal'))
+    Livewire.on('swal', (data) => {
+        Swal.fire({
+        title: data.title ?? '',
+        text: data.text ?? '',
+        html: data.html ?? null,
+        icon: data.icon ?? 'info',
+        timer: data.timer ?? 2000,
+        toast: true,
+        position: data.position ?? 'top-end',
+        showConfirmButton: false,
+        });
+    });
+    });
 </script>

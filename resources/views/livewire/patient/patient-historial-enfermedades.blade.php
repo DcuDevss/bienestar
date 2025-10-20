@@ -14,6 +14,11 @@
                 </div>
                 <!-- BOTONES OSEF & LA CAJA -->
                 <div class="float-right mr-2 flex gap-x-2">
+                    <!-- Imagen con link (RCTA) -->
+                    <a href="https://rcta.me/?utm_term=&utm_campaign=RCTA+DNU/+Pmax+/+Reconnect&utm_source=adwords&utm_medium=ppc&hsa_acc=3976412703&hsa_cam=21983270123&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=21983271299&gbraid=0AAAAAp3bv2M-2NoWfjCKXwvQFRekKOKO3&gclid=Cj0KCQjwgIXCBhDBARIsAELC9ZhPejgMuncQuoBdXnlBKYeV4pe06k2knUoVCHSvUOPPzjFGOfIv6vgaAgpOEALw_wcB
+                        " target="_blank" class="bg-white rounded-md py-1 px-3">
+                        <img class="h-[34px]" src="{{ asset('assets/rctaLogo.jpg') }}" alt="">
+                    </a>
                     <a href="https://prescriptorweb.ddaval.com.ar/" target="_blank">
                         <button class="bg-blue-600 rounded-md py-1 px-3">
                             <img class="h-[25px]" src="https://osef.gob.ar/assets/images/osef-logotipo.png"
@@ -26,7 +31,7 @@
                     </a>
                 </div>
             </div>
-            
+
             <!-- CARD -->
             <div class="flex gap-x-4 h-full">
                 @if ($enfermedades->isNotEmpty())
@@ -358,18 +363,6 @@
 
         </x-slot>
     </x-dialog-modal>
-
-    <div x-data="{ open: false, msg: '', t: null }"
-        x-on:toast.window="
-                clearTimeout(t);
-                msg = $event.detail?.message || 'Acción realizada';
-                open = true;
-                t = setTimeout(() => open = false, 2500);
-            "
-        x-show="open" x-transition
-        class="fixed top-4 right-4 z-50 rounded-md bg-emerald-600 text-white px-4 py-2 shadow">
-        <span x-text="msg"></span>
-    </div>
     <!-- LIGHTBOX -->
     <script>
         /funcionalidad para ampliar la imagen al darle click y cerrar/
@@ -403,5 +396,19 @@
             // Acción adicional al hacer clic en el otro botón
             console.log('Acción realizada');
         }
+    </script>
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+        document.addEventListener('livewire:initialized', () => {
+            Livewire.on('swal', (data) => {
+                Swal.fire({
+                    title: data.title || 'Atención',
+                    text: data.text || '',
+                    icon: data.icon || 'info',
+                    confirmButtonText: 'OK',
+                    timer: 3000
+                });
+            });
+        });
     </script>
 </div>

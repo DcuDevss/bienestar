@@ -347,6 +347,15 @@ class PatientHistorialCertificado extends Component
         $this->modal = false;
         $this->dispatch('toast', type: 'success', message: 'Padecimiento actualizado correctamente');
 
+        $this->dispatch(
+            'swal',
+            title: 'Actualizado',
+            text:  'El certificado fue actualizado correctamente.',
+            icon:  'success'
+        );
+
+
+
         $this->reset([
             'name',
             'editedDisaseName',

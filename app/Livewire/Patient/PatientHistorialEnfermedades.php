@@ -223,6 +223,13 @@ class PatientHistorialEnfermedades extends Component
 
         $this->modal = false;
         $this->dispatch('toast', type: 'success', message: 'Enfermedad editada correctamente');
+        $this->dispatch(
+            'swal',
+            title: 'Actualizado',
+            text:  'La enfermedad fue editada correctamente.',
+            icon:  'success'
+        );
+
 
         $this->reset([
             'name',

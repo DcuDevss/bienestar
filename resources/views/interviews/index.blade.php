@@ -18,7 +18,7 @@
         <!-- CERTIFICADO -->
         <section class="flex-1 min-w-0 px-1 md:basis-[calc(100%-27rem)]">
             <div class="grid grid-cols-1 md:grid-cols-12 gap-1">
-                
+
                 <div class="col-span-1 md:col-span-3">
                     <div>
                         <div class="bg-white p-3 rounded-md">
@@ -176,7 +176,7 @@
 
                         <div class=" border-b border-slate-100 pb-1">
                             <dt class="text-slate-500 font-medium">Ciudad</dt>
-                            <dd class="font-semibold text-slate-800 capitalize break-words">{{ $paciente->ciudad->nombre ?? 'Sin ciudad' }}
+                            <dd class="font-semibold text-slate-800 capitalize break-words">{{ $paciente->ciudad_id ? $paciente->ciudades->nombre : 'No asignado' }}
                             </dd>
                         </div>
 

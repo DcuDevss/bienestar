@@ -324,3 +324,36 @@
         </div>
     </div>
 </div>
+<script>
+document.addEventListener('livewire:init', () => {
+  Livewire.on('swal', ({ title = '', text = '', icon = 'success', timer = 2000, toast = true, position = 'top-end' } = {}) => {
+    Swal.fire({
+      title, text, icon,
+      toast, position, timer,
+      showConfirmButton: !toast,
+    });
+  });
+
+  Livewire.on('confirm', ({
+    title = '¿Estás seguro?',
+    text = 'Esta acción no se puede deshacer.',
+    icon = 'warning',
+    confirmText = 'Sí, continuar',
+    cancelText = 'Cancelar',
+    action = null,
+    params = {}
+  } = {}) => {
+    Swal.fire({
+      title, text, icon,
+      showCancelButton: true,
+      confirmButtonText: confirmText,
+      cancelButtonText: cancelText,
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed && action) {
+        Livewire.dispatch(action, params);
+      }
+    });
+  });
+});
+</script>

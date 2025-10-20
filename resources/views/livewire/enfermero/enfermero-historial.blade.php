@@ -50,12 +50,39 @@
                                             Editar
                                         </button>
                                         @role('super-admin')
-                                            <button
-                                                onclick="confirm('¿Seguro que desea eliminar este control?') || event.stopImmediatePropagation()"
-                                                wire:click="delete({{ $control->id }})"
-                                                class="px-4 py-[2px] bg-[#2d5986] hover:bg-[#3973ac] text-white rounded">
-                                                Eliminar
-                                            </button>
+                                           <button
+    x-data
+    x-on:click.prevent="
+      Swal.fire({
+        title: '¿Eliminar control?',
+        text: 'Esta acción no se puede deshacer.',
+        icon: 'warning',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, eliminar',
+        cancelButtonText: 'Cancelar',
+        reverseButtons: true,
+      }).then((r) => {
+        if (r.isConfirmed) {
+          $wire.delete({{ $control->id }}).then(() => {
+            Swal.fire({
+              title: 'Eliminado',
+              text: 'Control eliminado correctamente.',
+              icon: 'success',
+              toast: true,
+              position: 'top-end',
+              timer: 2500,
+              showConfirmButton: false,
+              timerProgressBar: true,
+            });
+          });
+        }
+      });
+    "
+    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+>
+  Eliminar
+</button>
+
                                         @endrole
                                     </td>
                                 </tr>
@@ -175,46 +202,43 @@
             </form>
         </div>
     </div>
-    <script>
-        // Escucha el evento Livewire 'notify' y muestra el toast
-        document.addEventListener('livewire:init', () => {
-            Livewire.on('notify', (payload = {}) => {
-                showToast(payload.message || 'Actualizado correctamente', payload.type || 'success');
-            });
-        });
-
-        // Toast minimalista (sin dependencias)
-        function showToast(message, type = 'success') {
-            const toast = document.createElement('div');
-            toast.textContent = message;
-
-            toast.style.position = 'fixed';
-            toast.style.bottom = '20px';
-            toast.style.right = '20px';
-            toast.style.padding = '12px 16px';
-            toast.style.borderRadius = '10px';
-            toast.style.boxShadow = '0 8px 20px rgba(0,0,0,0.25)';
-            toast.style.color = '#fff';
-            toast.style.fontWeight = '600';
-            toast.style.zIndex = '9999';
-            toast.style.opacity = '0';
-            toast.style.transform = 'translateY(8px)';
-            toast.style.transition = 'opacity 200ms ease, transform 200ms ease';
-            toast.style.background = (type === 'error') ? '#dc2626' : '#16a34a';
-
-            document.body.appendChild(toast);
-
-            requestAnimationFrame(() => {
-                toast.style.opacity = '1';
-                toast.style.transform = 'translateY(0)';
-            });
-
-            setTimeout(() => {
-                toast.style.opacity = '0';
-                toast.style.transform = 'translateY(8px)';
-                setTimeout(() => toast.remove(), 220);
-            }, 3000);
-        }
-    </script>
-
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('livewire:init', () => {
+  // Toast (éxito, error, etc.)
+  Livewire.on('swal', function () {
+    let payload = {};
+    if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
+      payload = arguments[0];
+    } else {
+      payload = { title: arguments[0] ?? '', text: arguments[1] ?? '', icon: arguments[2] ?? 'info' };
+    }
+    const { title='Listo', text='', html=null, icon='success', timer=3000 } = payload;
+
+    Swal.fire({
+      title, text, html, icon,
+      timer,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timerProgressBar: true,
+    });
+  });
+
+  // Confirmación de eliminación
+  Livewire.on('confirm', ({title='¿Estás seguro?', text='', icon='warning', confirmText='Sí', cancelText='Cancelar', action='', id=null} = {}) => {
+    Swal.fire({
+      title, text, icon,
+      showCancelButton: true,
+      confirmButtonText: confirmText,
+      cancelButtonText: cancelText,
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed && action) {
+        Livewire.dispatch(action, { id });
+      }
+    });
+  });
+});
+</script>

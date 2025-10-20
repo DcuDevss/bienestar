@@ -104,7 +104,7 @@
 
                 <div>
                     <label for="horas_reposo2"
-                        class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica') }}</label>
+                        class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica33') }}</label>
                     <input id="horas_reposo2" class="w-full rounded cursor-pointer" type="text"
                         placeholder="{{ __('ingrese horas de salud') }}" wire:model="horas_reposo2" />
                     <x-input-error for="horas_reposo2" />

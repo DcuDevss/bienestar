@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Doctor;
 
+use App\Models\Ciudade;
 use Livewire\Component;
 use App\Models\Customer;
 use App\Models\Estado;
@@ -10,7 +11,8 @@ use App\Models\Paciente;
 use App\Models\Jerarquia;
 
 class MultiformController extends Component
-{ public $color;
+{
+    public $color;
 
     public $apellido_nombre;
     public $dni;
@@ -23,7 +25,10 @@ class MultiformController extends Component
     public $jerarquia;
     public $legajo;
     public $destino_actual;
-    public $ciudad;
+    // public $ciudad;
+    public $ciudad_id;
+    public $ciudades;
+
     public $edad;
 
     public $fecha_nacimiento;
@@ -62,7 +67,7 @@ class MultiformController extends Component
         $this->estados = Estado::all(); // Obtener todos los estados
         $this->factores = Factore::all();
         $this->jerarquias = Jerarquia::all();
-
+        $this->ciudades = Ciudade::all();
     }
 
     public function decreaseStep()
@@ -123,55 +128,56 @@ class MultiformController extends Component
         }
 
         $this->step++;
-
     }
 
 
     // ...
 
-public function submit2()
-{
+    public function submit2()
+    {
 
-    $this->validate([
-        'legajo' => 'required',
-        'jerarquia_id' => 'required',
-        'destino_actual' => 'required',
-        'ciudad' => 'required',
-        'edad' => 'required',
-        'estado_id' => 'required', // Agregar validación para el estado_id
-        'NroCredencial' => 'required',
-        'antiguedad' => 'required',
-        'chapa' => 'required',
-    ]);
+        $this->validate([
+            'legajo' => 'required',
+            'jerarquia_id' => 'required',
+            'destino_actual' => 'required',
+            // 'ciudad' => 'required',
+            'ciudad_id' => 'required|exists:ciudades,id',
+            'edad' => 'required',
+            'estado_id' => 'required', // Agregar validación para el estado_id
+            'NroCredencial' => 'required',
+            'antiguedad' => 'required',
+            'chapa' => 'required',
+        ]);
 
 
-    $this->customer = tap($this->customer)->update([
-        'legajo' => $this->legajo,
-        'jerarquia_id' => $this->jerarquia_id,
-        'destino_actual' => $this->destino_actual,
-        'ciudad' => $this->ciudad,
-        'edad' => $this->edad,
-        'estado_id' => $this->estado_id, // Incluir estado_id en la actualización
-        'NroCrendecial' => $this->NroCredencial,
-        'antiguedad' => $this->antiguedad,
-        'chapa' => $this->chapa,
-    ]);
+        $this->customer = tap($this->customer)->update([
+            'legajo' => $this->legajo,
+            'jerarquia_id' => $this->jerarquia_id,
+            'destino_actual' => $this->destino_actual,
+            // 'ciudad' => $this->ciudad,
+            'ciudad_id' => $this->ciudad_id,
+            'edad' => $this->edad,
+            'estado_id' => $this->estado_id, // Incluir estado_id en la actualización
+            'NroCrendecial' => $this->NroCredencial,
+            'antiguedad' => $this->antiguedad,
+            'chapa' => $this->chapa,
+        ]);
 
-    $this->step++;
-}
+        $this->step++;
+    }
 
-// ...
+    // ...
 
 
     public function submit3()
     {
-        
+
         $this->validate([
             'peso' => 'required',
             'altura'  => 'required',
-            'factore_id'=> 'required',
-            'enfermedad'=>'required',
-            'remedios'=>'required',
+            'factore_id' => 'required',
+            'enfermedad' => 'required',
+            'remedios' => 'required',
         ]);
 
         $this->customer = tap($this->customer)->update([

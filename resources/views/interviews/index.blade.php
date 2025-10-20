@@ -176,7 +176,7 @@
 
                         <div class=" border-b border-slate-100 pb-1">
                             <dt class="text-slate-500 font-medium">Ciudad</dt>
-                            <dd class="font-semibold text-slate-800 capitalize break-words">{{ $paciente->ciudad }}
+                            <dd class="font-semibold text-slate-800 capitalize break-words">{{ $paciente->ciudad->nombre ?? 'Sin ciudad' }}
                             </dd>
                         </div>
 
@@ -370,7 +370,7 @@
                     </div>
                 </div> --}}
                 <!-- BOTONES 4 -->
-                <div class="bg-white rounded-md p-2 mt-1 mx-0">
+                {{-- <div class="bg-white rounded-md p-2 mt-1 mx-0">
                     <div>
                         <ul>
                             <!-- REINICIAR DIAS DE LICENCIA -->
@@ -382,7 +382,7 @@
                             </li>
                         </ul>
                     </div>
-                </div>
+                </div> --}}
             @endcan
         </section>
     </div>

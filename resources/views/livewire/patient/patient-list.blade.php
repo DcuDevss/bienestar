@@ -62,7 +62,8 @@
                                 <tr wire:key="{{ $paciente->id }}" class="border-b border-gray-700 hover:bg-[#204060]">
                                     {{-- <th class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-nowrap dark:text-white">
                                         {{ $paciente->id }}</th> --}}
-                                    <th class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
+                                    <th
+                                        class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
                                         {{ $paciente->apellido_nombre }}</th>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->dni }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->legajo }}</td>
@@ -70,7 +71,8 @@
                                         {{ $paciente->jerarquia_id ? $paciente->jerarquias->name : 'No asignado' }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
                                         {{ $paciente->destino_actual }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->ciudad }}</td>
+                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300 text-center">
+                                        {{ $paciente->ciudad->nombre ?? 'Sin ciudad' }}</td>
                                     <td class="tiBody px-2 py-1 text-[14px]">
                                         @if ($paciente->estado_id == 1)
                                             <span
@@ -99,16 +101,13 @@
                                     <td
                                         class="tiBody px-4 py-3
                                         @php $ultimaEnfermedad = $paciente->disases->last(); @endphp
-                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
-                                            @php
+                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia) @php
                                                 $fechaFinalizacionLicencia = \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia);
                                             @endphp
                                             @if ($fechaFinalizacionLicencia->startOfDay() == \Carbon\Carbon::now()->startOfDay())
-                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse /* Amarillo con transparencia y animación de pulso */
-                                            @endif
+                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse /* Amarillo con transparencia y animación de pulso */ @endif
                                         @endif
-                                        font-semibold text-xs text-white uppercase tracking-widest focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition"
-                                    >
+                                        font-semibold text-xs text-white uppercase tracking-widest focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition">
                                         @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
                                             {{ \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia)->format('d-m-Y H:i:s') }}
                                         @else
@@ -133,12 +132,12 @@
                                             </a>
                                             <!-- Opción Eliminar -->
                                             @role('super-admin')
-                                            <button
-                                                onclick="confirm('Seguro desea eliminar a este paciente {{ $paciente->apellido_nombre }} ?') || event.stopImmediatePropagation()"
-                                                wire:click="delete({{ $paciente->id }})"
-                                                class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-red-700 hover:bg-red-600">
-                                                Eliminar
-                                            </button>
+                                                <button
+                                                    onclick="confirm('Seguro desea eliminar a este paciente {{ $paciente->apellido_nombre }} ?') || event.stopImmediatePropagation()"
+                                                    wire:click="delete({{ $paciente->id }})"
+                                                    class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-red-700 hover:bg-red-600">
+                                                    Eliminar
+                                                </button>
                                             @endrole
                                         </div>
                                     </td>
@@ -190,7 +189,8 @@
 
                                 {{ $dp->paciente->jerarquias->name ?? 'Sin jerarquía' }}
                                 - {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
-                                - Finaliza: {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
+                                - Finaliza:
+                                {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
                                 {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
                                 - Finaliza:
                                 {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
@@ -205,7 +205,6 @@
         </div>
     </section>
 </div>
-{{-- comentario de prueba --}}
 
 
 </div>

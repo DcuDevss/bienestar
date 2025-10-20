@@ -103,7 +103,6 @@
                     @endif
                 </div>
 
-
                 <div>
                     <label for="name"
                         class="block text-sm font-medium text-gray-700">{{ __('Tipo de Licencia') }}</label>
@@ -115,9 +114,6 @@
                     </select>
                 </div>
                 <x-input-error for="tipolicencia_id" />
-
-
-
 
                 <div>
                     <label for="fecha_presentacion_certificado"
@@ -191,8 +187,6 @@
             </div>
             <input type="hidden" wire:model="disase_id">
         </x-slot>
-
-
 
         <x-slot name="footer">
             @if (session('error'))

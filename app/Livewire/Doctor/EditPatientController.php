@@ -2,6 +2,7 @@
 
 namespace App\Livewire\Doctor;
 
+use App\Models\Ciudade;
 use Livewire\Component;
 use App\Models\Paciente;
 use App\Models\Estado;
@@ -27,7 +28,10 @@ class EditPatientController extends Component
     public $legajo;
     public $jerarquia_id;
     public $destino_actual;
-    public $ciudad;
+    // public $ciudad;
+    public $ciudad_id;
+    public $ciudades;
+
     public $edad;
     public $estado_id;
     public $NroCredencial;
@@ -53,6 +57,7 @@ class EditPatientController extends Component
         $this->estados    = Estado::all();
         $this->factores   = Factore::all();
         $this->jerarquias = Jerarquia::all();
+        $this->ciudades = Ciudade::all();
     }
 
     public function loadPatientData()
@@ -72,7 +77,8 @@ class EditPatientController extends Component
         $this->legajo           = $customer->legajo;
         $this->jerarquia_id     = $customer->jerarquia_id;
         $this->destino_actual   = $customer->destino_actual;
-        $this->ciudad           = $customer->ciudad;
+        // $this->ciudad           = $customer->ciudad;
+        $this->ciudad_id        = $customer->ciudad_id;
         $this->edad             = $customer->edad;
         $this->estado_id        = $customer->estado_id;
         $this->NroCredencial    = $customer->NroCredencial;
@@ -105,7 +111,7 @@ class EditPatientController extends Component
                 'legajo'            => 'nullable|integer',
                 'jerarquia_id'      => 'nullable|integer|exists:jerarquias,id',
                 'destino_actual'    => 'nullable|string|max:255',
-                'ciudad'            => 'nullable|string|max:100',
+                'ciudad_id'         => 'required|integer|exists:ciudades,id',
                 'edad'              => 'nullable|integer|min:0',
                 'estado_id'         => 'nullable|integer|exists:estados,id',
                 'NroCredencial'     => 'nullable|integer',
@@ -139,7 +145,8 @@ class EditPatientController extends Component
             $customer->legajo           = $this->legajo;
             $customer->jerarquia_id     = $this->jerarquia_id;
             $customer->destino_actual   = $this->destino_actual;
-            $customer->ciudad           = $this->ciudad;
+            // $customer->ciudad           = $this->ciudad;
+            $customer->ciudad_id        = $this->ciudad_id;
             $customer->edad             = $this->edad;
             $customer->estado_id        = $this->estado_id;
             $customer->NroCredencial    = $this->NroCredencial;
@@ -164,7 +171,6 @@ class EditPatientController extends Component
 
 
             Log::debug('[EditPatientController] submit() end');
-
         } catch (ValidationException $e) {
             Log::warning('[EditPatientController] validation FAILED', [
                 'errors' => $e->validator->errors()->toArray(),

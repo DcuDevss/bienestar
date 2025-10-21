@@ -36,7 +36,7 @@ class VerHistorial extends Component
         $dir = $this->dir(); // "pdfhistoriales/{$this->pacienteId}"
 
         // --- 1) PDFs en BD: HISTORIAL ---
-        $fromHist = Pdfhistorial::where('paciente_id', $this->pacienteId)->get()->map(function ($row) use ($dir) {
+        $fromHist = PdfHistorial::where('paciente_id', $this->pacienteId)->get()->map(function ($row) use ($dir) {
             $origName   = basename($row->file);                // nombre "lindo" que guardaste
             $primary    = "{$dir}/{$origName}";
             $path       = Storage::disk('public')->exists($primary) ? $primary : null;
@@ -181,7 +181,7 @@ class VerHistorial extends Component
 
         // 2) Borrar registros en BD que apunten a ese archivo
         // Pdfhistorial guarda en 'file' (ruta completa dentro de 'public')
-        \App\Models\Pdfhistorial::where('paciente_id', $this->pacienteId)
+        \App\Models\PdfHistorial::where('paciente_id', $this->pacienteId)
             ->where('file', 'like', "%/{$basename}")
             ->delete();
 
@@ -216,7 +216,7 @@ class VerHistorial extends Component
         \Storage::disk('public')->delete($realPath);
 
         // Intento borrar filas en ambas tablas si estuvieran
-        \App\Models\Pdfhistorial::where('paciente_id', $this->pacienteId)
+        \App\Models\PdfHistorial::where('paciente_id', $this->pacienteId)
             ->where(function ($q) use ($realPath, $basename) {
                 $q->where('file', $realPath)->orWhere('file', 'like', "%{$basename}");
             })->delete();

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class DerivacionPsiquiatrica extends Model
 {
     use HasFactory;
+        protected $table = 'derivacionpsiquiatricas';
+
     protected $fillable=['name'];
     public function tratamientos(){
 

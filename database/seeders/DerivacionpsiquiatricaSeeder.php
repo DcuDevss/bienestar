@@ -2,19 +2,15 @@
 
 namespace Database\Seeders;
 
-use App\Models\DerivacionPsiquiatrica;
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use App\Models\DerivacionPsiquiatrica;
 
 class DerivacionPsiquiatricaSeeder extends Seeder
 {
-    /**
-     * Run the database seeeds.
-     */
     public function run(): void
     {
-        DerivacionPsiquiatrica::create(['name'=>'si']);
-        DerivacionPsiquiatrica::create(['name'=>'no']);
-        DerivacionPsiquiatrica::create(['name'=>'otros']);
+        foreach (['si', 'no', 'otros'] as $name) {
+            DerivacionPsiquiatrica::firstOrCreate(['name' => $name]);
+        }
     }
 }

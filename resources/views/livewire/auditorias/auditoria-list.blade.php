@@ -2,7 +2,7 @@
     <section class="seccionTab xl:mx-auto lg:mx-auto w-[95%]">
         <div class="mx-auto text-[12px]">
             <div class="bg-gray-800 shadow-md sm:rounded-lg">
-                <!-- Cabecera con buscador -->
+                <!-- Cabecera coon buscador -->
                 <div class="flex items-center justify-between p-4">
                     <div class="w-fit">
                         <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
@@ -19,7 +19,7 @@
                     </div>
                 </div>
 
-                <!-- Tabla -->
+                <!-- Tablaa -->
                 <div class="overflow-x-auto">
                     <table class="w-full text-left text-gray-500">
                         <thead class="text-xs text-white uppercase bg-gray-900">

@@ -8,6 +8,8 @@ use Illuminate\Database\Eloquent\Model;
 class PdfHistorial extends Model
 {
     use HasFactory;
+        protected $table = 'pdfhistorials';
+
     protected $guarded=[];
 
     public function paciente()

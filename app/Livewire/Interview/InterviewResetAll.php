@@ -54,16 +54,16 @@ class InterviewResetAll extends Component
         Auditoria::create([
             'user_id' => $usuario?->id,
             'accion'  => 'reset_licencias_global',
-            'detalle' => "Pacientes: {$pacientesProcesados}, Certificados: {$certificadosProcesados}, Año: {$anioEntrante}",
+            'detalle' => "Pacientes: {$pacientesProcesados}, Certificados: {$certificadosProcesados}",
         ]);
 
-        session()->flash(
-            'success',
-            "✅ Licencias del año {$anioEntrante} reseteadas correctamente.<br>" .
-            "👤 Responsable: <b>{$usuario?->name}</b><br>" .
-            "📌 Pacientes procesados: <b>{$pacientesProcesados}</b><br>" .
-            "🗂️ Certificados actualizados: <b>{$certificadosProcesados}</b>"
+          $this->dispatch(
+            'swal',
+            title: 'Exito',
+            text:  'Licencias Reseteadas con Exito!.',
+            icon:  'success'
         );
+
     }
 
 

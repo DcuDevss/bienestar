@@ -265,6 +265,11 @@ class PatientCertificado extends Component
     private function optimizarImagen($file, $dir)
     {
         if (!$file) return null;
+<<<<<<< HEAD
+        $extension = strtolower($file->getClientOriginalExtension());
+        $filename  = uniqid() . '_' . $file->getClientOriginalName();
+        $path      = storage_path("app/public/{$dir}/{$filename}");
+=======
         Log::debug('🖼️ Optimizando imagen', ['nombre' => $file->getClientOriginalName()]);
 
         try {
@@ -272,6 +277,7 @@ class PatientCertificado extends Component
             $baseName  = pathinfo($file->getClientOriginalName(), PATHINFO_FILENAME);
             $filename  = uniqid() . '_' . Str::slug($baseName) . '.jpg';
             $path      = storage_path("app/public/{$dir}/{$filename}");
+>>>>>>> 052a4409b7a04c713724d46deb6498890dc4585f
 
             switch ($extension) {
                 case 'png':

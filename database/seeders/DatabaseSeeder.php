@@ -38,13 +38,13 @@ class DatabaseSeeder extends Seeder
          $this->call(ProcedenciaSeeder::class);
          $this->call(TipolicenciaSeeder::class);
          $this->call(TipoEntrevistaSeeder::class);
-         $this->call(DerivacionpsiquiatricaSeeder::class);
+         $this->call(DerivacionPsiquiatricaSeeder::class);
          $this->call(IndicacionterapeuticaSeeder::class);
          $this->call(EstadoSeeder::class);
          $this->call(PortacionSeeder::class);
          $this->call(AbordajeSeeder::class);
          $this->call(ActitudEntrevistaSeeder::class);
          $this->call(EstadoEntrevistaSeeder::class);
-         $this->call(DerivacionpsiquiatricaSeeder::class);
+        // $this->call(DerivacionpsiquiatricaSeeder::class); cambios
     }
 }

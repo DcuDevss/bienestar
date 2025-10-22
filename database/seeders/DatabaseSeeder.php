@@ -39,7 +39,7 @@ class DatabaseSeeder extends Seeder
          $this->call(TipolicenciaSeeder::class);
          $this->call(TipoEntrevistaSeeder::class);
          $this->call(DerivacionPsiquiatricaSeeder::class);
-         $this->call(IndicacionterapeuticaSeeder::class);
+         $this->call(IndicacionTerapeuticaSeeder::class);
          $this->call(EstadoSeeder::class);
          $this->call(PortacionSeeder::class);
          $this->call(AbordajeSeeder::class);

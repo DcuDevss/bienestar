@@ -1,6 +1,6 @@
 <x-app-layout>
     <x-slot name="header">
-        <!-- <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+        <!-- <h2 class="font-semibold text-xl text-gray-800 leading-tight"> okis
             {{ __('Dashboard') }}
         </h2> -->
     </x-slot>
@@ -19,7 +19,7 @@
 
                 {{--<div class="col-span-3 md:col-span-1 lg:col-span-1 xl:col-span-1">
                     <h1>@livewire('schedulle.schedulle')</h1>
-                </div>--}}
+                </div>--}
             </div>
         </div>
     </div>

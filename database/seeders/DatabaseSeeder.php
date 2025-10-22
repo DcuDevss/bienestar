@@ -6,6 +6,7 @@ namespace Database\Seeders;
 
 use App\Models\ActitudEntrevista;
 use App\Models\DerivacionPsiquiatrica;
+use App\Models\Enfermedade;
 use App\Models\Estado;
 use App\Models\EstadoEntrevista;
 use App\Models\Portacion;
@@ -46,5 +47,9 @@ class DatabaseSeeder extends Seeder
          $this->call(ActitudEntrevistaSeeder::class);
          $this->call(EstadoEntrevistaSeeder::class);
          $this->call(DerivacionpsiquiatricaSeeder::class);
+         $this->call(EnfermedadeSeeder::class);
+         $this->call(PacienteSeeder::class);
+         $this->call(CiudadSeeder::class);
+         $this->call(SaludMentalesSeeder::class);
     }
 }

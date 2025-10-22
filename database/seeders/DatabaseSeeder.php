@@ -46,6 +46,6 @@ class DatabaseSeeder extends Seeder
          $this->call(ActitudEntrevistaSeeder::class);
          $this->call(EstadoEntrevistaSeeder::class);
          $this->call(CiudadSeeder::class);
-        // $this->call(DerivacionpsiquiatricaSeeder::class); cambios s eagrego ciudad
+        // $this->call(DerivacionpsiquiatricaSeeder::class); cambios s eagrego ciudad estados
     }
 }

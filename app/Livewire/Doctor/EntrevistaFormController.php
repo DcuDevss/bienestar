@@ -94,9 +94,10 @@ class EntrevistaFormController extends Component
         $this->abordajes = Abordaje::all();
         $this->estados_entrevista = EstadoEntrevista::all();
         $this->portacions = Portacion::all();
-        $this->salud_mentales = SaludMentale::all();
-
-
+        // $this->salud_mentales = SaludMentale::all();
+        // $this->salud_mentales = SaludMentale::orderBy('codigo', 'asc')->get();
+        $this->salud_mentales = SaludMentale::orderByRaw("CASE WHEN codigo REGEXP '^[0-9]+$' THEN LPAD(codigo, 10, '0') ELSE codigo END ASC")->get();
+        Log::info('Registros en $salud_mentales: ' . $this->salud_mentales->count()); 
 
         // Valor predeterminado
     }

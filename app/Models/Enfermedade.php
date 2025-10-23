@@ -14,9 +14,6 @@ class Enfermedade extends Model
         'name',
         'slug',
         'codigo',
-        'tipolicencia_id',
-
-
     ];
 
     /* public static function search($search){
@@ -47,11 +44,11 @@ class Enfermedade extends Model
     }
 
 
-    public function tratamientos()
+    /* public function tratamientos()
     {
 
         return $this->hasMany(Enfermedade::class, 'enfermedade_id');
-    }
+    } */
 
     public function pacientes()
     {

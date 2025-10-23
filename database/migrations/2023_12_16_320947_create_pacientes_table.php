@@ -23,6 +23,7 @@ return new class extends Migration
             $table->string('estado')->nullable();
             $table->string('destino_actual')->nullable();
             $table->string('ciudad')->nullable();
+            $table->unsignedBigInteger('ciudad_id')->nullable();
             $table->integer('chapa')->nullable();
             $table->integer('NroCredencial')->nullable();
             $table->string('sexo')->nullable();
@@ -44,17 +45,19 @@ return new class extends Migration
             $table->float('peso')->nullable();
             $table->float('altura')->nullable();
             $table->unsignedBigInteger('estado_id')->nullable();
-            $table->foreign('estado_id')->references('id')->on('estados')->onDelete('cascade');
             $table->unsignedBigInteger('factore_id')->nullable();
-            $table->foreign('factore_id')->references('id')->on('factores')->onDelete('cascade');
             $table->unsignedBigInteger('jerarquia_id')->nullable();
-            $table->foreign('jerarquia_id')->references('id')->on('jerarquias')->onDelete('cascade');
             $table->string('comisaria_servicio')->nullable();
             $table->timestamp('fecha_atencion')->nullable();
             $table->text('enfermedad')->nullable();
             $table->string('remedios')->nullable();
             $table->bigInteger('cuil')->nullable()->default(12);
             $table->softDeletes();
+            
+            $table->foreign('estado_id')->references('id')->on('estados')->onDelete('cascade');
+            $table->foreign('jerarquia_id')->references('id')->on('jerarquias')->onDelete('cascade');
+            $table->foreign('factore_id')->references('id')->on('factores')->onDelete('cascade');
+            $table->foreign('ciudad_id')->references('id')->on('ciudades')->onDelete('set null');
             $table->timestamps();
         });
     }

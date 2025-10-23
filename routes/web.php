@@ -108,19 +108,23 @@ Route::middleware([
     })->name('dashboard');
 });
 
-// --- DEBUG: colocar aquí ---
 Route::get('/debug-perm', function () {
     $u = auth()->user();
+
     return [
         'auth_guard_default' => config('auth.defaults.guard'),
-        'perm_guard_default' => config('permission.defaults.guard'),
+        'perm_guard_default' => config('permission.defaults.guard'), // puede ser null
         'user_id' => optional($u)->id,
         'user_email' => optional($u)->email,
         'roles' => optional($u)->getRoleNames(),
-        'can_paciente_certificado_edit' => optional($u)->can('paciente-certificado.edit'),
+
+        // 👇 AÑADIDOS:
+        'hasPermissionTo_paciente_certificado_edit' => optional($u)->hasPermissionTo('paciente-certificado.edit'),
+        'all_permissions_count' => optional($u)->getAllPermissions()->count(),
+        'first_10_permissions' => optional($u)->getAllPermissions()->pluck('name')->take(10),
     ];
-})->middleware(['auth']); // 'web' ya se aplica a todo web.php por defecto
-// --- FIN DEBUG ---
+})->middleware(['auth']);
+
 /***finailza*** */
 
 Route::view('/administrador', 'administrador')->name('panel-administrador');

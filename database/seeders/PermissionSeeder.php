@@ -29,12 +29,12 @@ class PermissionSeeder extends Seeder
             'multiform.index',
 
             // Pacientes / historias
-'patient-certificados.show',
-'patient-enfermedades.show',
-'paciente-certificado.edit', // ✅ debe coincidir con routes/web.php
-'paciente-general.show',     // ✅ lo usás en middleware
-'paciente.ver-historial',
+            'patient-certificados.show',
+            'patient-enfermedades.show',
+            'patient-certificado.edit',
+            'paciente-general.show',     // <-- agregar este porque lo usas en middleware
 
+            'paciente.ver-historial',
 
             // Áreas específicas
             'psicologo.index',

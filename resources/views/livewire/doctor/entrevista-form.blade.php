@@ -558,27 +558,26 @@
                         </div>
 
                         <div x-data x-init="new TomSelect($refs.selectSalud, {
-    maxOptions: null
-    // Elimina sortField para respetar el orden de la consulta
-})"
-    x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 11)"
-    class="mb-4">
-    <label for="salud_mentale_id" class="block text-sm font-medium text-gray-700">Diagnóstico:</label>
-    <select x-ref="selectSalud" wire:model="salud_mentale_id" class="opcion mt-1 p-2 w-full border rounded-md">
-        <option value="">Seleccione una opción</option>
-        @foreach ($salud_mentales as $salud)
-            <option value="{{ $salud->id }}">
-                {{ $salud->codigo }} - {{ $salud->name }} - {{ $salud->slug }}
-            </option>
-        @endforeach
-    </select>
-    @error('salud_mentale_id')
-        <span class="text-red-500">{{ $message }}</span>
-    @enderror
-</div>
-
-
-
+                            maxOptions: null
+                            // Elimina sortField para respetar el orden de la consulta
+                        })"
+                            x-show="!(tipo_entrevista_id == 1 || tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 11)"
+                            class="mb-4">
+                            <label for="salud_mentale_id"
+                                class="block text-sm font-medium text-gray-700">Diagnóstico:</label>
+                            <select x-ref="selectSalud" wire:model="salud_mentale_id"
+                                class="opcion mt-1 p-2 w-full border rounded-md">
+                                <option value="">Seleccione una opción</option>
+                                @foreach ($salud_mentales as $salud)
+                                    <option value="{{ $salud->id }}">
+                                        {{ $salud->codigo }} - {{ $salud->name }} - {{ $salud->slug }}
+                                    </option>
+                                @endforeach
+                            </select>
+                            @error('salud_mentale_id')
+                                <span class="text-red-500">{{ $message }}</span>
+                            @enderror
+                        </div>
 
                         <div x-show="!(tipo_entrevista_id == 2 || tipo_entrevista_id == 3 || tipo_entrevista_id == 4 || tipo_entrevista_id == 6 || tipo_entrevista_id == 7 || tipo_entrevista_id == 10 || tipo_entrevista_id == 11)"
                             class="mb-4">

@@ -84,7 +84,7 @@ class EntrevistaFormController extends Component
         $this->paciente_id = $paciente_id;
         $this->paciente = Paciente::find($paciente_id);
         // Cargar las opciones de los select
-        $this->tipos_entrevista = TipoEntrevista::all();  // Simula la carga de los tipos
+        $this->tipos_entrevista = TipoEntrevista::all();  // Simula la caarga de los tipos
         $this->actitudes_entrevista = ActitudEntrevista::all();
         $this->indicacionterapeuticas = IndicacionTerapeutica::all();
         $this->abordajes = Abordaje::all();

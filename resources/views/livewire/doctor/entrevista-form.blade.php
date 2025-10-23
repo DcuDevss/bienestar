@@ -21,7 +21,7 @@
     <form wire:submit.prevent="submit">
         @csrf
 
-        <!-- Card de Entrevista -->
+        <!-- Card de Entrevistaa -->
         <div class="bg-white shadow-md rounded-lg mb-4 mt-4 mx-auto px-4 w-9/12">
             <div class="p-4 border-b cursor-pointer" onclick="toggleCard('collapseOne')">
                 <h3 class="font-semibold text-lg">Entrevista</h3>

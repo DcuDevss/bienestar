@@ -14,6 +14,7 @@ use App\Models\Paciente;
 use App\Models\Portacion;
 use App\Models\SaludMentale;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 
 
 class EntrevistaFormController extends Component
@@ -76,19 +77,14 @@ class EntrevistaFormController extends Component
     public $index;
 
 
+
     public function mount($paciente_id)
     {
 
         $this->paciente_id = $paciente_id;
         $this->paciente = Paciente::find($paciente_id);
-
-
-
-
-
         // Cargar las opciones de los select
-
-        $this->tipos_entrevista = TipoEntrevista::all();  // Simula la carga de los tipos
+        $this->tipos_entrevista = TipoEntrevista::all();  // Simula la caarga de los tipos
         $this->actitudes_entrevista = ActitudEntrevista::all();
         $this->indicacionterapeuticas = IndicacionTerapeutica::all();
         $this->abordajes = Abordaje::all();
@@ -96,9 +92,15 @@ class EntrevistaFormController extends Component
         $this->portacions = Portacion::all();
         // $this->salud_mentales = SaludMentale::all();
         // $this->salud_mentales = SaludMentale::orderBy('codigo', 'asc')->get();
-        $this->salud_mentales = SaludMentale::orderByRaw("CASE WHEN codigo REGEXP '^[0-9]+$' THEN LPAD(codigo, 10, '0') ELSE codigo END ASC")->get();
-        Log::info('Registros en $salud_mentales: ' . $this->salud_mentales->count()); 
+        $this->salud_mentales = SaludMentale::select('id','codigo','name','slug')->get()
+            ->sortBy(function ($s) {
+                return preg_match('/^\d+$/', (string) $s->codigo)
+                    ? str_pad($s->codigo, 10, '0', STR_PAD_LEFT) // numéricos con padding
+                    : (string) $s->codigo;                       // no numéricos tal cual
+            })
+            ->values(); // reindexa colección
 
+        Log::info('Registros en $salud_mentales: '.$this->salud_mentales->count());
         // Valor predeterminado
     }
 

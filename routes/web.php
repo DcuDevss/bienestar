@@ -19,8 +19,8 @@ use App\Http\Controllers\NuevoUsuarioController;
 use App\Http\Controllers\Psicologo\PsicologoController;
 use App\Http\Controllers\PdfController;
 //use App\Http\Controllers\Interviews\InterviewController;
-use App\Http\Livewire\Paciente\PdfViewer as PacientePdfViewer;
-use App\Livewire\Paciente\PdfViewer;
+//use App\Http\Livewire\Paciente\PdfViewer as PacientePdfViewer;
+//use App\Livewire\Paciente\PdfViewer;
 /* use App\Livewire\Doctor\DiaDeTrabajoController; */
 use App\Livewire\Doctor\DisaseController;
 use App\Livewire\Doctor\EnfermedadeController;
@@ -45,7 +45,7 @@ use App\Livewire\Patient\PatientTratamiento;
 use App\Livewire\Patient\PatientEntrevistas;
 use App\Livewire\Auditorias\AuditoriaList;
 use App\Models\Paciente;
-use GuzzleHttp\Middleware;
+//use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
 
 
@@ -65,7 +65,7 @@ use Illuminate\Support\Facades\Auth;
 Route::get('/', function () {
     return view('welcome');
 });
-
+/*
 Route::middleware([
     'auth:sanctum',
     config('jetstream.auth_session'),
@@ -75,7 +75,7 @@ Route::middleware([
         return view('dashboard');
     })->name('dashboard');
 });
-
+*/
 /********nuevo********/
 
 Route::middleware([
@@ -110,19 +110,16 @@ Route::middleware([
 
 Route::get('/debug-perm', function () {
     $u = auth()->user();
-
-    return [
+    return response()->json([
         'auth_guard_default' => config('auth.defaults.guard'),
-        'perm_guard_default' => config('permission.defaults.guard'), // puede ser null cc
+        'perm_guard_default' => config('permission.defaults.guard'),
         'user_id' => optional($u)->id,
         'user_email' => optional($u)->email,
         'roles' => optional($u)->getRoleNames(),
-
-        // 👇 AÑADIDOS:
         'hasPermissionTo_paciente_certificado_edit' => optional($u)->hasPermissionTo('paciente-certificado.edit'),
         'all_permissions_count' => optional($u)->getAllPermissions()->count(),
         'first_10_permissions' => optional($u)->getAllPermissions()->pluck('name')->take(10),
-    ];
+    ]);
 })->middleware(['auth']);
 
 /***finailza*** */

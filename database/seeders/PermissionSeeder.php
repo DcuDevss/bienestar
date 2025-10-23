@@ -32,8 +32,6 @@ class PermissionSeeder extends Seeder
             'patient-certificados.show',
             'patient-enfermedades.show',
             'patient-certificado.edit',
-            'paciente-general.show',     // <-- agregar este porque lo usas en middleware
-
             'paciente.ver-historial',
 
             // Áreas específicas

@@ -19,7 +19,7 @@ class PatientList extends Component
     #[Url(history: true)] public $sortDir = 'ASC';
     #[Url] public $perPage = 8;
 
-    /* ---------- Confirmación SweetAlert ---------- */
+    /* ---------- Confirmación SweetAlert ---------------- */
     public function confirmarEliminar(int $id, string $nombre = '')
     {
         $this->dispatch('confirm', [
@@ -28,7 +28,7 @@ class PatientList extends Component
             'icon'        => 'warning',
             'confirmText' => 'Sí, eliminar',
             'cancelText'  => 'Cancelar',
-            'action'      => 'eliminar-paciente', // listener abajo
+            'action'      => 'eliminar-paciente', // listener abajo que 
             'params'      => ['id' => $id],
         ]);
     }

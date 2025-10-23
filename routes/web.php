@@ -66,15 +66,6 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::middleware([
-    'auth:sanctum',
-    config('jetstream.auth_session'),
-    'verified',
-])->group(function () {
-    Route::get('/dashboard', function () {
-        return view('dashboard');
-    })->name('dashboard');
-});
 
 /********nuevo********/
 
@@ -107,6 +98,25 @@ Route::middleware([
         }
     })->name('dashboard');
 });
+
+Route::get('/debug-perm', function () {
+    $u = auth()->user();
+    $rt = request()->route();
+
+    $mw = collect($rt?->middleware() ?? []);
+    $needs = $mw->filter(fn($m)=> str_starts_with($m,'can:'))
+                ->map(fn($m)=> substr($m,4))
+                ->values();
+
+    return [
+        'route'  => $rt?->getName(),
+        'uri'    => request()->path(),
+        'needs'  => $needs,                      // permisos que pide la ruta
+        'roles'  => $u?->getRoleNames() ?? [],
+        'can'    => $needs->mapWithKeys(fn($p)=> [$p => $u?->can($p)]),
+    ];
+})->middleware('auth');
+
 /***finailza*** */
 
 Route::view('/administrador', 'administrador')->name('panel-administrador');

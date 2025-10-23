@@ -113,7 +113,7 @@ Route::get('/debug-perm', function () {
 
     return [
         'auth_guard_default' => config('auth.defaults.guard'),
-        'perm_guard_default' => config('permission.defaults.guard'), // puede ser null
+        'perm_guard_default' => config('permission.defaults.guard'), // puede ser null cc
         'user_id' => optional($u)->id,
         'user_email' => optional($u)->email,
         'roles' => optional($u)->getRoleNames(),

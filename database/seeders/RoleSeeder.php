@@ -30,32 +30,33 @@ class RoleSeeder extends Seeder
             $R[$name] = Role::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
         }
 
-        // Sets de permisos por rol (por NOMBRE)
+        // Sets de permisos por rol (por NOMBRE)patient-certificado.edit
         $adminJefe = [
             'users.index','users.edit','users.update',
             'roles.index','roles.edit','roles.create','roles.show',
             'oficinas.index','diadetrabajos.index','curriculum.index',
-            'interviews.index','disases.index','multiform.index',
-            'patient-certificados.show','patient-enfermedades.show','patient-certificado.edit',
+            'interviews.index','disases.index','multiform.index','patient-certificado.edit',
+            'patient-certificados.show','patient-enfermedades.show','paciente-certificado.edit',
             'paciente.ver-historial','psicologo.index','enfermero.enfermero-historial',
         ];
 
+        //
         $administrativo = [
             'oficinas.index','diadetrabajos.index','curriculum.index',
             'interviews.index','disases.index','multiform.index',
             'patient-certificados.show','patient-enfermedades.show',
-            'paciente.ver-historial',
+            'paciente.ver-historial','patient-certificado.edit',
         ];
 
         $doctor = [
             'interviews.index',
             'patient-certificados.show','patient-enfermedades.show','patient-certificado.edit',
-            'paciente.ver-historial',
+            'paciente.ver-historial','paciente-certificado.edit'
         ];
 
         $psico     = ['psicologo.index','interviews.index','paciente.ver-historial'];
         $nutri     = ['interviews.index','paciente.ver-historial'];
-        $enfermero = ['enfermero.enfermero-historial','paciente.ver-historial'];
+        $enfermero = ['enfermero.enfermero-historial','paciente.ver-historial,'];
         $profeGym  = ['interviews.index','paciente.ver-historial'];
 
         // Asignaciones (colecciones por nombre)

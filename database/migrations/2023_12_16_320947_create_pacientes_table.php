@@ -53,7 +53,7 @@ return new class extends Migration
             $table->string('remedios')->nullable();
             $table->bigInteger('cuil')->nullable()->default(12);
             $table->softDeletes();
-            
+
             $table->foreign('estado_id')->references('id')->on('estados')->onDelete('cascade');
             $table->foreign('jerarquia_id')->references('id')->on('jerarquias')->onDelete('cascade');
             $table->foreign('factore_id')->references('id')->on('factores')->onDelete('cascade');

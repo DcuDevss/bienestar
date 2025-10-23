@@ -1,9 +1,9 @@
-<style>
+<div>
+    <style>
     .opcion .ts-dropdown .option {
         font-size: 12px !important;
     }
-</style>
-<div>
+    </style>
     @if (session()->has('message'))
         <div class="alert alert-success bg-green-500 text-white p-4 rounded-md shadow-md mb-4">
             <strong class="font-bold"></strong>

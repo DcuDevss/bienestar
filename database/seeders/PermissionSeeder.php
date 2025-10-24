@@ -32,7 +32,6 @@ class PermissionSeeder extends Seeder
             'patient-certificados.show',
             'patient-enfermedades.show',
             'patient-certificado.edit',
-            'paciente-certificado.edit',
             'paciente.ver-historial',
 
             // Áreas específicas

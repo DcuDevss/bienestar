@@ -38,10 +38,18 @@ class PdfPsiquiatraController extends Component
         return "pdfhistoriales/{$this->paciente->id}";
     }
 
-    public function uploadPdfs()
+   public function uploadPdfs()
     {
+        // 1) Guard clause: nada seleccionado
+        if (empty($this->pdfs) || count($this->pdfs) === 0) {
+            $this->dispatch('swal', title: 'Sin archivos', text: 'Seleccioná al menos un PDF para subir.', icon: 'error');
+            return;
+        }
+
+        // 2) Validación completa
         $this->validate([
-            'pdfs.*' => 'required|file|mimes:pdf|max:5120',
+            'pdfs'   => 'required|array|min:1',
+            'pdfs.*' => 'file|mimes:pdf|max:5120',
         ]);
 
         foreach ($this->pdfs as $pdf) {
@@ -60,42 +68,44 @@ class PdfPsiquiatraController extends Component
             ]);
         }
 
-        $this->pdfs = [];
+        $this->reset('pdfs'); // o $this->pdfs = [];
         $this->loadPdfs();
+
         $this->dispatch('swal', title: 'Cargado', text: 'PDF(s) cargados correctamente.', icon: 'success');
     }
 
-public function confirmarEliminar($pdfId)
-{
-    $this->dispatch('confirm', [
-        'title'       => '¿Eliminar PDF?',
-        'text'        => 'Esta acción no se puede deshacer.',
-        'icon'        => 'warning',
-        'confirmText' => 'Sí, eliminar',
-        'cancelText'  => 'Cancelar',
-        'id'          => $pdfId,   // 👈 pasamos solo el id
-    ]);
-}
 
-public function eliminarPdf($pdfId)
-{
-    $pdf = PdfPsiquiatra::find($pdfId);
-
-    if ($pdf) {
-        if (Storage::disk('public')->exists($pdf->filepath)) {
-            Storage::disk('public')->delete($pdf->filepath);
-        }
-
-        $pdf->delete();
-        $this->loadPdfs();
-
-        // ✅ éxito
-        $this->dispatch('swal', title: 'Eliminado', text: 'PDF eliminado correctamente.', icon: 'success');
-    } else {
-        // ⚠️ no encontrado
-        $this->dispatch('swal', title: 'No encontrado', text: 'El PDF no existe.', icon: 'error');
+    public function confirmarEliminar($pdfId)
+    {
+        $this->dispatch('confirm', [
+            'title'       => '¿Eliminar PDF?',
+            'text'        => 'Esta acción no se puede deshacer.',
+            'icon'        => 'warning',
+            'confirmText' => 'Sí, eliminar',
+            'cancelText'  => 'Cancelar',
+            'id'          => $pdfId,   // 👈 pasamos solo el id
+        ]);
     }
-}
+
+    public function eliminarPdf($pdfId)
+    {
+        $pdf = PdfPsiquiatra::find($pdfId);
+
+        if ($pdf) {
+            if (Storage::disk('public')->exists($pdf->filepath)) {
+                Storage::disk('public')->delete($pdf->filepath);
+            }
+
+            $pdf->delete();
+            $this->loadPdfs();
+
+            // ✅ éxito
+            $this->dispatch('swal', title: 'Eliminado', text: 'PDF eliminado correctamente.', icon: 'success');
+        } else {
+            // ⚠️ no encontrado
+            $this->dispatch('swal', title: 'No encontrado', text: 'El PDF no existe.', icon: 'error');
+        }
+    }
 
 
     public function render()

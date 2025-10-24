@@ -56,25 +56,58 @@ class Paciente extends Model
         'user_id'
     ];
 
-
-    public function scopeSearch($query, $value)
+    public function scopeSearch($query, $term)
     {
-        $query->where('apellido_nombre', 'like', "%{$value}%")
-            ->orWhere('dni', 'like', "%{$value}%")
-            ->orWhere('legajo', 'like', "%{$value}%")
-            ->orWhere('estado_id', 'like', "%{$value}%")
-            ->orWhere('jerarquia_id', 'like', "%{$value}%")
-            ->orWhere('destino_actual', 'like', "%{$value}%")
-            ->orWhereHas('estados', function ($query) use ($value) {
-                $query->where('name', 'like', "%{$value}%");
-            })
-            ->orWhereHas('jerarquias', function ($query) use ($value) {
-                $query->where('name', 'like', "%{$value}%");
-            })
-            ->orWhereHas('disases', function ($query) use ($value) {
-                $query->where('fecha_finalizacion_licencia', 'like', "%{$value}%");
+        $term = trim((string) $term);
+        if ($term === '') {
+            return $query;
+        }
+
+        // heurísticas simples
+        $isNumeric = ctype_digit($term);
+        $isDate    = preg_match('/^\d{4}-\d{2}-\d{2}$/', $term); // YYYY-MM-DD
+
+        return $query->where(function ($q) use ($term, $isNumeric, $isDate) {
+            // Texto libre en campos propios
+            $q->where('apellido_nombre', 'like', "%{$term}%")
+            ->orWhere('destino_actual', 'like', "%{$term}%");
+
+            // DNI / Legajo
+            if ($isNumeric) {
+                $q->orWhere('dni', $term)
+                ->orWhere('legajo', $term)
+                ->orWhere('id', $term); // opcional
+            } else {
+                $q->orWhere('dni', 'like', "%{$term}%")
+                ->orWhere('legajo', 'like', "%{$term}%");
+            }
+
+            // Estados (relación)
+            $q->orWhereHas('estados', function ($sub) use ($term) {
+                $sub->where('name', 'like', "%{$term}%");
             });
+
+            // Jerarquías (relación)
+            $q->orWhereHas('jerarquias', function ($sub) use ($term) {
+                $sub->where('name', 'like', "%{$term}%");
+            });
+
+            // Ciudades (relación) — en vez de ciudad_id LIKE
+            $q->orWhereHas('ciudades', function ($sub) use ($term) {
+                $sub->where('nombre', 'like', "%{$term}%");
+            });
+
+            // Disases (relación/pivot): por fecha o texto
+            $q->orWhereHas('disases', function ($sub) use ($term, $isDate) {
+                if ($isDate) {
+                    $sub->whereDate('disase_paciente.fecha_finalizacion_licencia', $term);
+                } else {
+                    $sub->where('disase_paciente.fecha_finalizacion_licencia', 'like', "%{$term}%");
+                }
+            });
+        });
     }
+
 
     // Relación 1 a 1 con Ciudad
     public function ciudad()

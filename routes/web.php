@@ -62,12 +62,13 @@ use Illuminate\Support\Facades\Auth;
 //Route::get('/', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'create'])->middleware('guest');
 
 
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::middleware([
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -79,13 +80,12 @@ Route::middleware([
 /********nuevo********/
 
 Route::middleware([
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
     Route::get('/dashboard', function () {
         $user = Auth::user(); // Obténgo al usuario autenticado
-
         // Lógica para redirigir según el rol
         if ($user->hasRole('super-admin')) {
             return view('dashboard');

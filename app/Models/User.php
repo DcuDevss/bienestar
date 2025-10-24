@@ -22,6 +22,7 @@ class User extends Authenticatable
     use TwoFactorAuthenticatable;
     use HasRoles;
 
+    protected string $guard_name = 'web';
     /**
      * The attributes that are mass assignable.
      *

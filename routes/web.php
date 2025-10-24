@@ -100,7 +100,7 @@ Route::middleware([
             // return view('panel-administrador');
             //return redirect()->intended(route('psicologo.index'));
             return view('dashboard');
-        } elseif ($user->hasRole('admin-jefa')) {
+        } elseif ($user->hasRole('admin-jefe')) {
             return view('dashboard');
         } else {
             return view('dashboard');

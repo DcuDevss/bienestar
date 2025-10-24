@@ -42,27 +42,44 @@ class FileController extends Component
 
     public function createFiles()
     {
-        $this->validate();
+        // 1) Bloquear cuando no hay nada seleccionado
+        if (empty($this->archivos) || count($this->archivos) === 0) {
+            $this->dispatch('swal', title: 'Sin archivos', text: 'Seleccioná al menos un archivo para subir.', icon: 'error');
+            return;
+        }
+
+        // 2) Validación completa (array + cada ítem)
+        $this->validate([
+            'archivos'   => 'required|array|min:1',
+            'archivos.*' => 'file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
+            'pacienteId' => 'required|exists:pacientes,id',
+        ]);
 
         foreach ($this->archivos as $archivo) {
-            $nombreArchivo = $archivo->getClientOriginalName();
-            $timestamp = now()->format('Ymd_His');
-            $nombreFinal = $timestamp . '_' . $nombreArchivo;
+            $nombreOriginal = $archivo->getClientOriginalName();
+            $timestamp      = now()->format('Ymd_His');
+
+            // sanitizar nombre base y conservar extensión original
+            $ext         = $archivo->getClientOriginalExtension();
+            $base        = pathinfo($nombreOriginal, PATHINFO_FILENAME);
+            $seguro      = \Illuminate\Support\Str::slug($base);
+            $nombreFinal = "{$timestamp}_{$seguro}.".strtolower($ext);
 
             $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreFinal, 'public');
 
-            PdfHistorial::create([
-                'file' => $ruta,
+            \App\Models\PdfHistorial::create([
+                'file'        => $ruta,
                 'paciente_id' => $this->pacienteId,
             ]);
         }
 
-        $this->archivos = [];
+        // limpiar estado UI
+        $this->reset('archivos');
         $this->modal = false;
 
-        // ✅ SweetAlert de éxito
         $this->dispatch('swal', title: 'Cargado', text: 'Archivo(s) subido(s) correctamente.', icon: 'success');
     }
+
 
     public function render()
     {

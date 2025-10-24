@@ -339,11 +339,6 @@
                     </div>
                 </div>
             </div>
-
-
-
-
-
             @can('users.index')
                 {{-- <div class="relative mt-5" x-data="{ open: false }">
 

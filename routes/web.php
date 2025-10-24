@@ -51,7 +51,7 @@ use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes ffff
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
@@ -141,9 +141,6 @@ Route::get('/auditorias', AuditoriaList::class)->name('auditorias.index');
 
 
 
-
-
-
 //Route::get('/disases', Multiform::class)->name('multiform.index');
 Route::get('/disases', DisaseController::class)->middleware('can:disases.index')->name('disases.index');
 Route::get('/multiform', MultiformController::class)->middleware('can:multiform.index')->name('multiform.index');
@@ -152,7 +149,6 @@ Route::get('paciente/{paciente_id}/entrevista/create', EntrevistaFormController:
 Route::get('/entrevistas/{paciente_id}', EntrevistaIndex::class)->name('entrevistas.index');
 Route::get('/entrevistas/editar/{entrevista_id}', EditEntrevista::class)->name('entrevistas.edit');
 Route::get('/entervistas/pdf-psiquiatra/{paciente}', PdfPsiquiatraController::class)->name('entrevistas.pdf-psiquiatra');
-
 
 
 

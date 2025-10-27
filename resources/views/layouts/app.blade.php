@@ -294,8 +294,46 @@
 
     <!-- Tom Select JS -->
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
+    <!-- SweetAlert2 -->
 
     @livewireScripts
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+
+<script>
+    function confirmRestore(id, nombre) {
+        Swal.fire({
+            title: `¿Restaurar a ${nombre}?`,
+            icon: 'question',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, restaurar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.emit('restore', id);
+            }
+        });
+    }
+
+    function confirmDelete(id, nombre) {
+        Swal.fire({
+            title: `¿Eliminar permanentemente a ${nombre}?`,
+            text: "¡Esta acción no se puede deshacer!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonText: 'Sí, eliminar',
+            cancelButtonText: 'Cancelar',
+            reverseButtons: true
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.emit('forceDelete', id);
+            }
+        });
+    }
+</script>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 </body>
 <footer class="text-center py-6 bg-gray-800 font-semibold text-xs text-white shadow-lg ">
     <p>&copy; 2025 Policía de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>

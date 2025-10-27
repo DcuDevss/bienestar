@@ -16,6 +16,7 @@ use App\Http\Controllers\RoleController;
 
 use App\Http\Controllers\Doctor\CurriculumController;
 use App\Http\Controllers\NuevoUsuarioController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\Psicologo\PsicologoController;
 use App\Http\Controllers\PdfController;
 //use App\Http\Controllers\Interviews\InterviewController;
@@ -46,7 +47,7 @@ use App\Livewire\Patient\PatientEntrevistas;
 use App\Models\Paciente;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
-
+use App\Livewire\Patient\DeletedPatientList;
 
 /*
 |--------------------------------------------------------------------------
@@ -180,3 +181,8 @@ Route::resource('roles', RoleController::class)->names('admin-roles');
 //Nuevo usuario
 Route::get('nuevo_usuario', [NuevoUsuarioController::class,'create'])->name('new-user');
 Route::post('nuevo_usuario', [NuevoUsuarioController::class,'store'])->name('new-user.store');
+
+/* // NUEVA RUTA para Pacientes Eliminados (Papelera)
+Route::get('/pacientes/eliminados', [PatientController::class, 'eliminados'])->name('pacientes.eliminados'); */
+Route::get('/pacientes/eliminados', DeletedPatientList::class)
+    ->name('pacientes.eliminados');

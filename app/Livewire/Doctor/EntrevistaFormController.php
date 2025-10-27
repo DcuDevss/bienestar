@@ -14,6 +14,7 @@ use App\Models\Paciente;
 use App\Models\Portacion;
 use App\Models\SaludMentale;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Collection;
 
 
 class EntrevistaFormController extends Component
@@ -76,28 +77,30 @@ class EntrevistaFormController extends Component
     public $index;
 
 
+
     public function mount($paciente_id)
     {
 
         $this->paciente_id = $paciente_id;
         $this->paciente = Paciente::find($paciente_id);
-
-
-
-
-
         // Cargar las opciones de los select
-
-        $this->tipos_entrevista = TipoEntrevista::all();  // Simula la carga de los tipos
+        $this->tipos_entrevista = TipoEntrevista::all();  // Simula la caarga de los tipos
         $this->actitudes_entrevista = ActitudEntrevista::all();
         $this->indicacionterapeuticas = IndicacionTerapeutica::all();
         $this->abordajes = Abordaje::all();
         $this->estados_entrevista = EstadoEntrevista::all();
         $this->portacions = Portacion::all();
-        $this->salud_mentales = SaludMentale::all();
+        // $this->salud_mentales = SaludMentale::all();
+        // $this->salud_mentales = SaludMentale::orderBy('codigo', 'asc')->get();
+        $this->salud_mentales = SaludMentale::select('id','codigo','name','slug')->get()
+            ->sortBy(function ($s) {
+                return preg_match('/^\d+$/', (string) $s->codigo)
+                    ? str_pad($s->codigo, 10, '0', STR_PAD_LEFT) // numéricos con padding
+                    : (string) $s->codigo;                       // no numéricos tal cual
+            })
+            ->values(); // reindexa colección
 
-
-
+        Log::info('Registros en $salud_mentales: '.$this->salud_mentales->count());
         // Valor predeterminado
     }
 
@@ -139,7 +142,12 @@ class EntrevistaFormController extends Component
         ];
 
         // Mensaje de éxito
-        session()->flash('message', 'Miembro agregado exitosamente.');
+        $this->dispatch(
+            'swal',
+            title: 'Agregado',
+            text:  'Miembro agregado exitosamente.',
+            icon:  'success'
+        );
     }
 
 
@@ -150,7 +158,12 @@ class EntrevistaFormController extends Component
         array_splice($this->miembros, $index, 1);
 
         // Mensaje de éxito
-        session()->flash('message', 'Miembro eliminado exitosamente.');
+        $this->dispatch(
+            'swal',
+            title: 'Eliminado',
+            text:  'Miembro eliminado exitosamente.',
+            icon:  'success'
+        );
     }
 
     public function submit()
@@ -308,7 +321,13 @@ class EntrevistaFormController extends Component
 
 
 
-            session()->flash('message', 'Entrevista registrada con éxito.');
+            $this->dispatch(
+                'swal',
+                title: 'Guardado',
+                text:  'Entrevista registrada con éxito.',
+                icon:  'success'
+            );
+
 
             Log::debug('Valores antes de guardar entrevista', [
     'indicacionterapeutica_id' => $this->indicacionterapeutica_id,
@@ -380,8 +399,12 @@ class EntrevistaFormController extends Component
 
         } catch (\Exception $e) {
             Log::error('Error al guardar la entrevista: ' . $e->getMessage());
-            $this->dispatch('toast', type: 'error', message: '⚠️ Complete los campos obligatorios antes de guardar.');
-            session()->flash('error', 'Error al guardar la entrevista, complete los campos Tipo de Entrevista y Estado de la Entrevista.');
+            $this->dispatch(
+                'swal',
+                title: 'Revisá los campos',
+                text:  'Completá Tipo de Entrevista y Estado de la Entrevista.',
+                icon:  'error'
+            );
         }
 
 

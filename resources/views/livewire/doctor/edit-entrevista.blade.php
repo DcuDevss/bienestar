@@ -567,7 +567,11 @@
         </div>
     </div>
 
-
+        @if (session('message'))
+            <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
+                {{ session('message') }}
+            </div>
+        @endif
 
     <!-- Botón de guardar -->
     <div class="flex justify-center mb-2 mt-4">
@@ -582,13 +586,7 @@
             Volver
         </button>
     </div>
-
-
-
-    @if (session()->has('success'))
-        <div class="bg-green-100 text-green-800 p-4 mb-4 rounded-lg">
-            {{ session('success') }}
-        </div>
-    @endif
 </form>
 </div>
+
+

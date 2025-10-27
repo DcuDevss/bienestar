@@ -1,0 +1,87 @@
+[33mf50c945[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m HEAD@{Thu Oct 23 15:51:24 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33mfc79eea[m[33m ([m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m HEAD@{Thu Oct 23 14:17:10 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m67223a1[m HEAD@{Thu Oct 23 10:17:54 2025}: commit: vamos a graegar esto
+[33m0249dbb[m HEAD@{Thu Oct 23 10:03:01 2025}: pull origin rodri: Fast-forward
+[33mb23ce49[m HEAD@{Wed Oct 22 14:46:46 2025}: commit: patient.patient-list-fechas
+[33ma55598a[m HEAD@{Wed Oct 22 12:58:37 2025}: commit: reta
+[33m0916a9c[m HEAD@{Wed Oct 22 12:57:41 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33mc46177b[m HEAD@{Wed Oct 22 11:33:43 2025}: commit: okis
+[33m6a95dc0[m HEAD@{Wed Oct 22 11:29:14 2025}: commit: okisss
+[33m366f044[m HEAD@{Wed Oct 22 11:24:06 2025}: commit: ok
+[33m0f206a2[m HEAD@{Wed Oct 22 11:11:13 2025}: commit: okis
+[33m8b0db99[m HEAD@{Wed Oct 22 11:10:30 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33mb5587d7[m HEAD@{Wed Oct 22 10:39:55 2025}: commit: ok
+[33mf184060[m HEAD@{Wed Oct 22 10:36:13 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m6e6c329[m HEAD@{Tue Oct 21 15:40:45 2025}: commit: okis vamos
+[33m6787d86[m HEAD@{Tue Oct 21 15:26:44 2025}: commit: ok
+[33m1bf181d[m HEAD@{Tue Oct 21 15:21:27 2025}: pull origin rodri: Fast-forward
+[33m2382c34[m HEAD@{Tue Oct 21 15:11:36 2025}: commit: envio
+[33me725a6a[m HEAD@{Tue Oct 21 13:38:52 2025}: commit: Fix PSR-4: renombrar archivos a PascalCase y corregir namespaces
+[33mfc67404[m HEAD@{Tue Oct 21 13:32:36 2025}: commit: Normalize case de clases Livewire (Doctor, Paciente, Enfermero) y vistas
+[33mdee1810[m HEAD@{Tue Oct 21 13:02:19 2025}: commit: Fix PSR-4: renombrar archivos y corregir namespaces
+[33m8f2657b[m HEAD@{Tue Oct 21 12:06:00 2025}: commit: cambios
+[33m94ce850[m HEAD@{Tue Oct 21 11:42:56 2025}: commit: ok
+[33ma1cde0a[m HEAD@{Tue Oct 21 10:21:45 2025}: commit: vamos
+[33mb2b68eb[m HEAD@{Tue Oct 21 09:26:30 2025}: commit: cambios
+[33meea36eb[m HEAD@{Mon Oct 20 15:56:10 2025}: commit: ok se realizo cambios
+[33m8810d11[m HEAD@{Mon Oct 20 15:36:37 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33maa04611[m HEAD@{Mon Oct 20 15:35:42 2025}: commit (merge): Merge: resolver PatientCertificado.php (theirs), revertir .env.example y eliminar archivo copy
+[33mdaa6919[m HEAD@{Mon Oct 20 10:37:48 2025}: commit: cambios se agrega a reta-bienestar
+[33ma5d51fb[m HEAD@{Tue Oct 7 14:40:25 2025}: commit (merge): Merge branch 'rodri' of https://github.com/DcuDevss/bienestar
+[33m1985068[m HEAD@{Tue Oct 7 14:31:30 2025}: commit: cambios se agrega a reta-nuevo-andorid14
+[33mc723a89[m HEAD@{Tue Sep 30 10:50:44 2025}: pull --tags origin main: Merge made by the 'ort' strategy.
+[33mae8c1a6[m HEAD@{Tue Sep 30 10:50:38 2025}: commit: cambios para rodri
+[33mc6ce072[m HEAD@{Wed Sep 17 13:36:41 2025}: commit: ok
+[33m2f807c7[m HEAD@{Wed Sep 17 13:34:45 2025}: pull origin rodri: Fast-forward
+[33m83ec085[m HEAD@{Wed Sep 17 13:31:55 2025}: checkout: moving from reta-nuevo to main
+[33mabd01a3[m[33m ([m[1;31morigin/reta-nuevo[m[33m, [m[1;32mreta-nuevo[m[33m)[m HEAD@{Fri Sep 5 15:41:38 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m360510b[m HEAD@{Thu Sep 4 12:04:58 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m4edacac[m HEAD@{Wed Sep 3 08:21:11 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m9472d9c[m HEAD@{Tue Sep 2 15:36:01 2025}: commit (merge): Merge branch 'rodri' of https://github.com/DcuDevss/bienestar into reta-nuevo
+[33mc1d23be[m HEAD@{Mon Sep 1 08:58:49 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m5ea1cd1[m HEAD@{Thu Aug 28 13:46:44 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m77e07e7[m HEAD@{Wed Aug 27 15:39:42 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m8f9aded[m HEAD@{Wed Aug 27 14:05:22 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m1ccb2a1[m HEAD@{Wed Aug 27 12:17:13 2025}: commit (merge): Merge branch 'rodri' of https://github.com/DcuDevss/bienestar into reta-nuevo
+[33m3577206[m HEAD@{Wed Aug 27 09:16:31 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m3df8cd7[m HEAD@{Wed Aug 27 08:55:57 2025}: commit: cambios de rodri
+[33m4d60348[m HEAD@{Fri Aug 8 11:32:39 2025}: merge origin/rodri: Fast-forward
+[33m702c4b3[m[33m ([m[1;31morigin/reta-prueba[m[33m, [m[1;32mreta-prueba[m[33m)[m HEAD@{Fri Aug 8 11:03:49 2025}: checkout: moving from reta-nuevo to reta-nuevo
+[33m702c4b3[m[33m ([m[1;31morigin/reta-prueba[m[33m, [m[1;32mreta-prueba[m[33m)[m HEAD@{Fri Aug 8 11:01:33 2025}: checkout: moving from reta-prueba to reta-nuevo
+[33m702c4b3[m[33m ([m[1;31morigin/reta-prueba[m[33m, [m[1;32mreta-prueba[m[33m)[m HEAD@{Fri Aug 8 10:02:50 2025}: reset: moving to 702c4b31f3df35cbf6ab5a6914878e438943d498
+[33mca63478[m HEAD@{Fri Aug 8 10:00:37 2025}: reset: moving to ca6347890c7c841da9d47d815daff00feaff1ced
+[33mca63478[m HEAD@{Thu Jul 10 10:12:54 2025}: commit: ok
+[33mc99c36f[m HEAD@{Thu Jul 10 10:12:44 2025}: checkout: moving from reta-prueba to reta-prueba
+[33mc99c36f[m HEAD@{Fri Jun 6 12:40:40 2025}: pull origin rodri: Fast-forward
+[33m702c4b3[m[33m ([m[1;31morigin/reta-prueba[m[33m, [m[1;32mreta-prueba[m[33m)[m HEAD@{Fri Jun 6 11:14:34 2025}: commit: cambios desdde reta
+[33ma8a3cbf[m HEAD@{Fri Jun 6 10:59:43 2025}: commit (merge): Merge branch 'rodri' of https://github.com/DcuDevss/bienestar into reta-prueba
+[33m877a926[m HEAD@{Fri Jun 6 10:50:46 2025}: commit: cambios
+[33m7df6558[m HEAD@{Tue Jun 3 09:28:26 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m07deff9[m HEAD@{Tue Jun 3 09:27:38 2025}: commit: 💳 ultimo de rodri4
+[33m78d2e9b[m HEAD@{Tue Jun 3 08:55:48 2025}: commit (merge): Merge branch 'rodri' of https://github.com/DcuDevss/bienestar into reta-prueba
+[33m28b055f[m HEAD@{Tue Jun 3 08:48:19 2025}: reset: moving to HEAD
+[33m28b055f[m HEAD@{Wed May 28 09:10:26 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33mc732c9c[m HEAD@{Wed May 28 09:04:06 2025}: commit: 💳 subir-de reta
+[33m17e73cc[m HEAD@{Tue Apr 29 09:17:05 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m1431dfa[m HEAD@{Tue Apr 29 09:16:28 2025}: commit: Guardando cambios d rodri
+[33md7ecf19[m HEAD@{Thu Apr 24 10:54:51 2025}: commit (merge): Merge branch 'rodri' of https://github.com/DcuDevss/bienestar into reta-prueba
+[33m7268ad4[m HEAD@{Thu Apr 24 10:50:10 2025}: commit: Guardando cambios de rodri
+[33m150fe68[m HEAD@{Thu Apr 10 12:56:57 2025}: commit: reta arreglo historial de toodos los pacientes
+[33mddf9e32[m HEAD@{Thu Apr 10 10:51:54 2025}: commit: reta arreglo historial certificadosxx
+[33ma6238a8[m HEAD@{Tue Apr 8 12:10:26 2025}: commit: reta arreglo historial certificados
+[33m98683f0[m HEAD@{Tue Apr 8 10:00:00 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33mf2176d6[m HEAD@{Tue Apr 8 09:59:38 2025}: commit: reta antes rodribis
+[33m28b8545[m HEAD@{Mon Apr 7 13:37:52 2025}: commit: reta antes de rodri12
+[33mf2ef619[m HEAD@{Mon Apr 7 13:27:53 2025}: pull origin rodri: Merge made by the 'ort' strategy.
+[33m61e058f[m HEAD@{Mon Apr 7 13:23:56 2025}: commit: reta antes de rodri1
+[33mb657b9c[m HEAD@{Mon Apr 7 10:26:24 2025}: pull origin rodri: Fast-forward
+[33mba10f31[m HEAD@{Fri Apr 4 13:29:20 2025}: pull origin rodri: Fast-forward
+[33ma6075b6[m HEAD@{Fri Apr 4 12:14:44 2025}: commit: cambios en los seeder y el views del pacientes
+[33m0b06abd[m HEAD@{Thu Apr 3 08:25:37 2025}: pull origin rodri: Fast-forward
+[33m2fa29d9[m HEAD@{Mon Mar 31 09:13:18 2025}: pull origin rodri: Fast-forward
+[33m83ec085[m HEAD@{Mon Mar 31 09:00:56 2025}: checkout: moving from main to reta-prueba
+[33m83ec085[m HEAD@{Mon Mar 31 09:00:23 2025}: Branch: renamed refs/heads/reta-prueba to refs/heads/main
+[33m83ec085[m HEAD@{Mon Mar 31 08:48:18 2025}: commit: cambios-nuevo-escalafon
+[33m3458309[m HEAD@{Fri Mar 21 12:49:52 2025}: commit: comit cambios en pacinetes el modelo y la migracion
+[33m4adb33d[m HEAD@{Wed Mar 19 14:18:09 2025}: checkout: moving from main to reta-prueba
+[33m4adb33d[m HEAD@{Tue Mar 18 12:44:53 2025}: clone: from https://github.com/DcuDevss/bienestar.git

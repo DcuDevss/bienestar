@@ -33,7 +33,7 @@ class AuditoriaList extends Component
 
         return view('livewire.auditorias.auditoria-list', [
             'auditorias' => $auditorias, // ✅ pasamos la variable a la vista
-        ])->layout('layouts.app'); // ⚠️ ojo, debería ser 'layouts.app' y no 'components.layouts.app'
+        ])->layout('layouts.app'); // ⚠️ ojo, debeería ser 'layouts.app' y no 'components.layouts.app'
     }
 
 }

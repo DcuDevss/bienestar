@@ -16,15 +16,6 @@ return new class extends Migration
             $table->string('codigo')->nullable();
             $table->string('name')->nullable();
             $table->string('slug')->nullable();
-           // $table->timestamp('fecha_atencion')->nullable();
-            //$table->timestamp('fecha_finalizacion')->nullable();
-           // $table->string('horas_salud')->nullable();
-           // $table->string('archivo')->nullable();
-           // $table->string('tipodelicencia')->nullable();
-           // $table->boolean('activo')->default(true)->nullable();
-           // $table->text('symptoms')->nullable();
-           // $table->unsignedBigInteger('tipolicencia_id')->nullable();
-           // $table->foreign('tipolicencia_id')->references('id')->on('tipolicencias')->onDelete('cascade');
             $table->timestamps();
         });
     }

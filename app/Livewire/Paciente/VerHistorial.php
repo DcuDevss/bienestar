@@ -3,7 +3,7 @@
 namespace App\Livewire\Paciente;
 
 use App\Models\Paciente;
-use App\Models\Pdfhistorial;
+use App\Models\PdfHistorial;
 use App\Models\PdfPsiquiatra;
 use Livewire\Component;
 use Illuminate\Support\Facades\Storage;
@@ -36,7 +36,7 @@ class VerHistorial extends Component
         $dir = $this->dir(); // "pdfhistoriales/{$this->pacienteId}"
 
         // --- 1) PDFs en BD: HISTORIAL ---
-        $fromHist = Pdfhistorial::where('paciente_id', $this->pacienteId)->get()->map(function ($row) use ($dir) {
+        $fromHist = PdfHistorial::where('paciente_id', $this->pacienteId)->get()->map(function ($row) use ($dir) {
             $origName   = basename($row->file);                // nombre "lindo" que guardaste
             $primary    = "{$dir}/{$origName}";
             $path       = Storage::disk('public')->exists($primary) ? $primary : null;
@@ -167,6 +167,72 @@ class VerHistorial extends Component
         }
         return response()->download($absolute, $basename);
     }
+
+    public function delete($filename)
+    {
+        // Normalizamos al nombre real dentro de la carpeta del paciente
+        $basename = basename($filename);
+        $path     = $this->dir() . '/' . $basename;
+
+        // 1) Borrar del filesystem (si existe)
+        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
+            \Illuminate\Support\Facades\Storage::disk('public')->delete($path);
+        }
+
+        // 2) Borrar registros en BD que apunten a ese archivo
+        // Pdfhistorial guarda en 'file' (ruta completa dentro de 'public')
+        \App\Models\PdfHistorial::where('paciente_id', $this->pacienteId)
+            ->where('file', 'like', "%/{$basename}")
+            ->delete();
+
+        // PdfPsiquiatra puede tener 'filepath' (ruta) o 'filename' (nombre original)
+        \App\Models\PdfPsiquiatra::where('paciente_id', $this->pacienteId)
+            ->where(function ($q) use ($basename) {
+                $q->where('filepath', 'like', "%/{$basename}")
+                ->orWhere('filename', $basename);
+            })
+            ->delete();
+
+        // Recargar la lista combinada
+        $this->loadPdfs();
+
+        // Mensaje simple (ya tenés los alerts arriba en la vista)
+        session()->flash('message', 'Archivo eliminado correctamente.');
+    }
+
+    public function deleteByPath($path)
+    {
+        // Normalizamos siempre a la carpeta del paciente para evitar rutas extrañas
+        $basename = basename($path);
+        $realPath = $this->dir() . '/' . $basename; // ej: pdfhistoriales/{id}/{archivo.pdf}
+
+        // Si no existe, avisamos y salimos
+        if (!\Storage::disk('public')->exists($realPath)) {
+            session()->flash('error', 'Archivo no encontrado o ya eliminado.');
+            return;
+        }
+
+        // Borro el archivo físico
+        \Storage::disk('public')->delete($realPath);
+
+        // Intento borrar filas en ambas tablas si estuvieran
+        \App\Models\PdfHistorial::where('paciente_id', $this->pacienteId)
+            ->where(function ($q) use ($realPath, $basename) {
+                $q->where('file', $realPath)->orWhere('file', 'like', "%{$basename}");
+            })->delete();
+
+        \App\Models\PdfPsiquiatra::where('paciente_id', $this->pacienteId)
+            ->where(function ($q) use ($realPath, $basename) {
+                $q->where('filepath', $realPath)->orWhere('filepath', 'like', "%{$basename}");
+            })->delete();
+
+        // Recargo la lista
+        $this->loadPdfs();
+
+        // Mensaje
+        session()->flash('message', 'PDF eliminado correctamente.');
+    }
+
 
     public function render()
     {

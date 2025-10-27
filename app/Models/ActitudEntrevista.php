@@ -11,7 +11,7 @@ class ActitudEntrevista extends Model
 
     // Atributos que se pueden llenar masivamente
     protected $fillable = [
-        'name', // Excelente, Muy Buena, Buena, etc.
+        'name', // Excelente, Muy Buena, Buena, etc., okk
     ];
 
     // Relación inversa con la tabla Entrevistas

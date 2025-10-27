@@ -15,7 +15,7 @@ use Illuminate\Queue\InteractsWithQueue;
 class AppoinmentStatusListener
 {
     /**
-     * Create the event listener.
+     * Create the event listener. vamoss
      */
     public function __construct()
     {

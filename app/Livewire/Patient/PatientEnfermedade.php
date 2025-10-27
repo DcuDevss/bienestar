@@ -170,49 +170,40 @@ class PatientEnfermedade extends Component
             $dir = "archivos_enfermedades/paciente_{$this->patient->id}";
             Storage::disk('public')->makeDirectory($dir);
 
-            $archivoPathEnfermedad = null;
-            if (isset($data['imgen_enfermedad']) && $data['imgen_enfermedad'] instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                $extension = $data['imgen_enfermedad']->getClientOriginalExtension();
-                $nombreArchivoUnico = Str::random(20) . '.' . $extension;
-                $archivoPathEnfermedad = $data['imgen_enfermedad']->storeAs($dir, $nombreArchivoUnico, 'public');
-            }
+        $archivoPathEnfermedad = $data['imgen_enfermedad']?->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName(), 'public');
+        $archivoPathPDF = $data['pdf_enfermedad']?->storeAs($dir, $data['pdf_enfermedad']->getClientOriginalName(), 'public');
 
-            $archivoPathPDF = null;
-            if (isset($data['pdf_enfermedad']) && $data['pdf_enfermedad'] instanceof \Livewire\Features\SupportFileUploads\TemporaryUploadedFile) {
-                $extensionDorso = $data['pdf_enfermedad']->getClientOriginalExtension();
-                $nombreArchivoUnicoDorso = Str::random(20) . '.' . $extensionDorso;
-                $archivoPathPDF = $data['pdf_enfermedad']->storeAs($dir, $nombreArchivoUnicoDorso, 'public');
-            }
 
-            // 🔹 Pivot Data
-            $pivotData = [
-                'fecha_atencion_enfermedad' => $data['fecha_atencion_enfermedad'] ?? null,
-                'detalle_diagnostico' => $data['detalle_diagnostico'] ?? null,
-                'imgen_enfermedad' => $archivoPathEnfermedad,
-                'pdf_enfermedad' => $archivoPathPDF,
-                'fecha_finalizacion_enfermedad' => $data['fecha_finalizacion_enfermedad'] ?? null,
-                'horas_reposo' => $data['horas_reposo'] ?? null,
-                'medicacion' => $data['medicacion'] ?? null,
-                'dosis' => $data['dosis'] ?? null,
-                'motivo_consulta' => $data['motivo_consulta'] ?? null,
-                'derivacion_psiquiatrica' => $data['derivacion_psiquiatrica'] ?? 0,
-                'estado_enfermedad' => $data['estado_enfermedad'] ?? 0,
-                'detalle_medicacion' => $data['detalle_medicacion'] ?? null,
-                'nro_osef' => $data['nro_osef'] ?? null,
-                'tipodelicencia' => $data['tipodelicencia'] ?? null,
-                'art' => $data['art'] ?? null,
-            ];
+        // 3) Guardar pivote
+        $this->patient->enfermedades()->syncWithoutDetaching([
+            $enfermedadeId => [
+                'fecha_atencion_enfermedad'      => $data['fecha_atencion_enfermedad'] ?? null,
+                'detalle_diagnostico'            => $data['detalle_diagnostico'] ?? null,
+                'imgen_enfermedad'               => $archivoPathEnfermedad,
+                'pdf_enfermedad'                 => $archivoPathPDF,
+                'fecha_finalizacion_enfermedad'  => $data['fecha_finalizacion_enfermedad'] ?? null,
+                'horas_reposo'                   => $data['horas_reposo'] ?? null,
+                'medicacion'                     => $data['medicacion'] ?? null,
+                'dosis'                          => $data['dosis'] ?? null,
+                'motivo_consulta'                => $data['motivo_consulta'] ?? null,
+                'derivacion_psiquiatrica'        => $data['derivacion_psiquiatrica'] ?? null,
+                'estado_enfermedad'              => $data['estado_enfermedad'] ?? 0,
+                'detalle_medicacion'             => $data['detalle_medicacion'] ?? null,
+                'nro_osef'                       => $data['nro_osef'] ?? null,
+                'tipodelicencia'                 => $data['tipodelicencia'] ?? null,
+                'art'                            => $data['art'] ?? null,
+            ],
+        ]);
+        $this->dispatch(
+            'swal',
+            title: 'Agregado',
+            text:  'Atención médica agregada correctamente.',
+            icon:  'success'
+        );
 
-            // 🔹 Adjuntar enfermedad al paciente (siempre nuevo registro)
-            $this->patient->enfermedades()->attach($enfermedadeId, $pivotData);
-
-            Log::info('💾 Atención médica registrada correctamente', [
-                'paciente_id' => $this->patient->id,
-                'enfermedade_id' => $enfermedadeId,
-            ]);
-
-            $this->modal = false;
-            $this->pickerOpen = false;
+        // 4) Reset + cerrar modal + cerrar picker
+        $this->modal = false;
+        $this->pickerOpen = false;
 
             $this->reset([
                 'name',

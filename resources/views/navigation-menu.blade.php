@@ -63,15 +63,60 @@
                             @endrole
                         </div>
                     </div>
-                    
-                    @can('users.index')
-                        <div class="flex items-center">
-                            <a href="{{ route('users.index') }}" 
-                                class="px-4 py-2 bg-blue-600 rounded-md font-semibold text-sm text-white uppercase tracking-widest hover:bg-blue-700 transition ease-in-out duration-150">
-                                Administrador
-                            </a>
-                        </div>
-                    @endcan
+                </div>
+            </div>
+            @can('users.index')
+                {{-- <div class="relative mt-5" x-data="{ open: false }">
+
+                    <button @click="open = !open"
+                        class="inline-flex items-center justify-center float-right mr-4 px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition group">
+                        Administrador
+                        <!-- Icono de flecha hacia abajo para indicar que es un menú desplegable -->
+                        <svg x-bind:class="{ 'rotate-180': open }"
+                            class="w-4 h-4 ml-1 -mr-1 transform transition-transform ease-in-out duration-200"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
+
+                    <!-- Contenedor del menú desplegable -->
+                    <div x-show="open" @click.away="open = false"
+                        class="absolute z-10 right-0 mt-9 py-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg">
+                        <!-- Opciones del menú -->
+                        <a href="{{ route('users.index') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500">Rol de usuario</a>
+                        <a href="{{ route('admin-roles.index') }}"
+                            class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-500">Crud de roles</a>
+                    </div>
+                </div> --}}
+                <div class="relative mt-5  text-white">
+                    <a href="{{ route('users.index') }}" class="px-3 py-2 bg-blue-600 rounded-md">
+                        Administrador
+                    </a>
+                </div>
+            @endcan
+
+            {{--
+        <div class="ml-5">
+            <div class="relative mt-5" x-data="{ open: false }">
+                <button @click="open = !open"
+                    class="inline-flex items-center justify-center float-right mr-4 px-3 py-2 bg-slate-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-slate-900 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition group">
+                    Licencias
+                    <!-- Icono de flecha hacia abajo para indicar que es un menú desplegable -->
+                    <svg x-bind:class="{ 'rotate-180': open }"
+                        class="w-4 h-4 ml-1 -mr-1 transform transition-transform ease-in-out duration-200"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7">
+                        </path>
+                    </svg>
+                </button>
+
+                <!-- Contenedor del menú desplegable -->
+                <div x-show="open" @click.away="open = false"
+                    class="absolute z-10 right-0 mt-9 py-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg">
+                    <!-- Opciones del menú -->
+                    @livewire('patient.patient-listfechas')
 
                 </div>
 

@@ -1,7 +1,5 @@
 <?php
 
-
-
 namespace App\Livewire\Paciente;
 
 use App\Models\Paciente;
@@ -22,12 +20,11 @@ class FileController extends Component
         $pdfhistorial_id, $patient_enfermedades, $patient, $pdfhistorial, $archivo, $tipodelicencia;
 
     public $modal = false;
-
     public $archivos = [];
     public $pacienteId;
 
     protected $rules = [
-        'archivos.*' => 'file|mimes:pdf,png,jpg,jpeg,gif|max:10240', // Acepta PDF e imágenes, máximo 10 MB por archivo
+        'archivos.*' => 'file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
         'pacienteId' => 'required|exists:pacientes,id',
     ];
 
@@ -45,37 +42,44 @@ class FileController extends Component
 
     public function createFiles()
     {
-        $this->validate();
+        // 1) Bloquear cuando no hay nada seleccionado
+        if (empty($this->archivos) || count($this->archivos) === 0) {
+            $this->dispatch('swal', title: 'Sin archivos', text: 'Seleccioná al menos un archivo para subir.', icon: 'error');
+            return;
+        }
 
-        // Subir y almacenar los archivos PDF e imágenes
+        // 2) Validación completa (array + cada ítem)
+        $this->validate([
+            'archivos'   => 'required|array|min:1',
+            'archivos.*' => 'file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
+            'pacienteId' => 'required|exists:pacientes,id',
+        ]);
+
         foreach ($this->archivos as $archivo) {
-            // Obtener el nombre original del archivo
-            $nombreArchivo = $archivo->getClientOriginalName();
+            $nombreOriginal = $archivo->getClientOriginalName();
+            $timestamp      = now()->format('Ymd_His');
 
-            // Construir la ruta de almacenamiento con el ID del paciente
-            $timestamp = now()->format('Ymd_His'); // Ejemplo: 20251007_1020
-            $nombreArchivo = $archivo->getClientOriginalName();
-            $nombreFinal = $timestamp . '_' . $nombreArchivo;
+            // sanitizar nombre base y conservar extensión original
+            $ext         = $archivo->getClientOriginalExtension();
+            $base        = pathinfo($nombreOriginal, PATHINFO_FILENAME);
+            $seguro      = \Illuminate\Support\Str::slug($base);
+            $nombreFinal = "{$timestamp}_{$seguro}.".strtolower($ext);
 
             $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreFinal, 'public');
 
-            /* $nombreUnico = uniqid() . '_' . $archivo->getClientOriginalName();
-            $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreUnico, 'public'); */
-
-            /* $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreArchivo, 'public');
- */
-            // Crear un nuevo registro en la base de datos para cada archivo
-            Pdfhistorial::create([
-                'file' => $ruta,
+            \App\Models\PdfHistorial::create([
+                'file'        => $ruta,
                 'paciente_id' => $this->pacienteId,
             ]);
         }
 
-        // Limpiar el campo de archivos después de la carga exitosa
-        $this->archivos = [];
+        // limpiar estado UI
+        $this->reset('archivos');
         $this->modal = false;
-        session()->flash('message', 'Archivos subidos exitosamente.');
+
+        $this->dispatch('swal', title: 'Cargado', text: 'Archivo(s) subido(s) correctamente.', icon: 'success');
     }
+
 
     public function render()
     {

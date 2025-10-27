@@ -9,7 +9,7 @@ use Illuminate\Database\Seeder;
 class IndicacionTerapeuticaSeeder extends Seeder
 {
     /**
-     * Run the database seeeds...
+     * Run the database seeeds...fdgdgd
      */
     public function run(): void
     {

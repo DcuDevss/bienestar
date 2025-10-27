@@ -1,9 +1,4 @@
 <div class="">
-    @if (session()->has('message'))
-    <div class="bg-green-100 border border-green-400 text-green-700 px-4 py-2 rounded relative mb-3">
-        {{ session('message') }}
-    </div>
-    @endif
     <!-- BOTON -->
     <div class="">
         <button class="bg-slate-800 text-white px-3 py-3 rounded-md w-[90%] transform transition-transform hover:scale-105" wire:click="addNew">Control paciente</button>
@@ -15,7 +10,8 @@
             <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
                 {{ __('agregar control al paciente') }}
             </div>
-            <img class="h-32 w-full object-center " src="https://www.universidadviu.com/sites/universidadviu.com/files/styles/img_style_19_7_480/public/images/proceso-de-atenci%C3%B3n-de-enfermer%C3%ADa2.jpg?itok=mmbDlCTJ" alt="">
+            <img src="{{ asset('assets/controlEnfermero.webp') }}" class="h-32 w-full object-center object-cover">
+
         </x-slot>
 
         <x-slot name="content">
@@ -94,3 +90,26 @@
     </x-dialog-modal>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('livewire:init', () => {
+  Livewire.on('swal', function () {
+    let payload = {};
+    if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
+      payload = arguments[0];
+    } else {
+      payload = { title: arguments[0] ?? '', text: arguments[1] ?? '', icon: arguments[2] ?? 'info' };
+    }
+    const { title='Listo', text='', html=null, icon='success', timer=3000 } = payload;
+
+    Swal.fire({
+      title, text, html, icon,
+      timer,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timerProgressBar: true,
+    });
+  });
+});
+</script>

@@ -62,7 +62,8 @@
                                 <tr wire:key="{{ $paciente->id }}" class="border-b border-gray-700 hover:bg-[#204060]">
                                     {{-- <th class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-nowrap dark:text-white">
                                         {{ $paciente->id }}</th> --}}
-                                    <th class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
+                                    <th
+                                        class="tiBody px-4 py-1 text-[14px] font-medium text-white whitespace-normal min-w-[200px] dark:text-white">
                                         {{ $paciente->apellido_nombre }}</th>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->dni }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->legajo }}</td>
@@ -70,7 +71,8 @@
                                         {{ $paciente->jerarquia_id ? $paciente->jerarquias->name : 'No asignado' }}</td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
                                         {{ $paciente->destino_actual }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->ciudad }}</td>
+                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300 text-center">
+                                        {{ $paciente->ciudad_id ? $paciente->ciudades->nombre : 'No asignado' }}</td>
                                     <td class="tiBody px-2 py-1 text-[14px]">
                                         @if ($paciente->estado_id == 1)
                                             <span
@@ -99,16 +101,13 @@
                                     <td
                                         class="tiBody px-4 py-3
                                         @php $ultimaEnfermedad = $paciente->disases->last(); @endphp
-                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
-                                            @php
+                                        @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia) @php
                                                 $fechaFinalizacionLicencia = \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia);
                                             @endphp
                                             @if ($fechaFinalizacionLicencia->startOfDay() == \Carbon\Carbon::now()->startOfDay())
-                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse /* Amarillo con transparencia y animación de pulso */
-                                            @endif
+                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse /* Amarillo con transparencia y animación de pulso */ @endif
                                         @endif
-                                        font-semibold text-xs text-white uppercase tracking-widest focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition"
-                                    >
+                                        font-semibold text-xs text-white uppercase tracking-widest focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition">
                                         @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
                                             {{ \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia)->format('d-m-Y H:i:s') }}
                                         @else
@@ -132,14 +131,48 @@
                                                 Editar
                                             </a>
                                             <!-- Opción Eliminar -->
-                                            @role('super-admin')
+                                       @role('super-admin')
                                             <button
-                                                onclick="confirm('Seguro desea eliminar a este paciente {{ $paciente->apellido_nombre }} ?') || event.stopImmediatePropagation()"
-                                                wire:click="delete({{ $paciente->id }})"
-                                                class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-red-700 hover:bg-red-600">
-                                                Eliminar
+                                            type="button"
+                                            x-data="{ nombre: @js($paciente->apellido_nombre) }"
+                                            x-on:click="
+                                                Swal.fire({
+                                                title: '¿Eliminar paciente?',
+                                                html: `Se eliminará <b>${nombre}</b>. Esta acción no se puede deshacer.`,
+                                                icon: 'warning',
+                                                showCancelButton: true,
+                                                confirmButtonText: 'Sí, eliminar',
+                                                cancelButtonText: 'Cancelar',
+                                                reverseButtons: true,
+                                                focusCancel: true
+                                                }).then((res) => {
+                                                if (res.isConfirmed) {
+                                                    $wire.delete({{ $paciente->id }})
+                                                    .then(() => {
+                                                        Swal.fire({
+                                                        icon: 'success',
+                                                        title: 'Eliminado',
+                                                        text: `Se eliminó ${nombre}.`,
+                                                        timer: 1800,
+                                                        showConfirmButton: false,
+                                                        toast: true,
+                                                        position: 'top-end'
+                                                        });
+                                                    })
+                                                    .catch(() => {
+                                                        Swal.fire({
+                                                        icon: 'error',
+                                                        title: 'Error',
+                                                        text: 'No se pudo eliminar el paciente.'
+                                                        });
+                                                    });
+                                                }
+                                                });
+                                            "
+                                            class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-red-700 hover:bg-red-600">
+                                            Eliminar
                                             </button>
-                                            @endrole
+                                        @endrole
                                         </div>
                                     </td>
 
@@ -177,7 +210,7 @@
         </div>
     </section>
 
-    <section class="seccionTab2 w-fit">@livewire('patient.patient-listfechas')
+    <section class="seccionTab2 w-fit">@livewire('patient.patient-list-fechas')
         <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm max-h-[36rem] overflow-y-auto">
             <h2 class="text-lg font-bold mb-2 text-gray-700">Pacientes por Tipo de Licencia</h2>
 
@@ -190,11 +223,8 @@
 
                                 {{ $dp->paciente->jerarquias->name ?? 'Sin jerarquía' }}
                                 - {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
-                                - Finaliza: {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
-                                {{ $dp->paciente->apellido_nombre ?? 'Paciente no encontrado' }}
                                 - Finaliza:
                                 {{ \Carbon\Carbon::parse($dp->fecha_finalizacion_licencia)->format('d/m/Y') }}
-
                             </li>
                         @empty
                             <li class="text-gray-500">Sin pacientes registrados</li>
@@ -205,7 +235,6 @@
         </div>
     </section>
 </div>
-{{-- comentario de prueba --}}
 
 
 </div>
@@ -223,4 +252,42 @@
         const dropdown = document.getElementById(`dropdown-${patientId}`);
         dropdown.classList.toggle('hidden');
     }
+</script>
+{{-- script sweet alert --}}
+<script>
+    document.addEventListener('livewire:init', () => {
+    // Confirmación genérica (para dispatch('confirm'))
+    Livewire.on('confirm', (data) => {
+        Swal.fire({
+        title: data.title ?? '',
+        text: data.text ?? '',
+        html: data.html ?? null,
+        icon: data.icon ?? 'question',
+        showCancelButton: true,
+        confirmButtonText: data.confirmText ?? 'Confirmar',
+        cancelButtonText: data.cancelText ?? 'Cancelar',
+        reverseButtons: true,
+        focusCancel: true,
+        }).then((result) => {
+        if (result.isConfirmed && data.action) {
+            const p = data.params || {};
+            Livewire.dispatch(data.action, p.id ?? p);
+        }
+        });
+    });
+
+    // Toast/alert genérico (para dispatch('swal'))
+    Livewire.on('swal', (data) => {
+        Swal.fire({
+        title: data.title ?? '',
+        text: data.text ?? '',
+        html: data.html ?? null,
+        icon: data.icon ?? 'info',
+        timer: data.timer ?? 2000,
+        toast: true,
+        position: data.position ?? 'top-end',
+        showConfirmButton: false,
+        });
+    });
+    });
 </script>

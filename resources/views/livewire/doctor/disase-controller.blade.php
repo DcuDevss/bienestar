@@ -62,9 +62,24 @@
                       ✏️
                     </a>
                     <!-- Delete con confirm -->
-                    <a class="text-red-500 cursor-pointer hover:text-red-700"
-                       onclick="if(confirm('¿Seguro que quieres eliminar esta enfermedad?')) { @this.delete({{ $disase->id }}) }">
-                      🗑️
+                    <a x-data
+                        @click="
+                                Swal.fire({
+                                    title: '¿Eliminar enfermedad?',
+                                    text: 'Esta acción no se puede deshacer.',
+                                    icon: 'warning',
+                                    showCancelButton: true,
+                                    confirmButtonText: 'Sí, eliminar',
+                                    cancelButtonText: 'Cancelar',
+                                    reverseButtons: true,
+                                }).then((result) => {
+                                    if (result.isConfirmed) {
+                                        $wire.eliminarConfirmado({{ $disase->id }})
+                                    }
+                                })
+                        "
+                        class="text-red-500 cursor-pointer hover:text-red-700">
+                        🗑️
                     </a>
                   </div>
                 </td>
@@ -149,10 +164,39 @@
             </button>
         </x-slot>
     </x-dialog-modal>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('livewire:init', () => {
 
-    <div x-data="{ show:false, msg:'' }"
-        x-on:notify.window="msg = $event.detail.message; show = true; setTimeout(()=> show=false, 2000)"
-        x-show="show"
-        class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow">
-    <span x-text="msg"></span>
-</div>
+  // ✅ Alerta normal
+  Livewire.on('swal', (payload = {}) => {
+    Swal.fire({
+      title: payload.title ?? '',
+      text: payload.text ?? '',
+      icon: payload.icon ?? 'info',
+      position: payload.position ?? 'top-end',
+      toast: payload.toast ?? true,
+      showConfirmButton: false,
+      timer: 3000,
+      timerProgressBar: true,
+    });
+  });
+
+  // ✅ Confirmación con acción
+  Livewire.on('confirm', ({title='¿Estás seguro?', text='', icon='warning', confirmText='Confirmar', cancelText='Cancelar', action='', id=null} = {}) => {
+    Swal.fire({
+      title, text, icon,
+      showCancelButton: true,
+      confirmButtonText: confirmText,
+      cancelButtonText: cancelText,
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed && action) {
+        Livewire.dispatch(action, { id });
+      }
+    });
+  });
+
+});
+</script>
+

@@ -174,27 +174,27 @@ class PatientCertificado extends Component
             Storage::disk('public')->makeDirectory($dir);
             Log::debug('📁 Directorio creado', ['dir' => $dir]);
 
-            // Procesar imágenes
-            $pathFrente = $this->optimizarImagen($data['imagen_frente'], $dir);
-            $pathDorso  = $this->optimizarImagen($data['imagen_dorso'], $dir);
+            // Procesar imágenes (pueden venir null)
+            $pathFrente = $this->optimizarImagen($data['imagen_frente'] ?? null, $dir);
+            $pathDorso  = $this->optimizarImagen($data['imagen_dorso'] ?? null, $dir);
 
-            // Recalcular días
+            // Recalcular días (si ambas fechas están)
             $suma_auxiliar = null;
-            if ($data['fecha_inicio_licencia'] && $data['fecha_finalizacion_licencia']) {
+            if (!empty($data['fecha_inicio_licencia']) && !empty($data['fecha_finalizacion_licencia'])) {
                 $suma_auxiliar = Carbon::parse($data['fecha_inicio_licencia'])
                     ->diffInDays(Carbon::parse($data['fecha_finalizacion_licencia'])) + 1;
             }
 
             // Guardar pivot
             $this->patient->disases()->attach($disaseId, [
-                'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'],
-                'fecha_inicio_licencia'          => $data['fecha_inicio_licencia'],
-                'fecha_finalizacion_licencia'    => $data['fecha_finalizacion_licencia'],
+                'fecha_presentacion_certificado' => $data['fecha_presentacion_certificado'] ?? null,
+                'fecha_inicio_licencia'          => $data['fecha_inicio_licencia'] ?? null,
+                'fecha_finalizacion_licencia'    => $data['fecha_finalizacion_licencia'] ?? null,
                 'detalle_certificado'            => $data['detalle_certificado'],
                 'imagen_frente'                  => $pathFrente,
                 'imagen_dorso'                   => $pathDorso,
-                'horas_salud'                    => $data['horas_salud'],
-                'suma_salud'                     => $data['suma_salud'],
+                'horas_salud'                    => $data['horas_salud'] ?? null,
+                'suma_salud'                     => $data['suma_salud'] ?? null,
                 'suma_auxiliar'                  => $suma_auxiliar,
                 'estado_certificado'             => $data['estado_certificado'] ?? true,
                 'tipolicencia_id'                => $data['tipolicencia_id'],
@@ -206,39 +206,60 @@ class PatientCertificado extends Component
                 'imagen_dorso' => $pathDorso,
             ]);
 
-            // Reset
+            // Limpiar estado + cerrar modal
             $this->reset([
-                'name',
-                'fecha_presentacion_certificado',
-                'detalle_certificado',
-                'fecha_inicio_licencia',
-                'fecha_finalizacion_licencia',
-                'horas_salud',
-                'suma_salud',
-                'suma_auxiliar',
-                'tipolicencia_id',
-                'tipodelicencia',
-                'estado_certificado',
-                'imagen_frente',
-                'imagen_dorso',
-                'search',
-                'disase_id'
+                'name','fecha_presentacion_certificado','detalle_certificado',
+                'fecha_inicio_licencia','fecha_finalizacion_licencia',
+                'horas_salud','suma_salud','suma_auxiliar','tipolicencia_id','tipodelicencia',
+                'estado_certificado','imagen_frente','imagen_dorso','search','disase_id'
             ]);
-
-            session()->flash('success', 'Certificado agregado correctamente.');
             $this->modal = false;
             $this->pickerOpen = false;
             $this->resetValidation();
+
+            // Refrescar lista
             $this->patient_disases = $this->patient->disases()->get();
-        } catch (\Exception $e) {
+            $this->dispatch('$refresh');
+
+            // 🎉 SweetAlert de éxito
+            $this->dispatch(
+                'swal',
+                title: 'Agregado',
+                text:  'El certificado se agregó al historial.',
+                icon:  'success'
+            );
+
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            // Mostrar errores en SweetAlert (detalle por campo)
+            $html = collect($e->validator->errors()->messages())
+                ->map(fn($msgs,$field) => '<b>'.e(str_replace('_',' ',$field)).'</b>: '.e(implode(' | ', $msgs)))
+                ->implode('<br>');
+
+           $this->dispatch(
+                'swal',
+                title: 'Revisá los campos',
+                html:  $html, // <-- string HTML, no array/objeto
+                icon:  'error'
+            );
+
+            throw $e; // para que <x-input-error> marque los campos también
+        } catch (\Throwable $e) {
             Log::error('❌ Error al agregar certificado', [
                 'mensaje' => $e->getMessage(),
                 'linea' => $e->getLine(),
                 'archivo' => $e->getFile(),
             ]);
-            session()->flash('error', 'Ocurrió un error al agregar el certificado.');
+
+          $this->dispatch(
+            'swal',
+            title: 'Ups',
+            text:  'Ocurrió un error al agregar el certificado.',
+            icon:  'error'
+        );
+
         }
     }
+
 
     // ---------------- Optimización de imágenes ----------------
     private function optimizarImagen($file, $dir)
@@ -283,7 +304,7 @@ class PatientCertificado extends Component
         }
     }
 
-    // ---------------- Crear nueva enfermedad desde búsqueda ----------------
+    // ---------------- Crear nueva enfermedad desde búsqueda ------------------
     public function addNew()
     {
         Log::info('➕ Creando nueva enfermedad desde búsqueda', ['search' => $this->search]);

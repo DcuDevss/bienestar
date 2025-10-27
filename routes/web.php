@@ -51,7 +51,7 @@ use Illuminate\Support\Facades\Auth;
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes ffff
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
@@ -62,12 +62,13 @@ use Illuminate\Support\Facades\Auth;
 //Route::get('/', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'create'])->middleware('guest');
 
 
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::middleware([
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -79,13 +80,12 @@ Route::middleware([
 /********nuevo********/
 
 Route::middleware([
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
     Route::get('/dashboard', function () {
         $user = Auth::user(); // Obténgo al usuario autenticado
-
         // Lógica para redirigir según el rol
         if ($user->hasRole('super-admin')) {
             return view('dashboard');
@@ -100,7 +100,7 @@ Route::middleware([
             // return view('panel-administrador');
             //return redirect()->intended(route('psicologo.index'));
             return view('dashboard');
-        } elseif ($user->hasRole('admin-jefa')) {
+        } elseif ($user->hasRole('admin-jefe')) {
             return view('dashboard');
         } else {
             return view('dashboard');
@@ -118,7 +118,7 @@ Route::get('get', function () {
     ->name('admin.index')->middleware((['can:admin.index']));
 
 
-//rutas de roles todas index, show, create, edit
+//rutas de roles todas index, show, create, edit cambios de rodri
 //Route::resource('/roles',RoleController::class)->names('roles');
 
 //Route::resource('/users',UserController::class)->names('users');
@@ -141,9 +141,6 @@ Route::get('/auditorias', AuditoriaList::class)->name('auditorias.index');
 
 
 
-
-
-
 //Route::get('/disases', Multiform::class)->name('multiform.index');
 Route::get('/disases', DisaseController::class)->middleware('can:disases.index')->name('disases.index');
 Route::get('/multiform', MultiformController::class)->middleware('can:multiform.index')->name('multiform.index');
@@ -152,7 +149,6 @@ Route::get('paciente/{paciente_id}/entrevista/create', EntrevistaFormController:
 Route::get('/entrevistas/{paciente_id}', EntrevistaIndex::class)->name('entrevistas.index');
 Route::get('/entrevistas/editar/{entrevista_id}', EditEntrevista::class)->name('entrevistas.edit');
 Route::get('/entervistas/pdf-psiquiatra/{paciente}', PdfPsiquiatraController::class)->name('entrevistas.pdf-psiquiatra');
-
 
 
 

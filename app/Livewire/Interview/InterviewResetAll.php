@@ -29,7 +29,7 @@ class InterviewResetAll extends Component
                 $inicioLic = Carbon::parse($cert->pivot->fecha_inicio_licencia)->startOfDay();
                 $finLic    = Carbon::parse($cert->pivot->fecha_finalizacion_licencia)->startOfDay();
 
-                // 👉 Cortamos las fechas para que solo cuenten en el año entrante
+                // 👉 Cortamoos las fechas para que solo cuenten en el año entrante
                 $inicio = $inicioLic->greaterThan($inicioAnio) ? $inicioLic : $inicioAnio;
                 $fin    = $finLic->lessThan($finAnio) ? $finLic : $finAnio;
 
@@ -54,16 +54,16 @@ class InterviewResetAll extends Component
         Auditoria::create([
             'user_id' => $usuario?->id,
             'accion'  => 'reset_licencias_global',
-            'detalle' => "Pacientes: {$pacientesProcesados}, Certificados: {$certificadosProcesados}, Año: {$anioEntrante}",
+            'detalle' => "Pacientes: {$pacientesProcesados}, Certificados: {$certificadosProcesados}",
         ]);
 
-        session()->flash(
-            'success',
-            "✅ Licencias del año {$anioEntrante} reseteadas correctamente.<br>" .
-            "👤 Responsable: <b>{$usuario?->name}</b><br>" .
-            "📌 Pacientes procesados: <b>{$pacientesProcesados}</b><br>" .
-            "🗂️ Certificados actualizados: <b>{$certificadosProcesados}</b>"
+          $this->dispatch(
+            'swal',
+            title: 'Exito',
+            text:  'Licencias Reseteadas con Exito!.',
+            icon:  'success'
         );
+
     }
 
 

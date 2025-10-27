@@ -140,7 +140,11 @@ class EditEntrevista extends Component
         $this->indicacionterapeuticas = IndicacionTerapeutica::all();
         $this->abordajes = Abordaje::all();
         $this->portacions = Portacion::all();
-        $this->salud_mentales = SaludMentale::all();
+        // $this->salud_mentales = SaludMentale::all();
+        // $this->salud_mentales = SaludMentale::orderBy('codigo', 'asc')->get();
+        $this->salud_mentales = SaludMentale::orderByRaw("CASE WHEN codigo REGEXP '^[0-9]+$' THEN LPAD(codigo, 10, '0') ELSE codigo END ASC")->get();
+        Log::info('Registros en $salud_mentales: ' . $this->salud_mentales->count()); 
+
     }
 
     public function editMember($id)
@@ -153,6 +157,7 @@ class EditEntrevista extends Component
             $this->grupo_familiar = $miembro->toArray();  // Actualiza $grupo_familiar con los datos del miembro
         }
     }
+
 
     // Método para guardar los cambios en el miembro editado
     public function saveMember()
@@ -184,9 +189,6 @@ class EditEntrevista extends Component
                 $entrevista = Entrevista::find($this->entrevista_id);
                 $this->miembros = $entrevista->grupoFamiliar;  // Recargar los miembros para reflejar los cambios
 
-                // Mostrar mensaje de éxito
-                session()->flash('message', 'Miembro editado exitosamente.');
-
                 // Limpiar el estado de edición
                 $this->editIndex = null;
                 $this->grupo_familiar = [];
@@ -217,7 +219,6 @@ class EditEntrevista extends Component
         $this->grupo_familiar = [];
         $this->miembros = Entrevista::find($this->entrevista_id)->grupoFamiliar;
 
-        session()->flash('message', 'Miembro agregado exitosamente.');
     }
 
     //funcion para acepar valores null
@@ -323,7 +324,8 @@ class EditEntrevista extends Component
             $entrevista->save();
 
             // Mostrar mensaje de éxito
-            session()->flash('success', 'La entrevista ha sido actualizada correctamente.');
+           session()->flash('message', 'Entrevista editada con éxito.');
+
         }
     }
 

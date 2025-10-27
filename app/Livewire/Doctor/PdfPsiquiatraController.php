@@ -8,13 +8,14 @@ use App\Models\Paciente;
 use App\Models\PdfPsiquiatra;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Livewire\Attributes\On;
 
 class PdfPsiquiatraController extends Component
 {
     use WithFileUploads;
 
     public $paciente;
-    public $pdfs = []; // múltiples archivos
+    public $pdfs = [];
     public $pdfsList;
 
     public function mount(Paciente $paciente)
@@ -32,20 +33,23 @@ class PdfPsiquiatraController extends Component
             ->values();
     }
 
-
-    /**
-     * Carpeta base para este paciente.
-     * Queda: public/pacientes/{id}/pdfs
-     */
     protected function storageDir(): string
     {
         return "pdfhistoriales/{$this->paciente->id}";
     }
 
-    public function uploadPdfs()
+   public function uploadPdfs()
     {
+        // 1) Guard clause: nada seleccionado
+        if (empty($this->pdfs) || count($this->pdfs) === 0) {
+            $this->dispatch('swal', title: 'Sin archivos', text: 'Seleccioná al menos un PDF para subir.', icon: 'error');
+            return;
+        }
+
+        // 2) Validación completa
         $this->validate([
-            'pdfs.*' => 'required|file|mimes:pdf|max:5120',
+            'pdfs'   => 'required|array|min:1',
+            'pdfs.*' => 'file|mimes:pdf|max:5120',
         ]);
 
         foreach ($this->pdfs as $pdf) {
@@ -55,7 +59,6 @@ class PdfPsiquiatraController extends Component
             $safe  = \Illuminate\Support\Str::slug($base);
             $name  = $safe.'_'.now()->format('Ymd_His').'_'.\Illuminate\Support\Str::random(6).'.'.$ext;
 
-            // 👉 misma carpeta que el file-controller
             $path = $pdf->storeAs($this->storageDir(), $name, 'public');
 
             \App\Models\PdfPsiquiatra::create([
@@ -65,9 +68,23 @@ class PdfPsiquiatraController extends Component
             ]);
         }
 
-        $this->pdfs = [];
+        $this->reset('pdfs'); // o $this->pdfs = [];
         $this->loadPdfs();
-        session()->flash('message', 'PDFs cargados correctamente.');
+
+        $this->dispatch('swal', title: 'Cargado', text: 'PDF(s) cargados correctamente.', icon: 'success');
+    }
+
+
+    public function confirmarEliminar($pdfId)
+    {
+        $this->dispatch('confirm', [
+            'title'       => '¿Eliminar PDF?',
+            'text'        => 'Esta acción no se puede deshacer.',
+            'icon'        => 'warning',
+            'confirmText' => 'Sí, eliminar',
+            'cancelText'  => 'Cancelar',
+            'id'          => $pdfId,   // 👈 pasamos solo el id
+        ]);
     }
 
     public function eliminarPdf($pdfId)
@@ -82,11 +99,14 @@ class PdfPsiquiatraController extends Component
             $pdf->delete();
             $this->loadPdfs();
 
-            session()->flash('message', 'PDF eliminado correctamente.');
+            // ✅ éxito
+            $this->dispatch('swal', title: 'Eliminado', text: 'PDF eliminado correctamente.', icon: 'success');
         } else {
-            session()->flash('error', 'PDF no encontrado.');
+            // ⚠️ no encontrado
+            $this->dispatch('swal', title: 'No encontrado', text: 'El PDF no existe.', icon: 'error');
         }
     }
+
 
     public function render()
     {

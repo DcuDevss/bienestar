@@ -5,13 +5,16 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Pdfhistorial extends Model
+class Ciudade extends Model
 {
     use HasFactory;
-    protected $guarded=[];
 
+    protected $fillable = ['nombre', 'cp'];
+    
+    // Relación 1 a 1 inversa con Paciente
     public function paciente()
     {
-        return $this->belongsTo(Paciente::class);
+        return $this->hasOne(Paciente::class);
     }
+
 }

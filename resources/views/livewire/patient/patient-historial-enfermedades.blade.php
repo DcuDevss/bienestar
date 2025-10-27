@@ -60,6 +60,13 @@
                                 </p>
                             </li>
 
+                            <li class="mb-0">
+                                <p>
+                                    <span class="pr-1 font-extrabold text-black">Fecha de finalización:</span>
+                                    {{ \Carbon\Carbon::parse($enfermedad->pivot->fecha_finalizacion_enfermedad)->format('d-m-Y H:i:s') }}
+                                </p>
+                            </li>
+
                             {{--                             <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">fecha de finalizacion:</span>
                                     {{ $enfermedad->pivot->fecha_finalizacion_enfermedad }}</p>
@@ -104,10 +111,10 @@
                                 <p><span class="pr-1 font-extrabold text-black">Detalle de la enfermedad:</span></p>
                                 <div class="h-[40px] overflow-auto">{{ $enfermedad->pivot->detalle_diagnostico }}</div>
                             </li>
-                            <li class="mb-0">
+                 {{--            <li class="mb-0">
                                 <p><span class="pr-1 font-extrabold text-black">Detalle de la medicacion:</span></p>
                                 <div class="h-[40px] overflow-auto">{{ $enfermedad->pivot->detalle_medicacion }}</div>
-                            </li>
+                            </li> --}}
                             <!-- IMAGEN -->
                             <li class="text-center py-6 font-bold">
                                 <p><span class="pr-1 font-extrabold text-black">Archivo adjunto:</span></p>
@@ -199,7 +206,7 @@
                 alt="">
         </x-slot>
         <x-slot name="content">
-            <div class="grid grid-cols-2 gap-4">
+            <div class="grid grid-cols-3 gap-4 mt-3">
                 <div class="relative" wire:click.outside="closeNamePicker"
                     wire:keydown.arrow-down.prevent="moveNameDown" wire:keydown.arrow-up.prevent="moveNameUp"
                     wire:keydown.enter.prevent="chooseNameHighlighted">
@@ -250,8 +257,18 @@
                     <x-input-error for="tipodelicencia" />
                 </div>
 
+                <div>
+                        <label for="derivacion_psiquiatrica"
+                            class="block text-sm font-medium text-gray-700">{{ __('Derivación Psiquiatrica') }}</label>
+                        <select id="derivacion_psiquiatrica" class="w-full rounded cursor-pointer"
+                                    wire:model="derivacion_psiquiatrica">
+                                    <option value="" selected>{{ __('Seleccione una opción') }}</option>
+                                    <option value="no">{{ __('no') }}</option>
+                                    <option value="si">{{ __('si') }}</option>
+                        </select>
+                        <x-input-error for="derivacion_psiquiatrica" />
+                </div>
             </div>
-
 
             <div class="grid grid-cols-3 gap-4 mt-3">
                 <div>
@@ -261,7 +278,7 @@
                         placeholder="{{ __('fecha atencion') }}" wire:model="fecha_atencion_enfermedad" />
                     <x-input-error for="fecha_atencion_enfermedad" />
                 </div>
-                {{--
+
                 <div>
                     <label for="fecha_finalizacion_enfermedad"
                         class="block text-sm font-medium text-gray-700">{{ __('finalización de enfermedad') }}</label>
@@ -269,14 +286,22 @@
                         type="datetime-local" placeholder="{{ __('fecha finalización') }}"
                         wire:model="fecha_finalizacion_enfermedad" />
                     <x-input-error for="fecha_finalizacion_enfermedad" />
-                </div> --}}
+                </div>
 
                 <div>
                     <label for="horas_reposo"
                         class="block text-sm font-medium text-gray-700">{{ __('Horas de reposo') }}</label>
                     <input id="horas_reposo" class="w-full rounded cursor-pointer" type="number"
-                        placeholder="{{ __('ingrese horas de reposo') }}" wire:model="horas_reposo" />
+                        placeholder="{{ __('Ingreso Opcional') }}" wire:model="horas_reposo" />
                     <x-input-error for="horas_reposo" />
+                </div>
+
+                <div>
+                    <label for="motivo_consulta"
+                        class="block text-sm font-medium text-gray-700">{{ __('Motivo de la Consulta') }}</label>
+                    <textarea id="motivo_consulta" class="w-full rounded cursor-pointer" type="text"
+                        placeholder="{{ __('Ingrese el motivo') }}" wire:model="motivo_consulta"></textarea>
+                    <x-input-error for="motivo_consulta" />
                 </div>
 
                 <div>
@@ -341,13 +366,13 @@
 
             </div>
 
-            <div class="col-span-2 mt-3">
+{{--             <div class="col-span-2 mt-3">
                 <label for="detalle_medicacion"
                     class="block text-sm font-medium text-gray-700">{{ __('detalle de la medicacion') }}</label>
                 <textarea id="detalle_medicacion" class="w-full rounded cursor-pointer" rows="5"
                     placeholder="{{ __('ingrese detalle') }}" wire:model="detalle_medicacion"></textarea>
                 <x-input-error for="detalle_medicacion" />
-            </div>
+            </div> --}}
 
             <input type="hidden" wire:model="enfermedade_id">
         </x-slot>

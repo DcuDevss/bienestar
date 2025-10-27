@@ -191,7 +191,7 @@
                                 <label for="horas_reposo"
                                     class="block text-sm font-medium text-gray-700">{{ __('Horas de reposo') }}</label>
                                 <input id="horas_reposo" class="w-full rounded cursor-pointer" type="number"
-                                    placeholder="{{ __('ingrese horas de salud') }}" wire:model="horas_reposo" />
+                                    placeholder="{{ __('Ingreso Opcional') }}" wire:model="horas_reposo" />
                                 <x-input-error for="horas_reposo" />
                             </div>
                         </div>

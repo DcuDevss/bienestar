@@ -35,7 +35,7 @@ class PatientHistorialEnfermedades extends Component
     public $modal = false;
 
     public $detalle_diagnostico, $fecha_atencion_enfermedad, $fecha_finalizacion_enfermedad, $horas_reposo, $pdf_enfermedad,
-        $imgen_enfermedad, $medicacion, $dosis, $detalle_medicacion, $nro_osef, $tipodelicencia, $pacienteId, $patient_disases;
+        $imgen_enfermedad, $medicacion, $dosis, $detalle_medicacion, $nro_osef, $tipodelicencia, $pacienteId, $patient_disases, $derivacion_psiquiatrica, $motivo_consulta;
 
     // --- Autocomplete dentro del modal ---
     public $nameSearch = '';          // lo que escribe en "Nombre" dentro del modal
@@ -58,7 +58,8 @@ class PatientHistorialEnfermedades extends Component
         'imgen_enfermedad' => 'nullable|file',
         'medicacion' => 'nullable',
         'dosis' => 'nullable',
-        //'estado_enfermedad'=>'nullable',
+        'derivacion_psiquiatrica' => 'nullable',
+        'motivo_consulta' => 'nullable',
         'detalle_medicacion' => 'nullable',
         'nro_osef' => 'nullable',
         'art' => 'nullable',
@@ -109,6 +110,9 @@ class PatientHistorialEnfermedades extends Component
             $this->art                           = $enf->pivot->art ?? null;
             $this->detalle_diagnostico           = $enf->pivot->detalle_diagnostico ?? null;
             $this->tipodelicencia                = $enf->pivot->tipodelicencia ?? null;
+            $this->derivacion_psiquiatrica       = $enf->pivot->derivacion_psiquiatrica ?? null;
+            $this->motivo_consulta       = $enf->pivot->motivo_consulta ?? null;
+
 
             $this->modal = true;
 
@@ -200,6 +204,8 @@ class PatientHistorialEnfermedades extends Component
             'medicacion'                    => $data['medicacion'],
             'dosis'                         => $data['dosis'],
             'tipodelicencia'                => $data['tipodelicencia'],
+            'derivacion_psiquiatrica'       => $data['derivacion_psiquiatrica'],
+            'motivo_consulta'               => $data['motivo_consulta'],
         ];
 
         // ====================
@@ -253,6 +259,8 @@ class PatientHistorialEnfermedades extends Component
             'nameIndex',
             'pivotId',
             'original_enfermedade_id',
+            'derivacion_psiquiatrica',
+            'motivo_consulta'
         ]);
 
         $this->patient_disases = $paciente->enfermedades()->get();
@@ -363,7 +371,9 @@ class PatientHistorialEnfermedades extends Component
                         ->orWhere('enfermedade_paciente.medicacion', 'like', '%' . $this->search . '%')
                         ->orWhere('enfermedade_paciente.nro_osef', 'like', '%' . $this->search . '%')
                         ->orWhere('enfermedade_paciente.art', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.tipodelicencia', 'like', '%' . $this->search . '%');
+                        ->orWhere('enfermedade_paciente.tipodelicencia', 'like', '%' . $this->search . '%')
+                        ->orWhere('enfermedade_paciente.derivacion_psiquiatrica', 'like', '%' . $this->search . '%')
+                        ->orWhere('enfermedade_paciente.motivo_consulta', 'like', '%' . $this->search . '%');
                 })
                 ->orderBy('enfermedade_paciente.id', $this->sortAsc ? 'desc' : 'asc')
                 ->paginate($this->perPage, ['*'], 'enfermedades_page');

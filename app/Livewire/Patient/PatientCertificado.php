@@ -304,7 +304,7 @@ class PatientCertificado extends Component
         }
     }
 
-    // ---------------- Crear nueva enfermedad desde búsqueda ----------------
+    // ---------------- Crear nueva enfermedad desde búsqueda ------------------
     public function addNew()
     {
         Log::info('➕ Creando nueva enfermedad desde búsqueda', ['search' => $this->search]);

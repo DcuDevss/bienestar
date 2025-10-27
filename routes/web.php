@@ -118,7 +118,7 @@ Route::get('get', function () {
     ->name('admin.index')->middleware((['can:admin.index']));
 
 
-//rutas de roles todas index, show, create, edit
+//rutas de roles todas index, show, create, edit cambios de rodri
 //Route::resource('/roles',RoleController::class)->names('roles');
 
 //Route::resource('/users',UserController::class)->names('users');

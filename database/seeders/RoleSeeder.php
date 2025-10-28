@@ -55,7 +55,7 @@ class RoleSeeder extends Seeder
 
         $psico     = ['psicologo.index','interviews.index','paciente.ver-historial'];
         $nutri     = ['interviews.index','paciente.ver-historial'];
-        $enfermero = ['enfermero.enfermero-historial','paciente.ver-historial'];
+        $enfermero = ['enfermero.enfermero-historial','paciente.ver-historial', 'interviews.index'];
         $profeGym  = ['interviews.index','paciente.ver-historial'];
 
         // Asignaciones (colecciones por nombre)

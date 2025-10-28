@@ -51,7 +51,7 @@
 
         <x-slot name="title">
             <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
-                {{ __('agregar certificado al historial del paciente 123') }}
+                {{ __('agregar certificado al historial del paciente') }}
             </div>
             <img class="h-32 w-full object-center object-cover" src="{{ asset('assets/disases.jpg') }}" alt="">
         </x-slot>

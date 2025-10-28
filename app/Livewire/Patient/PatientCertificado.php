@@ -260,6 +260,7 @@ class PatientCertificado extends Component
         }
     }
 
+    
 
     // ---------------- Optimización de imágenes ----------------
     private function optimizarImagen($file, $dir)

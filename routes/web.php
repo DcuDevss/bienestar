@@ -60,7 +60,7 @@ use App\Livewire\Patient\DeletedPatientList;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-//Route::get('/', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'create'])->middleware('guest');
+//Route::get('/', [\Laraavel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'create'])->middleware('guest');
 
 
 

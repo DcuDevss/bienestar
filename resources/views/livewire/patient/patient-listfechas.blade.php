@@ -1,7 +1,7 @@
 <div class="w-full text-[12px]">
     <!-- Recuadro para mostrar pacientes con finalización hoy -->
     @if($pacientesConFinalizacionHoy->isNotEmpty())
-        <div class="subTab2 bg-gray-800 pr-2 pl-1 mt-4 rounded-lg  overflow-auto">
+        <div class="subTab2 bg-gray-800 pr-2 pl-1 mt-4 rounded-lg  max-h-[36rem] overflow-y-auto">
             <div class="flex flex-col items-center justify-center  mx-auto py-2">
                 <span class="text-white text-lg font-semibold">Personal que finaliza hoy:</span>
             </div>

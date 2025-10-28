@@ -5,7 +5,7 @@
             <div class="flex flex-col items-center justify-center  mx-auto py-2">
                 <span class="text-white text-lg font-semibold">Personal que finaliza hoy:</span>
             </div>
-
+            {{-- TABLA --}}
             <table class="w-full text-sm text-left text-gray-500">
                 <thead class="teGead2 text-xs text-white uppercase bg-gray-900">
                     <tr class="">

@@ -185,7 +185,7 @@
             </div>
         </div>
     </section>
-    {{-- TABLA PACIENTES POR TIPO DE LICENCIA --}}
+    {{-- TABLA PACIENTES POR TIPO DEe LICENCIA --}}
     <section class="seccionTab2 flex w-[95%] mx-auto gap-x-6 mb-8">
         @livewire('patient.patient-listfechas')
         <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm max-h-[36rem] overflow-y-auto">

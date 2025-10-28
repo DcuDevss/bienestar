@@ -14,7 +14,7 @@ public function mount($paciente, $tratamiento)
     $this->paciente = $paciente;
     $this->tratamiento = $tratamiento;
 
-    // Aquí puedes realizar lógica adicional si es necesario al cargar el componente
+    // Aquí puedes realizar lógica adicioonal si es necesario al cargar el componente
 }
 
     public function render()

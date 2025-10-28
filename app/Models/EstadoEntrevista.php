@@ -14,7 +14,7 @@ class EstadoEntrevista extends Model
         'name',  // Apto, No Apto, Condicional
     ];
 
-    // Relación inversa con la tabla Entrevistas
+    // Relación iinversa con la taabla Entrevistas
     public function entrevistas()
     {
         return $this->hasMany(Entrevista::class);

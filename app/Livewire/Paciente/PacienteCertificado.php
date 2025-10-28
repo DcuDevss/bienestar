@@ -24,6 +24,8 @@ class PacienteCertificado extends Component
     public $modal = false;
     public $archivos = [];
     public $pacienteId;
+    public $certificado_id; // Paraa guardar el id del registro que vas a editar
+
 
 
     protected $rules = [
@@ -143,5 +145,50 @@ class PacienteCertificado extends Component
 
 
         return view('livewire.paciente.paciente-certificado', ['enfermedades' => $enfermedades]);
+    }
+
+    public function editModal($certificadoId)
+    {
+        $certificado = $this->patient->enfermedadPacientes()->where('id', $certificadoId)->first();
+
+        if ($certificado) {
+            $this->certificado_id = $certificado->id;
+            $this->enfermedade_id = $certificado->enfermedade_id;
+            $this->name = $certificado->enfermedade->name ?? '';
+            $this->detalle_enfermedad2 = $certificado->detalle_enfermedad2;
+            $this->fecha_atencion2 = $certificado->fecha_atencion2;
+            $this->horas_reposo2 = $certificado->horas_reposo2;
+            // Si tienes más campos, agregalos aquí
+
+            $this->modal = true;
+        }
+    }
+
+    public function updateEnfermedade()
+    {
+        $data = $this->validate();
+
+        $certificado = $this->patient->enfermedadPacientes()->where('id', $this->certificado_id)->first();
+
+        if ($certificado) {
+            $certificado->update([
+                'enfermedade_id' => $data['enfermedade_id'],
+                'detalle_enfermedad2' => $data['detalle_enfermedad2'],
+                'fecha_atencion2' => $data['fecha_atencion2'],
+                'horas_reposo2' => $data['horas_reposo2'],
+                // Otros campos aquí si tienes
+            ]);
+
+            $this->patient_enfermedades = $this->patient->enfermedadPacientes; // refrescar lista
+
+            $this->reset([
+                'certificado_id',
+                'name',
+                'detalle_enfermedad2',
+                'fecha_atencion2',
+                'horas_reposo2',
+                'modal',
+            ]);
+        }
     }
 }

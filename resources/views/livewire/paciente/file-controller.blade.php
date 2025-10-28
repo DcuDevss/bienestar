@@ -41,3 +41,28 @@
     </x-dialog-modal>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+  document.addEventListener('livewire:init', () => {
+    Livewire.on('swal', function () {
+      let payload = {};
+      if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
+        payload = arguments[0];
+      } else {
+        payload = { title: arguments[0] ?? '', text: arguments[1] ?? '', icon: arguments[2] ?? 'info' };
+      }
+
+      const { title='Listo', text='', html=null, icon='success', timer=3000 } = payload;
+
+      Swal.fire({
+        title, text, html, icon,
+        timer,
+        toast: true,
+        position: 'top-end',
+        showConfirmButton: false,
+        timerProgressBar: true,
+      });
+    });
+  });
+</script>
+

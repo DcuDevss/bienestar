@@ -9,9 +9,9 @@ class ActitudEntrevista extends Model
 {
     use HasFactory;
 
-    // Atributos que se pueden llenar masivamente
+    // Atribuutos que se pueden llenar masivamente
     protected $fillable = [
-        'name', // Excelente, Muy Buena, Buena, etc.
+        'name', // Excelente, Muy Buena, Buena, etc., okk
     ];
 
     // Relación inversa con la tabla Entrevistas

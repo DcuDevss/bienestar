@@ -3,14 +3,16 @@
 namespace App\Livewire\Doctor;
 
 use Livewire\Component;
-use App\Models\Customer;
+use App\Models\Paciente;
 use App\Models\Estado;
 use App\Models\Factore;
-use App\Models\Paciente;
 use App\Models\Jerarquia;
+use App\Models\Ciudade;
+use Livewire\Attributes\On;
 
 class MultiformController extends Component
-{ public $color;
+{
+    public $color;
 
     public $apellido_nombre;
     public $dni;
@@ -20,10 +22,13 @@ class MultiformController extends Component
     public $email;
     public $TelefonoCelular;
 
-    public $jerarquia;
+    public $jerarquia; // (no se usaa, podés quitarla si querés)
     public $legajo;
     public $destino_actual;
-    public $ciudad;
+
+    public $ciudad_id;
+    public $ciudades;
+
     public $edad;
 
     public $fecha_nacimiento;
@@ -58,22 +63,29 @@ class MultiformController extends Component
 
     public function mount()
     {
-        $this->step = 0;
-        $this->estados = Estado::all(); // Obtener todos los estados
-        $this->factores = Factore::all();
+        $this->step       = 0;
+        $this->estados    = Estado::all();
+        $this->factores   = Factore::all();
         $this->jerarquias = Jerarquia::all();
-
+        $this->ciudades   = Ciudade::all();
     }
 
+    #[On('go-previous')]
     public function decreaseStep()
     {
-        $this->step--;
+        $this->step = max(0, $this->step - 1);
+        $this->dispatch('swal', title: 'Volviste de paso', text: 'Podés editar los datos del paso anterior.', icon: 'info');
     }
 
     public function submit()
     {
+        $action = $this->stepActions[$this->step] ?? null;
 
-        $action = $this->stepActions[$this->step];
+        if (!$action || !method_exists($this, $action)) {
+            // Seguridad: si hay una llamada a un paso inexistente
+            $this->dispatch('swal', title: 'Paso inválido', text: 'No se pudo continuar.', icon: 'error');
+            return;
+        }
 
         $this->$action();
     }
@@ -81,119 +93,117 @@ class MultiformController extends Component
     public function submit1()
     {
         $this->validate([
-            'apellido_nombre' => 'required',
-            'dni' => 'required|numeric',
-            'cuil' => 'required',
-            'sexo' => 'required',
-            'domicilio' => 'required',
-            'fecha_nacimiento' => 'required',
-            'email' => 'required|email',
-            'TelefonoCelular' => 'required|numeric',
+            'apellido_nombre'   => 'required|string|min:3',
+            'dni'               => 'required|numeric',
+            'cuil'              => 'required',
+            'sexo'              => 'required|in:Masculino,Femenino',
+            'domicilio'         => 'required',
+            'fecha_nacimiento'  => 'required|date',
+            'email'             => 'required|email',
+            'TelefonoCelular'   => 'required|numeric',
         ]);
-
 
         if ($this->customer) {
             $this->customer = tap($this->customer)->update([
-                'apellido_nombre' => $this->apellido_nombre,
-                'dni' => $this->dni,
-                'cuil' => $this->cuil,
-                'sexo' => $this->sexo,
-                'domicilio' => $this->domicilio,
+                'apellido_nombre'  => $this->apellido_nombre,
+                'dni'              => $this->dni,
+                'cuil'             => $this->cuil,
+                'sexo'             => $this->sexo,
+                'domicilio'        => $this->domicilio,
                 'fecha_nacimiento' => $this->fecha_nacimiento,
-                'email' => $this->email,
-                'TelefonoCelular' => $this->TelefonoCelular,
-                'FecIngreso' => $this->FecIngreso,
+                'email'            => $this->email,
+                'TelefonoCelular'  => $this->TelefonoCelular,
+                'FecIngreso'       => $this->FecIngreso,
             ]);
-
-            session()->flash('message', 'Paciente reistrado correctamente.');
         } else {
             $this->customer = Paciente::create([
-                'apellido_nombre' => $this->apellido_nombre,
-                'dni' => $this->dni,
-                'cuil' => $this->cuil,
-                'sexo' => $this->sexo,
-                'domicilio' => $this->domicilio,
+                'apellido_nombre'  => $this->apellido_nombre,
+                'dni'              => $this->dni,
+                'cuil'             => $this->cuil,
+                'sexo'             => $this->sexo,
+                'domicilio'        => $this->domicilio,
                 'fecha_nacimiento' => $this->fecha_nacimiento,
-                'email' => $this->email,
-                'TelefonoCelular' => $this->TelefonoCelular,
-                'FecIngreso' => $this->FecIngreso,
+                'email'            => $this->email,
+                'TelefonoCelular'  => $this->TelefonoCelular,
+                'FecIngreso'       => $this->FecIngreso,
             ]);
-
-            session()->flash('message', 'Paciente reistrado correctamente.');
         }
 
-        $this->step++;
+        // Feedback y avanzar
+        session()->flash('message', 'Paciente registrado correctamente.');
+        $this->dispatch('swal', title: 'Paso 1 guardado', text: 'Datos personales registrados.', icon: 'success');
 
+        $this->step++;
+        $this->dispatch('swal', title: 'Continuá con el Paso 2', text: 'Completá datos institucionales.', icon: 'info');
     }
 
-
-    // ...
-
-public function submit2()
-{
-
-    $this->validate([
-        'legajo' => 'required',
-        'jerarquia_id' => 'required',
-        'destino_actual' => 'required',
-        'ciudad' => 'required',
-        'edad' => 'required',
-        'estado_id' => 'required', // Agregar validación para el estado_id
-        'NroCredencial' => 'required',
-        'antiguedad' => 'required',
-        'chapa' => 'required',
-    ]);
-
-
-    $this->customer = tap($this->customer)->update([
-        'legajo' => $this->legajo,
-        'jerarquia_id' => $this->jerarquia_id,
-        'destino_actual' => $this->destino_actual,
-        'ciudad' => $this->ciudad,
-        'edad' => $this->edad,
-        'estado_id' => $this->estado_id, // Incluir estado_id en la actualización
-        'NroCrendecial' => $this->NroCredencial,
-        'antiguedad' => $this->antiguedad,
-        'chapa' => $this->chapa,
-    ]);
-
-    $this->step++;
-}
-
-// ...
-
-
-    public function submit3()
+    public function submit2()
     {
-        
         $this->validate([
-            'peso' => 'required',
-            'altura'  => 'required',
-            'factore_id'=> 'required',
-            'enfermedad'=>'required',
-            'remedios'=>'required',
+            'legajo'         => 'required',
+            'jerarquia_id'   => 'required|exists:jerarquias,id',
+            'destino_actual' => 'required',
+            'ciudad_id'      => 'required|exists:ciudades,id',
+            'edad'           => 'required|numeric',
+            'estado_id'      => 'required|exists:estados,id',
+            'NroCredencial'  => 'required',
+            'antiguedad'     => 'required|numeric',
+            'chapa'          => 'required',
         ]);
 
         $this->customer = tap($this->customer)->update([
-            'peso' => $this->peso,
-            'altura' => $this->altura,
-            'factore_id' => $this->factore_id,
-            'enfermedad' => $this->enfermedad,
-            'remedios' => $this->remedios,
+            'legajo'         => $this->legajo,
+            'jerarquia_id'   => $this->jerarquia_id,
+            'destino_actual' => $this->destino_actual,
+            'ciudad_id'      => $this->ciudad_id,
+            'edad'           => $this->edad,
+            'estado_id'      => $this->estado_id,
+            'NroCredencial'  => $this->NroCredencial, // corregido
+            'antiguedad'     => $this->antiguedad,
+            'chapa'          => $this->chapa,
         ]);
 
-        session()->flash('message', 'Wow! ' . $this->customer->fecha_nacimiento . ' is nice fecha_nacimiento ' . $this->customer->fecha_nacimiento);
-
-        // Marcar como completado el registro
-        $this->registroCompletado = true;
+        $this->dispatch('swal', title: 'Paso 2 guardado', text: 'Datos institucionales registrados.', icon: 'success');
 
         $this->step++;
+        $this->dispatch('swal', title: 'Continuá con el Paso 3', text: 'Completá datos de salud.', icon: 'info');
     }
 
+    public function submit3()
+    {
+        $this->validate([
+            'peso'        => 'required|numeric',
+            'altura'      => 'required',
+            'factore_id'  => 'required|exists:factores,id',
+            'enfermedad'  => 'required|string',
+            'remedios'    => 'required|string',
+        ]);
 
+        $this->customer = tap($this->customer)->update([
+            'peso'        => $this->peso,
+            'altura'      => $this->altura,
+            'factore_id'  => $this->factore_id,
+            'enfermedad'  => $this->enfermedad,
+            'remedios'    => $this->remedios,
+        ]);
+
+        // Mensaje final
+        session()->flash('message', 'Registro completado correctamente.');
+        $this->registroCompletado = true;
+        $this->step++;
+
+        $this->dispatch('swal', title: '¡Listo!', text: 'El registro fue completado.', icon: 'success');
+    }
+
+    #[On('go-dashboard')]
+    public function goDashboard()
+    {
+        return redirect()->route('dashboard');
+    }
 
     public function render()
     {
-        return view('livewire.doctor.multiform-controller')->layout('layouts.app');
+        return view('livewire.doctor.multiform-controller')
+               ->layout('layouts.app');
     }
 }

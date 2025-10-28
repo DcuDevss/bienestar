@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use Illuminate\Http\Request;
 use App\Models\User;
+use Illuminate\Support\Facades\Hash;
 use Spatie\Permission\Models\Role;
 
 class UserController extends Controller
@@ -31,8 +32,29 @@ class UserController extends Controller
 
     public function update(Request $request, User $user)
     {
+        /* $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users',
+            'password' => 'required|confirmed'
+        ]); */
+        $request->validate([
+            'name' => 'required',
+            'email' => 'required|email|unique:users,email,' . $user->id,
+            'password' => 'nullable|confirmed'
+        ]);
+
+        $user->name = $request->name;
+        $user->email = $request->email;
+
+        // Solo actualiza la contraseña si se proporcionó una nuevaa
+        if ($request->filled('password')) {
+            $user->password = bcrypt($request->password);
+        }
+
+        $user->save();
+
         $user->roles()->sync($request->roles);
-        return redirect()->route('users.edit', $user)->with('info', 'Se asigno los roles correctamente');
+        return redirect()->route('users.edit', $user)->with('info', 'Se ha editado el perfil correctamente');
     }
 
     public function destroy(User $user)

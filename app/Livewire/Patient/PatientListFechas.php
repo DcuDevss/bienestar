@@ -17,7 +17,7 @@ class PatientListFechas extends Component
     #[Url(history:true)]
     public $admin = '';
 
-    // ... (otros métodos)
+    // ... (otras métodos)
 
     public function getPatientsWithTodayFinalization()
     {
@@ -30,7 +30,7 @@ class PatientListFechas extends Component
 
     public function render()
     {
-        return view('livewire.patient.patient-listfechas', [
+        return view('livewire.patient.patient-list-fechas', [
 
             'pacientesConFinalizacionHoy' => $this->getPatientsWithTodayFinalization(),
             ]);

@@ -1,18 +1,6 @@
 <div class="p-4 bg-white rounded shadow-md max-w-lg mx-auto mt-4">
 
-    {{-- Mensaje de éxito --}}
-    @if (session()->has('message'))
-        <div class="mb-4 p-3 bg-green-100 text-green-800 rounded">
-            {{ session('message') }}
-        </div>
-    @endif
 
-    {{-- Mensaje de error --}}
-    @if (session()->has('error'))
-        <div class="mb-4 p-3 bg-red-100 text-red-800 rounded">
-            {{ session('error') }}
-        </div>
-    @endif
 
     <div class="mb-4 flex justify-center">
         <img src="{{ asset('assets/guardarPdf.png') }}" alt="Descripción de la imagen" class="h-24 w-auto object-contain" />
@@ -50,10 +38,24 @@
             class="text-blue-600 hover:text-blue-400 font-semibold">
             {{ $pdf->filename }}
             </a>
-            <button wire:click="eliminarPdf({{ $pdf->id }})"
-                    onclick="confirm('¿Está seguro de eliminar este PDF?') || event.stopImmediatePropagation()"
-                    class="ml-4 px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm">
-            Eliminar
+            <button
+                x-data
+                @click.prevent="
+                    Swal.fire({
+                    title: '¿Eliminar PDF?',
+                    text: 'Esta acción no se puede deshacer.',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, eliminar',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true,
+                    }).then((r) => {
+                    if (r.isConfirmed) { $wire.eliminarPdf({{ $pdf->id }}) }
+                    })
+                "
+                class="ml-4 px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-sm"
+            >
+                Eliminar
             </button>
         </li>
         @endforeach
@@ -69,3 +71,44 @@
     </div>
 
 </div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('livewire:init', () => {
+  // Toast/alert genérico
+  Livewire.on('swal', function () {
+    let payload = {};
+    if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
+      payload = arguments[0];
+    } else {
+      payload = { title: arguments[0] ?? '', text: arguments[1] ?? '', icon: arguments[2] ?? 'info' };
+    }
+    const { title='Listo', text='', html=null, icon='success', timer=3000 } = payload;
+
+    Swal.fire({
+      title, text, html, icon,
+      timer,
+      toast: true,
+      position: 'top-end',
+      showConfirmButton: false,
+      timerProgressBar: true,
+    });
+  });
+
+  // Confirmación con acción -> llama directo al método Livewire del componente actual
+  Livewire.on('confirm', ({title='¿Estás seguro?', text='', icon='warning', confirmText='Confirmar', cancelText='Cancelar', id=null} = {}) => {
+    Swal.fire({
+      title, text, icon,
+      showCancelButton: true,
+      confirmButtonText: confirmText,
+      cancelButtonText: cancelText,
+      reverseButtons: true,
+    }).then((result) => {
+      if (result.isConfirmed && id) {
+        // 👇 Llamada directa al método del componente
+        @this.call('eliminarPdf', id);
+      }
+    });
+  });
+});
+</script>
+

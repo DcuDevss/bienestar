@@ -1,4 +1,10 @@
 <div>
+    @if (session()->has('success'))
+    <div class="mb-2 px-4 py-2 bg-green-600 text-white rounded-md text-center">
+        {{ session('success') }}
+    </div>
+    @endif
+
     <header class="px-3  bg-white">
         <h2 class="font-bold text-center text-gray-800  text-2xl mb-2 flex items-center">
             {{-- <span class="text-red-700">
@@ -32,28 +38,6 @@
     </header>
     <div class="bg-white px-3">
 
-        {{--  <ul class="w-full">
-
-            @forelse($enfermedades as $enfermedad)
-                <li class="cursor-pointer px-2 py-1 bg-gray-400 hover:bg-gray-500 text-black my-2 bolck rounded-md"><a
-                        wire:click="addModalDisase({{ $enfermedad->id }})">{{ $enfermedad->name }}:
-                        </a></li>
-            @empty
-                @if (strlen(trim($this->search)) > 4)
-                    <h3 class="bg-red-500 text-white p-2 w-full mt-2 text-center font-bold">
-                        {{ __('no search result') }}</h3>
-                    <div class="bg-blue-500 text-white text-center p-2 my-2">
-                        <button wire:click="addNew">{{ __(' quires agregar esta nueva enfermedad?') }}
-                            <br>
-                            <strong class="text-xl">{{ __($this->search) }}</strong>
-                            <br>
-                            <p>{{ __('listar ...?') }}</p>
-                        </button>
-
-                    </div>
-                @endif
-            @endforelse
-        </ul> --}}
         <ul class="w-full">
             @forelse($enfermedades as $enfermedad)
                 <li class="cursor-pointer px-3 py-2 bg-gray-400 hover:bg-gray-500 text-black my-2 bolck rounded-md">
@@ -207,7 +191,7 @@
                                 <label for="horas_reposo"
                                     class="block text-sm font-medium text-gray-700">{{ __('Horas de reposo') }}</label>
                                 <input id="horas_reposo" class="w-full rounded cursor-pointer" type="number"
-                                    placeholder="{{ __('ingrese horas de salud') }}" wire:model="horas_reposo" />
+                                    placeholder="{{ __('Ingreso Opcional') }}" wire:model="horas_reposo" />
                                 <x-input-error for="horas_reposo" />
                             </div>
                         </div>
@@ -225,7 +209,7 @@
                                 <label for="pdf_enfermedad"
                                     class="block text-sm font-medium text-gray-700">{{ __('pdf') }}</label>
                                 <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
-                                    wire:model="pdf_enfermedad" accept="image/*" />
+                                    wire:model="pdf_enfermedad" accept="image/.pdf" />
                                 <x-input-error for="pdf_enfermedad" />
                             </div>
 
@@ -313,6 +297,30 @@
 
         </div>
     @endif
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('swal', function () {
+        let payload = {};
+        if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
+            payload = arguments[0]; // named args
+        } else {
+            payload = { title: arguments[0] ?? '', text: arguments[1] ?? '', icon: arguments[2] ?? 'info' };
+        }
+
+        const { title = 'Listo', text = '', html = null, icon = 'success', timer = 2500 } = payload;
+
+        Swal.fire({
+            title, text, html, icon,
+            timer,
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timerProgressBar: true,
+        });
+        });
+    });
+    </script>
 
 
     {{--

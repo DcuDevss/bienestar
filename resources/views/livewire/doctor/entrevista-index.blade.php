@@ -101,6 +101,11 @@
                                         <p><strong>Signos y Síntomas:</strong>
                                             {{ $entrevista->signos_y_sintomas ?? 'Sin Datos' }}</p>
                                     @endif
+                                    @if (!empty($entrevista->fecha))
+                                        <p><strong>Fecha que lo realizó:</strong>
+                                            {{ \Carbon\Carbon::parse($entrevista->fecha)->format('d-m-Y') ?? 'Sin Datos' }}
+                                        </p>
+                                    @endif
                                     @if (!empty($entrevista->profesional))
                                         <p><strong>Profesional que lo Atendió:</strong>
                                             {{ $entrevista->profesional ?? 'Sin Datos' }}</p>

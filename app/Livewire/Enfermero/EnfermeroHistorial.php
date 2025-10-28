@@ -13,23 +13,13 @@ class EnfermeroHistorial extends Component
 {
     use WithPagination;
 
-    #[Url(history:true)]
-    public $search = '';
-
-    #[Url(history:true)]
-    public $admin = '';
-
-    #[Url(history:true)]
-    public $sortBy = 'id';
-
-    #[Url(history:true)]
-    public $sortDir = 'ASC';
-
-    #[Url()]
-    public $perPage = 8;
+    #[Url(history:true)] public $search = '';
+    #[Url(history:true)] public $admin = '';
+    #[Url(history:true)] public $sortBy = 'id';
+    #[Url(history:true)] public $sortDir = 'ASC';
+    #[Url()] public $perPage = 8;
 
     public $pacienteId;
-
     public $editForm = [];
     public $editModal = false;
     public $editControl = [];
@@ -39,21 +29,20 @@ class EnfermeroHistorial extends Component
         $this->pacienteId = $paciente->id;
     }
 
+    /** Abre modal para editaaar un control */
     public function openEditModal($id)
     {
-        $control = Controlenfermero::findOrFail($id);
+        $control = ControlEnfermero::findOrFail($id);
 
         $this->editControl = [
             'id'             => $control->id,
             'presion'        => (string) $control->presion,
             'glucosa'        => (string) $control->glucosa,
-            'temperatura'    => (float) $control->temperatura,
+            'temperatura'    => $control->temperatura ? (float) $control->temperatura : null,
             'dosis'          => $control->dosis,
             'inyectable'     => $control->inyectable,
             'fecha_atencion' => $control->fecha_atencion
-                ? ($control->fecha_atencion instanceof \DateTimeInterface
-                    ? $control->fecha_atencion->format('Y-m-d')
-                    : Carbon::parse($control->fecha_atencion)->format('Y-m-d'))
+                ? Carbon::parse($control->fecha_atencion)->format('Y-m-d')
                 : null,
             'detalles'       => $control->detalles,
         ];
@@ -62,9 +51,10 @@ class EnfermeroHistorial extends Component
         $this->editModal = true;
     }
 
+    /** Guarda la edición */
     public function updateTratamiento()
     {
-        $control = Controlenfermero::findOrFail($this->editForm['id']);
+        $control = ControlEnfermero::findOrFail($this->editForm['id']);
 
         $campos = ['presion','glucosa','temperatura','inyectable','dosis','fecha_atencion','detalles'];
         foreach ($campos as $campo) {
@@ -88,18 +78,38 @@ class EnfermeroHistorial extends Component
         ]);
 
         $this->editModal = false;
-        session()->flash('message', 'Tratamiento actualizado correctamente.');
-        $this->dispatch('notify', message: 'Tratamiento actualizado correctamente.');
+        $this->dispatch('swal', title: 'Actualizado', text: 'Tratamiento actualizado correctamente.', icon: 'success');
     }
 
+    /** 🔹 Paso 1: Confirmación con SweetAlert */
+    public function confirmDelete($id)
+    {
+        $this->dispatch('confirm', [
+            'title'       => '¿Eliminar control?',
+            'text'        => 'Esta acción no se puede deshacer.',
+            'icon'        => 'warning',
+            'confirmText' => 'Sí, eliminar',
+            'cancelText'  => 'Cancelar',
+            'action'      => 'do-delete-control',
+            'id'          => $id,
+        ]);
+    }
+
+    /** 🔹 Paso 2: Eliminación real después de confirmar */
     public function delete($id)
     {
-        Controlenfermero::findOrFail($id)->delete();
+        $control = ControlEnfermero::find($id);
+        if ($control) {
+            $control->delete();
+            $this->dispatch('swal', title: 'Eliminado', text: 'Control eliminado correctamente.', icon: 'success');
+        } else {
+            $this->dispatch('swal', title: 'No encontrado', text: 'El control ya no existe.', icon: 'error');
+        }
     }
 
     public function render()
     {
-        $query = Controlenfermero::where('paciente_id', $this->pacienteId);
+        $query = ControlEnfermero::where('paciente_id', $this->pacienteId);
 
         if ($this->search) {
             $query->where(function ($q) {

@@ -1,15 +1,7 @@
-
 <div>
 
     <header class="px-3 bg-white">
         <h2 class="font-bold text-center text-gray-800 capitalize text-2xl mb-2 flex items-center">
-            {{--<span class="text-red-700">
-                <svg xmlns="http://www.w3.org/2000/svg" class="h-6 w-6" fill="none" viewBox="0 0 24 24"
-                    stroke="currentColor" stroke-width="2">
-                    <path stroke-linecap="round" stroke-linejoin="round"
-                        d="M9 3v2m6-2v2M9 19v2m6-2v2M5 9H3m2 6H3m18-6h-2m2 6h-2M7 19h10a2 2 0 002-2V7a2 2 0 00-2-2H7a2 2 0 00-2 2v10a2 2 0 002 2zM9 9h6v6H9V9z" />
-                </svg>
-            </span>--}}
             <div class="">
                 <img src="https://cdn-icons-png.flaticon.com/512/3216/3216342.png" alt="" class="h-[34px]">
             </div>
@@ -18,11 +10,12 @@
             </span>
         </h2>
         <ul class="w-full">
-            <input class="w-full rounded" type="text" placeholder="buscar patologia de certificados o crearla" wire:model.live="search" />
+            <input class="w-full rounded" type="text" placeholder="buscar patologia de certificados o crearla"
+                wire:model.live="search" />
             @foreach ($patient->disases as $pd)
                 <li class="mb-1">
                     <div class="flex justify-between items-center">
-                       {{-- <span class="cursor-pointer rounded-md px-2 py-1 bg-slate-800 hover:bg-slate-900 text-white">{{ $pd->name }}</span>
+                        {{-- <span class="cursor-pointer rounded-md px-2 py-1 bg-slate-800 hover:bg-slate-900 text-white">{{ $pd->name }}</span>
                         <span class="text-gray-500">
                             {{ $pd->pivot->fecha_enfermedad }} - {{ $pd->pivot->tipo_enfermedad }}
                         </span>  --}}
@@ -36,18 +29,19 @@
         <ul class="w-full">
             @forelse($disases as $disase)
                 <li class="cursor-pointer px-3 py-2 bg-gray-400 hover:bg-gray-500 text-black my-2 bolck rounded-md">
-                    <a
-                        wire:click="addModalDisase({{ $disase->id }})">{{ $disase->name }}</a></li>
+                    <a wire:click="addModalDisase({{ $disase->id }})">{{ $disase->name }}</a>
+                </li>
             @empty
                 @if (strlen(trim($this->search)) > 4)
                     <div class="bg-[#dc2626] text-white text-center p-1 rounded-md text-sm">
                         <span>Sin resultados, desea agregarla como nueva patologia de certificado?</span>
-                        {{--<strong class="text-xl">{{ __($this->search) }}</strong>--}}
+                        {{-- <strong class="text-xl">{{ __($this->search) }}</strong> --}}
                         <div>
-                            <button wire:click="addNew" class="text-black bg-white px-2 py-1 rounded-md hover:bg-[#d1d5db]">
+                            <button wire:click="addNew"
+                                class="text-black bg-white px-2 py-1 rounded-md hover:bg-[#d1d5db]">
                                 {{ __('Si') }}
                             </button>
-                           {{--  <button wire:click="cancel" class="text-black bg-white px-2 py-1 rounded-md hover:bg-[#d1d5db]">
+                            {{--  <button wire:click="cancel" class="text-black bg-white px-2 py-1 rounded-md hover:bg-[#d1d5db]">
                                 {{ __('No') }}
                             </button> --}}
                         </div>
@@ -64,58 +58,55 @@
             <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
                 {{ __('agregar certificado al historial del paciente') }}
             </div>
-            <img class="h-32 w-full object-center object-cover" src="{{ asset('assets/disases.jpg') }}" alt="">
+            <img class="h-28 w-full object-center object-cover" src="{{ asset('assets/gettyimages.jpg') }}"
+                alt="">
         </x-slot>
         <x-slot name="content">
 
             <div class="grid grid-cols-2 gap-4">
-                <div class="relative"
-                    wire:click.outside="closePicker"
-                    wire:keydown.escape="closePicker">
+                <div class="relative" wire:click.outside="closePicker" wire:keydown.escape="closePicker">
 
-                <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Nombre') }}</label>
+                    <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Nombre') }}</label>
 
-                {{-- usá search o name; acá uso "search" --}}
-                <input id="name"
-                        class="w-full rounded bg-gray-100"
-                        type="text"
-                        placeholder="{{ __('nombre') }}"
-                        wire:model.live="search"
-                        x-data @focus="$wire.openPicker()" />
+                    {{-- usá search o name; acá uso "search" --}}
+                    <input id="name" class="w-full rounded bg-gray-100" type="text"
+                        placeholder="{{ __('nombre') }}" wire:model.live="search" x-data @focus="$wire.openPicker()" />
 
-                <x-input-error for="name" />
+                    <x-input-error for="name" />
 
-                @if($pickerOpen && trim($search) !== '')
-                    <div class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto bg-white border border-slate-200 rounded-md shadow">
-                    <ul class="w-full">
-                        @forelse($disases as $d)
-                        <li class="cursor-pointer px-3 py-2 bg-gray-50 hover:bg-gray-100 text-black my-1 rounded-md">
-                            <button type="button" class="w-full text-left"
-                                    wire:click="pickDisase({{ $d->id }})">
-                            {{ $d->name }}
-                            </button>
-                        </li>
-                        @empty
-                        @if (strlen(trim($search)) > 4)
-                            <div class="bg-red-600 text-white text-center p-2 rounded-md text-sm">
-                            <span>Sin resultados, ¿agregar como nueva?</span>
-                            <div class="mt-1">
-                                <button wire:click="addNew"
-                                        class="text-black bg-white px-2 py-1 rounded-md hover:bg-gray-200">
-                                {{ __('Si') }}
-                                </button>
-                            </div>
-                            </div>
-                        @endif
-                        @endforelse
-                    </ul>
-                    </div>
-                @endif
+                    @if ($pickerOpen && trim($search) !== '')
+                        <div
+                            class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto bg-white border border-slate-200 rounded-md shadow">
+                            <ul class="w-full">
+                                @forelse($disases as $d)
+                                    <li
+                                        class="cursor-pointer px-3 py-2 bg-gray-50 hover:bg-gray-100 text-black my-1 rounded-md">
+                                        <button type="button" class="w-full text-left"
+                                            wire:click="pickDisase({{ $d->id }})">
+                                            {{ $d->name }}
+                                        </button>
+                                    </li>
+                                @empty
+                                    @if (strlen(trim($search)) > 4)
+                                        <div class="bg-red-600 text-white text-center p-2 rounded-md text-sm">
+                                            <span>Sin resultados, ¿agregar como nueva?</span>
+                                            <div class="mt-1">
+                                                <button wire:click="addNew"
+                                                    class="text-black bg-white px-2 py-1 rounded-md hover:bg-gray-200">
+                                                    {{ __('Si') }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @endif
+                                @endforelse
+                            </ul>
+                        </div>
+                    @endif
                 </div>
 
-
                 <div>
-                    <label for="name" class="block text-sm font-medium text-gray-700">{{ __('Tipo de Licencia') }}</label>
+                    <label for="name"
+                        class="block text-sm font-medium text-gray-700">{{ __('Tipo de Licencia') }}</label>
                     <select id="tipolicencia_id" class="w-full rounded cursor-pointer" wire:model="tipolicencia_id">
                         <option value="" selected>{{ __('Seleccione una opción') }}</option>
                         @foreach ($tipolicencias as $licencia)
@@ -125,82 +116,88 @@
                 </div>
                 <x-input-error for="tipolicencia_id" />
 
-
-
-
                 <div>
-                    <label for="fecha_presentacion_certificado" class="block text-sm font-medium text-gray-700">{{ __('Fecha de presentacion del certificado') }}</label>
-                    <input id="fecha_presentacion_certificado" class="w-full rounded cursor-pointer" type="date" placeholder="{{ __(' ingrese fecha de la enfermedad') }}" wire:model="fecha_presentacion_certificado" />
+                    <label for="fecha_presentacion_certificado"
+                        class="block text-sm font-medium text-gray-700">{{ __('Fecha de presentacion del certificado') }}</label>
+                    <input id="fecha_presentacion_certificado" class="w-full rounded cursor-pointer" type="date"
+                        placeholder="{{ __(' ingrese fecha de la enfermedad') }}"
+                        wire:model="fecha_presentacion_certificado" />
                     <x-input-error for="fecha_presentacion_certificado" />
                 </div>
 
                 {{-- Nuevos campos --}}
                 <div>
-                    <label for="fecha_inicio_licencia" class="block text-sm font-medium text-gray-700">{{ __('Inicio del certificado') }}</label>
-                    <input id="fecha_inicio_licencia" class="w-full rounded cursor-pointer" type="datetime-local" placeholder="{{ __('fecha de inicio') }}" wire:model="fecha_inicio_licencia" />
+                    <label for="fecha_inicio_licencia"
+                        class="block text-sm font-medium text-gray-700">{{ __('Inicio del certificado') }}</label>
+                    <input id="fecha_inicio_licencia" class="w-full rounded cursor-pointer" type="datetime-local"
+                        placeholder="{{ __('fecha de inicio') }}" wire:model="fecha_inicio_licencia" />
                     <x-input-error for="fecha_inicio_licencia" />
                 </div>
 
                 <div>
-                    <label for="fecha_finalizacion_licencia" class="block text-sm font-medium text-gray-700">{{ __('Inialización de certificado') }}</label>
-                    <input id="fecha_finalizacion_licencia" class="w-full rounded cursor-pointer" type="datetime-local" placeholder="{{ __('fecha finalización') }}" wire:model="fecha_finalizacion_licencia" />
+                    <label for="fecha_finalizacion_licencia"
+                        class="block text-sm font-medium text-gray-700">{{ __('Finalización de certificado') }}</label>
+                    <input id="fecha_finalizacion_licencia" class="w-full rounded cursor-pointer" type="datetime-local"
+                        placeholder="{{ __('fecha finalización') }}" wire:model="fecha_finalizacion_licencia" />
                     <x-input-error for="fecha_finalizacion_licencia" />
                 </div>
 
-                <div>
-                    <label for="horas_salud" class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica') }}</label>
-                    <input id="horas_salud" class="w-full rounded cursor-pointer" type="number" placeholder="{{ __('ingrese horas de salud') }}" wire:model="horas_salud" />
+                {{-- <div>
+                    <label for="horas_salud"
+                        class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica') }}</label>
+                    <input id="horas_salud" class="w-full rounded cursor-pointer" type="number"
+                        placeholder="{{ __('ingrese horas de salud') }}" wire:model="horas_salud" />
                     <x-input-error for="horas_salud" />
-                </div>
+                </div> --}}
 
-                <div class="mb-4">
+                <div class="">
                     <label for="suma_salud" class="block text-sm font-medium text-gray-700">
                         Días licencia certificado
                     </label>
-                    <input type="number"
-                        wire:model="suma_salud"
-                        id="suma_auxiliar"
-                        readonly
+                    <input type="number" wire:model="suma_salud" id="suma_auxiliar" readonly
                         class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-indigo-500 focus:ring-indigo-500 sm:text-sm"
                         placeholder="Días calculados automáticamente">
-                    @error('suma_salud') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+                    @error('suma_salud')
+                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                    @enderror
                 </div>
 
-
                 <div>
-                    <label for="imagen_frente" class="block text-sm font-medium text-gray-700">{{ __('Imagen frente') }}</label>
-                    <input id="imagen_frente" class="rounded py-2 cursor-pointer" type="file" wire:model="imagen_frente" accept="image/*" />
+                    <label for="imagen_frente"
+                        class="block text-sm font-medium text-gray-700">{{ __('Imagen frente') }}</label>
+                    <input id="imagen_frente" class="rounded py-2 cursor-pointer" type="file"
+                        wire:model="imagen_frente" accept="image/*" />
                     <x-input-error for="imagen_frente" />
                 </div>
 
                 <div>
-                    <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">{{ __('Imagen dorso') }}</label>
-                    <input id="imagen_dorso" class="rounded py-2 cursor-pointer" type="file" wire:model="imagen_dorso" accept="image/*" />
+                    <label for="imagen_dorso"
+                        class="block text-sm font-medium text-gray-700">{{ __('Imagen dorso') }}</label>
+                    <input id="imagen_dorso" class="rounded py-2 cursor-pointer" type="file"
+                        wire:model="imagen_dorso" accept="image/*" />
                     <x-input-error for="imagen_dorso" />
                 </div>
 
-{{--                 <div>
-                    <label class="flex items-center">
-                        <input id="estado_certificado" class="rounded cursor-pointer" type="checkbox" wire:model="estado_certificado" />
-                        <span class="ml-2">{{ __('Estado') }}</span>
-                    </label>
-                </div> --}}
-
-
-
                 <div class="col-span-2">
-                    <label for="detalle_certificado" class="block text-sm font-medium text-gray-700">{{ __('Detalle del certificado') }}</label>
-                    <textarea id="detalle_certificado" class="w-full rounded cursor-pointer" rows="5" placeholder="{{ __('ingrese detalle') }}" wire:model="detalle_certificado"></textarea>
+                    <label for="detalle_certificado"
+                        class="block text-sm font-medium text-gray-700">{{ __('Detalle del certificado') }}</label>
+                    <textarea id="detalle_certificado" class="w-full rounded cursor-pointer" rows="2"
+                        placeholder="{{ __('ingrese detalle') }}" wire:model="detalle_certificado"></textarea>
                     <x-input-error for="detalle_certificado" />
                 </div>
             </div>
             <input type="hidden" wire:model="disase_id">
         </x-slot>
 
-
         <x-slot name="footer">
+            @if (session('error'))
+                <div class="bg-red-500 text-white p-3 rounded-lg mb-4" style="font-size: 14px;">
+                    {{ session('error') }}
+                </div>
+            @endif
+
             <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
-                wire:click="$set('modal',false)">
+                onclick="limpiarCamposCertificado()"     wire:click="$set('modal',false)">
                 {{ __('Cancelar') }}
             </button>
             <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="addDisase">
@@ -209,5 +206,95 @@
 
         </x-slot>
     </x-dialog-modal>
-</div>
+    @if (session()->has('success'))
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+            class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 transition">
+            {{ session('success') }}
+        </div>
+    @endif
 
+</div>
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('swal', function() {
+            let payload = {};
+            if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[
+                    0])) {
+                payload = arguments[0]; // named args: { title, text, html, icon, ... }
+            } else if (arguments.length >= 1) {
+                payload = {
+                    title: arguments[0],
+                    text: arguments[1],
+                    icon: arguments[2]
+                }; // posicional
+            }
+
+            let {
+                title = '', text = '', html = null, icon = 'info', timer, toast = true, position =
+                    'top-end'
+            } = payload;
+
+            // Si por error llega un objeto en text, lo convertimos a HTML legible
+            if (typeof text !== 'string' && text != null) {
+                try {
+                    const pretty = JSON.stringify(text, null, 2);
+                    html = html ||
+                        `<pre style="text-align:left;white-space:pre-wrap;margin:0">${pretty}</pre>`;
+                    text = '';
+                } catch {}
+            }
+
+            Swal.fire({
+                title,
+                text,
+                html,
+                icon,
+                timer: timer ?? 2200,
+                toast,
+                position,
+                showConfirmButton: false,
+            });
+        });
+    });
+</script>
+<script>
+    function limpiarCamposCertificado() {
+        const contenedorCampos = document.querySelector('.grid.grid-cols-2.gap-4');
+
+        if (!contenedorCampos) {
+            console.error('No se encontró el contenedor de campos del formulario.');
+            return;
+        }
+
+        // 1. Limpiar campos de texto, fecha, números y archivos (input/textarea)
+        const inputs = contenedorCampos.querySelectorAll('input, textarea');
+        inputs.forEach(campo => {
+            // No limpiamos el input oculto (hidden)
+            if (campo.type !== 'hidden') {
+                if (campo.type === 'file') {
+                    // Para inputs de tipo file, se debe restablecer su valor
+                    campo.value = '';
+                } else if (campo.type !== 'radio' && campo.type !== 'checkbox') {
+                    // Para otros inputs de texto/número/fecha
+                    campo.value = '';
+                }
+            }
+        });
+
+        // 2. Limpiar selectores
+        const selects = contenedorCampos.querySelectorAll('select');
+        selects.forEach(select => {
+            // Establece el valor de la primera opción (asumiendo que es la de "Seleccione una opción" con value="")
+            select.value = "";
+        });
+
+        // Si el campo 'search' del modal no se limpia, prueba a forzar la limpieza del elemento específico:
+        const inputNombre = document.getElementById('name');
+        if(inputNombre) {
+            inputNombre.value = '';
+        }
+    }
+
+    // ... el resto de tu código Livewire/Swal
+</script>

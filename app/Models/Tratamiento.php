@@ -42,11 +42,11 @@ class Tratamiento extends Model
     }
     public function derivacionpsiquiatricas()
     {
-        return $this->belongsTo('App\Models\Derivacionpsiquiatrica', 'derivacionpsiquiatrica_id', 'id');
+        return $this->belongsTo('App\Models\DerivacionPsiquiatrica', 'derivacionpsiquiatrica_id', 'id');
     }
     public function indicacionterapeuticas()
     {
-        return $this->belongsTo('App\Models\Indicacionterapeutica', 'indicacionterapeutica_id', 'id');
+        return $this->belongsTo('App\Models\IndicacionTerapeutica', 'indicacionterapeutica_id', 'id');
     }
     public function pacientes()
     {
@@ -65,3 +65,5 @@ class Tratamiento extends Model
 
 
 }
+
+/* comentario */

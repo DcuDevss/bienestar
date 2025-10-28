@@ -17,7 +17,7 @@ class PatientEntrevistas extends Component
     public $poseeArmaFilterDisplay;
     public $recomendacionFilter = null;
     public $recomendacionFilterDisplay = '';
-    public $sortBy = 'entrevistas.id'; // Especificamos la tabla en el ORDER BY
+    public $sortBy = 'entrevistas.id'; // Especificaamos la tabla en el ORDER BY
     public $sortDir = 'ASC';
     public $perPage = 8;
 

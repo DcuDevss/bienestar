@@ -44,6 +44,7 @@ use App\Livewire\Patient\PatientHistorialCertificado;
 use App\Livewire\Patient\PatientHistorialEnfermedades;
 use App\Livewire\Patient\PatientTratamiento;
 use App\Livewire\Patient\PatientEntrevistas;
+use App\Livewire\Auditorias\AuditoriaList;
 use App\Models\Paciente;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -62,12 +63,13 @@ use App\Livewire\Patient\DeletedPatientList;
 //Route::get('/', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'create'])->middleware('guest');
 
 
+
 Route::get('/', function () {
     return view('welcome');
 });
 
 Route::middleware([
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'verified',
 ])->group(function () {
@@ -79,13 +81,12 @@ Route::middleware([
 /********nuevo********/
 
 Route::middleware([
-    'auth:sanctum',
+    'auth',
     config('jetstream.auth_session'),
     'verified'
 ])->group(function () {
     Route::get('/dashboard', function () {
         $user = Auth::user(); // Obténgo al usuario autenticado
-
         // Lógica para redirigir según el rol
         if ($user->hasRole('super-admin')) {
             return view('dashboard');
@@ -137,6 +138,8 @@ Route::get('/curriculum', [CurriculumController::class, 'index'])->middleware('c
 Route::get('/interviews/{paciente}', [InterviewController::class, 'index'])->middleware('can:interviews.index')->name('interviews.index');
 Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])->name('reset-sums'); // web.php
 Route::get('/pdfs/{filename}', [PdfController::class, 'show'])->name('pdf.show');
+Route::get('/auditorias', AuditoriaList::class)->name('auditorias.index');
+
 
 
 

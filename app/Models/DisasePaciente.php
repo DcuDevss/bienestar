@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class DisasePaciente extends Model
 {
-    protected $table = 'disase_paciente'; // 👈 nombre correcto de la tabla pivot
+    protected $table = 'disase_paciente'; // 👈 noombre correcto de la tabla pivot
 
     protected $fillable = [
         'fecha_presentacion_certificado',

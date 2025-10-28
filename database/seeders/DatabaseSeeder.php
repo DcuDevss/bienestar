@@ -5,7 +5,8 @@ namespace Database\Seeders;
 // use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 use App\Models\ActitudEntrevista;
-use App\Models\Derivacionpsiquiatrica;
+use App\Models\DerivacionPsiquiatrica;
+use App\Models\Enfermedade;
 use App\Models\Estado;
 use App\Models\EstadoEntrevista;
 use App\Models\Portacion;
@@ -25,8 +26,8 @@ class DatabaseSeeder extends Seeder
         //     'email' => 'test@example.com',
         // ]);
          // User::flushEventListeners();//esto evita que se envien correos electronicos
+         $this->call(PermissionSeeder::class);
          $this->call(RoleSeeder::class);
-         //$this->call(PermissionSeeder::class);TipoEntrevistaSeeder
          $this->call(UserSeeder::class);
          $this->call(JerarquiaSeeder::class);
          $this->call(FactoreSeeder::class);
@@ -38,13 +39,17 @@ class DatabaseSeeder extends Seeder
          $this->call(ProcedenciaSeeder::class);
          $this->call(TipolicenciaSeeder::class);
          $this->call(TipoEntrevistaSeeder::class);
-         $this->call(DerivacionpsiquiatricaSeeder::class);
-         $this->call(IndicacionterapeuticaSeeder::class);
+         $this->call(DerivacionPsiquiatricaSeeder::class);
+         $this->call(IndicacionTerapeuticaSeeder::class);
          $this->call(EstadoSeeder::class);
          $this->call(PortacionSeeder::class);
          $this->call(AbordajeSeeder::class);
          $this->call(ActitudEntrevistaSeeder::class);
          $this->call(EstadoEntrevistaSeeder::class);
          $this->call(DerivacionpsiquiatricaSeeder::class);
+         $this->call(EnfermedadeSeeder::class);
+         $this->call(PacienteSeeder::class);
+         $this->call(CiudadSeeder::class);
+         $this->call(SaludMentalesSeeder::class);
     }
 }

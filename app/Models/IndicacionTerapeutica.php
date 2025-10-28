@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class IndicacionTerapeutica extends Model
 {
     use HasFactory;
-    /* forma correcta de indicar la tabla vamos */
+    /* forma coorrecta de indicar la tabla vamos */
     protected $table = 'indicacionterapeuticas';
 
     protected $fillable = ['name'];

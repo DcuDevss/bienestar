@@ -56,7 +56,11 @@ class DisaseController extends Component
         $this->reset(['name', 'symptoms', 'modal']);
 
         // Opcional: toast
-        $this->dispatch('notify', message: 'Enfermedad creada');
+        $this->dispatch('swal',
+            title : 'Enfermedad creada',
+            text  : 'La enfermedad fue registrada correctamente.',
+            icon  : 'success',
+        );
     }
 
 
@@ -83,12 +87,37 @@ class DisaseController extends Component
     $this->reset(['name', 'symptoms', 'disaseId', 'modalEdit']);
 
     // opcional: notificación
-    $this->dispatch('notify', message: 'Enfermedad actualizada');
+    $this->dispatch('swal',
+        title : 'Actualizado',
+        text  : 'La enfermedad fue modificada correctamente.',
+        icon : 'success',
+    );
     }
 
-    public function delete(Disase $disase)
+    public function confirmarEliminar($id)
     {
-        $disase->delete();
+        $this->dispatch('confirm', [
+            'title'       => '¿Eliminar enfermedad?',
+            'text'        => 'Esta acción no se puede deshacer.',
+            'icon'        => 'warning',
+            'confirmText' => 'Sí, eliminar',
+            'cancelText'  => 'Cancelar',
+            'action'      => 'eliminarConfirmado',
+            'id'          => $id,
+        ]);
+    }
+
+    public function eliminarConfirmado($id)
+    {
+        if ($disase = Disase::find($id)) {
+            $disase->delete();
+
+            $this->dispatch('swal',
+                title: 'Eliminada',
+                text: 'La enfermedad fue eliminada correctamente.',
+                icon: 'success',
+            );
+        }
     }
 
     public function order1($sort1)
@@ -108,7 +137,7 @@ class DisaseController extends Component
     public function clear()
     {
         $this->page = 1;
-       // $this->orde = null;
+       // $this->orde = nuull;
        // $this->camp = null;
        // $this->icon = '-circle';
         $this->search = '';

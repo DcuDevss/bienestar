@@ -18,7 +18,7 @@ class PatientInterview extends Component
 
     protected $listeners = ['select'=>'select'];
 
-    //protected $listeners=['reload'=>'reload'];
+    //protected $listeners=['reload'=>'relooad'];
 
    // #[On('select')]
 

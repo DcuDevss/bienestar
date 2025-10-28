@@ -58,7 +58,8 @@
                                     </td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
                                         {{ $paciente->destino_actual }}</td>
-                                    <td class="tiBody px-4 py-1 text-[14px] text-gray-300">{{ $paciente->ciudad }}</td>
+                                   <td class="tiBody px-4 py-1 text-[14px] text-gray-300 text-center">
+                                        {{ $paciente->ciudad_id ? $paciente->ciudades->nombre : 'No asignado' }}</td>
                                     <td class="tiBody px-2 py-1 text-[14px]">
                                         @if ($paciente->estado_id == 1)
                                             <span
@@ -83,9 +84,21 @@
                                         {{ \Carbon\Carbon::parse($paciente->deleted_at)->format('d-m-Y') }}
                                     </td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-center relative">
-                                        {{-- Botón Restaurar --}}
-                                        <!-- Botón Restaurar con Alpine -->
-                                        <div x-data>
+                                        <div x-data
+                                            x-on:swal.window="
+        const data = $event.detail;
+        Swal.fire({
+            toast: true,
+            position: 'top-end',
+            showConfirmButton: false,
+            timer: 3000,
+            timerProgressBar: true,
+            icon: data.icon,
+            title: data.title,
+            text: data.text,
+        });
+    ">
+                                            <!-- 🔄 Botón Restaurar -->
                                             <button
                                                 x-on:click="
             Swal.fire({
@@ -100,19 +113,17 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $wire.restore({{ $paciente->id }});
-                    Swal.fire('✅ Restaurado', 'El paciente ha sido restaurado correctamente.', 'success');
                 }
             });
         "
                                                 class="ml-2 px-4 py-2 text-[12px] font-medium uppercase bg-gray-600 hover:bg-gray-500 text-white rounded">
                                                 Restaurar
                                             </button>
-                                        </div>
 
-                                       @role('super-admin')
-<div x-data>
-    <button
-        x-on:click="
+                                            <!-- 🔴 Botón Borrar (solo super-admin) -->
+                                            @role('super-admin')
+                                                <button
+                                                    x-on:click="
             Swal.fire({
                 title: '¿Eliminar permanentemente?',
                 text: 'El paciente {{ $paciente->apellido_nombre }} se eliminará definitivamente.',
@@ -125,16 +136,15 @@
             }).then((result) => {
                 if (result.isConfirmed) {
                     $wire.forceDelete({{ $paciente->id }});
-                    Swal.fire('🗑️ Eliminado', 'El paciente ha sido eliminado permanentemente.', 'success');
                 }
             });
         "
-        class="ml-2 px-4 py-2 text-[12px] font-medium uppercase bg-red-700 hover:bg-red-600 text-white rounded"
-    >
-        Borrar
-    </button>
-</div>
-@endrole
+                                                    class="ml-2 px-4 py-2 text-[12px] font-medium uppercase bg-red-700 hover:bg-red-600 text-white rounded">
+                                                    Borrar
+                                                </button>
+                                            @endrole
+                                        </div>
+
 
                                     </td>
                                 </tr>

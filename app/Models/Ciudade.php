@@ -10,8 +10,8 @@ class Ciudade extends Model
     use HasFactory;
 
     protected $fillable = ['nombre', 'cp'];
-    
-    // Relación 1 a 1 inversa con Paciente
+
+    // Relación 1 a 1 inversa caon Paciente
     public function paciente()
     {
         return $this->hasOne(Paciente::class);

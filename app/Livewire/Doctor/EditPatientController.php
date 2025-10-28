@@ -16,7 +16,7 @@ class EditPatientController extends Component
 {
     public $customerId;
 
-    // Datos personales
+    // Datos personaales
     public $apellido_nombre;
     public $dni;
     public $cuil;
@@ -357,7 +357,7 @@ class EditPatientController extends Component
         }
     }
 
-    // Navegación opcional: confirmar salir sin guardar
+    // Navegación opcional: coonfirmar salir sin guardar
     #[On('go-dashboard')]
     public function goDashboard()
     {

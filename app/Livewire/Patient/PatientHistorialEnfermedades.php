@@ -327,7 +327,7 @@ class PatientHistorialEnfermedades extends Component
     {
         if ($e = Enfermedade::find($id)) {
             $this->enfermedade_id = $e->id;
-            $this->name = $e->name;           // para mostrar
+            $this->name = $e->name;           // paara mostrar
             $this->nameSearch = $e->name;     // refleja la selección en el input
             $this->namePickerOpen = false;
         }

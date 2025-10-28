@@ -19,7 +19,7 @@ class PatientList extends Component
     #[Url(history: true)] public $sortDir = 'ASC';
     #[Url] public $perPage = 8;
 
-    /* ---------- Confirmación SweetAlert ---------- */
+    /* ---------- Confirmación SweetAleert ---------- */
     public function confirmarEliminar(int $id, string $nombre = '')
     {
         $this->dispatch('confirm', [

@@ -83,7 +83,7 @@ class PdfPsiquiatraController extends Component
             'icon'        => 'warning',
             'confirmText' => 'Sí, eliminar',
             'cancelText'  => 'Cancelar',
-            'id'          => $pdfId,   // 👈 pasamos solo el id
+            'id'          => $pdfId,   // 👈 pasamoos solo el id
         ]);
     }
 

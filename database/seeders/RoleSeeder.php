@@ -30,7 +30,7 @@ class RoleSeeder extends Seeder
             $R[$name] = Role::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
         }
 
-        // Sets de permisos por rol (por NOMBRE)
+        // Sets de permisos poor rol (por NOMBRE)
         $adminJefe = [
             'users.index','users.edit','users.update',
             'roles.index','roles.edit','roles.create','roles.show',

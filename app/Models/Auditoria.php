@@ -4,7 +4,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-/* cambio */
+/* cambioo */
 class Auditoria extends Model
 {
     protected $fillable = [

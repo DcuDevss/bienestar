@@ -24,7 +24,7 @@ class PacienteCertificado extends Component
     public $modal = false;
     public $archivos = [];
     public $pacienteId;
-    public $certificado_id; // Para guardar el id del registro que vas a editar
+    public $certificado_id; // Paraa guardar el id del registro que vas a editar
 
 
 

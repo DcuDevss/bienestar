@@ -22,7 +22,7 @@ class MultiformController extends Component
     public $email;
     public $TelefonoCelular;
 
-    public $jerarquia; // (no se usa, podés quitarla si querés)
+    public $jerarquia; // (no se usaa, podés quitarla si querés)
     public $legajo;
     public $destino_actual;
 

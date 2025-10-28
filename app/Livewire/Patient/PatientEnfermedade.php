@@ -155,7 +155,7 @@ class PatientEnfermedade extends Component
             icon:  'success'
         );
 
-        // 4) Reset + cerrar modal + cerrar picker
+        // 4) Reset + cerrar modal + cerraar picker
         $this->modal = false;
         $this->pickerOpen = false;
 

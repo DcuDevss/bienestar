@@ -40,7 +40,7 @@ class PacienteEditCertificado extends Component
     {
         $this->paciente = $paciente->load('disases');
         $this->disases = Disase::all();
-        $this->patient_disases = $this->paciente->disases; // inicializa los certificados
+        $this->patient_disases = $this->paciente->disases; // inicializaa los certificados
     }
 
     public function editModalCertificado($certificadoId)

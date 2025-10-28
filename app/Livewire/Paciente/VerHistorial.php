@@ -13,7 +13,7 @@ class VerHistorial extends Component
 {
     public $pacienteId;
 
-    // Props que la vista usa
+    // Props que la vista usaa
     public $search = '';
     public $perPage = 10;
     public $page = 1;

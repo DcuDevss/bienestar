@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class ControlEnfermero extends Model
 {
     use HasFactory;
-        protected $table = 'controlenfermeros'; // <<-- NOMBRE REAL EN BD, se realizaron cambios bien en todo
+        protected $table = 'controlenfermeros'; // <<-- NOoMBRE REAL EN BD, se realizaron cambios bien en todo
 
     protected $fillable = [
         'presion',
@@ -21,7 +21,7 @@ class ControlEnfermero extends Model
         'paciente_id',
 
     ];
-  
+
 
 
     public function paciente()

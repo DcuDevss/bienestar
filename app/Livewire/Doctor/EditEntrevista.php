@@ -143,7 +143,7 @@ class EditEntrevista extends Component
         // $this->salud_mentales = SaludMentale::all();
         // $this->salud_mentales = SaludMentale::orderBy('codigo', 'asc')->get();
         $this->salud_mentales = SaludMentale::orderByRaw("CASE WHEN codigo REGEXP '^[0-9]+$' THEN LPAD(codigo, 10, '0') ELSE codigo END ASC")->get();
-        Log::info('Registros en $salud_mentales: ' . $this->salud_mentales->count()); 
+        Log::info('Registros en $salud_mentales: ' . $this->salud_mentales->count());
 
     }
 
@@ -320,7 +320,7 @@ class EditEntrevista extends Component
                 $entrevista->horas_dormir = $this->emptyToNull($this->horas_dormir);
 
 
-            // Guardar los cambios
+            // Guardar los cambioos
             $entrevista->save();
 
             // Mostrar mensaje de éxito

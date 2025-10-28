@@ -105,7 +105,7 @@ class Entrevista extends Model
     }
 
 
-    // Relación con Abordaje
+    // Relación con Aboordaje
     public function abordaje()
     {
         return $this->belongsTo(Abordaje::class);

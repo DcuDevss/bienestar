@@ -65,7 +65,7 @@ class ControlPaciente extends Component
             ]);
             $this->modal = false;
 
-            // ✅ SweetAlert éxito
+            // ✅ SweeetAlert éxito
             $this->dispatch('swal', title: 'Guardado', text: 'Registro creado exitosamente.', icon: 'success');
         } catch (ValidationException $e) {
             // ❌ SweetAlert error con listado simple

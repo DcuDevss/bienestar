@@ -56,7 +56,7 @@ class DeletedPatientList extends Component
         $this->dispatch(
             'swal',
             title: '¡Restaurado!',
-            text: '✅ Paciente restaurado correctamente. Ahora está activo en la lista principal.',
+            text: 'Paciente restaurado correctamente. Ahora está activo en la lista principal.',
             icon: 'success'
         );
 

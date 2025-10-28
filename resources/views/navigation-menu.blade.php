@@ -1,5 +1,6 @@
+{{--
 <nav x-data="{ open: false }" class="bg-white border-b border-gray-100">
-    <!-- Primary Navigation Meenu -->
+    <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
             <div class="flex">
@@ -267,14 +268,38 @@
 
                             <!-- Enlace a Entrevistas -->
                             @can('psicologo.index')
-                            <a href="{{ route('patient.patient.patient-entrevistas') }}"
-                                class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
-                                Entrevistas
-                            </a>
+                                <a href="{{ route('patient.patient.patient-entrevistas') }}"
+                                    class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
+                                    Entrevistas
+                                </a>
+                                
                             @endcan
+                            @role('super-admin')
+                            <a href="{{ route('pacientes.eliminados') }}"
+                                    class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
+                                    Pacientes Eliminados
+                                </a>
+                                @endrole
                         </div>
                     </div>
                 </div>
+
+
+
+
+                <!-- Navigation Links -->{{-- route('dashboard') --}}
+                {{--  <div class="hidden space-x-8 sm:-my-px sm:ms-10 sm:flex">
+                    @foreach ($navLinks as $navlink)
+                     <x-nav-link href="{{ $navlink['route'] }}" :active="$navlink['active']">
+                        {{ __($navlink['name']) }}
+                    </x-nav-link>
+
+                    @endforeach
+
+                </div> --}}
+                {{-- <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                             {{ __('Pacientes') }}
+                </x-responsive-nav-link> --}}
 
                 <div class="ml-5">
                     <div class="relative mt-5" x-data="{ open: false }">
@@ -314,8 +339,8 @@
                             <a href="{{ route('multiform.index') }}"
                                 class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Formulario</a>
                             @role('super-admin')
-                            <a href="{{ route('auditorias.index') }}"
-                            class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Auditorías</a>
+                                <a href="{{ route('auditorias.index') }}"
+                                    class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Auditorías</a>
                             @endrole
                         </div>
                     </div>
@@ -324,17 +349,17 @@
             @can('users.index')
                 {{-- <div class="relative mt-5" x-data="{ open: false }">
 
-                    <button @click="open = !open"
-                        class="inline-flex items-center justify-center float-right mr-4 px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition group">
-                        Administrador
-                        <!-- Icono de flecha hacia abajo para indicar que es un menú desplegable -->
-                        <svg x-bind:class="{ 'rotate-180': open }"
-                            class="w-4 h-4 ml-1 -mr-1 transform transition-transform ease-in-out duration-200"
-                            fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7">
-                            </path>
-                        </svg>
-                    </button>
+                    <button @click="open = !open"
+                        class="inline-flex items-center justify-center float-right mr-4 px-3 py-2 bg-blue-600 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-red-500 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition group">
+                        Administrador
+                        <!-- Icono de flecha hacia abajo para indicar que es un menú desplegable -->
+                        <svg x-bind:class="{ 'rotate-180': open }"
+                            class="w-4 h-4 ml-1 -mr-1 transform transition-transform ease-in-out duration-200"
+                            fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                            <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7">
+                            </path>
+                        </svg>
+                    </button>
 
                     <!-- Contenedor del menú desplegable -->
                     <div x-show="open" @click.away="open = false"
@@ -353,7 +378,36 @@
                 </div>
             @endcan
 
-            <div class="hidden sm:flex sm:items-center sm:ms-6">
+            {{--
+        <div class="ml-5">
+            <div class="relative mt-5" x-data="{ open: false }">
+                <button @click="open = !open"
+                    class="inline-flex items-center justify-center float-right mr-4 px-3 py-2 bg-slate-800 border border-transparent rounded-md font-semibold text-xs text-white uppercase tracking-widest hover:bg-slate-900 focus:outline-none focus:border-red-700 focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition group">
+                    Licencias
+                    <!-- Icono de flecha hacia abajo para indicar que es un menú desplegable -->
+                    <svg x-bind:class="{ 'rotate-180': open }"
+                        class="w-4 h-4 ml-1 -mr-1 transform transition-transform ease-in-out duration-200"
+                        fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth="2" d="M19 9l-7 7-7-7">
+                        </path>
+                    </svg>
+                </button>
+
+                <!-- Contenedor del menú desplegable -->
+                <div x-show="open" @click.away="open = false"
+                    class="absolute z-10 right-0 mt-9 py-2 w-32 bg-white border border-gray-300 rounded-md shadow-lg">
+                    <!-- Opciones del menú -->
+                    @livewire('patient.patient-listfechas')
+
+                </div>
+            </div>
+
+
+        </div> --}}
+
+
+
+            <div class="hidden sm:flex sm:items-center sm:ms-6">
                 <!-- Teams Dropdown -->
                 @if (Laravel\Jetstream\Jetstream::hasTeamFeatures())
                     <div class="ms-3 relative">
@@ -485,6 +539,23 @@
 
     <!-- Responsive Navigation Menu -->
     <div :class="{ 'block': open, 'hidden': !open }" class="hidden sm:hidden">
+
+        {{--  <div class="pt-2 pb-3 space-y-1">
+            @foreach ($navLinks as $navlink)
+            <x-responsive-nav-link href="{{ $navlink['route'] }}" :active="$navlink['active']">
+               {{ __($navlink['name']) }}
+           </x-responsive-nav-link>
+
+           @endforeach
+
+
+        </div> --}}
+
+        {{-- <x-responsive-nav-link href="{{ route('dashboard') }}" :active="request()->routeIs('dashboard')">
+                {{ __('Dashboard') }}
+            </x-responsive-nav-link> --}}
+
+        <!-- Responsive Settings Options -->
         <div class="pt-4 pb-1 border-t border-gray-200">
             <div class="flex items-center px-4">
                 @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
@@ -511,8 +582,6 @@
                         {{ __('API Tokens') }}
                     </x-responsive-nav-link>
                 @endif
-
-                <div class="border-t border-gray-200"></div>
 
                 <!-- Authentication -->
                 <form method="POST" action="{{ route('logout') }}" x-data>

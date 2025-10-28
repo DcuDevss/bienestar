@@ -68,7 +68,7 @@ class RoleSeeder extends Seeder
         $R['enfermero']->syncPermissions(Permission::whereIn('name', $enfermero)->get());
         $R['profesorgym']->syncPermissions(Permission::whereIn('name', $profeGym)->get());
 
-        // Usuarios finales por ahora sin permisos vamos
+        // Usuarios finales por ahora sin permisos vamos cambios
         $R['user_policia']->syncPermissions([]);
         $R['user_civil']->syncPermissions([]);
 

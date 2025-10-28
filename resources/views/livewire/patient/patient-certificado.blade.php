@@ -56,9 +56,10 @@
 
         <x-slot name="title">
             <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
-                {{ __('agregar certificado al historial del paciente') }}
+                {{ __('agregar certificado al historial del paciente 321') }}
             </div>
-            <img class="h-32 w-full object-center object-cover" src="{{ asset('assets/disases.jpg') }}" alt="">
+            <img class="h-28 w-full object-center object-cover" src="{{ asset('assets/gettyimages.jpg') }}"
+                alt="">
         </x-slot>
         <x-slot name="content">
 
@@ -141,7 +142,7 @@
                     <x-input-error for="fecha_finalizacion_licencia" />
                 </div>
 
-{{--                 <div>
+                <div>
                     <label for="horas_salud"
                         class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica') }}</label>
                     <input id="horas_salud" class="w-full rounded cursor-pointer" type="number"
@@ -149,7 +150,7 @@
                     <x-input-error for="horas_salud" />
                 </div> --}}
 
-                <div class="mb-4">
+                <div class="">
                     <label for="suma_salud" class="block text-sm font-medium text-gray-700">
                         Días licencia certificado
                     </label>
@@ -180,7 +181,7 @@
                 <div class="col-span-2">
                     <label for="detalle_certificado"
                         class="block text-sm font-medium text-gray-700">{{ __('Detalle del certificado') }}</label>
-                    <textarea id="detalle_certificado" class="w-full rounded cursor-pointer" rows="5"
+                    <textarea id="detalle_certificado" class="w-full rounded cursor-pointer" rows="2"
                         placeholder="{{ __('ingrese detalle') }}" wire:model="detalle_certificado"></textarea>
                     <x-input-error for="detalle_certificado" />
                 </div>
@@ -196,7 +197,7 @@
             @endif
 
             <button class="bg-red-500 text-white hover:bg-red-400 px-4 py-2 rounded mx-3"
-                wire:click="$set('modal',false)">
+                onclick="limpiarCamposCertificado()"     wire:click="$set('modal',false)">
                 {{ __('Cancelar') }}
             </button>
             <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="addDisase">
@@ -206,12 +207,8 @@
         </x-slot>
     </x-dialog-modal>
     @if (session()->has('success'))
-        <div
-            x-data="{ show: true }"
-            x-show="show"
-            x-init="setTimeout(() => show = false, 3000)"
-            class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 transition"
-        >
+        <div x-data="{ show: true }" x-show="show" x-init="setTimeout(() => show = false, 3000)"
+            class="fixed top-4 right-4 bg-green-600 text-white px-4 py-2 rounded shadow-lg z-50 transition">
             {{ session('success') }}
         </div>
     @endif
@@ -219,33 +216,85 @@
 </div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-document.addEventListener('livewire:init', () => {
-  Livewire.on('swal', function () {
-    let payload = {};
-    if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
-      payload = arguments[0]; // named args: { title, text, html, icon, ... }
-    } else if (arguments.length >= 1) {
-      payload = { title: arguments[0], text: arguments[1], icon: arguments[2] }; // posicional
-    }
+    document.addEventListener('livewire:init', () => {
+        Livewire.on('swal', function() {
+            let payload = {};
+            if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[
+                    0])) {
+                payload = arguments[0]; // named args: { title, text, html, icon, ... }
+            } else if (arguments.length >= 1) {
+                payload = {
+                    title: arguments[0],
+                    text: arguments[1],
+                    icon: arguments[2]
+                }; // posicional
+            }
 
-    let { title = '', text = '', html = null, icon = 'info', timer, toast = true, position = 'top-end' } = payload;
+            let {
+                title = '', text = '', html = null, icon = 'info', timer, toast = true, position =
+                    'top-end'
+            } = payload;
 
-    // Si por error llega un objeto en text, lo convertimos a HTML legible
-    if (typeof text !== 'string' && text != null) {
-      try {
-        const pretty = JSON.stringify(text, null, 2);
-        html = html || `<pre style="text-align:left;white-space:pre-wrap;margin:0">${pretty}</pre>`;
-        text = '';
-      } catch {}
-    }
+            // Si por error llega un objeto en text, lo convertimos a HTML legible
+            if (typeof text !== 'string' && text != null) {
+                try {
+                    const pretty = JSON.stringify(text, null, 2);
+                    html = html ||
+                        `<pre style="text-align:left;white-space:pre-wrap;margin:0">${pretty}</pre>`;
+                    text = '';
+                } catch {}
+            }
 
-    Swal.fire({
-      title, text, html, icon,
-      timer: timer ?? 2200,
-      toast, position,
-      showConfirmButton: false,
+            Swal.fire({
+                title,
+                text,
+                html,
+                icon,
+                timer: timer ?? 2200,
+                toast,
+                position,
+                showConfirmButton: false,
+            });
+        });
     });
-  });
-});
 </script>
+<script>
+    function limpiarCamposCertificado() {
+        const contenedorCampos = document.querySelector('.grid.grid-cols-2.gap-4');
 
+        if (!contenedorCampos) {
+            console.error('No se encontró el contenedor de campos del formulario.');
+            return;
+        }
+
+        // 1. Limpiar campos de texto, fecha, números y archivos (input/textarea)
+        const inputs = contenedorCampos.querySelectorAll('input, textarea');
+        inputs.forEach(campo => {
+            // No limpiamos el input oculto (hidden)
+            if (campo.type !== 'hidden') {
+                if (campo.type === 'file') {
+                    // Para inputs de tipo file, se debe restablecer su valor
+                    campo.value = '';
+                } else if (campo.type !== 'radio' && campo.type !== 'checkbox') {
+                    // Para otros inputs de texto/número/fecha
+                    campo.value = '';
+                }
+            }
+        });
+
+        // 2. Limpiar selectores
+        const selects = contenedorCampos.querySelectorAll('select');
+        selects.forEach(select => {
+            // Establece el valor de la primera opción (asumiendo que es la de "Seleccione una opción" con value="")
+            select.value = "";
+        });
+
+        // Si el campo 'search' del modal no se limpia, prueba a forzar la limpieza del elemento específico:
+        const inputNombre = document.getElementById('name');
+        if(inputNombre) {
+            inputNombre.value = '';
+        }
+    }
+
+    // ... el resto de tu código Livewire/Swal
+</script>

@@ -56,7 +56,7 @@
 
         <x-slot name="title">
             <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
-                {{ __('agregar certificado al historial del paciente') }}
+                {{ __('agregar certificado al historial del paciente 321') }}
             </div>
             <img class="h-28 w-full object-center object-cover" src="{{ asset('assets/gettyimages.jpg') }}"
                 alt="">
@@ -142,7 +142,7 @@
                     <x-input-error for="fecha_finalizacion_licencia" />
                 </div>
 
-                {{-- <div>
+                <div>
                     <label for="horas_salud"
                         class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica') }}</label>
                     <input id="horas_salud" class="w-full rounded cursor-pointer" type="number"

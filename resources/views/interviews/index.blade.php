@@ -115,14 +115,13 @@
                                         </div>
 
                                         <div>
-                                            @if ($ultimaFechaEnfermedad && $ultimaFechaEnfermedad->pivot->fecha_finalizacion_licencia)
+                                            @if ($ultimaFechaEnfermedad)
                                                 @php
                                                     $fechaFinalizacionLicencia = \Carbon\Carbon::createFromFormat(
                                                         'Y-m-d H:i:s',
                                                         $ultimaFechaEnfermedad->pivot->fecha_finalizacion_licencia,
                                                     );
                                                 @endphp
-
                                                 <div class="flex justify-between items-center">
                                                     <span
                                                         class="cursor-pointer px-1 rounded-md py-1 bg-slate-900 text-white">
@@ -132,7 +131,6 @@
                                             @else
                                                 <p>No posee información de fechas.</p>
                                             @endif
-
                                         </div>
                                     </div>
                                 </li>
@@ -178,8 +176,7 @@
 
                         <div class=" border-b border-slate-100 pb-1">
                             <dt class="text-slate-500 font-medium">Ciudad</dt>
-                            <dd class="font-semibold text-slate-800 capitalize break-words">
-                                {{ $paciente->ciudad_id ? $paciente->ciudades->nombre : 'No asignado' }}
+                            <dd class="font-semibold text-slate-800 capitalize break-words">{{ $paciente->ciudad_id ? $paciente->ciudades->nombre : 'No asignado' }}
                             </dd>
                         </div>
 
@@ -273,12 +270,12 @@
                             Historial certificados médicos
                         </a>
                         @role('doctor')
-                            @can('patient-enfermedades.show')
-                                <a href="{{ route('patient-enfermedades.show', $paciente->id) }}"
-                                    class="inline-flex items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100 hover:text-slate-700 transition">
-                                    Historial atención médica
-                                </a>
-                            @endcan
+                        @can('patient-enfermedades.show')
+                            <a href="{{ route('patient-enfermedades.show', $paciente->id) }}"
+                                class="inline-flex items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100 hover:text-slate-700 transition">
+                                Historial atención médica
+                            </a>
+                        @endcan
                         @endrole
                     </div>
 
@@ -287,7 +284,7 @@
                             @livewire('patient.patient-certificado', ['paciente' => $paciente->id])
                         </div>
 
-                        @role('doctor')
+                       @role('doctor')
                             @can('patient-enfermedades.show')
                                 <div class="rounded-md border border-slate-200 p-3">
                                     @livewire('patient.patient-enfermedade', ['paciente' => $paciente->id])
@@ -356,7 +353,7 @@
             </div>
             <!-- BOTONES 3 -->
             @can('users.index')
-                <!-- TRATAMIENTOS -->
+            <!-- TRATAMIENTOS -->
                 {{-- <div class="bg-white rounded-md p-2 mt-1 mx-0">
                     <div>
                         <ul>

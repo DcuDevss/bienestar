@@ -142,7 +142,7 @@
                     <x-input-error for="fecha_finalizacion_licencia" />
                 </div>
 
-                <div>
+                {{-- <div>
                     <label for="horas_salud"
                         class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica') }}</label>
                     <input id="horas_salud" class="w-full rounded cursor-pointer" type="number"

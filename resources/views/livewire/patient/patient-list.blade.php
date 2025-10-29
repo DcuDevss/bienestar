@@ -188,7 +188,7 @@
                         </tbody>
                     </table>
                 </div>
-                {{-- PAGINATION --}}
+                {{-- PAGINATION. --}}
                 <div class="py-4 px-5">
                     <div class="flex">
                         <div class="flex space-x-4 items-center mb-3">

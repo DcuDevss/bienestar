@@ -21,7 +21,7 @@
                                 placeholder="Buscar..." required="">
                         </div>
                         {{-- BOTON RESET ALL --}}
-                        @role('super-admin')
+                        @role('super-admin|admin-jefe')
                             <div class="">
                                 <livewire:interview.interview-reset-all />
                             </div>

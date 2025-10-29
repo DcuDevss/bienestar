@@ -668,41 +668,21 @@
                 <!-- Grupo Izquierdo: 3 botones -->
                 <div class="flex gap-4 items-center">
                     <!-- Botón Guardar -->
-                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md sm:w-auto">
+                    <button type="submit" class="px-4 py-2 bg-blue-500 text-white rounded-md sm:w-auto mb-4">
                         Guardar
                     </button>
 
                     <!-- Ver entrevistas paciente -->
                     @if ($paciente)
                         <a href="{{ route('entrevistas.index', ['paciente_id' => $paciente->id]) }}"
-                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto">
+                            class="bg-green-500 hover:bg-green-700 text-white font-bold py-2 px-4 rounded-md sm:w-auto mb-4">
                             Ver entrevistas del paciente
                         </a>
                     @else
                         <p>No se encontró el paciente.</p>
                     @endif
                 </div>
-
-                <!-- Grupo Derecho: 2 elementos -->
-                <div class="flex gap-4 items-center mr-6 mb-4">
-                    <!-- Imagen con link (RCTA) -->
-                    <a href="https://rcta.me/?utm_term=&utm_campaign=RCTA+DNU/+Pmax+/+Reconnect&utm_source=adwords&utm_medium=ppc&hsa_acc=3976412703&hsa_cam=21983270123&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=21983271299&gbraid=0AAAAAp3bv2M-2NoWfjCKXwvQFRekKOKO3&gclid=Cj0KCQjwgIXCBhDBARIsAELC9ZhPejgMuncQuoBdXnlBKYeV4pe06k2knUoVCHSvUOPPzjFGOfIv6vgaAgpOEALw_wcB
-            "
-                        target="_blank"
-                        class="bg-white rounded-md py-1 px-3 inline-flex items-center justify-center"">
-                        <img class="h-[50px]" src="{{ asset('assets/rctaLogo.jpg') }}" alt="">
-                    </a>
-
-                    <!-- Botón con imagen OSEF -->
-                    <a href="https://prescriptorweb.ddaval.com.ar/" target="_blank"
-                        class="bg-blue-600 rounded-md py-1 px-3 inline-flex items-center justify-center">
-                        <img class="h-[25px]" src="https://osef.gob.ar/assets/images/osef-logotipo.png"
-                            alt="">
-                    </a>
-
-                </div>
             </div>
-
     </form>
 
 </div>

@@ -58,6 +58,71 @@
                         <label for="FecIngreso" class="block font-medium">Fecha de Ingreso</label>
                         <input type="date" id="FecIngreso" wire:model="FecIngreso" class="input rounded-md w-full">
                     </div>
+                    {{-- FOTO (reemplazo / quitar) --}}
+                    <div class="col-span-1 lg:col-span-3">
+                        <div class="rounded-xl border border-gray-200 bg-white/60 p-4 md:p-5">
+                            <label class="block text-sm font-medium text-gray-700 mb-2">Foto (opcional)</label>
+
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4">
+                            {{-- Input de archivo + nombre seleccionado --}}
+                                <div class="md:col-span-2">
+                                    <input type="file"
+                                        wire:model="foto"
+                                        wire:key="foto-{{ $uploadIteration }}"
+                                        accept="image/*"
+                                        class="block w-full text-sm text-gray-900 bg-white border border-gray-300 rounded-md cursor-pointer
+                                                focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]
+                                                file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium
+                                                file:bg-[#2d5986] file:text-white hover:file:bg-[#244a70]">
+
+                                    @error('foto')
+                                    <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                    @enderror
+
+                                    <div wire:loading wire:target="foto" class="mt-2 inline-flex items-center gap-2 text-sm text-gray-600">
+                                    <svg class="h-4 w-4 animate-spin" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <circle cx="12" cy="12" r="10" class="opacity-25"></circle>
+                                        <path d="M4 12a8 8 0 0 1 8-8" class="opacity-75"></path>
+                                    </svg>
+                                    Subiendo imagen...
+                                    </div>
+
+                                    @if ($foto)
+                                    <div class="mt-2 text-sm text-gray-700">
+                                        Archivo seleccionado:
+                                        <span class="font-semibold">{{ $foto->getClientOriginalName() }}</span>
+                                    </div>
+                                    @endif
+                                </div>
+
+                                {{-- Foto actual (solo nombre + quitar) --}}
+                                <div class="md:col-span-1">
+                                    @php $pac = \App\Models\Paciente::find($customerId); @endphp
+                                    @if (!empty($pac?->foto))
+                                    <div class="flex items-center justify-between gap-3 rounded-md border border-gray-200 bg-white px-3 py-2">
+                                        <span class="truncate text-sm text-gray-700">
+                                        Actual: <span class="font-semibold truncate">{{ basename($pac->foto) }}</span>
+                                        </span>
+                                        <button type="button"
+                                                wire:click="removePhoto"
+                                                wire:loading.attr="disabled"
+                                                wire:target="removePhoto"
+                                                class="inline-flex items-center rounded-md border border-red-300 px-3 py-1.5 text-sm font-medium
+                                                    text-red-600 hover:bg-red-50 disabled:opacity-60 disabled:cursor-not-allowed">
+                                        Quitar
+                                        </button>
+                                    </div>
+                                    @else
+                                    <div class="flex items-center rounded-md border border-dashed border-gray-300 bg-white px-3 py-2 text-sm text-gray-500">
+                                        Sin foto actual
+                                    </div>
+                                    @endif
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+
                 </div>
             </div>
         </div>

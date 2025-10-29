@@ -3,17 +3,23 @@
 namespace App\Livewire\Doctor;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Storage;
+
 use App\Models\Paciente;
 use App\Models\Estado;
 use App\Models\Factore;
 use App\Models\Jerarquia;
 use App\Models\Ciudade;
-use Livewire\Attributes\On;
 
 class MultiformController extends Component
 {
+    use WithFileUploads;
+
     public $color;
 
+    // Paso 1
     public $apellido_nombre;
     public $dni;
     public $cuil;
@@ -21,38 +27,41 @@ class MultiformController extends Component
     public $sexo = '';
     public $email;
     public $TelefonoCelular;
+    public $fecha_nacimiento;
+    public $FecIngreso;
 
-    public $jerarquia; // (no se usa, podés quitarla si querés)
+    // Foto
+    public $foto;                   // archivo temporal Livewire
+    public int $uploadIteration = 0; // para resetear el input file
+
+    // Paso 2
+    public $jerarquia; // (no se usa)
     public $legajo;
     public $destino_actual;
-
     public $ciudad_id;
     public $ciudades;
-
     public $edad;
-
-    public $fecha_nacimiento;
-    public $peso;
-    public $altura;
-
     public $estado_id = '';
     public $factore_id = '';
     public $jerarquia_id = '';
-    public $comisaria_servicio;
-    public $fecha_atencion;
-    public $enfermedad;
-    public $remedios;
-
-    public $step;
-    public $estados;
-    public $factores;
-    public $FecIngreso;
     public $NroCredencial;
     public $antiguedad;
     public $chapa;
     public $jerarquias;
+    public $estados;
+    public $factores;
 
-    public $customer;
+    // Paso 3
+    public $comisaria_servicio;
+    public $fecha_atencion;
+    public $enfermedad;
+    public $remedios;
+    public $peso;
+    public $altura;
+
+    // Control general
+    public $step;
+    public $customer; // instancia Paciente creada/actualizada
     public $registroCompletado = false;
 
     private $stepActions = [
@@ -82,7 +91,6 @@ class MultiformController extends Component
         $action = $this->stepActions[$this->step] ?? null;
 
         if (!$action || !method_exists($this, $action)) {
-            // Seguridad: si hay una llamada a un paso inexistente
             $this->dispatch('swal', title: 'Paso inválido', text: 'No se pudo continuar.', icon: 'error');
             return;
         }
@@ -101,10 +109,12 @@ class MultiformController extends Component
             'fecha_nacimiento'  => 'required|date',
             'email'             => 'required|email',
             'TelefonoCelular'   => 'required|numeric',
+            'foto'              => 'nullable|image|max:5120', // 5MB para evitar cortes
         ]);
 
+        // Crear o actualizar paciente (sin foto todavía)
         if ($this->customer) {
-            $this->customer = tap($this->customer)->update([
+            $this->customer->update([
                 'apellido_nombre'  => $this->apellido_nombre,
                 'dni'              => $this->dni,
                 'cuil'             => $this->cuil,
@@ -129,11 +139,32 @@ class MultiformController extends Component
             ]);
         }
 
+        // Guardar foto si se cargó
+        if ($this->foto) {
+            // borrar anterior si había
+            if ($this->customer->foto && Storage::disk('public')->exists($this->customer->foto)) {
+                Storage::disk('public')->delete($this->customer->foto);
+            }
+
+            $dir = "pacientes/{$this->customer->id}";
+            Storage::disk('public')->makeDirectory($dir);
+
+            $filename = uniqid() . '_' . $this->foto->getClientOriginalName();
+            $path = $this->foto->storeAs($dir, $filename, 'public'); // ej: pacientes/15/xxxx.jpg
+
+            $this->customer->foto = $path; // guardar ruta relativa (sin "public/")
+            $this->customer->save();
+
+            // limpiar input y forzar rerender del file input
+            $this->reset('foto');
+            $this->uploadIteration++;
+        }
+
         // Feedback y avanzar
         session()->flash('message', 'Paciente registrado correctamente.');
         $this->dispatch('swal', title: 'Paso 1 guardado', text: 'Datos personales registrados.', icon: 'success');
 
-        $this->step++;
+        $this->step = 1; // avanzar explícitamente al PASO 2
         $this->dispatch('swal', title: 'Continuá con el Paso 2', text: 'Completá datos institucionales.', icon: 'info');
     }
 
@@ -151,21 +182,21 @@ class MultiformController extends Component
             'chapa'          => 'required',
         ]);
 
-        $this->customer = tap($this->customer)->update([
+        $this->customer->update([
             'legajo'         => $this->legajo,
             'jerarquia_id'   => $this->jerarquia_id,
             'destino_actual' => $this->destino_actual,
             'ciudad_id'      => $this->ciudad_id,
             'edad'           => $this->edad,
             'estado_id'      => $this->estado_id,
-            'NroCredencial'  => $this->NroCredencial, // corregido
+            'NroCredencial'  => $this->NroCredencial,
             'antiguedad'     => $this->antiguedad,
             'chapa'          => $this->chapa,
         ]);
 
         $this->dispatch('swal', title: 'Paso 2 guardado', text: 'Datos institucionales registrados.', icon: 'success');
 
-        $this->step++;
+        $this->step = 2; // avanzar al PASO 3
         $this->dispatch('swal', title: 'Continuá con el Paso 3', text: 'Completá datos de salud.', icon: 'info');
     }
 
@@ -179,7 +210,7 @@ class MultiformController extends Component
             'remedios'    => 'required|string',
         ]);
 
-        $this->customer = tap($this->customer)->update([
+        $this->customer->update([
             'peso'        => $this->peso,
             'altura'      => $this->altura,
             'factore_id'  => $this->factore_id,
@@ -187,12 +218,25 @@ class MultiformController extends Component
             'remedios'    => $this->remedios,
         ]);
 
-        // Mensaje final
         session()->flash('message', 'Registro completado correctamente.');
         $this->registroCompletado = true;
-        $this->step++;
 
+        $this->step = 3; // fin
         $this->dispatch('swal', title: '¡Listo!', text: 'El registro fue completado.', icon: 'success');
+    }
+
+    public function removePhoto()
+    {
+        if ($this->customer?->foto && Storage::disk('public')->exists($this->customer->foto)) {
+            Storage::disk('public')->delete($this->customer->foto);
+        }
+        if ($this->customer) {
+            $this->customer->foto = null;
+            $this->customer->save();
+        }
+        $this->reset('foto');
+        $this->uploadIteration++;
+        $this->dispatch('swal', title: 'Foto eliminada', text: 'La foto del paciente fue eliminada.', icon: 'error');
     }
 
     #[On('go-dashboard')]

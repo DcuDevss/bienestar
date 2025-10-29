@@ -21,10 +21,20 @@
 
                 <div class="col-span-1 md:col-span-3">
                     <div>
-                        <div class="bg-white p-3 rounded-md">
+                            <div class="bg-white p-3 rounded-md">
+
                             <div class="image overflow-hidden flex items-center justify-center">
-                                <img class="h-[200px] mx-auto" src="{{ asset('assets/defaultPicture.jpg') }}" />
+                            @if ($paciente->foto && Storage::disk('public')->exists($paciente->foto))
+                                <img class="h-[200px] w-[200px] object-cover rounded-full shadow-md"
+                                    src="{{ Storage::url($paciente->foto) }}"
+                                    alt="Foto de {{ $paciente->apellido_nombre }}">
+                            @else
+                                <img class="h-[200px] w-[200px] object-cover rounded-full shadow-md"
+                                    src="{{ asset('assets/defaultPicture.jpg') }}"
+                                    alt="Foto por defecto">
+                            @endif
                             </div>
+
 
                             <h1 class="text-center font-bold text-gray-900 leading-8 my-1">
                                 {{ $paciente->apellido_nombre }}

@@ -53,7 +53,8 @@ class Paciente extends Model
         'deleted_at',
         'created_at',
         'updated_at',
-        'user_id'
+        'user_id',
+        'foto'
     ];
 
     public function scopeSearch($query, $term)

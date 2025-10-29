@@ -1,5 +1,4 @@
 <div>
-
     <header class="px-3 bg-white">
         <h2 class="font-bold text-center text-gray-800 capitalize text-2xl mb-2 flex items-center">
             <div class="">
@@ -50,7 +49,6 @@
             @endforelse
         </ul>
     </div>
-
 
     <x-dialog-modal wire:model="modal">
 

@@ -13,7 +13,11 @@
                         type="text" placeholder="{{ __('Buscar...') }}" wire:model.live="search" />
                 </div>
                 <!-- BOTONES OSEF & LA CAJA -->
+                <!-- Imagen con link (ValidadorOsef) -->
                 <div class="float-right mr-2 flex gap-x-2">
+                    <a href=" https://validador.osef.gob.ar/" class="bg-white rounded-md py-1 px-3" target="_blank">
+                        <img class="h-[34px]" src="{{ asset('assets/VALIDADOR.png') }}" alt="">
+                    </a>
                     <!-- Imagen con link (RCTA) -->
                     <a href="https://rcta.me/?utm_term=&utm_campaign=RCTA+DNU/+Pmax+/+Reconnect&utm_source=adwords&utm_medium=ppc&hsa_acc=3976412703&hsa_cam=21983270123&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=21983271299&gbraid=0AAAAAp3bv2M-2NoWfjCKXwvQFRekKOKO3&gclid=Cj0KCQjwgIXCBhDBARIsAELC9ZhPejgMuncQuoBdXnlBKYeV4pe06k2knUoVCHSvUOPPzjFGOfIv6vgaAgpOEALw_wcB
                         " target="_blank" class="bg-white rounded-md py-1 px-3">

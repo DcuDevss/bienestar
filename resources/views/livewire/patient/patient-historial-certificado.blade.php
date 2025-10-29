@@ -236,13 +236,14 @@
                 </div>
 
                 <!-- Horas de salud -->
-                <div>
+                
+                {{-- <div>
                     <label for="horas_salud" class="block text-sm font-medium text-gray-700">
                         {{ __('Horas de licencia médica') }}
                     </label>
                     <input id="horas_salud" type="number" class="w-full rounded" wire:model.defer="horas_salud" />
                     <x-input-error for="horas_salud" />
-                </div>
+                </div> --}}
 
                 <!-- Dias licencia -->
                 <div>

@@ -1,5 +1,4 @@
 <div>
-
     <header class="px-3 bg-white">
         <h2 class="font-bold text-center text-gray-800 capitalize text-2xl mb-2 flex items-center">
             <div class="">
@@ -51,12 +50,11 @@
         </ul>
     </div>
 
-
     <x-dialog-modal wire:model="modal">
 
         <x-slot name="title">
             <div class="text-xl text-gray-500 font-bold text-center mb-2 capitalize">
-                {{ __('agregar certificado al historial del paciente 321') }}
+                {{ __('agregar certificado al historial del paciente') }}
             </div>
             <img class="h-28 w-full object-center object-cover" src="{{ asset('assets/gettyimages.jpg') }}"
                 alt="">

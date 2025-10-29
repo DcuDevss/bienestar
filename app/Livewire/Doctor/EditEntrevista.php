@@ -29,6 +29,7 @@ class EditEntrevista extends Component
     public $paciente_id;
     public $miembros = []; // Para almacenar los miembros de la entrevista
     public $grupo_familiar = [];  // Para almacenar el miembro a editar, nuevos cmabios
+    public $grupo_familiar = [];  // Para almacenar el miembro a editar ok cambios
     public $editIndex = null;
 
     // Desacoplar los campos individuales en lugar de usar entrevista_data

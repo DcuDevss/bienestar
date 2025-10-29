@@ -236,6 +236,7 @@
                 </div>
 
                 <!-- Horas de salud -->
+                
                 {{-- <div>
                     <label for="horas_salud" class="block text-sm font-medium text-gray-700">
                         {{ __('Horas de licencia médica') }}

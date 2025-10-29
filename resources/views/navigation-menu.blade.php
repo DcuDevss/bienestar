@@ -275,11 +275,11 @@
                                 
                             @endcan
                             @role('super-admin')
-                            <a href="{{ route('pacientes.eliminados') }}"
+                                <a href="{{ route('pacientes.eliminados') }}"
                                     class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
                                     Pacientes Eliminados
                                 </a>
-                                @endrole
+                            @endrole
                         </div>
                     </div>
                 </div>

@@ -10,33 +10,46 @@ class DeletedPatientList extends Component
 {
     use WithPagination;
 
+    // 👇 Livewire usa Tailwind por defecto
+    protected $paginationTheme = 'tailwind';
+
     public $search = '';
 
-    // 📢 Mapea los eventos de JavaScript (Livewire.emit) a los métodos de la clase
+    // ✅ Nueva propiedad para controlar la cantidad de resultados por página
+    public $perPage = 8; // Valor predeterminado a 8 (como en la imagen)
+
+    // 📢 Escucha eventos Livewire.emit()
     protected $listeners = [
         'restore' => 'restore',
         'forceDelete' => 'forceDelete',
     ];
 
     /**
-     * Reinicia la paginación cuando cambia la búsqueda.
+     * 🔄 Reinicia la paginación al cambiar la búsqueda
      */
     public function updatingSearch()
     {
         $this->resetPage('deletedPage');
     }
 
-    
+    /**
+     * ✅ Reinicia la paginación al cambiar la cantidad de resultados por página
+     */
+    public function updatingPerPage()
+    {
+        $this->resetPage('deletedPage');
+    }
 
     /**
-     * Renderiza el componente y filtra los pacientes eliminados.
+     * 🎯 Renderiza el componente con los pacientes eliminados
      */
     public function render()
     {
+        // ✅ Usamos $this->perPage en la función paginate
         $pacientesEliminados = Paciente::onlyTrashed()
             ->where('apellido_nombre', 'like', "%{$this->search}%")
             ->orderByDesc('deleted_at')
-            ->paginate(10, ['*'], 'deletedPage');
+            ->paginate($this->perPage, ['*'], 'deletedPage');
 
         return view('livewire.patient.deleted-patient-list', [
             'pacientesEliminados' => $pacientesEliminados,
@@ -44,19 +57,17 @@ class DeletedPatientList extends Component
     }
 
     /**
-     * ♻️ Restaura un paciente eliminado.
+     * ♻️ Restaura un paciente eliminado
      */
     public function restore($id)
     {
         $paciente = Paciente::withTrashed()->findOrFail($id);
-
         $paciente->restore();
 
-        // 🟢 NUEVO: Notificación directa (dispatch)
         $this->dispatch(
             'swal',
             title: '¡Restaurado!',
-            text: 'Paciente restaurado correctamente. Ahora está activo en la lista principal.',
+            text: 'Paciente restaurado correctamente.',
             icon: 'success'
         );
 
@@ -64,19 +75,17 @@ class DeletedPatientList extends Component
     }
 
     /**
-     * ❌ Elimina un paciente permanentemente.
+     * ❌ Elimina un paciente permanentemente
      */
     public function forceDelete($id)
     {
         $paciente = Paciente::withTrashed()->findOrFail($id);
-
         $paciente->forceDelete();
 
-        // 🔴 NUEVO: Notificación directa (dispatch)
         $this->dispatch(
             'swal',
             title: '¡Eliminado!',
-            text: '🗑️ Paciente eliminado permanentemente de la base de datos.',
+            text: 'Paciente eliminado permanentemente de la base de datos.',
             icon: 'error'
         );
 

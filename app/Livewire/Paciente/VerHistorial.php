@@ -9,6 +9,7 @@ use Livewire\Component;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 
 class VerHistorial extends Component
 {
@@ -17,7 +18,7 @@ class VerHistorial extends Component
     public $search = '';
     public $perPage = 10;
     public $page = 1;
-    public $items; // ahora colección
+    public $items; // colección de PDFs
 
     public function mount(Paciente $paciente)
     {
@@ -52,7 +53,7 @@ class VerHistorial extends Component
                 'path'     => $primary,
                 'url'      => Storage::disk('public')->url($primary),
                 'source'   => 'historial',
-                'modified' => $this->lastModifiedSafe($primary),
+                'modified' => $this->formatDate($this->lastModifiedSafe($primary)),
             ];
         })->filter();
 
@@ -72,11 +73,11 @@ class VerHistorial extends Component
                 'path'     => $path,
                 'url'      => Storage::disk('public')->url($path),
                 'source'   => 'psiquiatra',
-                'modified' => $this->lastModifiedSafe($path),
+                'modified' => $this->formatDate($this->lastModifiedSafe($path)),
             ];
         })->filter();
 
-        // PDFs filesystem
+        // PDFs en el filesystem
         $fromFs = collect(Storage::disk('public')->files($dir))
             ->filter(fn($p) => Str::of($p)->lower()->endsWith('.pdf'))
             ->map(function ($p) {
@@ -89,7 +90,7 @@ class VerHistorial extends Component
                     'path'     => $p,
                     'url'      => Storage::disk('public')->url($p),
                     'source'   => 'archivo',
-                    'modified' => $this->lastModifiedSafe($p),
+                    'modified' => $this->formatDate($this->lastModifiedSafe($p)),
                 ];
             });
 
@@ -99,7 +100,8 @@ class VerHistorial extends Component
 
         $this->items = collect($db->concat($fs))
             ->sortByDesc('modified')
-            ->values(); // Mantenemos colección
+            ->values();
+
         Log::info("Total de PDFs cargados: " . $this->items->count());
     }
 
@@ -113,7 +115,14 @@ class VerHistorial extends Component
         }
     }
 
-    // Se ejecuta automáticamente al cambiar search
+    protected function formatDate($timestamp)
+    {
+        if (!$timestamp) return '—';
+        return Carbon::createFromTimestamp($timestamp)
+            ->timezone('America/Argentina/Buenos_Aires')
+            ->format('d-m-Y H:i');
+    }
+
     public function updatedSearch()
     {
         $this->page = 1;

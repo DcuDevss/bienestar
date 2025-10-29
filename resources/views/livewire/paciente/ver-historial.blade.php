@@ -38,7 +38,7 @@
                             Fuente: {{ $item['source'] }}
                             @php
                                 $ts = $item['modified'];
-                                echo $ts ? ' · ' . \Carbon\Carbon::createFromTimestamp($ts)->format('d/m/Y H:i') : '';
+                                echo $ts ? ' · ' . \Carbon\Carbon::createFromTimestamp($ts)->format('d-m-Y H:i') : '';
                             @endphp
                         </span>
                     </div>

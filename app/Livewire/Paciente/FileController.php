@@ -57,7 +57,7 @@ class FileController extends Component
 
         foreach ($this->archivos as $archivo) {
             $nombreOriginal = $archivo->getClientOriginalName();
-            $timestamp      = now()->format('Ymd_His');
+            $timestamp = now()->format('d-m-Y_H-i-s');
 
             // sanitizar nombre base y conservar extensión original
             $ext         = $archivo->getClientOriginalExtension();

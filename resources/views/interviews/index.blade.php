@@ -126,7 +126,7 @@
                                                 <div class="flex justify-between items-center">
                                                     <span
                                                         class="cursor-pointer px-1 rounded-md py-1 bg-slate-900 text-white">
-                                                        {{ $fechaFinalizacionLicencia->format('d/m/Y H:i:s') }}
+                                                        {{ $fechaFinalizacionLicencia->format('d-m-Y H:i:s') }}
                                                     </span>
                                                 </div>
                                             @else

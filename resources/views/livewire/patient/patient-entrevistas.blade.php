@@ -4,37 +4,35 @@
             <div class="bg-gray-800 shadow-md sm:rounded-lg">
                 <!-- Búsqueda con wire:model -->
                 <div class="flex items-center justify-between p-4">
-            <div class="flex items-center gap-x-3">
-                <!-- Buscar general -->
-                <div class="relative">
-                    <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
-                        <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20"
-                            xmlns="http://www.w3.org/2000/svg">
-                            <path fill-rule="evenodd"
-                                d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                clip-rule="evenodd" />
-                        </svg>
+                    <div class="flex items-center gap-x-3">
+                        <!-- Buscar general -->
+                        <div class="relative">
+                            <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor"
+                                    viewBox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd"
+                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                        clip-rule="evenodd" />
+                                </svg>
+                            </div>
+                            <input wire:model.debounce.300ms="search" type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 pl-10 p-2 w-48"
+                                placeholder="Buscar..." wire:keydown.enter="resetPage">
+                        </div>
+
+                        <!-- Posee arma -->
+                        <input type="text" wire:model.debounce.300ms="poseeArmaFilterDisplay"
+                            placeholder="Posee arma?" value="{{ $poseeArmaFilterDisplay }}"
+                            wire:keydown.enter="resetPage"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2 w-48">
+
+                        <!-- Bajo tratamiento -->
+                        <input type="text" wire:model.debounce.300ms="recomendacionFilterDisplay"
+                            placeholder="Bajo tratamiento" value="{{ $recomendacionFilterDisplay }}"
+                            wire:keydown.enter="resetPage"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2 w-48">
                     </div>
-                    <input wire:model.debounce.300ms="search" type="text"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 pl-10 p-2 w-48"
-                        placeholder="Buscar..." wire:keydown.enter="resetPage">
                 </div>
-
-                <!-- Posee arma -->
-                <input type="text" wire:model.debounce.300ms="poseeArmaFilterDisplay"
-                    placeholder="Posee arma?"
-                    value="{{ $poseeArmaFilterDisplay }}"
-                    wire:keydown.enter="resetPage"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2 w-48">
-
-                <!-- Bajo tratamiento -->
-                <input type="text" wire:model.debounce.300ms="recomendacionFilterDisplay"
-                    placeholder="Bajo tratamiento"
-                    value="{{ $recomendacionFilterDisplay }}"
-                    wire:keydown.enter="resetPage"
-                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2 w-48">
-            </div>
-        </div>
                 @if ($entrevistas->isEmpty())
                     <div class="text-center text-xs uppercase px-4 py-3 text-white">
                         <p>No hay resultados para esta búsqueda.</p>
@@ -62,28 +60,36 @@
                                     <tr class="border-b border-gray-700 hover:bg-[#204060]">
                                         {{-- <td class="text-center px-4 py-3 text-white">{{ $entrevista->paciente_id }}</td> --}}
                                         <td class="text-center px-4 py-3 text-white">
-                                            {{ $entrevista->paciente->jerarquias->name ?? 'N/A' }}</td>
+                                            {{ $entrevista->paciente?->jerarquias?->name ?? 'Paciente Eliminado' }}
+                                        </td>
+
                                         <td class="text-center px-4 py-3 text-white">
-                                            {{ $entrevista->paciente->apellido_nombre }}</td>
+                                            {{ $entrevista->paciente?->apellido_nombre ?? 'Paciente eliminado' }}
+                                        </td>
                                         <td class="tiBody px-2 py-1 text-[14px]">
                                             @if ($entrevista->estado_id == 1)
-                                                <span class="bg-green-600 text-white rounded-md px-4 py-2 text-md text-center inline-block">
+                                                <span
+                                                    class="bg-green-600 text-white rounded-md px-4 py-2 text-md text-center inline-block">
                                                     {{ $entrevista->estado_nombre }}
                                                 </span>
                                             @elseif ($entrevista->estado_id == 2)
-                                                <span class="text-white bg-gray-600 rounded-md px-4 py-2 text-md text-center inline-block">
+                                                <span
+                                                    class="text-white bg-gray-600 rounded-md px-4 py-2 text-md text-center inline-block">
                                                     {{ $entrevista->estado_nombre }}
                                                 </span>
                                             @elseif ($entrevista->estado_id == 3)
-                                                <span class="text-black bg-yellow-400 rounded-md px-4 py-2 text-md text-center inline-block">
+                                                <span
+                                                    class="text-black bg-yellow-400 rounded-md px-4 py-2 text-md text-center inline-block">
                                                     {{ $entrevista->estado_nombre }}
                                                 </span>
                                             @elseif ($entrevista->estado_id == 4)
-                                                <span class="text-white bg-red-700 rounded-md px-4 py-2 text-md text-center inline-block">
+                                                <span
+                                                    class="text-white bg-red-700 rounded-md px-4 py-2 text-md text-center inline-block">
                                                     {{ $entrevista->estado_nombre }}
                                                 </span>
                                             @elseif ($entrevista->estado_id == 5)
-                                                <span class="text-white bg-black rounded-md px-4 py-2 text-md text-center inline-block">
+                                                <span
+                                                    class="text-white bg-black rounded-md px-4 py-2 text-md text-center inline-block">
                                                     {{ $entrevista->estado_nombre }}
                                                 </span>
                                             @else
@@ -144,12 +150,12 @@
 
                         </table>
                     </div>
-                    @endif
+                @endif
 
-                    <!-- Paginación -->
-                    <div class="py-4 px-5">
-                        {{ $entrevistas->links() }} <!-- Muestra la paginación de Livewire -->
-                    </div>
+                <!-- Paginación -->
+                <div class="py-4 px-5">
+                    {{ $entrevistas->links() }} <!-- Muestra la paginación de Livewire -->
+                </div>
             </div>
         </div>
     </section>

@@ -326,4 +326,7 @@ class Paciente extends Model
             return $disase->pivot->id == $certificadoId;
         })?->pivot;
     }
+
+    
 }
+

@@ -213,7 +213,7 @@
     <section class="seccionTab2 flex w-[95%] mx-auto gap-x-6 mb-8">
         {{-- TABLA PERS. QUE FINALIZA HOY --}}
         @livewire('patient.patient-list-fechas')
-        {{-- TABLA PACIENTES POR TIPO DE LICENCIA --}}
+        {{-- TABLA PACIENTES POR TIPO DE LICENCIA TOMA LOS CAMBIOS --}}
         <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm max-h-[36rem] overflow-y-auto">
             <h2 class="text-lg font-bold mb-2 text-gray-700">Pacientes por Tipo de Licencia</h2>
             @foreach ($agrupadosPorLicencia as $licencia)

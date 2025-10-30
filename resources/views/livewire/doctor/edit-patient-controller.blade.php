@@ -235,20 +235,9 @@
                 Actualizar Paciente
             </button>
 
-            {{-- Volver con confirmación --}}
-            <a href="#"
-               class="bg-[#42be31] text-white py-2 px-6 rounded-md hover:opacity-90"
-               x-data
-               x-on:click.prevent="
-                   Livewire.dispatch('confirm', {
-                       title: 'Salir sin guardar',
-                       text: '¿Seguro? Podrías perder cambios no guardados.',
-                       icon: 'warning',
-                       confirmText: 'Sí, salir',
-                       cancelText: 'Cancelar',
-                       action: 'go-dashboard'
-                   })
-               ">
+            {{-- Volver al Dashboard--}}
+            <a href="{{ route('dashboard') }}"
+            class="bg-[#42be31] text-white py-2 px-6 rounded-md hover:opacity-90">
                 Volver
             </a>
         </div>

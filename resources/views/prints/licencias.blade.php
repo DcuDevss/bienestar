@@ -1,0 +1,97 @@
+<!doctype html>
+<html>
+<head>
+  <meta charset="utf-8">
+  <title>Estadística — Licencias</title>
+  <style>
+    @media print { .no-print { display:none } }
+    body { font-family: "Segoe UI", Arial, sans-serif; font-size: 13px; color: #222; margin: 30px; background: #fff; }
+    .header { text-align: center; margin-bottom: 20px; }
+    .header img { width: 90px; height: auto; display: block; margin: 0 auto 8px; }
+    .header h1 { font-size: 20px; margin: 4px 0; font-weight: 700; color: #1e3a5f; }
+    .header h2 { font-size: 16px; margin: 0; color: #444; font-weight: 500; }
+    .filters { margin: 10px 0 18px; padding: 8px 12px; background: #f3f6fa; border-left: 4px solid #2d5986; border-radius: 4px; }
+    table { width: 100%; border-collapse: collapse; margin-top: 10px; }
+    th, td { border: 1px solid #ccc; padding: 8px 10px; }
+    th { background: #2d5986; color: #fff; font-weight: 600; text-align: left; font-size: 13px; }
+    tr:nth-child(even) td { background: #f9f9f9; }
+    .right { text-align: right; }
+    .footer { margin-top: 25px; text-align: right; font-size: 11px; color: #666; }
+    .no-print-btn { background: #2d5986; color: white; border: none; border-radius: 4px; padding: 8px 14px; cursor: pointer; margin-bottom: 12px; }
+    .no-print-btn:hover { background: #244a70; }
+  </style>
+</head>
+<body onload="window.print()">
+
+  <button class="no-print no-print-btn" onclick="window.print()">Imprimir / Guardar como PDF</button>
+
+  <div class="header">
+    <img src="{{ asset('assets/escudo_128x128.png') }}" alt="Escudo" width="90">
+    <h1>División Bienestar Policial</h1>
+    <h2>Estadística de Licencias</h2>
+  </div>
+
+  @php
+    use App\Models\Tipolicencia;
+    use App\Models\Ciudade;
+    use Carbon\Carbon;
+
+    // Normalizamos posibles formatos de filtros
+    $tiposIds  = collect($filtros['tipolicencia_ids'] ?? [])
+                  ->when(empty($filtros['tipolicencia_ids'] ?? null) && !empty($filtros['tipolicencia_id'] ?? null),
+                         fn($c) => collect([$filtros['tipolicencia_id']]));
+    $ciudsIds  = collect($filtros['ciudad_ids'] ?? [])
+                  ->when(empty($filtros['ciudad_ids'] ?? null) && !empty($filtros['ciudad_id'] ?? null),
+                         fn($c) => collect([$filtros['ciudad_id']]));
+
+    $tiposTxt  = $tiposIds->isNotEmpty()
+                  ? Tipolicencia::whereIn('id', $tiposIds)->pluck('name')->implode(', ')
+                  : 'Todas';
+
+    $ciudsTxt  = $ciudsIds->isNotEmpty()
+                  ? Ciudade::whereIn('id', $ciudsIds)->pluck('nombre')->implode(', ')
+                  : 'Todas';
+
+    $desdeTxt  = !empty($filtros['desde'] ?? null) ? Carbon::parse($filtros['desde'])->format('d-m-Y') : '—';
+    $hastaTxt  = !empty($filtros['hasta'] ?? null) ? Carbon::parse($filtros['hasta'])->format('d-m-Y') : '—';
+  @endphp
+
+  <div class="filters">
+    <strong>Filtros:</strong>
+    Tipo Licencia: {{ $tiposTxt }} |
+    Ciudad: {{ $ciudsTxt }} |
+    Desde: {{ $desdeTxt }} |
+    Hasta: {{ $hastaTxt }}
+  </div>
+
+  <table>
+    <thead>
+      <tr>
+        <th>Tipo Licencia</th>
+        <th>Ciudad</th>
+        <th class="right">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      @forelse($rows as $r)
+        <tr>
+          <td>{{ $r->tipolicencia }}</td>
+          <td>{{ $r->ciudad }}</td>
+          <td class="right">{{ $r->total }}</td>
+        </tr>
+      @empty
+        <tr><td colspan="3" class="right">Sin datos</td></tr>
+      @endforelse
+      <tr>
+        <td colspan="2"><strong>Total</strong></td>
+        <td class="right"><strong>{{ $total }}</strong></td>
+      </tr>
+    </tbody>
+  </table>
+
+  <div class="footer">
+    Generado automáticamente — {{ now()->format('d/m/Y H:i') }}
+  </div>
+
+</body>
+</html>

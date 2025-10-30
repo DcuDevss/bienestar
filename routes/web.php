@@ -47,6 +47,8 @@ use App\Livewire\Auditorias\AuditoriaList;
 use App\Models\Paciente;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
+use App\Livewire\Stats\LicenciasStats;
+use App\Http\Controllers\PrintReportsController;
 
 
 /*
@@ -179,3 +181,9 @@ Route::resource('roles', RoleController::class)->names('admin-roles');
 //Nuevo usuario
 Route::get('nuevo_usuario', [NuevoUsuarioController::class,'create'])->name('new-user');
 Route::post('nuevo_usuario', [NuevoUsuarioController::class,'store'])->name('new-user.store');
+
+//estadisticas
+Route::get('/estadisticas/licencias', LicenciasStats::class)->name('stats.licencias');
+
+Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
+     ->name('prints.licencias');

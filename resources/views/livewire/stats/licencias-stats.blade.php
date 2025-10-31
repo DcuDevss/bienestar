@@ -77,37 +77,80 @@
     </div>
   </div>
 
-  {{-- TABLA PRINCIPAL --}}
-  <div class="bg-slate-50 border border-gray-300 rounded-xl shadow overflow-x-auto">
-    <table class="w-full text-sm border-collapse">
-      <thead class="bg-[#2d5986] text-white">
+ {{-- TABLA PRINCIPAL (fila a fila) --}}
+<div class="bg-slate-50 border border-gray-300 rounded-xl shadow overflow-x-auto">
+  <table class="w-full text-sm border-collapse">
+    <thead class="bg-[#2d5986] text-white">
+      <tr>
+        <th class="p-3 text-left font-semibold text-base uppercase tracking-wide">Paciente</th>
+        <th class="p-3 text-left font-semibold text-base uppercase tracking-wide">DNI</th>
+        <th class="p-3 text-left font-semibold text-base uppercase tracking-wide">Ciudad</th>
+        <th class="p-3 text-left font-semibold text-base uppercase tracking-wide">Tipo Licencia</th>
+        <th class="p-3 text-left font-semibold text-base uppercase tracking-wide">Inicio</th>
+        <th class="p-3 text-left font-semibold text-base uppercase tracking-wide">Fin</th>
+      </tr>
+    </thead>
+    <tbody class="bg-white divide-y divide-gray-200">
+      @forelse($rows as $r)
+        <tr class="hover:bg-slate-100 transition">
+          <td class="p-3">{{ $r->apellido_nombre }}</td>
+          <td class="p-3">{{ $r->dni }}</td>
+          <td class="p-3">{{ $r->ciudad }}</td>
+          <td class="p-3">{{ $r->tipolicencia }}</td>
+          <td class="p-3">
+            {{ $r->fecha_inicio_licencia ? \Carbon\Carbon::parse($r->fecha_inicio_licencia)->format('d-m-Y H:i') : '—' }}
+          </td>
+          <td class="p-3">
+            {{ $r->fecha_finalizacion_licencia ? \Carbon\Carbon::parse($r->fecha_finalizacion_licencia)->format('d-m-Y H:i') : '—' }}
+          </td>
+        </tr>
+      @empty
         <tr>
-          <th class="p-3 text-left font-semibold text-base uppercase tracking-wide">Tipo Licencia</th>
-          <th class="p-3 text-left font-semibold text-base uppercase tracking-wide">Ciudad</th>
-          <th class="p-3 text-right font-semibold text-base uppercase tracking-wide">Total</th>
+          <td colspan="6" class="p-4 text-center text-gray-500">Sin resultados</td>
+        </tr>
+      @endforelse
+    </tbody>
+  </table>
+</div>
+
+{{-- Paginación de filas --}}
+<div class="mt-4">
+  {{ $rows->links() }}
+</div>
+
+{{-- RESUMEN: Totales por tipo --}}
+<div class="mt-8 bg-white border border-gray-200 rounded-xl shadow">
+  <div class="p-4 border-b">
+    <h3 class="text-lg font-semibold text-gray-700">Totales por tipo de licencia</h3>
+  </div>
+  <div class="overflow-x-auto">
+    <table class="w-full text-sm">
+      <thead class="bg-slate-100">
+        <tr>
+          <th class="p-3 text-left font-semibold">Tipo de Licencia</th>
+          <th class="p-3 text-right font-semibold">Total</th>
         </tr>
       </thead>
-      <tbody class="bg-white divide-y divide-gray-200">
-        @forelse($rows as $r)
-          <tr class="hover:bg-slate-100 transition">
-            <td class="p-3">{{ $r->tipolicencia }}</td>
-            <td class="p-3">{{ $r->ciudad }}</td>
-            <td class="p-3 text-right font-semibold">{{ $r->total }}</td>
+      <tbody>
+        @forelse($totales as $t)
+          <tr class="border-t">
+            <td class="p-3">{{ $t->tipolicencia }}</td>
+            <td class="p-3 text-right font-semibold">{{ $t->total }}</td>
           </tr>
         @empty
           <tr>
-            <td colspan="3" class="p-4 text-center text-gray-500">Sin resultados</td>
+            <td colspan="2" class="p-4 text-center text-gray-500">Sin datos</td>
           </tr>
         @endforelse
-      </tbody>
-      <tfoot class="bg-slate-100">
-        <tr>
-          <td colspan="2" class="p-3 text-right font-semibold text-gray-700">TOTAL</td>
-          <td class="p-3 text-right font-bold text-[#2d5986]">{{ $total }}</td>
+        <tr class="bg-slate-50 border-t">
+          <td class="p-3 text-right font-semibold">TOTAL GENERAL</td>
+          <td class="p-3 text-right font-bold text-[#2d5986]">{{ $totalGeneral }}</td>
         </tr>
-      </tfoot>
+      </tbody>
     </table>
   </div>
+</div>
+
 
   {{-- PAGINACIÓN --}}
 <div class="mt-4">

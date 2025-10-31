@@ -11,6 +11,7 @@
     .header h1 { font-size: 20px; margin: 4px 0; font-weight: 700; color: #1e3a5f; }
     .header h2 { font-size: 16px; margin: 0; color: #444; font-weight: 500; }
     .filters { margin: 10px 0 18px; padding: 8px 12px; background: #f3f6fa; border-left: 4px solid #2d5986; border-radius: 4px; }
+    .section-title { margin-top: 18px; font-weight: 700; color: #1e3a5f; }
     table { width: 100%; border-collapse: collapse; margin-top: 10px; }
     th, td { border: 1px solid #ccc; padding: 8px 10px; }
     th { background: #2d5986; color: #fff; font-weight: 600; text-align: left; font-size: 13px; }
@@ -64,33 +65,62 @@
     Hasta: {{ $hastaTxt }}
   </div>
 
+  {{-- DETALLE DE PACIENTES --}}
+  <h3 class="section-title">Detalle de pacientes</h3>
   <table>
     <thead>
       <tr>
+        <th>Paciente</th>
+        <th>DNI</th>
         <th>Tipo Licencia</th>
         <th>Ciudad</th>
-        <th class="right">Total</th>
+        <th>Desde</th>
+        <th>Hasta</th>
       </tr>
     </thead>
     <tbody>
       @forelse($rows as $r)
         <tr>
+          <td>{{ $r->apellido_nombre }}</td>
+          <td>{{ $r->dni }}</td>
           <td>{{ $r->tipolicencia }}</td>
           <td>{{ $r->ciudad }}</td>
-          <td class="right">{{ $r->total }}</td>
+          <td>{{ $r->fecha_inicio_licencia ? \Carbon\Carbon::parse($r->fecha_inicio_licencia)->format('d-m-Y H:i') : '—' }}</td>
+          <td>{{ $r->fecha_finalizacion_licencia ? \Carbon\Carbon::parse($r->fecha_finalizacion_licencia)->format('d-m-Y H:i') : '—' }}</td>
         </tr>
       @empty
-        <tr><td colspan="3" class="right">Sin datos</td></tr>
+        <tr><td colspan="6" class="right">Sin datos</td></tr>
+      @endforelse
+    </tbody>
+  </table>
+
+  {{-- RESUMEN POR TIPO DE LICENCIA --}}
+  <h3 class="section-title">Resumen por tipo de licencia</h3>
+  <table>
+    <thead>
+      <tr>
+        <th>Tipo Licencia</th>
+        <th class="right">Total</th>
+      </tr>
+    </thead>
+    <tbody>
+      @forelse($totales as $t)
+        <tr>
+          <td>{{ $t->tipolicencia }}</td>
+          <td class="right">{{ $t->total }}</td>
+        </tr>
+      @empty
+        <tr><td colspan="2" class="right">Sin datos</td></tr>
       @endforelse
       <tr>
-        <td colspan="2"><strong>Total</strong></td>
-        <td class="right"><strong>{{ $total }}</strong></td>
+        <td><strong>Total General</strong></td>
+        <td class="right"><strong>{{ $totalGeneral }}</strong></td>
       </tr>
     </tbody>
   </table>
 
   <div class="footer">
-    Generado automáticamente — {{ now()->format('d/m/Y H:i') }}
+    Generado el — {{ now()->format('d/m/Y H:i') }}
   </div>
 
 </body>

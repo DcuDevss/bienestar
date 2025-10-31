@@ -14,61 +14,81 @@ class PrintReportsController extends Controller
         $pivot  = 'disase_paciente';
         $pacTbl = 'pacientes';
 
-        // Obtener arrays de filtros múltiples
+        // Arrays de filtros múltiples
         $tipolicenciaIds = (array) $req->input('tipolicencia_ids', []);
         $ciudadIds       = (array) $req->input('ciudad_ids', []);
 
-        // Base query agrupada
-        $q = DB::table($pivot)
-            ->join($pacTbl, "$pacTbl.id", '=', "$pivot.paciente_id")
+        // 🧩 1️⃣ — DETALLE (PACIENTES)
+        $rowsBase = DB::table("$pivot as dp")
+            ->join("$pacTbl as p", 'p.id', '=', 'dp.paciente_id')
+            ->leftJoin('tipolicencias as tl', 'tl.id', '=', 'dp.tipolicencia_id')
+            ->leftJoin('ciudades as c', 'c.id', '=', 'p.ciudad_id')
             ->select(
-                "$pivot.tipolicencia_id",
-                "$pacTbl.ciudad_id",
-                DB::raw('COUNT(*) as total')
+                'p.apellido_nombre',
+                'p.dni',
+                DB::raw('COALESCE(c.nombre, "Sin ciudad") as ciudad'),
+                DB::raw('COALESCE(tl.name, "Sin tipo") as tipolicencia'),
+                'dp.fecha_inicio_licencia',
+                'dp.fecha_finalizacion_licencia'
             )
-            // Filtros múltiples
-            ->when(!empty($tipolicenciaIds), fn($qq) =>
-                $qq->whereIn("$pivot.tipolicencia_id", $tipolicenciaIds)
+            ->when(!empty($tipolicenciaIds), fn($q) =>
+                $q->whereIn('dp.tipolicencia_id', $tipolicenciaIds)
             )
-            ->when(!empty($ciudadIds), fn($qq) =>
-                $qq->whereIn("$pacTbl.ciudad_id", $ciudadIds)
+            ->when(!empty($ciudadIds), fn($q) =>
+                $q->whereIn('p.ciudad_id', $ciudadIds)
             )
-            // Filtros por fecha
-            ->when($req->filled('desde') || $req->filled('hasta'), function ($qq) use ($pivot, $req) {
+            ->when($req->filled('desde') || $req->filled('hasta'), function ($q) use ($req) {
                 $desde = $req->input('desde', '1900-01-01');
                 $hasta = $req->input('hasta', '2999-12-31');
-                $qq->whereDate("$pivot.fecha_inicio_licencia", '<=', $hasta)
-                   ->where(function($w) use ($pivot, $desde) {
-                       $w->whereNull("$pivot.fecha_finalizacion_licencia")
-                         ->orWhereDate("$pivot.fecha_finalizacion_licencia", '>=', $desde);
-                   });
+                $q->whereDate('dp.fecha_inicio_licencia', '<=', $hasta)
+                  ->where(function($w) use ($desde) {
+                      $w->whereNull('dp.fecha_finalizacion_licencia')
+                        ->orWhereDate('dp.fecha_finalizacion_licencia', '>=', $desde);
+                  });
             })
-            ->groupBy("$pivot.tipolicencia_id", "$pacTbl.ciudad_id");
+            ->orderBy('tl.name')
+            ->orderBy('p.apellido_nombre')
+            ->get();
 
-        // Obtener resultados
-        $rowsBase = $q->get();
-        $total    = $rowsBase->sum('total');
+        // 🧮 2️⃣ — TOTALES POR TIPO DE LICENCIA
+        $totales = DB::table("$pivot as dp")
+            ->join("$pacTbl as p", 'p.id', '=', 'dp.paciente_id')
+            ->leftJoin('tipolicencias as tl', 'tl.id', '=', 'dp.tipolicencia_id')
+            ->select(
+                DB::raw('COALESCE(tl.name, "Sin tipo") as tipolicencia'),
+                DB::raw('COUNT(*) as total')
+            )
+            ->when(!empty($tipolicenciaIds), fn($q) =>
+                $q->whereIn('dp.tipolicencia_id', $tipolicenciaIds)
+            )
+            ->when(!empty($ciudadIds), fn($q) =>
+                $q->whereIn('p.ciudad_id', $ciudadIds)
+            )
+            ->when($req->filled('desde') || $req->filled('hasta'), function ($q) use ($req) {
+                $desde = $req->input('desde', '1900-01-01');
+                $hasta = $req->input('hasta', '2999-12-31');
+                $q->whereDate('dp.fecha_inicio_licencia', '<=', $hasta)
+                  ->where(function($w) use ($desde) {
+                      $w->whereNull('dp.fecha_finalizacion_licencia')
+                        ->orWhereDate('dp.fecha_finalizacion_licencia', '>=', $desde);
+                  });
+            })
+            ->groupBy('tl.name')
+            ->orderBy('tl.name')
+            ->get();
 
-        // Mapear nombres
-        $mapCiudades      = Ciudade::pluck('nombre', 'id');
-        $mapTipolicencias = Tipolicencia::pluck('name', 'id');
+        $totalGeneral = $totales->sum('total');
 
-        // Decorar filas
-        $rows = $rowsBase->map(function ($r) use ($mapCiudades, $mapTipolicencias) {
-            $r->ciudad        = $mapCiudades[$r->ciudad_id] ?? 'Sin ciudad';
-            $r->tipolicencia  = $mapTipolicencias[$r->tipolicencia_id] ?? 'Sin tipo';
-            return $r;
-        });
-
-        // Vista PDF/Impresión
+        // 🖨️ Render de la vista PDF
         return view('prints.licencias', [
-            'rows'    => $rows,
-            'total'   => $total,
-            'filtros' => [
-                'desde'             => $req->desde,
-                'hasta'             => $req->hasta,
-                'tipolicencia_ids'  => $tipolicenciaIds,
-                'ciudad_ids'        => $ciudadIds,
+            'rows'         => $rowsBase,
+            'totales'      => $totales,
+            'totalGeneral' => $totalGeneral,
+            'filtros'      => [
+                'desde'            => $req->desde,
+                'hasta'            => $req->hasta,
+                'tipolicencia_ids' => $tipolicenciaIds,
+                'ciudad_ids'       => $ciudadIds,
             ],
         ]);
     }

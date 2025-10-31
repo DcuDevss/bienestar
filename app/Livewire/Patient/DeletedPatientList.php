@@ -77,7 +77,7 @@ class DeletedPatientList extends Component
     /**
      * ❌ Elimina un paciente permanentemente
      */
-    public function forceDelete($id)
+   /*  public function forceDelete($id)
     {
         $paciente = Paciente::withTrashed()->findOrFail($id);
         $paciente->forceDelete();
@@ -90,5 +90,5 @@ class DeletedPatientList extends Component
         );
 
         $this->resetPage('deletedPage');
-    }
+    } */
 }

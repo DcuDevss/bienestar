@@ -125,7 +125,7 @@
 
                                                 {{-- Botón Eliminar permanente (solo super-admin) --}}
                                                 @role('super-admin')
-                                                    <button
+                                                   {{--  <button
                                                         x-on:click="
                 Swal.fire({
                     title: '¿Eliminar permanentemente?',
@@ -144,7 +144,7 @@
             "
                                                         class="w-24 text-[12px] px-3 py-1 bg-red-700 hover:bg-red-600 text-white rounded transition">
                                                         Borrar
-                                                    </button>
+                                                    </button> --}}
                                                 @endrole
                                             </div>
 

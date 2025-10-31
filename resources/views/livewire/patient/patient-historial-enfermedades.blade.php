@@ -244,6 +244,7 @@
                     <select id="tipodelicencia" class="w-full rounded cursor-pointer" wire:model="tipodelicencia">
                         <option value="" selected>{{ __('Seleccione una opción') }}</option>
                         <option value="Enfermedad común">{{ __('Enfermedad común') }}</option>
+                        <option value="art">{{ __('A.R.T') }}</option>
                         <option value="Enfermedad largo tratamiento">{{ __('Enfermedad largo tratamiento') }}</option>
                         <option value="Atención familiar">{{ __('Atención familiar') }}</option>
                         <option value="Donación de sangre">{{ __('Donación de sangre') }}</option>
@@ -305,9 +306,9 @@
                 </div>
 
                 <div>
-                    <label for="art" class="block text-sm font-medium text-gray-700">{{ __('art') }}</label>
+                    <label for="art" class="block text-sm font-medium text-gray-700">{{ __('Nro de Siniestro') }}</label>
                     <input id="art" class="w-full rounded cursor-pointer" type="text"
-                        placeholder="{{ __('ingrese art') }}" wire:model="art" />
+                        placeholder="{{ __('ingrese nro Siniestro') }}" wire:model="art" />
                     <x-input-error for="art" />
                 </div>
             </div>

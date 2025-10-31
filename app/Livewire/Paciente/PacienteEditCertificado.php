@@ -168,3 +168,4 @@ class PacienteEditCertificado extends Component
         ]);
     }
 }
+/*modal*/

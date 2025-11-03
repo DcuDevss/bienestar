@@ -144,7 +144,7 @@
                                         {{ __('Dto. 564/18 lic. extraordinaria ley 911-art 9') }}</option>
                                 </select>
                                 <x-input-error for="tipodelicencia" />
-                            </div>
+                            </div> 
 
                             <div>
                                 <label for="derivacion_psiquiatrica"

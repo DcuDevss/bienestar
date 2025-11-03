@@ -49,8 +49,8 @@
   <thead>
     <tr>
       <th>Fecha</th>
-      <th>Paciente</th>
       <th>Jerarquía</th>
+      <th>Paciente</th>
       <th>Estado</th>
     </tr>
   </thead>
@@ -64,8 +64,8 @@
       @endphp
       <tr>
         <td>{{ \Carbon\Carbon::parse($r->fecha_ref)->format('d-m-Y') }}</td>
+         <td>{{ $jerNom }}</td>
         <td>{{ $pacNom }}</td>
-        <td>{{ $jerNom }}</td>
         <td>{{ $estNom }}</td>
       </tr>
     @empty

@@ -88,8 +88,8 @@
       <thead class="bg-[#2d5986] text-white">
         <tr>
           <th class="p-3 text-left font-semibold">Fecha</th>
-          <th class="p-3 text-left font-semibold">Paciente</th>
           <th class="p-3 text-left font-semibold">Jerarquía</th>
+          <th class="p-3 text-left font-semibold">Paciente</th>
           <th class="p-3 text-left font-semibold">Estado</th>
         </tr>
       </thead>
@@ -98,13 +98,12 @@
           <tr class="hover:bg-slate-100">
             <td class="p-3">{{ \Carbon\Carbon::parse($r->fecha_ref)->format('d-m-Y') }}</td>
             <td class="p-3">
-              {{ $mapPacientes[$r->paciente_id] ?? ('ID '.$r->paciente_id) }}
-            </td>
-            <td class="p-3">
                 @php $jid = $mapPacienteJerarId[$r->paciente_id] ?? null; @endphp
                 {{ $jid ? ($mapJerarquias[$jid] ?? ('#'.$jid)) : 'Sin dato' }}
             </td>
-
+            <td class="p-3">
+              {{ $mapPacientes[$r->paciente_id] ?? ('ID '.$r->paciente_id) }}
+            </td>
             <td class="p-3">{{ $mapEstados[$r->estado_entrevista_id] ?? ('#'.$r->estado_entrevista_id) }}</td>
           </tr>
         @empty

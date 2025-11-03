@@ -235,11 +235,11 @@
                 Actualizar Paciente
             </button>
 
-            {{-- Volver con confirmación --}}
-        <a href="{{ route('dashboard') }}"
-        class="bg-[#42be31] text-white py-2 px-6 rounded-md hover:opacity-90">
-            Volver
-        </a>
+            {{-- Volver al Dashboard--}}
+            <a href="{{ route('dashboard') }}"
+            class="bg-[#42be31] text-white py-2 px-6 rounded-md hover:opacity-90">
+                Volver
+            </a>
         </div>
     </form>
 

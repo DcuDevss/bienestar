@@ -319,11 +319,13 @@
                     @endif
                     <ul class="">
                         <!-- CONTROL PACIENTE -->
+                        @role('enfermero')
                         <li class="py-2 text-center">
                             @can('enfermero.enfermero-historial')
                                 @livewire('enfermero.control-paciente', ['paciente' => $paciente])
                             @endcan
                         </li>
+                        @endrole
                         <!-- HISTORIAL DE CONTROL -->
                         <li class="text-center">
                             @can('enfermero.enfermero-historial')

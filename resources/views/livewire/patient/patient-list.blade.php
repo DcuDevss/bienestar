@@ -241,7 +241,7 @@
 </div>
 <script>
     function toggleDropdown(event, patientId) {
-        // Cerrar cualquier otro dropdown abierto
+        // Cerrar cualquier otro dropdown abierto cambios 
         const dropdowns = document.querySelectorAll('[id^="dropdown-"]');
         dropdowns.forEach(function(dropdown) {
             if (dropdown.id !== `dropdown-${patientId}`) {

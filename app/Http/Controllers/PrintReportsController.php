@@ -9,7 +9,7 @@ use App\Models\Jerarquia;
 use App\Models\EstadoEntrevista;
 use App\Models\Ciudade;
 use App\Models\Tipolicencia;
-use Carbon\Carbon
+use Carbon\Carbon;
 
 class PrintReportsController extends Controller
 {

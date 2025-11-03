@@ -211,7 +211,7 @@
     </section>
 
     <section class="seccionTab2 flex w-[95%] mx-auto gap-x-6 mb-8">
-        {{-- TABLA PERS. QUE FINALIZA HOY --}}
+        {{-- TABLA PERS. QUE FINALIZA HOY se realizan cambios--}}
         @livewire('patient.patient-list-fechas')
         {{-- TABLA PACIENTES POR TIPO DE LICENCIA TOMA LOS CAMBIOS --}}
         <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm max-h-[36rem] overflow-y-auto">

@@ -43,46 +43,48 @@
                                         {{ \Carbon\Carbon::parse($control->fecha_atencion)->format('d-m-Y H:i:s') }}
                                     </td>
                                     <td class="tiBody px-4 py-1 text-gray-300">{{ $control->detalles }}</td>
+
                                     <td class="tiBody px-4 py-1 flex flex-wrap gap-2">
+                                        @role('enfermero')
                                         <button @click="editModal = true"
                                             wire:click="openEditModal({{ $control->id }})"
                                             class="px-4 py-[2px] bg-yellow-500 hover:bg-yellow-600 text-white rounded">
                                             Editar
                                         </button>
+                                        @endrole
                                         @role('super-admin')
-                                           <button
-    x-data
-    x-on:click.prevent="
-      Swal.fire({
-        title: '¿Eliminar control?',
-        text: 'Esta acción no se puede deshacer.',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonText: 'Sí, eliminar',
-        cancelButtonText: 'Cancelar',
-        reverseButtons: true,
-      }).then((r) => {
-        if (r.isConfirmed) {
-          $wire.delete({{ $control->id }}).then(() => {
-            Swal.fire({
-              title: 'Eliminado',
-              text: 'Control eliminado correctamente.',
-              icon: 'success',
-              toast: true,
-              position: 'top-end',
-              timer: 2500,
-              showConfirmButton: false,
-              timerProgressBar: true,
-            });
-          });
-        }
-      });
-    "
-    class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
->
-  Eliminar
-</button>
-
+                                        <button
+                                                x-data
+                                                x-on:click.prevent="
+                                                Swal.fire({
+                                                    title: '¿Eliminar control?',
+                                                    text: 'Esta acción no se puede deshacer.',
+                                                    icon: 'warning',
+                                                    showCancelButton: true,
+                                                    confirmButtonText: 'Sí, eliminar',
+                                                    cancelButtonText: 'Cancelar',
+                                                    reverseButtons: true,
+                                                }).then((r) => {
+                                                    if (r.isConfirmed) {
+                                                    $wire.delete({{ $control->id }}).then(() => {
+                                                        Swal.fire({
+                                                        title: 'Eliminado',
+                                                        text: 'Control eliminado correctamente.',
+                                                        icon: 'success',
+                                                        toast: true,
+                                                        position: 'top-end',
+                                                        timer: 2500,
+                                                        showConfirmButton: false,
+                                                        timerProgressBar: true,
+                                                        });
+                                                    });
+                                                    }
+                                                });
+                                                "
+                                                class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
+                                            >
+                                            Eliminar
+                                        </button>
                                         @endrole
                                     </td>
                                 </tr>

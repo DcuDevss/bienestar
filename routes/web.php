@@ -51,8 +51,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Livewire\Stats\LicenciasStats;
 use App\Livewire\Stats\PostulantesStats;
 use App\Http\Controllers\PrintReportsController;
-
-
+use App\Livewire\Patient\DeletedPatientList;
 
 /*
 |--------------------------------------------------------------------------

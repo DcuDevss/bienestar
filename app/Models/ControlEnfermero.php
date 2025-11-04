@@ -19,9 +19,12 @@ class ControlEnfermero extends Model
         'fecha_atencion',
         'detalles',
         'paciente_id',
+        'peso',
+        'altura',
+        'talla',
 
     ];
-  
+
 
 
     public function paciente()

@@ -275,10 +275,10 @@
                             @endcan
 
                             <!-- Enlace a Estadísticas -->
-                            <a href="{{ route('stats.licencias') }}"
+                           {{--  <a href="{{ route('stats.licencias') }}"
                                 class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
                                 Estadísticas
-                            </a>
+                            </a> --}}
                         </div>
                     </div>
                 </div>

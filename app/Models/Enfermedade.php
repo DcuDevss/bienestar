@@ -50,9 +50,16 @@ class Enfermedade extends Model
         return $this->hasMany(Enfermedade::class, 'enfermedade_id');
     } */
 
-    public function pacientes()
+    public function enfermedades()
     {
-        return $this->belongsToMany(Paciente::class)->withPivot('detalle_diagnostico', 'fecha_atencion_enfermedad','estado_enfermedad','derivacion_psiquiatrica', 'fecha_finalizacion_enfermedad', 'horas_reposo','motivo_consulta', 'imgen_enfermedad', 'pdf_enfermedad', 'medicacion', 'dosis', 'detalle_medicacion', 'nro_osef', 'art', 'tipodelicencia');
+        return $this->belongsToMany(Enfermedade::class, 'enfermedade_paciente')
+            ->withPivot([
+                'id', 'detalle_diagnostico', 'fecha_atencion_enfermedad','estado_enfermedad',
+                'derivacion_psiquiatrica','fecha_finalizacion_enfermedad','horas_reposo',
+                'motivo_consulta','imgen_enfermedad','pdf_enfermedad','medicacion','dosis',
+                'detalle_medicacion','nro_osef','art','tipodelicencia'
+            ])
+            ->withTimestamps();
     }
 
     /* public function pacientes()

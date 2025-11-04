@@ -151,14 +151,14 @@
                     </div>
             </div>
                 {{-- Crear Estadisticas --}}
-                <div class="flex justify-end w-full mt-4">
+              {{--   <div class="flex justify-end w-full mt-4">
                     <div class="ml-auto">
                         <a href="{{ route('stats.postulantes-stats') }}"
                             class="inline-flex items-center gap-2 rounded-md bg-[#2d5986] px-6 py-2.5 font-medium text-white shadow hover:bg-[#244a70] transition">
                             Crear Estadísticas
                         </a>
                      </div>
-                </div>
+                </div> --}}
         </div>
     </section>
 </div>

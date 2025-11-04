@@ -1,5 +1,4 @@
 <div>
-
     <header class="px-3 bg-white">
         <h2 class="font-bold text-center text-gray-800 capitalize text-2xl mb-2 flex items-center">
             <div class="">
@@ -50,7 +49,6 @@
             @endforelse
         </ul>
     </div>
-
 
     <x-dialog-modal wire:model="modal">
 
@@ -142,13 +140,13 @@
                     <x-input-error for="fecha_finalizacion_licencia" />
                 </div>
 
-                {{-- <div>
+                <div>
                     <label for="horas_salud"
                         class="block text-sm font-medium text-gray-700">{{ __('Horas de licencias medica') }}</label>
                     <input id="horas_salud" class="w-full rounded cursor-pointer" type="number"
-                        placeholder="{{ __('ingrese horas de salud') }}" wire:model="horas_salud" />
+                        placeholder="{{ __('Opcional') }}" wire:model="horas_salud" />
                     <x-input-error for="horas_salud" />
-                </div> --}}
+                </div>
 
                 <div class="">
                     <label for="suma_salud" class="block text-sm font-medium text-gray-700">

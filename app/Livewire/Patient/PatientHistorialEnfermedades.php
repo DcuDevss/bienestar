@@ -3,67 +3,78 @@
 namespace App\Livewire\Patient;
 
 use Livewire\Component;
-use App\Models\Disase;
-use App\Models\Enfermedade;
-use App\Models\Paciente;
-use Illuminate\Support\Str;
-use App\Models\Tipolicencia;
-use Livewire\WithFileUploads;
-use Carbon\Carbon;
 use Livewire\WithPagination;
+use Livewire\WithFileUploads;
 use Livewire\Attributes\Url;
+
+use App\Models\Paciente;
+use App\Models\Enfermedade;
+
+use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Storage;
-
+use Illuminate\Support\Facades\DB;
+use Livewire\Attributes\On;
+use Carbon\Carbon;
 
 class PatientHistorialEnfermedades extends Component
 {
-    use WithPagination;
-    use WithFileUploads;
+    use WithPagination, WithFileUploads;
 
-    #[Url]
-    public $search = '';
+    #[Url] public $search = '';
     public $perPage = 4;
-
     public $sortAsc = true;
     public $sortField = 'name';
 
-    public $enfermedadeId;
-    public $name, $fecha_enfermedad, $tipo_enfermedad, $fecha_finalizacion, $fecha_atencion, $activo, $tipolicencia_id,
-        $enfermedade_id, $paciente_enfermedades, $patient, $enfermedade, $archivo, $art;
+    // contexto
+    public $pacienteId;
 
+    // modal & selección
     public $modal = false;
+    public $pivotId = null;                 // fila exacta del pivot a editar
+    public $original_enfermedade_id = null; // respaldo por si cambian la enfermedad
+    public $enfermedade_id = null;          // seleccionada en el modal
+    public $name = null;                    // para mostrar nombre en el modal
 
-    public $detalle_diagnostico, $fecha_atencion_enfermedad, $fecha_finalizacion_enfermedad, $horas_reposo, $pdf_enfermedad,
-        $imgen_enfermedad, $medicacion, $dosis, $detalle_medicacion, $nro_osef, $tipodelicencia, $pacienteId, $patient_disases, $derivacion_psiquiatrica, $motivo_consulta;
+    // campos pivot
+    public $detalle_diagnostico,
+           $fecha_atencion_enfermedad,
+           $fecha_finalizacion_enfermedad,
+           $horas_reposo,
+           $pdf_enfermedad,
+           $imgen_enfermedad,
+           $medicacion,
+           $dosis,
+           $detalle_medicacion,
+           $nro_osef,
+           $tipodelicencia,
+           $derivacion_psiquiatrica,
+           $motivo_consulta,
+           $art;
 
-    // --- Autocomplete dentro del modal ---
-    public $nameSearch = '';          // lo que escribe en "Nombre" dentro del modal
-    public $namePickerOpen = false;   // visibilidad del dropdown
-    public $nameOptions = [];         // resultados (id, name, codigo)
-    public $nameIndex = 0;            // navegación con teclado
-
-    // Para mover pivot si cambian de enfermedad en el modal
-    public $pivotId = null;
-    public $original_enfermedade_id = null;
+    // Autocomplete dentro del modal
+    public $nameSearch = '';        // lo que escribe en "Nombre"
+    public $namePickerOpen = false;
+    public $nameOptions = [];
+    public $nameIndex = 0;
 
     protected $rules = [
-        'enfermedade_id' => 'nullable',
-        'name' => 'nullable',
-        'detalle_diagnostico' => 'nullable',
-        'fecha_atencion_enfermedad' => 'nullable',
-        'fecha_finalizacion_enfermedad' => 'nullable',
-        'horas_reposo' => 'nullable',
-        'pdf_enfermedad' => 'nullable|file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
-        'imgen_enfermedad' => 'nullable|file',
-        'medicacion' => 'nullable',
-        'dosis' => 'nullable',
-        'derivacion_psiquiatrica' => 'nullable',
-        'motivo_consulta' => 'nullable',
-        'detalle_medicacion' => 'nullable',
-        'nro_osef' => 'nullable',
-        'art' => 'nullable',
-        'tipodelicencia' => 'nullable',
+        'enfermedade_id'                => 'nullable|integer|exists:enfermedades,id',
+        'name'                          => 'nullable|string|min:1',
+        'detalle_diagnostico'           => 'nullable|string',
+        'fecha_atencion_enfermedad'     => 'nullable', // si querés estricta: date
+        'fecha_finalizacion_enfermedad' => 'nullable', // idem
+        'horas_reposo'                  => 'nullable|integer',
+        'pdf_enfermedad'                => 'nullable|file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
+        'imgen_enfermedad'              => 'nullable|file|mimes:png,jpg,jpeg,gif|max:8192',
+        'medicacion'                    => 'nullable|string',
+        'dosis'                         => 'nullable|string',
+        'derivacion_psiquiatrica'       => 'nullable|string',
+        'motivo_consulta'               => 'nullable|string',
+        'detalle_medicacion'            => 'nullable|string',
+        'nro_osef'                      => 'nullable|string',
+        'art'                           => 'nullable|string',
+        'tipodelicencia'                => 'nullable|string',
     ];
 
     public function mount($paciente)
@@ -71,209 +82,266 @@ class PatientHistorialEnfermedades extends Component
         $this->pacienteId = $paciente;
     }
 
-    /** Abre el modal con los datos de la enfermedad (y prepara el autocomplete) */
+    /**
+     * MODO LEGADO: abre por id de enfermedad (puede traer "la primera" relación).
+     * Lo dejamos por compatibilidad, pero para editar un episodio puntual
+     * usá SIEMPRE openEditByPivot($pivotId).
+     */
+    #[On('ui.open-edit')]
+    public function onUiOpenEdit($payload = [])
+    {
+        // reusa la lógica de openEditByPivot
+        $this->openEditByPivot($payload['pivotId'] ?? null);
+    }
+    #[On('ui.open-edit')]
+    public function dbg($payload = []) {
+        $this->dispatch('swal', title:'Evento', text: json_encode($payload), icon:'info');
+    }
+
+    public function addDisase()
+    {
+        // compat temporal: si algo dispara addDisase, redirigimos al flujo correcto
+        return $this->editDisase();
+    }
+
     public function editModalDisase($enfermedadeId)
     {
-        Log::info("➡ Entró a editModalDisase con ID recibido: {$enfermedadeId}");
+        Log::info("➡ editModalDisase (LEGACY) con enfermedad_id={$enfermedadeId}");
 
-        $paciente = Paciente::with(['enfermedades' => function ($query) use ($enfermedadeId) {
-            $query->where('enfermedades.id', $enfermedadeId);
-        }])->find($this->pacienteId);
+        $paciente = Paciente::with(['enfermedades' => fn($q) =>
+            $q->where('enfermedades.id', $enfermedadeId)
+        ])->find($this->pacienteId);
 
-        Log::info("📌 Paciente buscado", [
-            'pacienteId' => $this->pacienteId,
-            'enfermedades_count' => $paciente?->enfermedades?->count()
-        ]);
-
-        if ($paciente && $paciente->enfermedades->isNotEmpty()) {
-            $enf = $paciente->enfermedades->first();
-
-            Log::info("✅ Enfermedad encontrada", [
-                'id'    => $enf->id,
-                'name'  => $enf->name,
-                'pivot' => $enf->pivot?->toArray()
-            ]);
-
-            // ... tu código original
-            $this->name  = $enf->name;
-            $this->enfermedade_id = $enf->id;
-            $this->original_enfermedade_id = $enf->id;
-            $this->pivotId = $enf->pivot->id ?? null;
-
-            $this->fecha_atencion_enfermedad     = $enf->pivot->fecha_atencion_enfermedad ?? null;
-            $this->detalle_medicacion            = $enf->pivot->detalle_medicacion ?? null;
-            $this->fecha_finalizacion_enfermedad = $enf->pivot->fecha_finalizacion_enfermedad ?? null;
-            $this->horas_reposo                  = $enf->pivot->horas_reposo ?? null;
-            $this->medicacion                    = $enf->pivot->medicacion ?? null;
-            $this->dosis                         = $enf->pivot->dosis ?? null;
-            $this->nro_osef                      = $enf->pivot->nro_osef ?? null;
-            $this->art                           = $enf->pivot->art ?? null;
-            $this->detalle_diagnostico           = $enf->pivot->detalle_diagnostico ?? null;
-            $this->tipodelicencia                = $enf->pivot->tipodelicencia ?? null;
-            $this->derivacion_psiquiatrica       = $enf->pivot->derivacion_psiquiatrica ?? null;
-            $this->motivo_consulta       = $enf->pivot->motivo_consulta ?? null;
-
-
-            $this->modal = true;
-
-            $this->nameSearch = '';
-            $this->namePickerOpen = false;
-            $this->nameOptions = [];
-
-            $this->openNamePicker();
-        } else {
+        if (!$paciente || $paciente->enfermedades->isEmpty()) {
             Log::warning("⚠ No se encontró enfermedad para el paciente", [
                 'pacienteId' => $this->pacienteId,
                 'enfermedadeId' => $enfermedadeId
             ]);
+            $this->dispatch('swal', title:'Error', text:'No se encontró el registro.', icon:'error');
+            return;
         }
+
+        $rel = $paciente->enfermedades->first();
+        $this->hydrateFromRelation($rel);
     }
 
-    /** Guardar cambios del modal */
+    /**
+     * 👉 MÉTODO RECOMENDADO: abre por id del PIVOT (edición exacta).
+     */
+    public function openEditByPivot(...$args)
+    {
+        $pivotId = $args[0] ?? null;
+
+        if (empty($pivotId)) {
+            $this->dispatch('swal', title:'Error', text:'No se recibió el ID del episodio (pivot).', icon:'error');
+            return;
+        }
+
+        $this->pivotId = (int) $pivotId;
+
+        // pivot directo (y validación de pertenencia al paciente)
+        $pivot = DB::table('enfermedade_paciente')->where('id', $this->pivotId)->first();
+        if (!$pivot) {
+            $this->dispatch('swal', title:'Error', text:'No se encontró el registro a editar.', icon:'error');
+            return;
+        }
+        if ((int) $pivot->paciente_id !== (int) $this->pacienteId) {
+            $this->dispatch('swal', title:'Error', text:'El episodio no corresponde a este paciente.', icon:'error');
+            return;
+        }
+
+        $rel = \App\Models\Enfermedade::find($pivot->enfermedade_id);
+        if (!$rel) {
+            $this->dispatch('swal', title:'Error', text:'No se encontró la enfermedad asociada.', icon:'error');
+            return;
+        }
+
+        // finge relación para reusar tu hidratador
+        $rel->setRelation('pivot', (object) [
+            'id'                           => $pivot->id,
+            'enfermedade_id'               => $pivot->enfermedade_id,
+            'paciente_id'                  => $pivot->paciente_id,
+            'fecha_atencion_enfermedad'    => $pivot->fecha_atencion_enfermedad,
+            'fecha_finalizacion_enfermedad'=> $pivot->fecha_finalizacion_enfermedad,
+            'detalle_diagnostico'          => $pivot->detalle_diagnostico,
+            'detalle_medicacion'           => $pivot->detalle_medicacion,
+            'horas_reposo'                 => $pivot->horas_reposo,
+            'medicacion'                   => $pivot->medicacion,
+            'dosis'                        => $pivot->dosis,
+            'nro_osef'                     => $pivot->nro_osef,
+            'art'                          => $pivot->art,
+            'tipodelicencia'               => $pivot->tipodelicencia,
+            'derivacion_psiquiatrica'      => $pivot->derivacion_psiquiatrica,
+            'motivo_consulta'              => $pivot->motivo_consulta,
+            'imgen_enfermedad'             => $pivot->imgen_enfermedad,
+            'pdf_enfermedad'               => $pivot->pdf_enfermedad,
+            'created_at'                   => $pivot->created_at ?? null,
+            'updated_at'                   => $pivot->updated_at ?? null,
+        ]);
+
+        $this->hydrateFromRelation($rel);
+    }
+
+
+
+    /**
+     * Carga todas las propiedades del modal a partir de la relación (Enfermedade con ->pivot)
+     */
+    private function hydrateFromRelation(Enfermedade $rel): void
+    {
+        $this->enfermedade_id          = $rel->id;
+        $this->original_enfermedade_id = $rel->id;
+        $this->name                    = $rel->name;
+
+        $p = $rel->pivot;
+
+        $this->fecha_atencion_enfermedad      = $p->fecha_atencion_enfermedad
+            ? Carbon::parse($p->fecha_atencion_enfermedad)->format('Y-m-d\TH:i') : null;
+        $this->fecha_finalizacion_enfermedad  = $p->fecha_finalizacion_enfermedad
+            ? Carbon::parse($p->fecha_finalizacion_enfermedad)->format('Y-m-d\TH:i') : null;
+
+        $this->detalle_diagnostico  = $p->detalle_diagnostico;
+        $this->detalle_medicacion   = $p->detalle_medicacion;
+        $this->horas_reposo         = $p->horas_reposo;
+        $this->medicacion           = $p->medicacion;
+        $this->dosis                = $p->dosis;
+        $this->nro_osef             = $p->nro_osef;
+        $this->art                  = $p->art;
+        $this->tipodelicencia       = $p->tipodelicencia;
+        $this->derivacion_psiquiatrica = $p->derivacion_psiquiatrica;
+        $this->motivo_consulta      = $p->motivo_consulta;
+
+        // preparar autocomplete (si lo usás)
+        $this->nameSearch     = $this->name;
+        $this->namePickerOpen = false;
+        $this->nameOptions    = [];
+        $this->nameIndex      = 0;
+
+        $this->modal = true;
+    }
+
+    /**
+     * Guarda cambios del modal sobre **la fila exacta del pivot**.
+     * Si cambian la enfermedad, se actualiza el campo enfermade_id del pivot.
+     * NO renombra la enfermedad global (evita tocar name/slug de tabla enfermedades).
+     */
     public function editDisase()
     {
+        // 1) Validación + guards
         $data = $this->validate();
 
         $paciente = Paciente::find($this->pacienteId);
-        if (!$paciente) return;
+        if (!$paciente) {
+            $this->dispatch('swal', title:'Error', text:'Paciente no encontrado.', icon:'error');
+            return;
+        }
 
-        // Fallback: si $this->enfermedade_id viene null, usamos el original
-        $enfermedadeId = $this->enfermedade_id ?? $this->original_enfermedade_id;
+        if (empty($this->pivotId)) {
+            $this->dispatch('swal', title:'Error', text:'Falta identificar el registro a editar.', icon:'error');
+            return;
+        }
 
-        // Directorio para archivos
+        // 2) Traer la fila actual del pivot (y validar pertenencia)
+        $pivotActual = DB::table('enfermedade_paciente')->where('id', $this->pivotId)->first();
+        if (!$pivotActual || (int) $pivotActual->paciente_id !== (int) $this->pacienteId) {
+            $this->dispatch('swal', title:'Error', text:'El episodio no corresponde a este paciente.', icon:'error');
+            return;
+        }
+
+        // 3) Determinar la enfermedad a guardar (cambio o fallback)
+        $enfermedadeId = $this->enfermedade_id
+            ?: ($this->original_enfermedade_id ?: $pivotActual->enfermedade_id);
+
+        // 4) Directorio y manejo de archivos
         $dir = "archivos_enfermedades/paciente_{$paciente->id}";
         Storage::disk('public')->makeDirectory($dir);
 
-        // Enfermedad actual para reutilizar archivos si no se suben nuevos
-        $enfActual = $paciente->enfermedades()->findOrFail($this->original_enfermedade_id);
-
-        // ====================
         // Imagen
-        // ====================
-        if (isset($data['imgen_enfermedad'])) {
-            $archivoPath = $data['imgen_enfermedad']->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName());
+        $archivoPathImg = $pivotActual->imgen_enfermedad;
+        if (!empty($data['imgen_enfermedad'])) {
             if (!str_starts_with($data['imgen_enfermedad']->getMimeType(), 'image/')) {
-                $this->addError('imgen_enfermedad', 'El imgen_enfermedad debe ser una imagen.');
+                $this->addError('imgen_enfermedad', 'El archivo debe ser una imagen válida.');
                 return;
             }
-
-            // Borrar imagen anterior si existe
-            if ($enfActual->pivot->imgen_enfermedad && Storage::disk('public')->exists($enfActual->pivot->imgen_enfermedad)) {
-                Storage::disk('public')->delete($enfActual->pivot->imgen_enfermedad);
+            if ($archivoPathImg && Storage::disk('public')->exists($archivoPathImg)) {
+                Storage::disk('public')->delete($archivoPathImg);
             }
-
-            // Guardar nueva
-            $archivoPath = $data['imgen_enfermedad']->storeAs($dir, $data['imgen_enfermedad']->getClientOriginalName(), 'public');
-        } else {
-            $archivoPath = $enfActual->pivot->imgen_enfermedad;
+            $archivoPathImg = $data['imgen_enfermedad']->storeAs(
+                $dir,
+                $data['imgen_enfermedad']->getClientOriginalName(),
+                'public'
+            );
         }
 
-        // ====================
         // PDF
-        // ====================
-        if (isset($data['pdf_enfermedad'])) {
+        $archivoPathPDF = $pivotActual->pdf_enfermedad;
+        if (!empty($data['pdf_enfermedad'])) {
             if ($data['pdf_enfermedad']->getMimeType() !== 'application/pdf') {
-                $this->addError('pdf_enfermedad', 'El pdf_enfermedad debe ser un archivo PDF.');
+                $this->addError('pdf_enfermedad', 'El archivo debe ser un PDF válido.');
                 return;
             }
-
-            // Borrar PDF anterior si existe
-            if ($enfActual->pivot->pdf_enfermedad && Storage::disk('public')->exists($enfActual->pivot->pdf_enfermedad)) {
-                Storage::disk('public')->delete($enfActual->pivot->pdf_enfermedad);
+            if ($archivoPathPDF && Storage::disk('public')->exists($archivoPathPDF)) {
+                Storage::disk('public')->delete($archivoPathPDF);
             }
-
-            // Guardar nuevo
-            $archivoPathDorso = $data['pdf_enfermedad']->storeAs($dir, $data['pdf_enfermedad']->getClientOriginalName(), 'public');
-        } else {
-            $archivoPathDorso = $enfActual->pivot->pdf_enfermedad;
+            $archivoPathPDF = $data['pdf_enfermedad']->storeAs(
+                $dir,
+                $data['pdf_enfermedad']->getClientOriginalName(),
+                'public'
+            );
         }
 
-        // ====================
-        // Datos del pivot
-        // ====================
-        $pivotData = [
-            'fecha_atencion_enfermedad'     => $data['fecha_atencion_enfermedad'],
-            'detalle_medicacion'            => $data['detalle_medicacion'],
-            'detalle_diagnostico'           => $data['detalle_diagnostico'],
-            'imgen_enfermedad'              => $archivoPath,
-            'pdf_enfermedad'                => $archivoPathDorso,
-            'fecha_finalizacion_enfermedad' => $data['fecha_finalizacion_enfermedad'],
-            'horas_reposo'                  => $data['horas_reposo'],
-            'nro_osef'                      => $data['nro_osef'],
-            'art'                           => $data['art'],
-            'medicacion'                    => $data['medicacion'],
-            'dosis'                         => $data['dosis'],
-            'tipodelicencia'                => $data['tipodelicencia'],
-            'derivacion_psiquiatrica'       => $data['derivacion_psiquiatrica'],
-            'motivo_consulta'               => $data['motivo_consulta'],
+        // 5) Preparar UPDATE del pivot
+        $pivotUpdate = [
+            'enfermedade_id'               => $enfermedadeId,
+            'fecha_atencion_enfermedad'    => $data['fecha_atencion_enfermedad'] ?? null,
+            'fecha_finalizacion_enfermedad'=> $data['fecha_finalizacion_enfermedad'] ?? null,
+            'detalle_diagnostico'          => $data['detalle_diagnostico'] ?? null,
+            'detalle_medicacion'           => $data['detalle_medicacion'] ?? null,
+            'horas_reposo'                 => $data['horas_reposo'] ?? null,
+            'medicacion'                   => $data['medicacion'] ?? null,
+            'dosis'                        => $data['dosis'] ?? null,
+            'nro_osef'                     => $data['nro_osef'] ?? null,
+            'art'                          => $data['art'] ?? null,
+            'tipodelicencia'               => $data['tipodelicencia'] ?? null,
+            'derivacion_psiquiatrica'      => $data['derivacion_psiquiatrica'] ?? null,
+            'motivo_consulta'              => $data['motivo_consulta'] ?? null,
+            'imgen_enfermedad'             => $archivoPathImg,
+            'pdf_enfermedad'               => $archivoPathPDF,
+            'updated_at'                   => now(),
         ];
 
-        // ====================
-        // Guardar cambios
-        // ====================
-        $changedDisease = ($enfermedadeId != $this->original_enfermedade_id);
+        // 6) UPDATE por id del pivot (fila exacta)
+        DB::table('enfermedade_paciente')
+            ->where('id', $this->pivotId)
+            ->update($pivotUpdate);
 
-        if ($changedDisease) {
-            $paciente->enfermedades()->detach($this->original_enfermedade_id);
-            $paciente->enfermedades()->attach($enfermedadeId, $pivotData);
-        } else {
-            $enfermedade = $paciente->enfermedades()->findOrFail($enfermedadeId);
-
-            $enfermedade->update([
+        // 7) (Opcional) si editaron el nombre de la enfermedad, actualizar tabla enfermedades
+        if (!empty($this->name)) {
+            Enfermedade::where('id', $enfermedadeId)->update([
                 'name' => $this->name,
                 'slug' => Str::slug($this->name),
             ]);
-
-            $paciente->enfermedades()->updateExistingPivot($enfermedadeId, $pivotData);
         }
 
-        $this->modal = false;
-        $this->dispatch('toast', type: 'success', message: 'Enfermedad editada correctamente');
-        $this->dispatch(
-            'swal',
-            title: 'Actualizado',
-            text:  'La enfermedad fue editada correctamente.',
-            icon:  'success'
-        );
-
+        // 8) Feedback + reset + cerrar modal
+        $this->dispatch('swal', title:'Actualizado', text:'La enfermedad fue editada correctamente.', icon:'success');
 
         $this->reset([
-            'name',
-            'fecha_atencion_enfermedad',
-            'detalle_diagnostico',
-            'detalle_medicacion',
-            'fecha_finalizacion_enfermedad',
-            'horas_reposo',
-            'medicacion',
-            'nro_osef',
-            'tipolicencia_id',
-            'tipodelicencia',
-            'art',
-            'dosis',
-            'imgen_enfermedad',
-            'pdf_enfermedad',
-            'search',
-            'nameSearch',
-            'namePickerOpen',
-            'nameOptions',
-            'nameIndex',
-            'pivotId',
-            'original_enfermedade_id',
-            'derivacion_psiquiatrica',
-            'motivo_consulta'
+            'modal','pivotId','original_enfermedade_id','enfermedade_id',
+            'name','nameSearch','namePickerOpen','nameOptions','nameIndex',
+            'fecha_atencion_enfermedad','fecha_finalizacion_enfermedad',
+            'detalle_diagnostico','detalle_medicacion','horas_reposo',
+            'medicacion','dosis','nro_osef','art','tipodelicencia',
+            'derivacion_psiquiatrica','motivo_consulta','imgen_enfermedad','pdf_enfermedad'
         ]);
 
-        $this->patient_disases = $paciente->enfermedades()->get();
         $this->resetValidation();
     }
-
-
 
     // ====== Autocomplete del campo "Nombre" dentro del modal ======
 
     public function openNamePicker()
     {
-        // solo precarga si está vacío; NO pisar lo que el usuario ya escribió
         if ($this->nameSearch === '' && !empty($this->name)) {
             $this->nameSearch = $this->name;
         }
@@ -281,14 +349,11 @@ class PatientHistorialEnfermedades extends Component
         $this->updatedNameSearch($this->nameSearch);
     }
 
-    public function closeNamePicker()
-    {
-        $this->namePickerOpen = false;
-    }
+    public function closeNamePicker() { $this->namePickerOpen = false; }
 
     public function updatedNameSearch($value)
     {
-        $this->enfermedade_id = null; // hasta que elijan una opción
+        $this->enfermedade_id = null;
         $q = trim((string)$value);
 
         if ($q === '') {
@@ -298,11 +363,9 @@ class PatientHistorialEnfermedades extends Component
             return;
         }
 
-        // Usa el MISMO motor que el buscador de arriba (Scout).
-        // Si no usás Scout, avisá y te lo cambio a "where like".
-        $this->nameOptions = \App\Models\Enfermedade::search($q)
-            ->take(10)
-            ->get()
+        // Si no usás Scout, cambiá esto a ->where('name','like',"%$q%")
+        $this->nameOptions = Enfermedade::search($q)
+            ->take(10)->get()
             ->map(fn($e) => [
                 'id'     => $e->id,
                 'name'   => $e->name,
@@ -315,21 +378,18 @@ class PatientHistorialEnfermedades extends Component
 
     public function updatedName($value)
     {
-        // mientras escribe, anulamos el id hasta que elija algo
         $this->enfermedade_id = null;
-
-        // reutilizamos la lógica de búsqueda del picker
         $this->nameSearch = $value;
-        $this->updatedNameSearch($value); // <- ya arma $nameOptions y $namePickerOpen
+        $this->updatedNameSearch($value);
     }
 
     public function pickEnfermedad($id)
     {
         if ($e = Enfermedade::find($id)) {
-            $this->enfermedade_id = $e->id;
-            $this->name = $e->name;           // paara mostrar
-            $this->nameSearch = $e->name;     // refleja la selección en el input
-            $this->namePickerOpen = false;
+            $this->enfermedade_id  = $e->id;
+            $this->name            = $e->name;
+            $this->nameSearch      = $e->name;
+            $this->namePickerOpen  = false;
         }
     }
 
@@ -361,19 +421,20 @@ class PatientHistorialEnfermedades extends Component
         if ($paciente) {
             $enfermedades = $paciente->enfermedades()
                 ->where(function ($query) {
-                    $query->where('name', 'like', '%' . $this->search . '%')
-                        ->orWhere('codigo', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.detalle_diagnostico', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.detalle_medicacion', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.fecha_finalizacion_enfermedad', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.horas_reposo', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.fecha_atencion_enfermedad', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.medicacion', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.nro_osef', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.art', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.tipodelicencia', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.derivacion_psiquiatrica', 'like', '%' . $this->search . '%')
-                        ->orWhere('enfermedade_paciente.motivo_consulta', 'like', '%' . $this->search . '%');
+                    $q = '%' . $this->search . '%';
+                    $query->where('name', 'like', $q)
+                        ->orWhere('codigo', 'like', $q)
+                        ->orWhere('enfermedade_paciente.detalle_diagnostico', 'like', $q)
+                        ->orWhere('enfermedade_paciente.detalle_medicacion', 'like', $q)
+                        ->orWhere('enfermedade_paciente.fecha_finalizacion_enfermedad', 'like', $q)
+                        ->orWhere('enfermedade_paciente.horas_reposo', 'like', $q)
+                        ->orWhere('enfermedade_paciente.fecha_atencion_enfermedad', 'like', $q)
+                        ->orWhere('enfermedade_paciente.medicacion', 'like', $q)
+                        ->orWhere('enfermedade_paciente.nro_osef', 'like', $q)
+                        ->orWhere('enfermedade_paciente.art', 'like', $q)
+                        ->orWhere('enfermedade_paciente.tipodelicencia', 'like', $q)
+                        ->orWhere('enfermedade_paciente.derivacion_psiquiatrica', 'like', $q)
+                        ->orWhere('enfermedade_paciente.motivo_consulta', 'like', $q);
                 })
                 ->orderBy('enfermedade_paciente.id', $this->sortAsc ? 'desc' : 'asc')
                 ->paginate($this->perPage, ['*'], 'enfermedades_page');

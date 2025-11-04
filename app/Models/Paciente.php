@@ -53,7 +53,8 @@ class Paciente extends Model
         'deleted_at',
         'created_at',
         'updated_at',
-        'user_id'
+        'user_id',
+        'foto'
     ];
 
     public function scopeSearch($query, $term)
@@ -250,28 +251,30 @@ class Paciente extends Model
         ->withPivot('tipo_enfermedad','fecha_enfermedad', 'fecha_atencion', 'fecha_finalizacion', 'horas_salud', 'archivo', 'activo', 'tipodelicencia'); // Agregar otros campos de la tabla intermedia que quieras mostrar
 }estado_enfermedad*/
 
-    public function enfermedades()
-    {
-        return $this->belongsToMany(Enfermedade::class, 'enfermedade_paciente', 'paciente_id', 'enfermedade_id')
-            ->withPivot([
-                'fecha_atencion_enfermedad',
-                'fecha_finalizacion_enfermedad',
-                'tipodelicencia',
-                'detalle_diagnostico',
-                'horas_reposo',
-                'imgen_enfermedad',
-                'pdf_enfermedad',
-                'medicacion',
-                'dosis',
-                'detalle_medicacion',
-                'motivo_consulta',
-                'nro_osef',
-                'art',
-                'estado_enfermedad',
-                'derivacion_psiquiatrica'
-            ])
-            ->withTimestamps();
-    }
+public function enfermedades()
+{
+    return $this->belongsToMany(\App\Models\Enfermedade::class)
+        ->withPivot(
+            'id', 
+            'detalle_diagnostico',
+            'fecha_atencion_enfermedad',
+            'estado_enfermedad',
+            'derivacion_psiquiatrica',
+            'fecha_finalizacion_enfermedad',
+            'horas_reposo',
+            'motivo_consulta',
+            'imgen_enfermedad',
+            'pdf_enfermedad',
+            'medicacion',
+            'dosis',
+            'detalle_medicacion',
+            'nro_osef',
+            'art',
+            'tipodelicencia'
+        )
+        ->withTimestamps();
+}
+
 
 
 

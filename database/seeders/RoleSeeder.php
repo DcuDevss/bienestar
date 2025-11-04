@@ -58,7 +58,7 @@ class RoleSeeder extends Seeder
         $enfermero = ['enfermero.enfermero-historial','paciente.ver-historial', 'interviews.index'];
         $profeGym  = ['interviews.index','paciente.ver-historial'];
 
-        // Asignaciones (colecciones por nombre)
+        // Asignaciones (colecciones por nombre, se agrego cambios)
         $R['super-admin']->syncPermissions(Permission::where('guard_name', 'web')->get());
         $R['admin-jefe']->syncPermissions(Permission::whereIn('name', $adminJefe)->get());
         $R['administrativo']->syncPermissions(Permission::whereIn('name', $administrativo)->get());

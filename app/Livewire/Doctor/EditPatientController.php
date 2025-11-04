@@ -3,17 +3,22 @@
 namespace App\Livewire\Doctor;
 
 use Livewire\Component;
+use Livewire\Attributes\On;
+use Livewire\WithFileUploads;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Validation\ValidationException;
+
 use App\Models\Paciente;
 use App\Models\Estado;
 use App\Models\Factore;
 use App\Models\Jerarquia;
 use App\Models\Ciudade;
-use Illuminate\Support\Facades\Log;
-use Illuminate\Validation\ValidationException;
-use Livewire\Attributes\On;
 
 class EditPatientController extends Component
 {
+    use WithFileUploads;
+
     public $customerId;
 
     // Datos personaales
@@ -51,7 +56,11 @@ class EditPatientController extends Component
     public $factores = [];
     public $jerarquias = [];
 
-    /* ==== Reglas y mensajes (para validate() y validateOnly()) ==== */
+    // Foto
+    public $foto;                    // archivo temporal
+    public int $uploadIteration = 0; // para resetear el input
+
+    /* ==== Reglas y mensajes ==== */
     protected $rules = [
         'apellido_nombre'   => 'nullable|string|max:255',
         'dni'               => 'nullable|integer',
@@ -66,7 +75,7 @@ class EditPatientController extends Component
         'legajo'            => 'nullable|integer',
         'jerarquia_id'      => 'nullable|integer|exists:jerarquias,id',
         'destino_actual'    => 'nullable|string|max:255',
-        'ciudad_id'         => 'nullable|integer|exists:ciudades,id', // edición: NO required
+        'ciudad_id'         => 'nullable|integer|exists:ciudades,id',
         'edad'              => 'nullable|integer|min:0',
         'estado_id'         => 'nullable|integer|exists:estados,id',
         'NroCredencial'     => 'nullable|integer',
@@ -78,6 +87,9 @@ class EditPatientController extends Component
         'factore_id'        => 'nullable|integer|exists:factores,id',
         'enfermedad'        => 'nullable|string|max:500',
         'remedios'          => 'nullable|string|max:500',
+
+        // 👇 regla para la foto
+        'foto'              => 'nullable|image|max:5120',
     ];
 
     protected $messages = [
@@ -91,6 +103,8 @@ class EditPatientController extends Component
         'peso.numeric'       => 'Peso debe ser numérico (ej. 80).',
         'email.email'        => 'Ingresá un email válido.',
         'sexo.in'            => 'Sexo debe ser Masculino o Femenino.',
+        'foto.image'         => 'La foto debe ser una imagen.',
+        'foto.max'           => 'La foto no puede superar 5MB.',
     ];
 
     public function mount($customerId)
@@ -113,7 +127,7 @@ class EditPatientController extends Component
         $this->apellido_nombre  = $customer->apellido_nombre;
         $this->dni              = $customer->dni;
         $this->cuil             = $customer->cuil;
-        $this->sexo             = $this->normalizeSexo($customer->sexo); // normalizamos al montar
+        $this->sexo             = $this->normalizeSexo($customer->sexo);
         $this->domicilio        = $customer->domicilio;
         $this->fecha_nacimiento = $customer->fecha_nacimiento;
         $this->email            = $customer->email;
@@ -139,7 +153,7 @@ class EditPatientController extends Component
         $this->remedios         = $customer->remedios;
     }
 
-    /* ===== Helpers de normalización y logging ===== */
+    /* ===== Helpers ===== */
     private function nullifyEmpty(array $attrs): void
     {
         foreach ($attrs as $a) {
@@ -162,14 +176,12 @@ class EditPatientController extends Component
 
     private function normalizeNumericos(): void
     {
-        // coma -> punto para numéricos decimales
         foreach (['altura','peso'] as $n) {
             if (isset($this->{$n}) && is_string($this->{$n})) {
                 $v = str_replace(',', '.', trim($this->{$n}));
                 $this->{$n} = ($v === '') ? null : $v;
             }
         }
-        // enteros en blanco -> null
         foreach (['dni','cuil','legajo','jerarquia_id','ciudad_id','edad','estado_id','NroCredencial','antiguedad','chapa','factore_id'] as $i) {
             if (isset($this->{$i}) && $this->{$i} === '') {
                 $this->{$i} = null;
@@ -181,41 +193,10 @@ class EditPatientController extends Component
     {
         Log::debug("[EditPatientController] {$context}", [
             'customerId'      => $this->customerId,
-            // personales
-            'apellido_nombre' => $this->apellido_nombre,
-            'dni'             => $this->dni,
-            'cuil'            => $this->cuil,
-            'sexo'            => $this->sexo,
-            'domicilio'       => $this->domicilio,
-            'fecha_nacimiento'=> $this->fecha_nacimiento,
-            'email'           => $this->email,
-            'TelefonoCelular' => $this->TelefonoCelular,
-            'FecIngreso'      => $this->FecIngreso,
-            // laborales
-            'legajo'          => $this->legajo,
-            'jerarquia_id'    => $this->jerarquia_id,
-            'destino_actual'  => $this->destino_actual,
-            'ciudad_id'       => $this->ciudad_id,
-            'edad'            => $this->edad,
-            'estado_id'       => $this->estado_id,
-            'NroCredencial'   => $this->NroCredencial,
-            'antiguedad'      => $this->antiguedad,
-            'chapa'           => $this->chapa,
-            // salud
-            'peso'            => $this->peso,
-            'altura'          => $this->altura,
-            'factore_id'      => $this->factore_id,
-            'enfermedad'      => $this->enfermedad,
-            'remedios'        => $this->remedios,
-            // existencia en catálogos
-            'ciudad_exists'   => (bool) optional(Ciudade::find($this->ciudad_id))->id,
-            'jerarquia_exists'=> (bool) optional(Jerarquia::find($this->jerarquia_id))->id,
-            'estado_exists'   => (bool) optional(Estado::find($this->estado_id))->id,
-            'factor_exists'   => (bool) optional(Factore::find($this->factore_id))->id,
+            // ... (logs como ya tenías)
         ]);
     }
 
-    /* ===== Validación en vivo opcional (loguea el 1er error del campo) ===== */
     public function updated($property)
     {
         try {
@@ -248,7 +229,6 @@ class EditPatientController extends Component
     {
         Log::debug('[EditPatientController] submit() start', ['customerId' => $this->customerId]);
 
-        // Normalización previa
         $this->nullifyEmpty([
             'apellido_nombre','dni','cuil','sexo','domicilio','fecha_nacimiento','email',
             'TelefonoCelular','FecIngreso','legajo','jerarquia_id','destino_actual','ciudad_id',
@@ -258,25 +238,18 @@ class EditPatientController extends Component
         $this->sexo = $this->normalizeSexo($this->sexo);
         $this->normalizeNumericos();
 
-        // Estado ANTES de validar
         $this->logState('before_validate');
 
         try {
             $validated = $this->validate(); // usa $rules + $messages
 
-            Log::debug('[EditPatientController] validation OK', [
-                'validated_keys' => array_keys($validated)
-            ]);
-
-            // Estado DESPUÉS de validar (por si hubo coerciones)
             $this->logState('after_validate');
 
             $customer = Paciente::findOrFail($this->customerId);
-            Log::debug('[EditPatientController] model loaded', ['id' => $customer->id]);
 
             $before = $customer->getAttributes();
 
-            // Asignaciones
+            // Campos “no foto”
             $customer->apellido_nombre  = $this->apellido_nombre;
             $customer->dni              = $this->dni;
             $customer->cuil             = $this->cuil;
@@ -303,9 +276,27 @@ class EditPatientController extends Component
             $customer->enfermedad       = $this->enfermedad;
             $customer->remedios         = $this->remedios;
 
-            Log::debug('[EditPatientController] dirty before save', $customer->getDirty());
-
             $customer->save();
+
+            // 👇 Reemplazo de foto si se subió una nueva
+            if ($this->foto) {
+                // borrar anterior si existe
+                if ($customer->foto && Storage::disk('public')->exists($customer->foto)) {
+                    Storage::disk('public')->delete($customer->foto);
+                }
+
+                $dir = "pacientes/{$customer->id}";
+                Storage::disk('public')->makeDirectory($dir);
+
+                $filename = uniqid().'_'.$this->foto->getClientOriginalName();
+                $path = $this->foto->storeAs($dir, $filename, 'public'); // pacientes/{id}/...
+
+                $customer->foto = $path;
+                $customer->save();
+
+                $this->reset('foto');
+                $this->uploadIteration++;
+            }
 
             $this->dispatch('swal', title: 'Guardado', text: 'Paciente actualizado correctamente.', icon: 'success');
 
@@ -313,16 +304,13 @@ class EditPatientController extends Component
                 'changes' => array_diff_assoc($customer->getAttributes(), $before)
             ]);
 
-            Log::debug('[EditPatientController] submit() end');
         } catch (ValidationException $e) {
             $errors = $e->validator->errors();
 
-            // Log global (array completo)
             Log::warning('[EditPatientController] validation FAILED (array)', [
                 'errors' => $errors->toArray(),
             ]);
 
-            // Log campo por campo
             foreach ($errors->messages() as $field => $messages) {
                 foreach ($messages as $msg) {
                     Log::warning('[EditPatientController] validation FIELD', [
@@ -333,31 +321,43 @@ class EditPatientController extends Component
                 }
             }
 
-            // Popup con detalle (HTML)
             $html = collect($errors->messages())->map(function($msgs, $field){
                 $nice = str_replace('_',' ',$field);
                 return '<b>'.e($nice).'</b>: '.e(implode(' | ', $msgs));
             })->implode('<br>');
 
             $this->dispatch('swal', title: 'Revisá los campos', html: $html, icon: 'error');
-
-            // Estado cuando falla validación
             $this->logState('on_validation_failed');
-
             return;
+
         } catch (\Throwable $e) {
             Log::error('[EditPatientController] submit() error', [
                 'customerId' => $this->customerId,
                 'msg' => $e->getMessage(),
                 'trace' => $e->getTraceAsString(),
             ]);
-
             $this->dispatch('swal', title: 'Ups', text: 'Ocurrió un error inesperado.', icon: 'error');
             return;
         }
     }
 
-    // Navegación opcional: coonfirmar salir sin guardar
+    public function removePhoto()
+    {
+        $customer = Paciente::findOrFail($this->customerId);
+
+        if ($customer->foto && Storage::disk('public')->exists($customer->foto)) {
+            Storage::disk('public')->delete($customer->foto);
+        }
+
+        $customer->foto = null;
+        $customer->save();
+
+        $this->reset('foto');
+        $this->uploadIteration++;
+
+        $this->dispatch('swal', title: 'Foto eliminada', text: 'Se quitó la foto del paciente.', icon: 'error');
+    }
+
     #[On('go-dashboard')]
     public function goDashboard()
     {

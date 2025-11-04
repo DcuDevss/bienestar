@@ -27,7 +27,7 @@ class UserSeeder extends Seeder
             'password'=>bcrypt('12345678'),
             'email_verified_at'=>now(),
         ])->assignRole(['super-admin','admin-jefe','administrativo','doctor','psicologa','enfermero']);
-        //->roles()->sync('1');
+        //->roles()->sync('1'), si se peude ;
 
         User::create([
             'name'=>'Jefa',

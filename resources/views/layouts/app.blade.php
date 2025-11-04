@@ -11,7 +11,10 @@
     <link rel="preconnect" href="https://fonts.bunny.net">
     <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
     <link href="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/css/tom-select.css" rel="stylesheet">
-    <link rel="icon" href="{{ asset('favicon.png') }}?v={{ config('app.version') }}" type="image/png">
+    {{-- favicon --}}
+    <link rel="icon" href="{{ asset('FaviconPol.png') }}?v={{ config('app.version') }}" type="image/png">
+
+    <!-- Scripts -->
     @vite(['resources/css/app.css', 'resources/js/app.js'])
 
     <link rel="stylesheet" href="{{ asset('css/all.min.css') }}">

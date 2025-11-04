@@ -13,7 +13,11 @@
                         type="text" placeholder="{{ __('Buscar...') }}" wire:model.live="search" />
                 </div>
                 <!-- BOTONES OSEF & LA CAJA -->
+                <!-- Imagen con link (ValidadorOsef) -->
                 <div class="float-right mr-2 flex gap-x-2">
+                    <a href=" https://validador.osef.gob.ar/" class="bg-white rounded-md py-1 px-3" target="_blank">
+                        <img class="h-[34px]" src="{{ asset('assets/VALIDADOR.png') }}" alt="">
+                    </a>
                     <!-- Imagen con link (RCTA) -->
                     <a href="https://rcta.me/?utm_term=&utm_campaign=RCTA+DNU/+Pmax+/+Reconnect&utm_source=adwords&utm_medium=ppc&hsa_acc=3976412703&hsa_cam=21983270123&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=21983271299&gbraid=0AAAAAp3bv2M-2NoWfjCKXwvQFRekKOKO3&gclid=Cj0KCQjwgIXCBhDBARIsAELC9ZhPejgMuncQuoBdXnlBKYeV4pe06k2knUoVCHSvUOPPzjFGOfIv6vgaAgpOEALw_wcB
                         " target="_blank" class="bg-white rounded-md py-1 px-3">
@@ -56,14 +60,14 @@
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de atención:</span>
-                                    {{ \Carbon\Carbon::parse($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s') }}
+                                    {{ optional($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s') ?? '—' }}
                                 </p>
                             </li>
 
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de finalización:</span>
-                                    {{ \Carbon\Carbon::parse($enfermedad->pivot->fecha_finalizacion_enfermedad)->format('d-m-Y H:i:s') }}
+                                    {{ optional($enfermedad->pivot->fecha_finalizacion_enfermedad)->format('d-m-Y H:i:s') ?? '—' }}
                                 </p>
                             </li>
 
@@ -155,10 +159,23 @@
 
 
                             <div class="botonEditar pt-2 flex justify-center w-full absolute bottom-2 left-0 right-0">
-                                <button wire:click="editModalDisase({{ $enfermedad->id }})"
-                                    class=" bg-[#667eea] text-white hover:white hover:bg-[#5a67d8] px-2 py-1 text-[13px] font-normal rounded-md cursor-pointer">
-                                    Editar
-                                </button>
+
+
+<button
+  type="button"
+  wire:click="openEditByPivot({{ (int) $enfermedad->pivot->id }})"
+  class="bg-[#667eea] text-white hover:bg-[#5a67d8] px-2 py-1 text-[13px] rounded-md">
+  Editar
+</button>
+<span class="text-xs text-gray-500">#{{ optional($enfermedad->pivot)->id }}</span>
+
+
+
+
+
+
+
+
 
                                 {{-- <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade_paciente_id' => $enfermedad->pivot->id]) }}"
                                     class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
@@ -325,8 +342,8 @@
                 <div>
                     <label for="pdf_enfermedad"
                         class="block text-sm font-medium text-gray-700">{{ __('pdf') }}</label>
-                    <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
-                        wire:model="pdf_enfermedad" accept="image/.pdf" />
+                   <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
+                            wire:model="pdf_enfermedad" accept="application/pdf" />
                     <x-input-error for="pdf_enfermedad" />
                     {{--  --}}
                 </div>
@@ -383,9 +400,11 @@
                 wire:click="$set('modal',false)">
                 {{ __('Cancelar') }}
             </button>
-            <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="editDisase">
-                {{ __('Editar enfermedad') }}
+            <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3"
+                    wire:click="addDisase">
+                {{ $pivotId ? __('Guardar cambios') : __('Agregar enfermedad') }}
             </button>
+
 
         </x-slot>
     </x-dialog-modal>

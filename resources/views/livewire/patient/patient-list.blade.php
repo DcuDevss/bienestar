@@ -19,7 +19,7 @@
                                 placeholder="Buscar..." required="">
                         </div>
                         {{-- BOTON RESET ALL --}}
-                        @role('super-admin')
+                        @role('super-admin|admin-jefe')
                             <div class="">
                                 <livewire:interview.interview-reset-all />
                             </div>
@@ -164,7 +164,7 @@
                         </tbody>
                     </table>
                 </div>
-                {{-- PAGINATION --}}
+                {{-- PAGINATION. --}}
                 <div class="py-4 px-5">
                     <div class="flex">
                         <div class="flex space-x-4 items-center mb-3">
@@ -185,12 +185,13 @@
             </div>
         </div>
     </section>
-    {{-- TABLA PACIENTES POR TIPO DEe LICENCIA --}}
+
     <section class="seccionTab2 flex w-[95%] mx-auto gap-x-6 mb-8">
-        @livewire('patient.patient-listfechas')
+        {{-- TABLA PERS. QUE FINALIZA HOY --}}
+        @livewire('patient.patient-list-fechas')
+        {{-- TABLA PACIENTES POR TIPO DE LICENCIA TOMA LOS CAMBIOS --}}
         <div class="bg-white rounded-md shadow-md p-4 mt-4 w-full text-sm max-h-[36rem] overflow-y-auto">
             <h2 class="text-lg font-bold mb-2 text-gray-700">Pacientes por Tipo de Licencia</h2>
-            
             @foreach ($agrupadosPorLicencia as $licencia)
                 <div class="mb-3">
                     <h3 class="font-semibold text-blue-600">{{ $licencia->name }}</h3>

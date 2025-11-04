@@ -1,4 +1,4 @@
-<div class="min-h-screen flex items-center justify-center bg-gray-100 -mt-[64px]">
+<div class="min-h-screen flex items-center justify-center bg-gray-100 -mt-[64px] mt-8">
     <div class="w-[80%] p-6 bg-white rounded-lg shadow-md">
         <div class="w-[80%] mx-auto text-center">
             <h3 class="text-xl font-semibold mb-2">Nuevo Personal</h3>
@@ -44,58 +44,107 @@
                         <p>Personal:</p>
                     </div>
                     <!-- STEP 0 -->
-                    <div class="grid grid-cols-3 w-full step-transition {{ $step === 0 ? 'step-active' : '' }}">
+                    <div class="grid grid-cols-3 gap-4 w-full step-transition {{ $step === 0 ? 'step-active' : '' }}">
 
                         <!-- COLUMNA 1 -->
                         <div class="flex flex-col gap-y-2 p-5 w-[80%] mx-auto">
-                            <!-- NOMBRE Y APELLIDO -->
-                            <label for="">Nombre y Apellido:</label>
+                            <label>Nombre y Apellido:</label>
                             <input type="text" placeholder="..." wire:model.lazy="apellido_nombre"
-                                class="h-8 rounded-md border focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                            <!-- DNI: -->
-                            <label for="">Dni:</label>
+                                class="h-8 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]">
+                            <label>DNI:</label>
                             <input type="number" placeholder="..." wire:model.lazy="dni"
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                            <!-- GENERO: -->
-                            <label for="">Genero:</label>
+                                class="h-8 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]">
+                            <label>Género:</label>
                             <select wire:model.lazy="sexo"
-                                class="h-9 rounded-md text-[#666666] focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                                <option disabled value="">Selecione un Genero</option>
-                                <option class="text-[#666666] h-8">Masculino</option>
-                                <option class="text-[#666666] h-8">Femenino</option>
+                                    class="h-9 rounded-md border border-gray-300 px-3 text-[#666] focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]">
+                            <option disabled value="">Seleccione un género</option>
+                            <option>Masculino</option>
+                            <option>Femenino</option>
                             </select>
                         </div>
 
                         <!-- COLUMNA 2 -->
                         <div class="flex flex-col gap-y-2 p-5 w-[80%] mx-auto">
-                            <!-- CUIL -->
-                            <label for="">Cuil:</label>
+                            <label>CUIL:</label>
                             <input type="number" wire:model.lazy="cuil" placeholder="..."
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                            <!-- DOMICILIO -->
-                            <label for="">Domicilio:</label>
+                                class="h-8 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]">
+                            <label>Domicilio:</label>
                             <input type="text" wire:model.lazy="domicilio" placeholder="..."
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                            <label for="fecha_nacimiento" class="block text-sm font-medium text-gray-600">Fecha de
-                                Nacimiento</label>
-                            <input type="date" class="mt-1 p-2 w-full border border-gray-300 rounded"
-                                wire:model.lazy="fecha_nacimiento" placeholder="...">
+                                class="h-8 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]">
+                            <label for="fecha_nacimiento" class="block text-sm font-medium text-gray-600">Fecha de Nacimiento</label>
+                            <input type="date" wire:model.lazy="fecha_nacimiento" placeholder="..."
+                                class="h-10 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]">
                         </div>
 
                         <!-- COLUMNA 3 -->
                         <div class="flex flex-col gap-y-2 p-5 w-[80%] mx-auto">
-                            <label for="">E-mail:</label>
-                            <input type="text" placeholder="..." wire:model.lazy="email"
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                            <label for="">Telefono:</label>
-                            <input type="number"wire:model.lazy="TelefonoCelular" placeholder="..."
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                            <label for="">Fecha de Ingreso:</label>
-                            <input type="date"wire:model.lazy="FecIngreso" placeholder="..."
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                            <label>E-mail:</label>
+                            <input type="email" placeholder="..." wire:model.lazy="email"
+                                class="h-8 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]">
+                            <label>Teléfono:</label>
+                            <input type="number" wire:model.lazy="TelefonoCelular" placeholder="..."
+                                class="h-8 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]">
+                            <label>Fecha de Ingreso:</label>
+                            <input type="date" wire:model.lazy="FecIngreso" placeholder="..."
+                                class="h-8 rounded-md border border-gray-300 px-3 focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]">
                         </div>
 
+                        <!-- BLOQUE FOTO + BOTÓN (alineado con el resto) -->
+                        <div class="col-span-3">
+                            <div class="w-[80%] mx-auto p-5 rounded-xl border border-gray-200 bg-white/50">
+                                <label class="block text-sm font-medium text-gray-700 mb-2">Foto (opcional)</label>
+
+                                <input type="file"
+                                    wire:model="foto"
+                                    wire:key="foto-{{ $uploadIteration }}"
+                                    accept="image/*"
+                                    class="block w-full text-sm text-gray-900 bg-white border border-gray-300 rounded-md cursor-pointer
+                                            focus:outline-none focus:ring-2 focus:ring-[#2d5986]/40 focus:border-[#2d5986]
+                                            file:mr-3 file:py-2 file:px-3 file:rounded-md file:border-0 file:text-sm file:font-medium
+                                            file:bg-[#2d5986] file:text-white hover:file:bg-[#244a70]">
+
+                                @error('foto')
+                                <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
+                                @enderror
+
+                                <div wire:loading wire:target="foto" class="text-sm text-gray-500 mt-2">Subiendo imagen...</div>
+
+                                {{-- Archivo seleccionado (nuevo) + botón quitar --}}
+                                @if ($foto)
+                                <div class="mt-2 flex items-center justify-between gap-3 text-sm text-gray-700 rounded-md border border-gray-200 bg-white px-3 py-2">
+                                    <span class="truncate">
+                                    Archivo seleccionado:
+                                    <span class="font-semibold truncate">{{ $foto->getClientOriginalName() }}</span>
+                                    </span>
+                                    <button type="button"
+                                            wire:click="removePhoto"
+                                            wire:loading.attr="disabled"
+                                            wire:target="removePhoto"
+                                            class="inline-flex items-center rounded-md border border-red-300 px-3 py-1.5 text-red-600 hover:bg-red-50 disabled:opacity-60 disabled:cursor-not-allowed">
+                                    Quitar
+                                    </button>
+                                </div>
+                                @endif
+
+                                {{-- Archivo actual (solo para edición; en alta normalmente no hay) --}}
+                                @if (!empty($customer?->foto))
+                                <div class="mt-2 flex items-center gap-3 text-sm text-gray-600">
+                                    <span>Archivo actual: <span class="font-semibold">{{ basename($customer->foto) }}</span></span>
+                                    <button type="button"
+                                            wire:click="removePhoto"
+                                            wire:loading.attr="disabled"
+                                            wire:target="removePhoto"
+                                            class="inline-flex items-center rounded-md border border-red-300 px-3 py-1.5 text-red-600 hover:bg-red-50 disabled:opacity-60 disabled:cursor-not-allowed">
+                                    Quitar foto
+                                    </button>
+                                </div>
+                                @endif
+                            </div>
+                        </div>
+
+
                     </div>
+
 
                     <div class="mx-auto">
                         @error('apellido_nombre')

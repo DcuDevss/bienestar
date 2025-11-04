@@ -54,7 +54,7 @@ class PatientDate extends Component
     {
         $appoinments = Appoinment::where('date', $this->date)
             ->where('doctor_id', $this->doctor_id)
-            ->pluck('hora_id')->toArray();//caon esto teneemos un array de id que son las horas q asu ves represtean los intervalos q tenemos reservados como citas son slos id de citas
+            ->pluck('hora_id')->toArray();//con esto cv tenemos un array de id que son las horas q asu ves represtean los intervalos q tenemos reservados como citas son slos id de citas
 
         $array = [];
         if ($start < $end) {

@@ -48,11 +48,15 @@ use App\Livewire\Auditorias\AuditoriaList;
 use App\Models\Paciente;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
-use App\Livewire\Patient\DeletedPatientList;
+use App\Livewire\Stats\LicenciasStats;
+use App\Livewire\Stats\PostulantesStats;
+use App\Http\Controllers\PrintReportsController;
+
+
 
 /*
 |--------------------------------------------------------------------------
-| Web Routes
+| Web Routes ffff
 |--------------------------------------------------------------------------
 |
 | Here is where you can register web routes for your application. These
@@ -101,7 +105,7 @@ Route::middleware([
             // return view('panel-administrador');
             //return redirect()->intended(route('psicologo.index'));
             return view('dashboard');
-        } elseif ($user->hasRole('admin-jefa')) {
+        } elseif ($user->hasRole('admin-jefe')) {
             return view('dashboard');
         } else {
             return view('dashboard');
@@ -119,7 +123,7 @@ Route::get('get', function () {
     ->name('admin.index')->middleware((['can:admin.index']));
 
 
-//rutas de roles todas index, show, create, edit
+//rutas de roles todas index, show, create, edit cambios de rodri
 //Route::resource('/roles',RoleController::class)->names('roles');
 
 //Route::resource('/users',UserController::class)->names('users');
@@ -142,9 +146,6 @@ Route::get('/auditorias', AuditoriaList::class)->name('auditorias.index');
 
 
 
-
-
-
 //Route::get('/disases', Multiform::class)->name('multiform.index');
 Route::get('/disases', DisaseController::class)->middleware('can:disases.index')->name('disases.index');
 Route::get('/multiform', MultiformController::class)->middleware('can:multiform.index')->name('multiform.index');
@@ -153,7 +154,6 @@ Route::get('paciente/{paciente_id}/entrevista/create', EntrevistaFormController:
 Route::get('/entrevistas/{paciente_id}', EntrevistaIndex::class)->name('entrevistas.index');
 Route::get('/entrevistas/editar/{entrevista_id}', EditEntrevista::class)->name('entrevistas.edit');
 Route::get('/entervistas/pdf-psiquiatra/{paciente}', PdfPsiquiatraController::class)->name('entrevistas.pdf-psiquiatra');
-
 
 
 
@@ -184,6 +184,18 @@ Route::resource('roles', RoleController::class)->names('admin-roles');
 //Nuevo usuario
 Route::get('nuevo_usuario', [NuevoUsuarioController::class,'create'])->name('new-user');
 Route::post('nuevo_usuario', [NuevoUsuarioController::class,'store'])->name('new-user.store');
+
+//estadisticas
+Route::get('/estadisticas/licencias', LicenciasStats::class)->name('stats.licencias');
+Route::get('/estadisticas/postulantes', PostulantesStats::class)->name('stats.postulantes');
+
+//impresiones en PDF
+Route::get('/prints/postulantes', [PrintReportsController::class, 'postulantes'])
+    ->name('prints.postulantes');
+Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
+     ->name('prints.licencias');
+// routes/web.php
+
 
 /* // NUEVA RUTA para Pacientes Eliminados (Papelera)
 Route::get('/pacientes/eliminados', [PatientController::class, 'eliminados'])->name('pacientes.eliminados'); */

@@ -15,6 +15,9 @@
                 <!-- BOTONES OSEF & LA CAJA -->
                 <!-- Imagen con link (ValidadorOsef) -->
                 <div class="float-right mr-2 flex gap-x-2">
+                    <a href=" https://www.experta.com.ar/index.php/siniestros/" class="bg-white rounded-md py-1 px-3" target="_blank">
+                        <img class="h-[34px]" src="{{ asset('assets/EXPERTA.png') }}" alt="">
+                    </a>
                     <a href=" https://validador.osef.gob.ar/" class="bg-white rounded-md py-1 px-3" target="_blank">
                         <img class="h-[34px]" src="{{ asset('assets/VALIDADOR.png') }}" alt="">
                     </a>

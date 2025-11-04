@@ -56,18 +56,21 @@
                                     {{ $enfermedad->pivot->motivo_consulta }} </p>
                             </li>
 
-
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de atención:</span>
-                                    {{ optional($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s') ?? '—' }}
+                                    {{ $enfermedad->pivot->fecha_atencion_enfermedad
+                                        ? \Carbon\Carbon::parse($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s')
+                                        : '—' }}
                                 </p>
                             </li>
 
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de finalización:</span>
-                                    {{ optional($enfermedad->pivot->fecha_finalizacion_enfermedad)->format('d-m-Y H:i:s') ?? '—' }}
+                                    {{ $enfermedad->pivot->fecha_finalizacion_enfermedad
+                                        ? \Carbon\Carbon::parse($enfermedad->pivot->fecha_finalizacion_enfermedad)->format('d-m-Y H:i:s')
+                                        : '—' }}
                                 </p>
                             </li>
 
@@ -161,13 +164,13 @@
                             <div class="botonEditar pt-2 flex justify-center w-full absolute bottom-2 left-0 right-0">
 
 
-<button
-  type="button"
-  wire:click="openEditByPivot({{ (int) $enfermedad->pivot->id }})"
-  class="bg-[#667eea] text-white hover:bg-[#5a67d8] px-2 py-1 text-[13px] rounded-md">
-  Editar
-</button>
-<span class="text-xs text-gray-500">#{{ optional($enfermedad->pivot)->id }}</span>
+                            <button
+                            type="button"
+                            wire:click="openEditByPivot({{ (int) $enfermedad->pivot->id }})"
+                            class="bg-[#667eea] text-white hover:bg-[#5a67d8] px-2 py-1 text-[13px] rounded-md">
+                            Editar
+                            </button>
+                            <span class="text-xs text-gray-500">#{{ optional($enfermedad->pivot)->id }}</span>
 
 
 

@@ -60,14 +60,14 @@
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de atención:</span>
-                                    {{ \Carbon\Carbon::parse($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s') }}
+                                    {{ optional($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s') ?? '—' }}
                                 </p>
                             </li>
 
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de finalización:</span>
-                                    {{ \Carbon\Carbon::parse($enfermedad->pivot->fecha_finalizacion_enfermedad)->format('d-m-Y H:i:s') }}
+                                    {{ optional($enfermedad->pivot->fecha_finalizacion_enfermedad)->format('d-m-Y H:i:s') ?? '—' }}
                                 </p>
                             </li>
 
@@ -159,10 +159,23 @@
 
 
                             <div class="botonEditar pt-2 flex justify-center w-full absolute bottom-2 left-0 right-0">
-                                <button wire:click="editModalDisase({{ $enfermedad->id }})"
-                                    class=" bg-[#667eea] text-white hover:white hover:bg-[#5a67d8] px-2 py-1 text-[13px] font-normal rounded-md cursor-pointer">
-                                    Editar
-                                </button>
+
+
+<button
+  type="button"
+  wire:click="openEditByPivot({{ (int) $enfermedad->pivot->id }})"
+  class="bg-[#667eea] text-white hover:bg-[#5a67d8] px-2 py-1 text-[13px] rounded-md">
+  Editar
+</button>
+<span class="text-xs text-gray-500">#{{ optional($enfermedad->pivot)->id }}</span>
+
+
+
+
+
+
+
+
 
                                 {{-- <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade_paciente_id' => $enfermedad->pivot->id]) }}"
                                     class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
@@ -328,8 +341,8 @@
                 <div>
                     <label for="pdf_enfermedad"
                         class="block text-sm font-medium text-gray-700">{{ __('pdf') }}</label>
-                    <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
-                        wire:model="pdf_enfermedad" accept="image/.pdf" />
+                   <input id="pdf_enfermedad" class="rounded py-2 cursor-pointer" type="file"
+                            wire:model="pdf_enfermedad" accept="application/pdf" />
                     <x-input-error for="pdf_enfermedad" />
                     {{--  --}}
                 </div>
@@ -386,9 +399,11 @@
                 wire:click="$set('modal',false)">
                 {{ __('Cancelar') }}
             </button>
-            <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3" wire:click="editDisase">
-                {{ __('Editar enfermedad') }}
+            <button class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3"
+                    wire:click="addDisase">
+                {{ $pivotId ? __('Guardar cambios') : __('Agregar enfermedad') }}
             </button>
+
 
         </x-slot>
     </x-dialog-modal>

@@ -36,15 +36,22 @@ class EnfermeroHistorial extends Component
 
         $this->editControl = [
             'id'             => $control->id,
-            'presion'        => (string) $control->presion,
-            'glucosa'        => (string) $control->glucosa,
-            'temperatura'    => $control->temperatura ? (float) $control->temperatura : null,
-            'dosis'          => $control->dosis,
-            'inyectable'     => $control->inyectable,
+
+            // NUEVOS (tipolibres)
+            'peso'           => (string) ($control->peso ?? ''),
+            'altura'         => (string) ($control->altura ?? ''),
+            'talla'          => (string) ($control->talla ?? ''),
+
+            'presion'        => (string) ($control->presion ?? ''),
+            'glucosa'        => (string) ($control->glucosa ?? ''),
+            'temperatura'    => (string) ($control->temperatura ?? ''), // ahora texto
+            'dosis'          => (string) ($control->dosis ?? ''),
+            'inyectable'     => (string) ($control->inyectable ?? ''),
+            // Si preferís datetime-local, usar ->format('Y-m-d\TH:i'); el form usa <input type="date">
             'fecha_atencion' => $control->fecha_atencion
                 ? Carbon::parse($control->fecha_atencion)->format('Y-m-d')
                 : null,
-            'detalles'       => $control->detalles,
+            'detalles'       => (string) ($control->detalles ?? ''),
         ];
 
         $this->editForm = $control->toArray();
@@ -56,18 +63,36 @@ class EnfermeroHistorial extends Component
     {
         $control = ControlEnfermero::findOrFail($this->editForm['id']);
 
-        $campos = ['presion','glucosa','temperatura','inyectable','dosis','fecha_atencion','detalles'];
+        $campos = [
+            'peso','altura','talla',
+            'presion','glucosa','temperatura','inyectable','dosis','fecha_atencion','detalles'
+        ];
+
+        // Copiamos del editControl al editForm
         foreach ($campos as $campo) {
             if (array_key_exists($campo, $this->editControl)) {
                 $this->editForm[$campo] = $this->editControl[$campo];
             }
         }
 
+        // Normalizamos: '' => null
+        foreach ($campos as $c) {
+            if (isset($this->editForm[$c]) && $this->editForm[$c] === '') {
+                $this->editForm[$c] = null;
+            }
+        }
+
+        // Fecha: sólo formatear si viene no nula
         if (!empty($this->editForm['fecha_atencion'])) {
-            $this->editForm['fecha_atencion'] = Carbon::parse($this->editForm['fecha_atencion'])->format('Y-m-d');
+            $this->editForm['fecha_atencion'] = \Carbon\Carbon::parse($this->editForm['fecha_atencion'])->format('Y-m-d');
+        } else {
+            $this->editForm['fecha_atencion'] = null;
         }
 
         $control->update([
+            'peso'           => $this->editForm['peso']           ?? null,
+            'altura'         => $this->editForm['altura']         ?? null,
+            'talla'          => $this->editForm['talla']          ?? null,
             'presion'        => $this->editForm['presion']        ?? null,
             'glucosa'        => $this->editForm['glucosa']        ?? null,
             'temperatura'    => $this->editForm['temperatura']    ?? null,
@@ -81,7 +106,8 @@ class EnfermeroHistorial extends Component
         $this->dispatch('swal', title: 'Actualizado', text: 'Tratamiento actualizado correctamente.', icon: 'success');
     }
 
-    /** 🔹 Paso 1: Confirmación con SweetAlert */
+
+    /** Confirmación con SweetAlert */
     public function confirmDelete($id)
     {
         $this->dispatch('confirm', [
@@ -95,7 +121,7 @@ class EnfermeroHistorial extends Component
         ]);
     }
 
-    /** 🔹 Paso 2: Eliminación real después de confirmar */
+    /** Eliminación real */
     public function delete($id)
     {
         $control = ControlEnfermero::find($id);
@@ -112,14 +138,19 @@ class EnfermeroHistorial extends Component
         $query = ControlEnfermero::where('paciente_id', $this->pacienteId);
 
         if ($this->search) {
-            $query->where(function ($q) {
-                $q->where('presion', 'like', '%' . $this->search . '%')
-                    ->orWhere('temperatura', 'like', '%' . $this->search . '%')
-                    ->orWhere('glucosa', 'like', '%' . $this->search . '%')
-                    ->orWhere('inyectable', 'like', '%' . $this->search . '%')
-                    ->orWhere('dosis', 'like', '%' . $this->search . '%')
-                    ->orWhere('fecha_atencion', 'like', '%' . $this->search . '%')
-                    ->orWhere('detalles', 'like', '%' . $this->search . '%');
+            $like = '%'.$this->search.'%';
+            $query->where(function ($q) use ($like) {
+                $q->where('presion', 'like', $like)
+                  ->orWhere('temperatura', 'like', $like)
+                  ->orWhere('glucosa', 'like', $like)
+                  ->orWhere('inyectable', 'like', $like)
+                  ->orWhere('dosis', 'like', $like)
+                  ->orWhere('fecha_atencion', 'like', $like)
+                  ->orWhere('detalles', 'like', $like)
+                  // NUEVOS en búsqueda
+                  ->orWhere('peso', 'like', $like)
+                  ->orWhere('altura', 'like', $like)
+                  ->orWhere('talla', 'like', $like);
             });
         }
 

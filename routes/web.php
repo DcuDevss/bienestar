@@ -185,13 +185,13 @@ Route::get('nuevo_usuario', [NuevoUsuarioController::class,'create'])->name('new
 Route::post('nuevo_usuario', [NuevoUsuarioController::class,'store'])->name('new-user.store');
 
 //estadisticas
-Route::get('/estadisticas/licencias', LicenciasStats::class)->name('stats.licencias');
-Route::get('/estadisticas/postulantes', PostulantesStats::class)->name('stats.postulantes');
+Route::get('/estadisticas/licencias', LicenciasStats::class)->name('stats.licencias-stats');
+Route::get('/estadisticas/postulantes', PostulantesStats::class)->name('stats.postulantes-stats');
 
 //impresiones en PDF
 Route::get('/prints/postulantes', [PrintReportsController::class, 'postulantes'])
-    ->name('prints.postulantes');
+    ->name('prints.postulantes-stats');
 Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
-     ->name('prints.licencias');
+     ->name('prints.licencias-stats');
 // routes/web.php
 

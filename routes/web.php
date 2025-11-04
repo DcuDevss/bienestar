@@ -190,8 +190,8 @@ Route::get('/estadisticas/postulantes', PostulantesStats::class)->name('stats.po
 
 //impresiones en PDF
 Route::get('/prints/postulantes', [PrintReportsController::class, 'postulantes'])
-    ->name('prints.postulantes-stats');
+    ->name('prints.postulantes');
 Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
-     ->name('prints.licencias-stats');
+     ->name('prints.licencias');
 // routes/web.php
 

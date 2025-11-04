@@ -185,8 +185,8 @@ Route::get('nuevo_usuario', [NuevoUsuarioController::class,'create'])->name('new
 Route::post('nuevo_usuario', [NuevoUsuarioController::class,'store'])->name('new-user.store');
 
 //estadisticas
-Route::get('/stats/licencias', LicenciasStats::class)->name('stats.licencias-stats');
-Route::get('/stats/postulantes', PostulantesStats::class)->name('stats.postulantes-stats');
+Route::get('/stats/licencias-stats', LicenciasStats::class)->name('stats.licencias-stats');
+Route::get('/stats/postulantes-stats', PostulantesStats::class)->name('stats.postulantes-stats');
 
 //impresiones en PDF
 Route::get('/prints/postulantes', [PrintReportsController::class, 'postulantes'])

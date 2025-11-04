@@ -276,10 +276,12 @@
                             @endcan
 
                             <!-- Enlace a Estadísticas -->
-                            <a href="{{ route('stats.licencias') }}"
+                            @role('admin-jefe')
+                            <a href="{{ route('stats.licencias-stats') }}"
                                 class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
                                 Estadísticas
                             </a>
+                            @endrole
                             @role('super-admin')
                                 <a href="{{ route('pacientes.deleted-patient-list') }}"
                                     class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">

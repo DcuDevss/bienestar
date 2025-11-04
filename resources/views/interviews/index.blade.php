@@ -301,7 +301,6 @@
                                 </div>
                             @endcan
                         @endrole
-
                     </div>
                 </div>
             </div>

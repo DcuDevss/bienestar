@@ -118,7 +118,7 @@
   <div>
     {{ $rows->links() }}
   </div>
-  {{-- BOTÓN IMPRIMIBLE --}}
+  {{-- BOTÓN IMPRIMIBLE para estadisticas --}}
 <div class="flex justify-end">
     <a href="{{ route('prints.postulantes', [
         'desde'          => $desde,

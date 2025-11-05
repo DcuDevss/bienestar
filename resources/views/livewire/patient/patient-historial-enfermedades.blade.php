@@ -62,7 +62,7 @@
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de atención:</span>
-                                    {{ $enfermedad->pivot->fecha_atencion_enfermedad
+                                    {{ !empty($enfermedad->pivot->fecha_atencion_enfermedad) && $enfermedad->pivot->fecha_atencion_enfermedad !== '0000-00-00 00:00:00'
                                         ? \Carbon\Carbon::parse($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s')
                                         : '—' }}
                                 </p>
@@ -71,7 +71,7 @@
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de finalización:</span>
-                                    {{ $enfermedad->pivot->fecha_finalizacion_enfermedad
+                                    {{ !empty($enfermedad->pivot->fecha_finalizacion_enfermedad) && $enfermedad->pivot->fecha_finalizacion_enfermedad !== '0000-00-00 00:00:00'
                                         ? \Carbon\Carbon::parse($enfermedad->pivot->fecha_finalizacion_enfermedad)->format('d-m-Y H:i:s')
                                         : '—' }}
                                 </p>

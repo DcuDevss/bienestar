@@ -47,22 +47,31 @@
                         </li>
                         <li class="mb-0">
                             <p>
-                                <span class="pr-1 font-extrabold text-black">Presentacion de certificado:</span>
-                                {{ \Carbon\Carbon::parse($disase->pivot->fecha_presentacion_certificado)->format('d-m-Y H:i:s') }}
+                                <span class="pr-1 font-extrabold text-black">Presentación de certificado:</span>
+                                {{ !empty($disase->pivot->fecha_presentacion_certificado) && $disase->pivot->fecha_presentacion_certificado !== '0000-00-00 00:00:00'
+                                    ? \Carbon\Carbon::parse($disase->pivot->fecha_presentacion_certificado)->format('d-m-Y H:i:s')
+                                    : '—' }}
                             </p>
                         </li>
+
                         <li class="mb-0">
                             <p>
                                 <span class="pr-1 font-extrabold text-black">Inicio de licencia:</span>
-                                {{ \Carbon\Carbon::parse($disase->pivot->fecha_inicio_licencia)->format('d-m-Y H:i:s') }}
+                                {{ !empty($disase->pivot->fecha_inicio_licencia) && $disase->pivot->fecha_inicio_licencia !== '0000-00-00 00:00:00'
+                                    ? \Carbon\Carbon::parse($disase->pivot->fecha_inicio_licencia)->format('d-m-Y H:i:s')
+                                    : '—' }}
                             </p>
                         </li>
+
                         <li class="mb-0">
                             <p>
-                                <span class="pr-1 font-extrabold text-black">Finalizacion:</span>
-                                {{ \Carbon\Carbon::parse($disase->pivot->fecha_finalizacion_licencia)->format('d-m-Y H:i:s') }}
+                                <span class="pr-1 font-extrabold text-black">Finalización:</span>
+                                {{ !empty($disase->pivot->fecha_finalizacion_licencia) && $disase->pivot->fecha_finalizacion_licencia !== '0000-00-00 00:00:00'
+                                    ? \Carbon\Carbon::parse($disase->pivot->fecha_finalizacion_licencia)->format('d-m-Y H:i:s')
+                                    : '—' }}
                             </p>
                         </li>
+
 
                         {{-- <li class="mb-0">
                             <p><span class="pr-1 font-extrabold text-black">Horas salud:</span>
@@ -236,7 +245,7 @@
                 </div>
 
                 <!-- Horas de salud -->
-                
+
                 {{-- <div>
                     <label for="horas_salud" class="block text-sm font-medium text-gray-700">
                         {{ __('Horas de licencia médica') }}

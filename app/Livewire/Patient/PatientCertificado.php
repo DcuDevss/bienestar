@@ -33,10 +33,10 @@ class PatientCertificado extends Component
     protected $rules = [
         'disase_id'                    => 'nullable|exists:disases,id',
         'name'                         => 'required_without:disase_id|string|min:2',
-        'fecha_presentacion_certificado' => 'nullable|date',
+        'fecha_presentacion_certificado' => 'required|date',
         'detalle_certificado'          => 'required|string|min:2',
-        'fecha_inicio_licencia'        => 'nullable|date',
-        'fecha_finalizacion_licencia'  => 'nullable|date|after_or_equal:fecha_inicio_licencia',
+        'fecha_inicio_licencia'        => 'required|date',
+        'fecha_finalizacion_licencia'  => 'required|date|after_or_equal:fecha_inicio_licencia',
         'horas_salud'                  => 'nullable|integer',
         'suma_salud'                   => 'nullable|integer',
         'suma_auxiliar'                => 'nullable|integer',
@@ -260,7 +260,7 @@ class PatientCertificado extends Component
         }
     }
 
-    
+
 
     // ---------------- Optimización de imágenes ----------------
     private function optimizarImagen($file, $dir)

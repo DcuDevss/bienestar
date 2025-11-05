@@ -276,6 +276,8 @@
                         <option value="Licencia pandemia">{{ __('Licencia pandemia') }}</option>
                         <option value="Dto. 564/18 lic. extraordinaria ley 911-art 9">
                             {{ __('Dto. 564/18 lic. extraordinaria ley 911-art 9') }}</option>
+                        <option value="Tareas livianas">{{ __('Tareas livianas') }}</option>
+                        <option value="Reposo">{{ __('Reposo') }}</option>
                     </select>
                     <x-input-error for="tipodelicencia" />
                 </div>

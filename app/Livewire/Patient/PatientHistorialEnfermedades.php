@@ -59,22 +59,22 @@ class PatientHistorialEnfermedades extends Component
     public $nameIndex = 0;
 
     protected $rules = [
-        'enfermedade_id'                => 'nullable|integer|exists:enfermedades,id',
+        'enfermedade_id'                => 'required|integer|exists:enfermedades,id',
         'name'                          => 'nullable|string|min:1',
-        'detalle_diagnostico'           => 'nullable|string',
-        'fecha_atencion_enfermedad'     => 'nullable', // si querés estricta: date
-        'fecha_finalizacion_enfermedad' => 'nullable', // idem
+        'detalle_diagnostico'           => 'required|string',
+        'fecha_atencion_enfermedad'     => 'required', // si querés estricta: date
+        'fecha_finalizacion_enfermedad' => 'required', // idem
         'horas_reposo'                  => 'nullable|integer',
         'pdf_enfermedad'                => 'nullable|file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
         'imgen_enfermedad'              => 'nullable|file|mimes:png,jpg,jpeg,gif|max:8192',
         'medicacion'                    => 'nullable|string',
         'dosis'                         => 'nullable|string',
         'derivacion_psiquiatrica'       => 'nullable|string',
-        'motivo_consulta'               => 'nullable|string',
+        'motivo_consulta'               => 'required|string',
         'detalle_medicacion'            => 'nullable|string',
         'nro_osef'                      => 'nullable|string',
         'art'                           => 'nullable|string',
-        'tipodelicencia'                => 'nullable|string',
+        'tipodelicencia'                => 'required|string',
     ];
 
     public function mount($paciente)

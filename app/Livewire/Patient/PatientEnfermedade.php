@@ -44,9 +44,9 @@ class PatientEnfermedade extends Component
     protected $rules = [
         'enfermedade_id'                => 'nullable|exists:enfermedades,id',
         'name'                          => 'required_without:enfermedade_id|string|min:2',
-        'detalle_diagnostico'           => 'nullable|string',
-        'fecha_atencion_enfermedad'     => 'nullable|date',
-        'fecha_finalizacion_enfermedad' => 'nullable|date|after_or_equal:fecha_atencion_enfermedad',
+        'detalle_diagnostico'           => 'required|string',
+        'fecha_atencion_enfermedad'     => 'required|date',
+        'fecha_finalizacion_enfermedad' => 'required|date|after_or_equal:fecha_atencion_enfermedad',
         'horas_reposo'                  => 'nullable|integer',
         'pdf_enfermedad'                => 'nullable|file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
         'imgen_enfermedad'              => 'nullable|file|mimes:png,jpg,jpeg,gif|max:8192',
@@ -58,7 +58,7 @@ class PatientEnfermedade extends Component
         'art'                           => 'nullable|string',
         'detalle_medicacion'            => 'nullable|string',
         'nro_osef'                      => 'nullable|string',
-        'tipodelicencia'                => 'nullable|string',
+        'tipodelicencia'                => 'required|string',
     ];
 
     public function mount(Paciente $paciente)

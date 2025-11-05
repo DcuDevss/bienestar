@@ -130,7 +130,7 @@
                                             <a href="{{ route('patient.edit', $paciente->id) }}"
                                                 class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-gray-700 hover:bg-gray-400">
                                                 Editar
-                                            </a>.
+                                            </a>
                                             @endcan
                                             <!-- Opción Eliminar -->
                                        @role('super-admin')

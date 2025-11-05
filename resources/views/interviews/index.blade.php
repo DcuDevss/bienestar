@@ -274,6 +274,7 @@
                     </dl>
 
                     <div class="mt-6 grid grid-cols-1 md:grid-cols-3 gap-3">
+                        {{-- permiso solo para personal psicologico --}}
                         @can('psicologo.index')
                             <a href="{{ route('entrevista.create', $paciente->id) }}"
                                 class="inline-flex items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100 hover:text-slate-700 transition">

@@ -126,10 +126,12 @@
                                         <div id="dropdown-{{ $paciente->id }}"
                                             class="hidden absolute bg-white shadow-lg rounded-lg mt-1 right-0 z-10 w-auto">
                                             <!-- Opción Editar -->
+                                            @can('oficinas.index')
                                             <a href="{{ route('patient.edit', $paciente->id) }}"
                                                 class="block px-4 py-2 text-[12px] font-medium uppercase text-white bg-gray-700 hover:bg-gray-400">
                                                 Editar
-                                            </a>
+                                            </a>.
+                                            @endcan
                                             <!-- Opción Eliminar -->
                                        @role('super-admin')
                                             <button

@@ -15,6 +15,9 @@
                 <!-- BOTONES OSEF & LA CAJA -->
                 <!-- Imagen con link (ValidadorOsef) -->
                 <div class="float-right mr-2 flex gap-x-2">
+                    <a href=" https://www.experta.com.ar/index.php/siniestros/" class="bg-white rounded-md py-1 px-3" target="_blank">
+                        <img class="h-[34px]" src="{{ asset('assets/EXPERTA.png') }}" alt="">
+                    </a>
                     <a href=" https://validador.osef.gob.ar/" class="bg-white rounded-md py-1 px-3" target="_blank">
                         <img class="h-[34px]" src="{{ asset('assets/VALIDADOR.png') }}" alt="">
                     </a>
@@ -59,7 +62,7 @@
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de atención:</span>
-                                    {{ $enfermedad->pivot->fecha_atencion_enfermedad
+                                    {{ !empty($enfermedad->pivot->fecha_atencion_enfermedad) && $enfermedad->pivot->fecha_atencion_enfermedad !== '0000-00-00 00:00:00'
                                         ? \Carbon\Carbon::parse($enfermedad->pivot->fecha_atencion_enfermedad)->format('d-m-Y H:i:s')
                                         : '—' }}
                                 </p>
@@ -68,7 +71,7 @@
                             <li class="mb-0">
                                 <p>
                                     <span class="pr-1 font-extrabold text-black">Fecha de finalización:</span>
-                                    {{ $enfermedad->pivot->fecha_finalizacion_enfermedad
+                                    {{ !empty($enfermedad->pivot->fecha_finalizacion_enfermedad) && $enfermedad->pivot->fecha_finalizacion_enfermedad !== '0000-00-00 00:00:00'
                                         ? \Carbon\Carbon::parse($enfermedad->pivot->fecha_finalizacion_enfermedad)->format('d-m-Y H:i:s')
                                         : '—' }}
                                 </p>
@@ -274,6 +277,8 @@
                         <option value="Licencia pandemia">{{ __('Licencia pandemia') }}</option>
                         <option value="Dto. 564/18 lic. extraordinaria ley 911-art 9">
                             {{ __('Dto. 564/18 lic. extraordinaria ley 911-art 9') }}</option>
+                        <option value="Tareas livianas">{{ __('Tareas livianas') }}</option>
+                        <option value="Reposo">{{ __('Reposo') }}</option>
                     </select>
                     <x-input-error for="tipodelicencia" />
                 </div>

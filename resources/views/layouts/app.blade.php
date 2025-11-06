@@ -28,7 +28,25 @@
 <style>
     /* ... Tus estilos CSS (omito por brevedad) ... */
 </style>
-
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  @if (session('forbidden_message'))
+    Swal.fire({
+      title: 'Aviso',
+      text: @json(session('forbidden_message')),
+      icon: 'warning',
+      confirmButtonText: 'Entendido',
+      confirmButtonColor: '#2d5986',
+      backdrop: true,
+      allowOutsideClick: false,
+      allowEscapeKey: true,
+      // 👇 Esto lo centra completamente
+      position: 'center',
+      timer: null, // sin auto cierre
+    });
+  @endif
+});
+</script>
 <body class="font-sans antialiased">
     <x-banner />
 

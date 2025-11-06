@@ -92,6 +92,10 @@ class PatientEntrevistas extends Component
             ->leftJoin('estado_entrevistas', 'entrevistas.estado_entrevista_id', '=', 'estado_entrevistas.id')
             ->leftJoin('pacientes', 'entrevistas.paciente_id', '=', 'pacientes.id') // Unir la tabla de pacientes
             ->leftJoin('estados', 'pacientes.estado_id', '=', 'estados.id')
+
+            //Agregado SoftDeletes
+            ->whereNull('pacientes.deleted_at')
+            
             ->when($this->search, function ($query) use ($searchLower) {
                 $query->whereRaw('LOWER(entrevistas.created_at) LIKE ?', ['%' . $searchLower . '%'])
                     ->orWhereHas('tipoEntrevista', function ($query) use ($searchLower) {

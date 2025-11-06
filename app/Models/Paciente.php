@@ -55,7 +55,7 @@ class Paciente extends Model
         'updated_at',
         'user_id',
         'foto'
-    ];
+    ]; 
 
     public function scopeSearch($query, $term)
     {

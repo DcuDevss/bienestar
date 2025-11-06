@@ -173,8 +173,7 @@
                             class="bg-[#667eea] text-white hover:bg-[#5a67d8] px-2 py-1 text-[13px] rounded-md">
                             Editar
                             </button>
-                            <span class="text-xs text-gray-500">#{{ optional($enfermedad->pivot)->id }}</span>
-
+                            
 
 
 

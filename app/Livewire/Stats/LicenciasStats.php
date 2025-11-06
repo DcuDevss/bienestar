@@ -23,6 +23,7 @@ class LicenciasStats extends Component
     {
         return DB::table('disase_paciente as dp')
             ->join('pacientes as p', 'p.id', '=', 'dp.paciente_id')
+            ->whereNull('p.deleted_at') // 👈 filtra pacientes eliminados
             ->leftJoin('tipolicencias as tl', 'tl.id', '=', 'dp.tipolicencia_id')
             ->leftJoin('ciudades as c', 'c.id', '=', 'p.ciudad_id')
             ->select(

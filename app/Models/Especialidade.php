@@ -18,7 +18,7 @@ class Especialidade extends Model
     ];
 
 
-    public function doctors(){//una especialidad tiene muchos medicos 
+    public function doctors(){//una especialidad tiene muchos medicos
         return $this->belongsToMany(User::class);
     }
 }

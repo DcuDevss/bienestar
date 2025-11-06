@@ -5,7 +5,7 @@ namespace App\Models;
 use App\Scopes\PatientScope;
 
 //use Illuminate\Database\Eloquent\Factories\HasFactory;
-//use Illuminate\Database\Eloquent\Model;
+//use Illuminate\Databaase\Eloquent\Model;
 
 class Patient extends User
 {

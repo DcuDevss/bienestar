@@ -32,7 +32,7 @@ class AuditoriaList extends Component
             ->paginate($this->perPage);
 
         return view('livewire.auditorias.auditoria-list', [
-            'auditorias' => $auditorias, // ✅ pasamos la variable a la vista
+            'auditorias' => $auditorias, // ✅ pasamos la vaariable a la vista
         ])->layout('layouts.app'); // ⚠️ ojo, debeería ser 'layouts.app' y no 'components.layouts.app'
     }
 

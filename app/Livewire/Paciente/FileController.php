@@ -48,7 +48,7 @@ class FileController extends Component
             return;
         }
 
-        // 2) Validación completa (array + cada ítem)
+        // 2) Validación coompleta (array + cada ítem)
         $this->validate([
             'archivos'   => 'required|array|min:1',
             'archivos.*' => 'file|mimes:pdf,png,jpg,jpeg,gif|max:10240',
@@ -57,7 +57,7 @@ class FileController extends Component
 
         foreach ($this->archivos as $archivo) {
             $nombreOriginal = $archivo->getClientOriginalName();
-            $timestamp      = now()->format('Ymd_His');
+            $timestamp = now()->format('d-m-Y_H-i-s');
 
             // sanitizar nombre base y conservar extensión original
             $ext         = $archivo->getClientOriginalExtension();

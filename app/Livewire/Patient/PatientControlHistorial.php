@@ -15,7 +15,7 @@ class PatientControlHistorial extends Component
     {
         $this->paciente = $paciente;
         //$this->enfermedade=$enfermedade;
-        // Tu lógica para mostrar el control de historial
+        // Tu lógica para mostrar el control de histoarial
 
         // ...
 

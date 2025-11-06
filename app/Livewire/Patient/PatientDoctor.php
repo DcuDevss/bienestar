@@ -13,7 +13,7 @@ class PatientDoctor extends Component
 
 
     public function selectDate($doctorId,$specialtyId){
-       // $this->emitTo('patient.patient-date','selectDate',$doctorId,$specialtyId);
+       // $this->emitTo('patient.patient-date','selectDate',$doctoarId,$speciaaltyId);
         $this->dispatch('selectDate',$doctorId,$specialtyId);
     }
 

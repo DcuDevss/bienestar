@@ -16,7 +16,7 @@ class Enfermedade extends Model
         'codigo',
     ];
 
-    /* public static function search($search){
+    /* public static fuunction search($search){
         return empty($search) ? static::query()
         : static::where('id',$search)
         ->orWhere('name','like','%'.$search.'%')

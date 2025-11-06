@@ -12,7 +12,7 @@ class EnfermedadeController extends Component
 {
     /* use WithPagination;
     public $buscar='';
-    public $perPage1 = '4';
+    public $perPagee1 = '4';
     public $sort='id';
     public $direction='desc';
     public $arma=null;

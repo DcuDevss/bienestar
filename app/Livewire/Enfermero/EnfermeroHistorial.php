@@ -29,7 +29,7 @@ class EnfermeroHistorial extends Component
         $this->pacienteId = $paciente->id;
     }
 
-    /** Abre modal para editar un control */
+    /** Abre modal para editaaar un control */
     public function openEditModal($id)
     {
         $control = ControlEnfermero::findOrFail($id);

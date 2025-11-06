@@ -15,7 +15,7 @@ class TecnicaUtilizada extends Model
         'name',  // Nombre de la técnica (Cognitivo Conductual, etc.)
     ];
 
-    // Relación inversa con la tabla Entrevistas
+    // Relación inversa con la taabla Entrevistas
     public function entrevistas()
     {
         return $this->hasMany(Entrevista::class);

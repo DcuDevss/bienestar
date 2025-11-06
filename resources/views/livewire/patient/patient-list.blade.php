@@ -2,18 +2,16 @@
     {{-- TABLA PACIENTES --}}
     <section class="seccionTab xl:mx-auto lg:mx-auto w-[95%]">
         <div class="mx-auto text-[12px]">
-            <!-- Start coding here -->
-            <div class="bg-gray-800  shadow-md sm:rounded-lg ">
+            <div class="bg-gray-800 shadow-md sm:rounded-lg ">
+                
+                {{-- Controles de búsqueda y botones --}}
                 <div class="flex items-center justify-between d p-4">
                     <div class="flex flex-row items-end justify-between w-full">
                         {{-- BOTON BUSCAR --}}
                         <div class="w-fit">
                             <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
-                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor"
-                                    viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
-                                    <path fill-rule="evenodd"
-                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                        clip-rule="evenodd" />
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor" viewbox="0 0 20 20" xmlns="http://www.w3.org/2000/svg">
+                                    <path fill-rule="evenodd" d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z" clip-rule="evenodd" />
                                 </svg>
                             </div>
                             <input wire:model.live.debounce.300ms="search" type="text"
@@ -41,16 +39,12 @@
                     <table class="w-full text-left text-gray-500 ">
                         <thead class=" text-xs text-white uppercase bg-gray-900">
                             <tr class="teGead text-[14px]">
-                                {{-- <th scope="col" class="px-4 py-3">N°</th> --}}
                                 <th scope="col" class="px-4 py-3">Apellido y nombre</th>
                                 <th scope="col" class="px-4 py-3">DNI</th>
                                 <th scope="col" class="px-4 py-3">legajo</th>
                                 <th scope="col" class="px-4 py-3">Jerarquia</th>
                                 <th scope="col" class="px-4 py-3">Destino</th>
                                 <th scope="col" class="px-4 py-3">Ciudad</th>
-                                {{--                                 {{-- <th scope="col" class="px-4 py-3">Estado</th>
-                                <th scope="col" class="px-4 py-3">Email</th>
-                                <th scope="col" class="px-4 py-3">Celular</th> --}}
                                 <th scope="col" class="px-4 py-3">Revista</th>
                                 <th scope="col" class="px-4 py-3">Finalizacion licencia</th>
                                 <th scope="col" class="px-4 py-3">Accion</th>
@@ -75,37 +69,25 @@
                                         {{ $paciente->ciudad_id ? $paciente->ciudades->nombre : 'No asignado' }}</td>
                                     <td class="tiBody px-2 py-1 text-[14px]">
                                         @if ($paciente->estado_id == 1)
-                                            <span
-                                                class="bg-green-600 text-white rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
-                                            <!-- Color por defecto -->
+                                            <span class="bg-green-600 text-white rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
                                         @elseif ($paciente->estado_id == 2)
-                                            <span
-                                                class="text-white bg-gray-600 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
-                                            <!-- Color rojo medio -->
+                                            <span class="text-white bg-gray-600 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
                                         @elseif ($paciente->estado_id == 3)
-                                            <span
-                                                class="text-black bg-yellow-400 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
-                                            <!-- Color azul -->
+                                            <span class="text-black bg-yellow-400 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
                                         @elseif ($paciente->estado_id == 4)
-                                            <span
-                                                class="text-white bg-red-700 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
-                                            <!-- Color rojo fuerte -->
+                                            <span class="text-white bg-red-700 rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
                                         @elseif ($paciente->estado_id == 5)
-                                            <span
-                                                class="text-white bg-black rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
-                                            <!-- Color amarillo -->
+                                            <span class="text-white bg-black rounded-md px-4 py-2 text-md text-center inline-block">{{ $paciente->estados->name }}</span>
                                         @else
                                             <span class=""></span>
-                                            <!-- Color por defecto para otros casos -->
                                         @endif
-                                    <td
-                                        class="tiBody px-4 py-3
+                                    <td class="tiBody px-4 py-3
                                         @php $ultimaEnfermedad = $paciente->disases->last(); @endphp
                                         @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia) @php
-                                                $fechaFinalizacionLicencia = \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia);
+                                            $fechaFinalizacionLicencia = \Carbon\Carbon::parse($ultimaEnfermedad->pivot->fecha_finalizacion_licencia);
                                             @endphp
                                             @if ($fechaFinalizacionLicencia->startOfDay() == \Carbon\Carbon::now()->startOfDay())
-                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse /* Amarillo con transparencia y animación de pulso */ @endif
+                                                bg-yellow-200 bg-opacity-50 rounded-md animate-pulse @endif
                                         @endif
                                         font-semibold text-xs text-white uppercase tracking-widest focus:ring focus:ring-red-200 active:bg-red-600 disabled:opacity-25 transition">
                                         @if ($ultimaEnfermedad && $ultimaEnfermedad->pivot && $ultimaEnfermedad->pivot->fecha_finalizacion_licencia)
@@ -116,13 +98,10 @@
                                     </td>
 
                                     <td class="tiBody px-4 py-1 text-[14px] relative">
-                                        <!-- Botón de opciones (Desplegable) -->
                                         <button onclick="toggleDropdown(event, {{ $paciente->id }})"
                                             class="ml-2 px-4 py-2 text-[12px] font-medium uppercase bg-gray-600 hover:bg-gray-500 text-white rounded">
                                             Opciones
                                         </button>
-
-                                        <!-- Menú desplegable -->
                                         <div id="dropdown-{{ $paciente->id }}"
                                             class="hidden absolute bg-white shadow-lg rounded-lg mt-1 right-0 z-10 w-auto">
                                             <!-- Opción Editar -->
@@ -177,10 +156,8 @@
                                         @endrole
                                         </div>
                                     </td>
-
-
                                     <td class="tiBody px-4 py-1 text-[14px]">
-                                        <a class="ml-3 px-4 py-1 rounded-md bg-[#2d5986] text-white  hover:bg-[#3973ac]"
+                                        <a class="ml-3 px-4 py-1 rounded-md bg-[#2d5986] text-white hover:bg-[#3973ac]"
                                             href="{{ route('interviews.index', ['paciente' => $paciente->id]) }}">
                                             {{ __('Ir') }}
                                         </a>
@@ -236,6 +213,11 @@
                 </div>
             @endforeach
         </div>
+        
+        {{-- NUEVA SECCIÓN: PAPELERA DE RECICLAJE --}}
+        {{-- <div class="mt-6">
+            @livewire('patient.deleted-patient-list') 
+        </div> --}}
     </section>
 </div>
 

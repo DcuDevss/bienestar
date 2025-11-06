@@ -16,12 +16,13 @@ use App\Http\Controllers\RoleController;
 
 use App\Http\Controllers\Doctor\CurriculumController;
 use App\Http\Controllers\NuevoUsuarioController;
+use App\Http\Controllers\PatientController;
 use App\Http\Controllers\Psicologo\PsicologoController;
 use App\Http\Controllers\PdfController;
 //use App\Http\Controllers\Interviews\InterviewController;
 use App\Http\Livewire\Paciente\PdfViewer as PacientePdfViewer;
 use App\Livewire\Paciente\PdfViewer;
-/* use App\Livewire\Doctor\DiaDeTrabajoController; */
+use App\Livewire\Doctor\DiaDeTrabajoController;
 use App\Livewire\Doctor\DisaseController;
 use App\Livewire\Doctor\EnfermedadeController;
 use App\Livewire\Doctor\MultiformController;
@@ -50,8 +51,7 @@ use Illuminate\Support\Facades\Auth;
 use App\Livewire\Stats\LicenciasStats;
 use App\Livewire\Stats\PostulantesStats;
 use App\Http\Controllers\PrintReportsController;
-
-
+use App\Livewire\Patient\DeletedPatientList;
 
 /*
 |--------------------------------------------------------------------------
@@ -63,7 +63,7 @@ use App\Http\Controllers\PrintReportsController;
 | be assigned to the "web" middleware group. Make something great!
 |
 */
-//Route::get('/', [\Laravel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'create'])->middleware('guest');
+//Route::get('/', [\Laraavel\Fortify\Http\Controllers\AuthenticatedSessionController::class, 'create'])->middleware('guest');
 
 
 
@@ -136,7 +136,7 @@ Route::get('get', function () {
 })->name('doctor.index');
 
 Route::get('/oficinas', OficinaController::class)->middleware('can:oficinas.index')->name('oficinas.index');
-/* Route::get('/diadetrabajos', DiaDeTrabajoController::class)->middleware('can:diadetrabajos.index')->name('diadetrabajos.index'); */
+Route::get('/diadetrabajos', DiaDeTrabajoController::class)->middleware('can:diadetrabajos.index')->name('diadetrabajos.index');
 Route::get('/curriculum', [CurriculumController::class, 'index'])->middleware('can:curriculum.index')->name('curriculum.index');
 Route::get('/interviews/{paciente}', [InterviewController::class, 'index'])->middleware('can:interviews.index')->name('interviews.index');
 Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])->name('reset-sums'); // web.php
@@ -195,3 +195,8 @@ Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
      ->name('prints.licencias');
 // routes/web.php
 
+
+/* // NUEVA RUTA para Pacientes Eliminados (Papelera)
+Route::get('/pacientes/eliminados', [PatientController::class, 'eliminados'])->name('pacientes.eliminados'); */
+Route::get('/patient/deleted-patient', DeletedPatientList::class)
+    ->name('patient.deleted-patient-list');

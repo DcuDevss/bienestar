@@ -17,7 +17,7 @@ class PatientListFechas extends Component
     #[Url(history:true)]
     public $admin = '';
 
-    // ... (otros métodos)
+    // ... (otras métodos)
 
     public function getPatientsWithTodayFinalization()
     {

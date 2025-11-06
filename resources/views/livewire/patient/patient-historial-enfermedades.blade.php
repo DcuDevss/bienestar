@@ -162,46 +162,26 @@
                                 </div>
                             </li>
 
-
-
-                            <div class="botonEditar pt-2 flex justify-center w-full absolute bottom-2 left-0 right-0">
-
-
-                            <button
-                            type="button"
-                            wire:click="openEditByPivot({{ (int) $enfermedad->pivot->id }})"
-                            class="bg-[#667eea] text-white hover:bg-[#5a67d8] px-2 py-1 text-[13px] rounded-md">
-                            Editar
-                            </button>
-                            <span class="text-xs text-gray-500">#{{ optional($enfermedad->pivot)->id }}</span>
-
-
-
-
-
-
-
-
-
-                                {{-- <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade_paciente_id' => $enfermedad->pivot->id]) }}"
-                                    class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
-                                    Control Historial
-                                </a> --}}
-
-
-                                {{--  <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade'=> $enfermedad->id]) }}"
-                                    class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
-                                    Control Historial
-                                 </a> --}}
-
-
-                                {{--  <td class="py-2 px-4 border-b">
-                                <a href="{{ route('patient.patient-historial', ['paciente' => $tratamiento->paciente_id, 'tratamiento' => $tratamiento->id]) }}"
-                                    class="text-blue-500 hover:underline">Crear</a>
-                            </td> --}}
-
-                            </div>
-
+                                <div class="botonEditar pt-2 flex justify-center w-full absolute bottom-2 left-0 right-0">
+                                    <button
+                                        type="button"
+                                        wire:click="openEditByPivot({{ (int) $enfermedad->pivot->id }})"
+                                        class="bg-[#667eea] text-white hover:bg-[#5a67d8] px-2 py-1 text-[13px] rounded-md">
+                                        Editar
+                                    </button>
+                                        {{-- <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade_paciente_id' => $enfermedad->pivot->id]) }}"
+                                            class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
+                                            Control Historial
+                                        </a> --}}
+                                        {{--  <a href="{{ route('patient.patient-control-historial', ['paciente' => $paciente->id, 'enfermedade'=> $enfermedad->id]) }}"
+                                            class="bg-green-500 text-white hover:bg-green-400 px-4 py-2 rounded mx-3">
+                                            Control Historial
+                                        </a> --}}
+                                        {{--  <td class="py-2 px-4 border-b">
+                                        <a href="{{ route('patient.patient-historial', ['paciente' => $tratamiento->paciente_id, 'tratamiento' => $tratamiento->id]) }}"
+                                            class="text-blue-500 hover:underline">Crear</a>
+                                    </td> --}}
+                                    </div>
                         </ul>
                     @endforeach
                 @else

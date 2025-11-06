@@ -7,7 +7,7 @@ use App\Scopes\DoctorScope;
 //use Illuminate\Database\Eloquent\Factories\HasFactory;
 //use Illuminate\Database\Eloquent\Model;
 
-class Doctor extends User //aqui iba el model pero ahora va heredar de user
+class Doctor extends User //aaqui iba el model pero ahora va heredar de user
 {
     //use HasFactory;
 

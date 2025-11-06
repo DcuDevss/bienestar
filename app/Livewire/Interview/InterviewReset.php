@@ -25,7 +25,7 @@ class InterviewReset extends Component
     }
 
     /**
-     * Resetea solo los certificados atendibles (Atención familiar) del año actual
+     * Resetea solo los certificaados atendibles (Atención familiar) del año actual
      */
     public function resetSumsAtendibles()
     {

@@ -131,6 +131,7 @@
                                     wire:model="tipodelicencia">
                                     <option value="" selected>{{ __('Seleccione una opción') }}</option>
                                     <option value="Enfermedad común">{{ __('Enfermedad común') }}</option>
+                                    <option value="art">{{ __('A.R.T') }}</option>
                                     <option value="Enfermedad largo tratamiento">
                                         {{ __('Enfermedad largo tratamiento') }}</option>
                                     <option value="Atención familiar">{{ __('Atención familiar') }}</option>
@@ -145,7 +146,7 @@
                                     <option value="Reposo">{{ __('Reposo') }}</option>
                                 </select>
                                 <x-input-error for="tipodelicencia" />
-                            </div>
+                            </div> 
 
                             <div>
                                 <label for="derivacion_psiquiatrica"
@@ -217,9 +218,9 @@
 
                             <div>
                                 <label for="art"
-                                    class="block text-sm font-medium text-gray-700">{{ __('art') }}</label>
+                                    class="block text-sm font-medium text-gray-700">{{ __('Nro Siniestro') }}</label>
                                 <input id="art" class="w-full rounded cursor-pointer" type="text"
-                                    placeholder="{{ __('ingrese art') }}" wire:model="art" />
+                                    placeholder="{{ __('ingrese nro siniestro') }}" wire:model="art" />
                                 <x-input-error for="art" />
                             </div>
                         </div>
@@ -238,7 +239,7 @@
                                 <label for="medicacion"
                                     class="block text-sm font-medium text-gray-700">{{ __('medicacion') }}</label>
                                 <input id="medicacion" class="w-full rounded cursor-pointer" type="text"
-                                    placeholder="{{ __('ingrese horas de salud') }}" wire:model="medicacion" />
+                                    placeholder="{{ __('ingrese medicacion') }}" wire:model="medicacion" />
                                 <x-input-error for="medicacion" />
                             </div>
 
@@ -246,7 +247,7 @@
                                 <label for="dosis"
                                     class="block text-sm font-medium text-gray-700">{{ __('dosis') }}</label>
                                 <input id="dosis" class="w-full rounded cursor-pointer" type="text"
-                                    placeholder="{{ __('ingrese horas de salud') }}" wire:model="dosis" />
+                                    placeholder="{{ __('ingrese dosis') }}" wire:model="dosis" />
                                 <x-input-error for="dosis" />
                             </div>
 

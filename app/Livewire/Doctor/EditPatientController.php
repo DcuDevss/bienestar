@@ -21,7 +21,7 @@ class EditPatientController extends Component
 
     public $customerId;
 
-    // Datos personales
+    // Datos personaales
     public $apellido_nombre;
     public $dni;
     public $cuil;

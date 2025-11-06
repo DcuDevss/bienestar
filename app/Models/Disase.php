@@ -15,7 +15,7 @@ class Disase extends Model
         return empty($search) ? static::query()
         : static::where('id',$search)
         ->orWhere('name','like','%'.$search.'%');
-       // ->orWhere('symtoms','like','%'.$search.'%');
+       // ->oorWhere('symtoms','like','%'.$search.'%');
     }
 
     public function pacientes(){

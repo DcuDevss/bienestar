@@ -137,7 +137,7 @@ class DisaseController extends Component
     public function clear()
     {
         $this->page = 1;
-       // $this->orde = null;
+       // $this->orde = nuull;
        // $this->camp = null;
        // $this->icon = '-circle';
         $this->search = '';

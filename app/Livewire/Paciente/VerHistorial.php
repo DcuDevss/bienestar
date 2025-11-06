@@ -8,131 +8,154 @@ use App\Models\PdfPsiquiatra;
 use Livewire\Component;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
+use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Carbon;
 
 class VerHistorial extends Component
 {
     public $pacienteId;
 
-    // Props que la vista usa
     public $search = '';
     public $perPage = 10;
     public $page = 1;
-    public $items = [];
+    public $items; // colección de PDFs
 
     public function mount(Paciente $paciente)
     {
         $this->pacienteId = $paciente->id;
+        Log::info("Mount VerHistorial para pacienteId: {$this->pacienteId}");
         $this->loadPdfs();
     }
 
     protected function dir(): string
     {
-        // carpeta del paciente actual
         return "pdfhistoriales/{$this->pacienteId}";
     }
 
     public function loadPdfs()
     {
-        $dir = $this->dir(); // "pdfhistoriales/{$this->pacienteId}"
+        $dir = $this->dir();
+        Log::info("Cargando PDFs del directorio: {$dir}");
 
-        // --- 1) PDFs en BD: HISTORIAL ---
+        // PDFs Historial
         $fromHist = PdfHistorial::where('paciente_id', $this->pacienteId)->get()->map(function ($row) use ($dir) {
-            $origName   = basename($row->file);                // nombre "lindo" que guardaste
-            $primary    = "{$dir}/{$origName}";
-            $path       = Storage::disk('public')->exists($primary) ? $primary : null;
+            $origName = basename($row->file);
+            $primary  = "{$dir}/{$origName}";
+            if (!Storage::disk('public')->exists($primary)) return null;
 
-            // si no existe con el nombre "lindo", no lo mostramos
-            if (!$path) return null;
+            $realBase = basename($primary);
+            Log::info("PDF Historial encontrado: {$realBase}");
 
-            $realBase   = basename($path);                      // nombre real en disco
             return [
-                'key'      => mb_strtolower($realBase),         // clave para deduplicar
-                'filename' => $realBase,                        // NOMBRE REAL (para el link)
-                'display'  => $origName,                        // NOMBRE LINDO (para mostrar)
-                'path'     => $path,
-                'url'      => Storage::disk('public')->url($path),
+                'key'      => mb_strtolower($realBase),
+                'filename' => $realBase,
+                'display'  => $origName,
+                'path'     => $primary,
+                'url'      => Storage::disk('public')->url($primary),
                 'source'   => 'historial',
-                'modified' => $this->lastModifiedSafe($path),
+                'modified' => $this->formatDate($this->lastModifiedSafe($primary)),
             ];
         })->filter();
 
-        // --- 2) PDFs en BD: PSIQUIATRA ---
+        // PDFs Psiquiatra
         $fromPsiq = PdfPsiquiatra::where('paciente_id', $this->pacienteId)->get()->map(function ($row) use ($dir) {
-            // filepath es el path real; si no, reconstruimos con el nombre original
-            $path = $row->filepath ?: "{$dir}/".basename($row->filename ?? '');
+            $path = $row->filepath ?: "{$dir}/" . basename($row->filename ?? '');
             if (!$path || !Storage::disk('public')->exists($path)) return null;
 
             $realBase = basename($path);
             $display  = $row->filename ?: $realBase;
+            Log::info("PDF Psiquiatra encontrado: {$realBase}");
 
             return [
                 'key'      => mb_strtolower($realBase),
-                'filename' => $realBase,                        // NOMBRE REAL (para el link)
-                'display'  => $display,                         // NOMBRE LINDO (para mostrar)
+                'filename' => $realBase,
+                'display'  => $display,
                 'path'     => $path,
                 'url'      => Storage::disk('public')->url($path),
                 'source'   => 'psiquiatra',
-                'modified' => $this->lastModifiedSafe($path),
+                'modified' => $this->formatDate($this->lastModifiedSafe($path)),
             ];
         })->filter();
 
-        // --- 3) Filesystem: todo lo que hay en la carpeta del paciente ---
+        // PDFs en el filesystem
         $fromFs = collect(Storage::disk('public')->files($dir))
-            ->filter(fn($p) => \Illuminate\Support\Str::of($p)->lower()->endsWith('.pdf'))
+            ->filter(fn($p) => Str::of($p)->lower()->endsWith('.pdf'))
             ->map(function ($p) {
                 $realBase = basename($p);
+                Log::info("PDF en filesystem: {$realBase}");
                 return [
                     'key'      => mb_strtolower($realBase),
-                    'filename' => $realBase,                    // NOMBRE REAL (para el link)
-                    'display'  => $realBase,                    // mostrar real si no hay nombre lindo
+                    'filename' => $realBase,
+                    'display'  => $realBase,
                     'path'     => $p,
                     'url'      => Storage::disk('public')->url($p),
                     'source'   => 'archivo',
-                    'modified' => $this->lastModifiedSafe($p),
+                    'modified' => $this->formatDate($this->lastModifiedSafe($p)),
                 ];
             });
 
-        // --- 4) Merge: PRIORIDAD BD (psiquiatra/historial) y luego completar con FS ---
+        // Merge BD + FS
         $db = $fromHist->concat($fromPsiq)->keyBy('key');
         $fs = $fromFs->reject(fn($i) => $db->has($i['key']))->keyBy('key');
 
-        $this->items = $db->concat($fs)
-            ->values()
+        $this->items = collect($db->concat($fs))
             ->sortByDesc('modified')
-            ->all();
-    }
+            ->values();
 
+        Log::info("Total de PDFs cargados: " . $this->items->count());
+    }
 
     protected function lastModifiedSafe(string $path): int
     {
         try {
             return Storage::disk('public')->lastModified($path) ?? 0;
         } catch (\Throwable $e) {
+            Log::error("Error lastModified {$path}: {$e->getMessage()}");
             return 0;
         }
+    }
+
+    protected function formatDate($timestamp)
+    {
+        if (!$timestamp) return '—';
+        return Carbon::createFromTimestamp($timestamp)
+            ->timezone('America/Argentina/Buenos_Aires')
+            ->format('d-m-Y H:i');
     }
 
     public function updatedSearch()
     {
         $this->page = 1;
+        Log::info("Busqueda actualizada: {$this->search}");
+    }
+
+    public function updatedPerPage()
+    {
+        $this->page = 1;
+        Log::info("PerPage actualizado a: {$this->perPage}");
     }
 
     protected function filtered()
     {
         $q = Str::lower(trim($this->search));
-        if ($q === '') return collect($this->items);
-
-        return collect($this->items)->filter(function ($it) use ($q) {
-            return Str::contains(Str::lower($it['filename']), $q)
-                || Str::contains(Str::lower($it['source']), $q);
-        });
+        $filtered = $q === ''
+            ? $this->items
+            : $this->items->filter(function ($it) use ($q) {
+                return Str::contains(Str::lower($it['filename']), $q)
+                    || Str::contains(Str::lower($it['display']), $q)
+                    || Str::contains(Str::lower($it['source']), $q);
+            });
+        Log::info("Filtered count: " . $filtered->count() . " para búsqueda: {$q}");
+        return $filtered->values();
     }
 
     public function getItemsPageProperty()
     {
-        $data  = $this->filtered()->values();
+        $data  = $this->filtered();
         $start = ($this->page - 1) * $this->perPage;
-        return $data->slice($start, $this->perPage)->values();
+        $slice = $data->slice($start, $this->perPage)->values();
+        Log::info("ItemsPage: mostrando desde {$start} cantidad {$slice->count()}");
+        return $slice;
     }
 
     public function getTotalProperty()
@@ -144,6 +167,7 @@ class VerHistorial extends Component
     {
         if ($this->page * $this->perPage < $this->total) {
             $this->page++;
+            Log::info("Página siguiente: {$this->page}");
         }
     }
 
@@ -151,88 +175,52 @@ class VerHistorial extends Component
     {
         if ($this->page > 1) {
             $this->page--;
+            Log::info("Página anterior: {$this->page}");
         }
     }
 
     public function download($path)
     {
-        // Siempre resolvemos a la carpeta del paciente para evitar rutas viejas o externas
         $basename = basename($path);
         $realPath = $this->dir() . '/' . $basename;
 
-        $absolute = Storage::disk('public')->path($realPath);
-        if (!file_exists($absolute)) {
-            session()->flash('error', 'Archivo no encontrado en la carpeta del paciente.');
+        if (!file_exists(Storage::disk('public')->path($realPath))) {
+            session()->flash('error', 'Archivo no encontrado.');
+            Log::warning("Intento descargar PDF no existente: {$realPath}");
             return;
         }
-        return response()->download($absolute, $basename);
-    }
 
-    public function delete($filename)
-    {
-        // Normalizamos al nombre real dentro de la carpeta del paciente
-        $basename = basename($filename);
-        $path     = $this->dir() . '/' . $basename;
-
-        // 1) Borrar del filesystem (si existe)
-        if (\Illuminate\Support\Facades\Storage::disk('public')->exists($path)) {
-            \Illuminate\Support\Facades\Storage::disk('public')->delete($path);
-        }
-
-        // 2) Borrar registros en BD que apunten a ese archivo
-        // Pdfhistorial guarda en 'file' (ruta completa dentro de 'public')
-        \App\Models\PdfHistorial::where('paciente_id', $this->pacienteId)
-            ->where('file', 'like', "%/{$basename}")
-            ->delete();
-
-        // PdfPsiquiatra puede tener 'filepath' (ruta) o 'filename' (nombre original)
-        \App\Models\PdfPsiquiatra::where('paciente_id', $this->pacienteId)
-            ->where(function ($q) use ($basename) {
-                $q->where('filepath', 'like', "%/{$basename}")
-                ->orWhere('filename', $basename);
-            })
-            ->delete();
-
-        // Recargar la lista combinada
-        $this->loadPdfs();
-
-        // Mensaje simple (ya tenés los alerts arriba en la vista)
-        session()->flash('message', 'Archivo eliminado correctamente.');
+        Log::info("Descargando PDF: {$realPath}");
+        return response()->download(Storage::disk('public')->path($realPath), $basename);
     }
 
     public function deleteByPath($path)
     {
-        // Normalizamos siempre a la carpeta del paciente para evitar rutas extrañas
         $basename = basename($path);
-        $realPath = $this->dir() . '/' . $basename; // ej: pdfhistoriales/{id}/{archivo.pdf}
+        $realPath = $this->dir() . '/' . $basename;
 
-        // Si no existe, avisamos y salimos
-        if (!\Storage::disk('public')->exists($realPath)) {
+        if (!Storage::disk('public')->exists($realPath)) {
             session()->flash('error', 'Archivo no encontrado o ya eliminado.');
+            Log::warning("Intento eliminar PDF no existente: {$realPath}");
             return;
         }
 
-        // Borro el archivo físico
-        \Storage::disk('public')->delete($realPath);
+        Storage::disk('public')->delete($realPath);
+        Log::info("Archivo eliminado: {$realPath}");
 
-        // Intento borrar filas en ambas tablas si estuvieran
-        \App\Models\PdfHistorial::where('paciente_id', $this->pacienteId)
+        PdfHistorial::where('paciente_id', $this->pacienteId)
             ->where(function ($q) use ($realPath, $basename) {
                 $q->where('file', $realPath)->orWhere('file', 'like', "%{$basename}");
             })->delete();
 
-        \App\Models\PdfPsiquiatra::where('paciente_id', $this->pacienteId)
+        PdfPsiquiatra::where('paciente_id', $this->pacienteId)
             ->where(function ($q) use ($realPath, $basename) {
                 $q->where('filepath', $realPath)->orWhere('filepath', 'like', "%{$basename}");
             })->delete();
 
-        // Recargo la lista
         $this->loadPdfs();
-
-        // Mensaje
         session()->flash('message', 'PDF eliminado correctamente.');
     }
-
 
     public function render()
     {

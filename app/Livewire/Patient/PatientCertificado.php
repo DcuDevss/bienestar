@@ -319,7 +319,7 @@ class PatientCertificado extends Component
         $this->addModalDisase($newDisase->id);
     }
 
-    // ---------------- Render del componente ----------------
+    // ---------------- Render del compoonente ----------------
     public function render()
     {
         Log::debug('🎨 Renderizando componente PatientCertificado');

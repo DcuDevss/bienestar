@@ -7,8 +7,6 @@ use Illuminate\Support\Facades\DB;
 use App\Models\Paciente;
 use App\Models\Jerarquia;
 use App\Models\EstadoEntrevista;
-use App\Models\Ciudade;
-use App\Models\Tipolicencia;
 use Carbon\Carbon;
 
 class PrintReportsController extends Controller
@@ -18,13 +16,13 @@ class PrintReportsController extends Controller
         $pivot  = 'disase_paciente';
         $pacTbl = 'pacientes';
 
-        // Arrays de filtros múltiples
         $tipolicenciaIds = (array) $req->input('tipolicencia_ids', []);
         $ciudadIds       = (array) $req->input('ciudad_ids', []);
 
-        // 🧩 1️⃣ — DETALLE (PACIENTES)
+        // 1) Detalle (pacientes)
         $rowsBase = DB::table("$pivot as dp")
             ->join("$pacTbl as p", 'p.id', '=', 'dp.paciente_id')
+            ->whereNull('p.deleted_at') // 👈 excluir soft-deleted
             ->leftJoin('tipolicencias as tl', 'tl.id', '=', 'dp.tipolicencia_id')
             ->leftJoin('ciudades as c', 'c.id', '=', 'p.ciudad_id')
             ->select(
@@ -54,9 +52,10 @@ class PrintReportsController extends Controller
             ->orderBy('p.apellido_nombre')
             ->get();
 
-        // 🧮 2️⃣ — TOTALES POR TIPO DE LICENCIA
+        // 2) Totales por tipo
         $totales = DB::table("$pivot as dp")
             ->join("$pacTbl as p", 'p.id', '=', 'dp.paciente_id')
+            ->whereNull('p.deleted_at') // 👈 excluir soft-deleted
             ->leftJoin('tipolicencias as tl', 'tl.id', '=', 'dp.tipolicencia_id')
             ->select(
                 DB::raw('COALESCE(tl.name, "Sin tipo") as tipolicencia'),
@@ -83,7 +82,6 @@ class PrintReportsController extends Controller
 
         $totalGeneral = $totales->sum('total');
 
-        // 🖨️ Render de la vista PDF
         return view('prints.licencias', [
             'rows'         => $rowsBase,
             'totales'      => $totales,
@@ -99,7 +97,7 @@ class PrintReportsController extends Controller
 
     public function postulantes(Request $req)
     {
-        // 1) Normalizar filtros (acepta arrays o "1,2,3")
+        // normalizar arrays
         $norm = function ($val) {
             if (is_array($val)) return array_values(array_filter($val, fn($v)=>$v!=='' && $v!==null));
             if (is_string($val) && trim($val)!=='') return array_values(array_filter(explode(',', $val)));
@@ -107,31 +105,32 @@ class PrintReportsController extends Controller
         };
         $jerarquiaIds = $norm($req->input('jerarquia_ids', []));
         $estadoIds    = $norm($req->input('estado_ids', []));
+        $desde        = $req->input('desde');
+        $hasta        = $req->input('hasta');
 
-        $desde = $req->input('desde');
-        $hasta = $req->input('hasta');
-
-        // 2) Traer filas desde ENTREVISTAS (sin joins)
-        $q = DB::table('entrevistas as e')
+        // filas base (entrevistas)
+        $rows = DB::table('entrevistas as e')
             ->select(
                 'e.paciente_id',
                 'e.estado_entrevista_id',
-                DB::raw('DATE(e.created_at) as fecha_ref')
+                DB::raw('COALESCE(e.fecha, e.created_at) as fecha_ref')
             )
-            ->when($desde, fn($qq) => $qq->whereDate('e.created_at', '>=', $desde))
-            ->when($hasta, fn($qq) => $qq->whereDate('e.created_at', '<=', $hasta))
-            ->when(!empty($estadoIds), fn($qq) => $qq->whereIn('e.estado_entrevista_id', $estadoIds))
-            ->orderBy('e.created_at', 'desc');
+            ->when($desde, fn($q) => $q->whereDate(DB::raw('COALESCE(e.fecha, e.created_at)'), '>=', $desde))
+            ->when($hasta, fn($q) => $q->whereDate(DB::raw('COALESCE(e.fecha, e.created_at)'), '<=', $hasta))
+            ->when(!empty($estadoIds), fn($q) => $q->whereIn('e.estado_entrevista_id', $estadoIds))
+            ->orderBy('fecha_ref', 'desc')
+            ->get();
 
-        $rows = $q->get(); // para imprimir, sin paginar
+        // Mapas SOLO de pacientes NO eliminados
+        $mapPacientes       = Paciente::whereNull('deleted_at')->pluck('apellido_nombre', 'id');
+        $mapPacienteJerarId = Paciente::whereNull('deleted_at')->pluck('jerarquia_id', 'id');
 
-        // 3) Mapas en PHP (para mostrar nombres y filtrar por jerarquía sin joins)
-        $mapPacientes        = Paciente::pluck('apellido_nombre', 'id');     // id => nombre
-        $mapPacienteJerarId  = Paciente::pluck('jerarquia_id', 'id');        // id => jerarquia_id
-        $mapJerarquias       = Jerarquia::pluck('name', 'id');               // id => nombre jerarquía
-        $mapEstados          = EstadoEntrevista::pluck('name', 'id');        // id => nombre estado
+        // Filtrar filas para quedarnos solo con pacientes existentes y no eliminados
+        $rows = $rows->filter(function($r) use ($mapPacientes) {
+            return $mapPacientes->has($r->paciente_id);
+        })->values();
 
-        // 4) Filtro por jerarquías (en colección)
+        // Filtro por jerarquías (si viene)
         if (!empty($jerarquiaIds)) {
             $allowed = array_flip($jerarquiaIds);
             $rows = $rows->filter(function($r) use ($mapPacienteJerarId, $allowed) {
@@ -140,30 +139,29 @@ class PrintReportsController extends Controller
             })->values();
         }
 
-        // 5) Totales por estado (para cards y/o pie)
+        // Diccionarios
+        $mapJerarquias = Jerarquia::pluck('name', 'id');
+        $mapEstados    = EstadoEntrevista::pluck('name', 'id');
+
+        // Totales por estado
         $totalesPorEstado = $rows->groupBy('estado_entrevista_id')
                                  ->map->count()
                                  ->toArray();
 
-        // 6) Texto amigable de filtros
-        $jerTxt = !empty($jerarquiaIds)
-                    ? $mapJerarquias->only($jerarquiaIds)->implode(', ')
-                    : 'Todas';
-        $estTxt = !empty($estadoIds)
-                    ? $mapEstados->only($estadoIds)->implode(', ')
-                    : 'Todos';
+        // Descripciones para cabecera
+        $jerTxt   = !empty($jerarquiaIds) ? $mapJerarquias->only($jerarquiaIds)->implode(', ') : 'Todas';
+        $estTxt   = !empty($estadoIds)    ? $mapEstados->only($estadoIds)->implode(', ')       : 'Todos';
         $desdeTxt = $desde ? Carbon::parse($desde)->format('d-m-Y') : '—';
         $hastaTxt = $hasta ? Carbon::parse($hasta)->format('d-m-Y') : '—';
 
-        // 7) Render de la vista PDF (sin “undefined property”)
         return view('prints.postulantes', [
-            'rows'              => $rows,
-            'totalesPorEstado'  => $totalesPorEstado,
-            'mapPacientes'      => $mapPacientes,
-            'mapPacienteJerarId'=> $mapPacienteJerarId,
-            'mapJerarquias'     => $mapJerarquias,
-            'mapEstados'        => $mapEstados,
-            'filtrosTxt'        => [
+            'rows'               => $rows,
+            'totalesPorEstado'   => $totalesPorEstado,
+            'mapPacientes'       => $mapPacientes,
+            'mapPacienteJerarId' => $mapPacienteJerarId,
+            'mapJerarquias'      => $mapJerarquias,
+            'mapEstados'         => $mapEstados,
+            'filtrosTxt'         => [
                 'jerarquias' => $jerTxt,
                 'estados'    => $estTxt,
                 'desde'      => $desdeTxt,

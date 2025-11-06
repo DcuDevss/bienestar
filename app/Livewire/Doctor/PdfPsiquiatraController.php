@@ -57,7 +57,7 @@ class PdfPsiquiatraController extends Component
             $ext   = $pdf->getClientOriginalExtension();
             $base  = pathinfo($orig, PATHINFO_FILENAME);
             $safe  = \Illuminate\Support\Str::slug($base);
-            $name  = $safe.'_'.now()->format('Ymd_His').'_'.\Illuminate\Support\Str::random(6).'.'.$ext;
+            $name = $safe . '_' . now()->format('d-m-Y_His') . '_' . \Illuminate\Support\Str::random(6) . '.' . $ext;
 
             $path = $pdf->storeAs($this->storageDir(), $name, 'public');
 
@@ -83,7 +83,7 @@ class PdfPsiquiatraController extends Component
             'icon'        => 'warning',
             'confirmText' => 'Sí, eliminar',
             'cancelText'  => 'Cancelar',
-            'id'          => $pdfId,   // 👈 pasamos solo el id
+            'id'          => $pdfId,   // 👈 pasamoos solo el id
         ]);
     }
 

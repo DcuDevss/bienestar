@@ -55,7 +55,7 @@ class Paciente extends Model
         'updated_at',
         'user_id',
         'foto'
-    ];
+    ]; 
 
     public function scopeSearch($query, $term)
     {
@@ -64,7 +64,7 @@ class Paciente extends Model
             return $query;
         }
 
-        // heurísticas simples
+        // heuurísticas simples
         $isNumeric = ctype_digit($term);
         $isDate    = preg_match('/^\d{4}-\d{2}-\d{2}$/', $term); // YYYY-MM-DD
 
@@ -329,4 +329,7 @@ public function enfermedades()
             return $disase->pivot->id == $certificadoId;
         })?->pivot;
     }
+
+    
 }
+

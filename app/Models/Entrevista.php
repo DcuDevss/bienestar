@@ -105,7 +105,7 @@ class Entrevista extends Model
     }
 
 
-    // Relación con Abordaje
+    // Relación con Aboordaje
     public function abordaje()
     {
         return $this->belongsTo(Abordaje::class);
@@ -118,7 +118,7 @@ class Entrevista extends Model
 
     public function paciente()
     {
-        return $this->belongsTo(Paciente::class, 'paciente_id');
+        return $this->belongsTo(Paciente::class, 'paciente_id')->withTrashed();
     }
 
     public function portacion()

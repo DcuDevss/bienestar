@@ -17,7 +17,7 @@ class PatientEntrevistas extends Component
     public $poseeArmaFilterDisplay;
     public $recomendacionFilter = null;
     public $recomendacionFilterDisplay = '';
-    public $sortBy = 'entrevistas.id'; // Especificamos la tabla en el ORDER BY
+    public $sortBy = 'entrevistas.id'; // Especificaamos la tabla en el ORDER BY
     public $sortDir = 'ASC';
     public $perPage = 8;
 
@@ -92,6 +92,10 @@ class PatientEntrevistas extends Component
             ->leftJoin('estado_entrevistas', 'entrevistas.estado_entrevista_id', '=', 'estado_entrevistas.id')
             ->leftJoin('pacientes', 'entrevistas.paciente_id', '=', 'pacientes.id') // Unir la tabla de pacientes
             ->leftJoin('estados', 'pacientes.estado_id', '=', 'estados.id')
+
+            //Agregado SoftDeletes
+            ->whereNull('pacientes.deleted_at')
+            
             ->when($this->search, function ($query) use ($searchLower) {
                 $query->whereRaw('LOWER(entrevistas.created_at) LIKE ?', ['%' . $searchLower . '%'])
                     ->orWhereHas('tipoEntrevista', function ($query) use ($searchLower) {

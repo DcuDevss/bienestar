@@ -2,14 +2,20 @@
 
     {{-- buscador --}}
     <div class="mb-4 flex items-center gap-2">
-        <input type="text" wire:model.debounce.400ms="search"
-               placeholder="Buscar... "
+        <input wire:model.live.debounce.300ms="search" type="text"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full pl-10 p-1 pt-1"
+                            placeholder="Buscar..."
                class="w-full border rounded p-2">
-                <select wire:model="perPage" class="border rounded p-2 pr-8 min-w-[4.5rem]">
-                <option value="5">5</option>
-                <option value="10">10</option>
-                <option value="25">25</option>
-                </select>
+                {{-- Control Mostrar --}}
+                        <label for="perPage" class="text-gray-400 mr-2 text-[14px]">Mostrar</label>
+                        {{-- Propiedad perPage del componente Livewire --}}
+                        <select wire:model.live="perPage" id="perPage"
+                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1 appearance-none cursor-pointer">
+                            {{-- Paginacion --}}
+                            <option value="8">8</option>
+                            <option value="15">15</option>
+                            <option value="25">25</option>
+                        </select>
     </div>
 
     <h3 class="text-lg font-semibold mb-3">Historial de PDFs</h3>
@@ -32,7 +38,7 @@
                             Fuente: {{ $item['source'] }}
                             @php
                                 $ts = $item['modified'];
-                                echo $ts ? ' · ' . \Carbon\Carbon::createFromTimestamp($ts)->format('d/m/Y H:i') : '';
+                                echo $ts ? ' · ' . \Carbon\Carbon::createFromTimestamp($ts)->format('d-m-Y H:i') : '';
                             @endphp
                         </span>
                     </div>

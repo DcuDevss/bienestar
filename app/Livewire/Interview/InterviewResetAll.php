@@ -29,7 +29,7 @@ class InterviewResetAll extends Component
                 $inicioLic = Carbon::parse($cert->pivot->fecha_inicio_licencia)->startOfDay();
                 $finLic    = Carbon::parse($cert->pivot->fecha_finalizacion_licencia)->startOfDay();
 
-                // 👉 Cortamoos las fechas para que solo cuenten en el año entrante
+                // 👉 Cortamoos las fechaas para que solo cuenten en el año entrante
                 $inicio = $inicioLic->greaterThan($inicioAnio) ? $inicioLic : $inicioAnio;
                 $fin    = $finLic->lessThan($finAnio) ? $finLic : $finAnio;
 

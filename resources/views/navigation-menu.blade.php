@@ -268,19 +268,25 @@
 
                             <!-- Enlace a Entrevistas solo para personal psicologico -->
                             @can('psicologo.index')
-                            <a href="{{ route('patient.patient.patient-entrevistas') }}"
-                                class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
-                                Entrevistas
-                            </a>
+                                <a href="{{ route('patient.patient.patient-entrevistas') }}"
+                                    class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
+                                    Entrevistas
+                                </a>
                             @endcan
-
                             <!-- Enlace a Estadísticas -->
                             @can('oficinas.index')
                             <a href="{{ route('stats.licencias-stats') }}"
                                 class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
                                 Estadísticas
                             </a>
+
+                            @role('super-admin')
+                                <a href="{{ route('patient.deleted-patient-list') }}"
+                                    class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
+                                    Pacientes Eliminados
+                                </a>
                             @endcan
+                            @endrole
                         </div>
                     </div>
                 </div>
@@ -340,8 +346,8 @@
                             <a href="{{ route('multiform.index') }}"
                                 class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Formulario</a>
                             @role('super-admin')
-                            <a href="{{ route('auditorias.index') }}"
-                            class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Auditorías</a>
+                                <a href="{{ route('auditorias.index') }}"
+                                    class="block px-4 py-2 text-sm text-gray-800 hover:bg-slate-300">Auditorías</a>
                             @endrole
                         </div>
                     </div>

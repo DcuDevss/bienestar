@@ -15,7 +15,7 @@ class Interview extends Model
         'created_at',
         'updated_at',
         'date',
-        // your other new column
+        // your other neew column
     ];
 
 

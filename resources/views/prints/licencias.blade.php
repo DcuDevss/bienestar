@@ -37,24 +37,19 @@
     use App\Models\Ciudade;
     use Carbon\Carbon;
 
-    // Normalizamos posibles formatos de filtros
-    $tiposIds  = collect($filtros['tipolicencia_ids'] ?? [])
-                  ->when(empty($filtros['tipolicencia_ids'] ?? null) && !empty($filtros['tipolicencia_id'] ?? null),
-                         fn($c) => collect([$filtros['tipolicencia_id']]));
-    $ciudsIds  = collect($filtros['ciudad_ids'] ?? [])
-                  ->when(empty($filtros['ciudad_ids'] ?? null) && !empty($filtros['ciudad_id'] ?? null),
-                         fn($c) => collect([$filtros['ciudad_id']]));
+    $tiposIds = collect($filtros['tipolicencia_ids'] ?? []);
+    $ciudsIds = collect($filtros['ciudad_ids'] ?? []);
 
-    $tiposTxt  = $tiposIds->isNotEmpty()
-                  ? Tipolicencia::whereIn('id', $tiposIds)->pluck('name')->implode(', ')
-                  : 'Todas';
+    $tiposTxt = $tiposIds->isNotEmpty()
+        ? Tipolicencia::whereIn('id', $tiposIds)->pluck('name')->implode(', ')
+        : 'Todas';
 
-    $ciudsTxt  = $ciudsIds->isNotEmpty()
-                  ? Ciudade::whereIn('id', $ciudsIds)->pluck('nombre')->implode(', ')
-                  : 'Todas';
+    $ciudsTxt = $ciudsIds->isNotEmpty()
+        ? Ciudade::whereIn('id', $ciudsIds)->pluck('nombre')->implode(', ')
+        : 'Todas';
 
-    $desdeTxt  = !empty($filtros['desde'] ?? null) ? Carbon::parse($filtros['desde'])->format('d-m-Y') : '—';
-    $hastaTxt  = !empty($filtros['hasta'] ?? null) ? Carbon::parse($filtros['hasta'])->format('d-m-Y') : '—';
+    $desdeTxt = !empty($filtros['desde'] ?? null) ? Carbon::parse($filtros['desde'])->format('d-m-Y') : '—';
+    $hastaTxt = !empty($filtros['hasta'] ?? null) ? Carbon::parse($filtros['hasta'])->format('d-m-Y') : '—';
   @endphp
 
   <div class="filters">
@@ -81,12 +76,20 @@
     <tbody>
       @forelse($rows as $r)
         <tr>
-          <td>{{ $r->apellido_nombre }}</td>
-          <td>{{ $r->dni }}</td>
-          <td>{{ $r->tipolicencia }}</td>
-          <td>{{ $r->ciudad }}</td>
-          <td>{{ $r->fecha_inicio_licencia ? \Carbon\Carbon::parse($r->fecha_inicio_licencia)->format('d-m-Y H:i') : '—' }}</td>
-          <td>{{ $r->fecha_finalizacion_licencia ? \Carbon\Carbon::parse($r->fecha_finalizacion_licencia)->format('d-m-Y H:i') : '—' }}</td>
+          <td>{{ $r->apellido_nombre ?? '—' }}</td>
+          <td>{{ $r->dni ?? '—' }}</td>
+          <td>{{ $r->tipolicencia ?? 'Sin tipo' }}</td>
+          <td>{{ $r->ciudad ?? 'Sin ciudad' }}</td>
+          <td>
+            {{ !empty($r->fecha_inicio_licencia)
+                ? \Carbon\Carbon::parse($r->fecha_inicio_licencia)->format('d-m-Y H:i')
+                : '—' }}
+          </td>
+          <td>
+            {{ !empty($r->fecha_finalizacion_licencia)
+                ? \Carbon\Carbon::parse($r->fecha_finalizacion_licencia)->format('d-m-Y H:i')
+                : '—' }}
+          </td>
         </tr>
       @empty
         <tr><td colspan="6" class="right">Sin datos</td></tr>
@@ -106,7 +109,7 @@
     <tbody>
       @forelse($totales as $t)
         <tr>
-          <td>{{ $t->tipolicencia }}</td>
+          <td>{{ $t->tipolicencia ?? 'Sin tipo' }}</td>
           <td class="right">{{ $t->total }}</td>
         </tr>
       @empty

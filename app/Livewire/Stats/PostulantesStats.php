@@ -10,8 +10,10 @@ class PostulantesStats extends Component
 {
     use WithPagination;
 
-    public array $jerarquia_ids = [];   // IDs de jerarquías (p.ej. postulante a agente/cadete)
-    public array $estado_ids = [];      // IDs de estados (apto/no apto/condicional)
+    protected $paginationTheme = 'tailwind';
+
+    public array $jerarquia_ids = [];
+    public array $estado_ids = [];
     public ?string $desde = null;
     public ?string $hasta = null;
 
@@ -27,25 +29,23 @@ class PostulantesStats extends Component
         $this->resetPage();
     }
 
+    /** Consulta base: join a pacientes para excluir soft-deleted y traer nombre/jerarquía */
     protected function baseQuery()
     {
-        // Si hay filtro de jerarquías, resolvemos primero los paciente_id que cumplan
-        $pacientesFiltrados = null;
-        if (!empty($this->jerarquia_ids)) {
-            $pacientesFiltrados = DB::table('pacientes')
-                ->whereIn('jerarquia_id', $this->jerarquia_ids)
-                ->pluck('id'); // colección de ids
-        }
-
         return DB::table('entrevistas as e')
+            ->join('pacientes as p', 'p.id', '=', 'e.paciente_id')
+            ->whereNull('p.deleted_at') // 👈 oculta pacientes eliminados (soft delete)
             ->select(
                 'e.id',
                 'e.paciente_id',
                 'e.estado_entrevista_id',
-                DB::raw('COALESCE(e.fecha, e.created_at) as fecha_ref')
+                DB::raw('COALESCE(e.fecha, e.created_at) as fecha_ref'),
+                'p.apellido_nombre',
+                'p.jerarquia_id'
             )
-            ->when($pacientesFiltrados && $pacientesFiltrados->isNotEmpty(), fn($q) =>
-                $q->whereIn('e.paciente_id', $pacientesFiltrados)
+            // filtros
+            ->when(!empty($this->jerarquia_ids), fn($q) =>
+                $q->whereIn('p.jerarquia_id', $this->jerarquia_ids)
             )
             ->when(!empty($this->estado_ids), fn($q) =>
                 $q->whereIn('e.estado_entrevista_id', $this->estado_ids)
@@ -63,13 +63,13 @@ class PostulantesStats extends Component
     {
         $rows = $this->baseQuery()->paginate(15);
 
-        // Totales por estado con los mismos filtros
+      // Totales por estado con los mismos filtros y exclusión de soft-deleted
         $totalesPorEstado = DB::table('entrevistas as e')
-            ->select('e.estado_entrevista_id', DB::raw('COUNT(*) as total'))
-            ->when(!empty($this->jerarquia_ids), function($q){
-                $pids = DB::table('pacientes')->whereIn('jerarquia_id', $this->jerarquia_ids)->pluck('id');
-                if ($pids->isNotEmpty()) $q->whereIn('e.paciente_id', $pids);
-            })
+            ->join('pacientes as p', 'p.id', '=', 'e.paciente_id')
+            ->whereNull('p.deleted_at')
+            ->when(!empty($this->jerarquia_ids), fn($q) =>
+                $q->whereIn('p.jerarquia_id', $this->jerarquia_ids)
+            )
             ->when(!empty($this->estado_ids), fn($q) =>
                 $q->whereIn('e.estado_entrevista_id', $this->estado_ids)
             )
@@ -79,33 +79,24 @@ class PostulantesStats extends Component
             ->when($this->hasta, fn($q) =>
                 $q->whereDate(DB::raw('COALESCE(e.fecha, e.created_at)'), '<=', $this->hasta)
             )
+            ->select('e.estado_entrevista_id', DB::raw('COUNT(*) as total')) // 👈 alias "total"
             ->groupBy('e.estado_entrevista_id')
-            ->pluck('total', 'e.estado_entrevista_id');
+            ->pluck('total', 'e.estado_entrevista_id'); // 👈 pluck por alias
 
-        // Catálogos
-        $jerarquias = DB::table('jerarquias')->select('id','name')->orderBy('name')->get();
-        $estados    = DB::table('estado_entrevistas')->select('id','name')->orderBy('id')->get();
+
+        // Catálogos / maps
+        $jerarquias    = DB::table('jerarquias')->select('id','name')->orderBy('name')->get();
+        $estados       = DB::table('estado_entrevistas')->select('id','name')->orderBy('id')->get();
         $mapJerarquias = $jerarquias->pluck('name','id');
         $mapEstados    = $estados->pluck('name','id');
 
-        // Mapear paciente -> nombre y paciente -> jerarquia_id para las filas de la página
-        $pidsPagina = $rows->pluck('paciente_id')->filter()->unique()->values();
-        $mapPacientes       = $pidsPagina->isNotEmpty()
-            ? DB::table('pacientes')->whereIn('id', $pidsPagina)->pluck('apellido_nombre','id')
-            : collect();
-        $mapPacienteJerarId = $pidsPagina->isNotEmpty()
-            ? DB::table('pacientes')->whereIn('id', $pidsPagina)->pluck('jerarquia_id','id')
-            : collect();
-
         return view('livewire.stats.postulantes-stats', [
-            'rows'               => $rows,
-            'totalesPorEstado'   => $totalesPorEstado,
-            'jerarquias'         => $jerarquias,
-            'estados'            => $estados,
-            'mapJerarquias'      => $mapJerarquias,
-            'mapEstados'         => $mapEstados,
-            'mapPacientes'       => $mapPacientes,
-            'mapPacienteJerarId' => $mapPacienteJerarId,
+            'rows'             => $rows,
+            'totalesPorEstado' => $totalesPorEstado,
+            'jerarquias'       => $jerarquias,
+            'estados'          => $estados,
+            'mapJerarquias'    => $mapJerarquias,
+            'mapEstados'       => $mapEstados,
         ])->layout('layouts.app');
     }
 }

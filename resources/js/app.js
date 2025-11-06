@@ -1,4 +1,4 @@
-import './bootstrap';
+/* import './bootstrap';
 // resources/js/app.js o donde centralices tu lógica JS
 import Swal from 'sweetalert2';
 
@@ -31,4 +31,4 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     });
-});
+}); */

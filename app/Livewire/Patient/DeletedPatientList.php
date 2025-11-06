@@ -17,7 +17,7 @@ class DeletedPatientList extends Component
 
     // ✅ Nueva propiedad para controlar la cantidad de resultados por página
     public $perPage = 8; // Valor predeterminado a 8 (como en la imagen)
-
+    //aggregado
     // 📢 Escucha eventos Livewire.emit()
     protected $listeners = [
         'restore' => 'restore',

@@ -97,14 +97,17 @@
         @forelse($rows as $r)
           <tr class="hover:bg-slate-100">
             <td class="p-3">{{ \Carbon\Carbon::parse($r->fecha_ref)->format('d-m-Y') }}</td>
+<td class="p-3">
+  {{ $r->apellido_nombre ?? '—' }}
+</td>
+<td class="p-3">
+  {{ $mapJerarquias[$r->jerarquia_id] ?? '—' }}
+</td>
+
             <td class="p-3">
-                @php $jid = $mapPacienteJerarId[$r->paciente_id] ?? null; @endphp
-                {{ $jid ? ($mapJerarquias[$jid] ?? ('#'.$jid)) : 'Sin dato' }}
-            </td>
-            <td class="p-3">
-              {{ $mapPacientes[$r->paciente_id] ?? ('ID '.$r->paciente_id) }}
-            </td>
-            <td class="p-3">{{ $mapEstados[$r->estado_entrevista_id] ?? ('#'.$r->estado_entrevista_id) }}</td>
+  {{ $mapEstados[$r->estado_entrevista_id] ?? '—' }}
+</td>
+
           </tr>
         @empty
           <tr>

@@ -198,5 +198,5 @@ Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
 
 /* // NUEVA RUTA para Pacientes Eliminados (Papelera)
 Route::get('/pacientes/eliminados', [PatientController::class, 'eliminados'])->name('pacientes.eliminados'); */
-Route::get('/pacientes/eliminados', DeletedPatientList::class)
-    ->name('pacientes.deleted-patient-list'); 
+Route::get('/patient/deleted-patient', DeletedPatientList::class)
+    ->name('patient.deleted-patient-list');

@@ -52,7 +52,7 @@ class PatientHistorialCertificado extends Component
     protected $rules = [
         'name'                           => 'required',
         'fecha_presentacion_certificado' => 'required',
-        'detalle_certificado'            => 'required',
+        'detalle_certificado'            => 'nullable',
         'fecha_inicio_licencia'          => 'required',
         'fecha_finalizacion_licencia'    => 'required|date|after_or_equal:fecha_inicio_licencia',
         'horas_salud'                    => 'nullable|integer',

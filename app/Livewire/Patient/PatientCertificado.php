@@ -34,7 +34,7 @@ class PatientCertificado extends Component
         'disase_id'                    => 'nullable|exists:disases,id',
         'name'                         => 'required_without:disase_id|string|min:2',
         'fecha_presentacion_certificado' => 'required|date',
-        'detalle_certificado'          => 'required|string|min:2',
+        'detalle_certificado'          => 'nullable|string|min:2',
         'fecha_inicio_licencia'        => 'required|date',
         'fecha_finalizacion_licencia'  => 'required|date|after_or_equal:fecha_inicio_licencia',
         'horas_salud'                  => 'nullable|integer',

@@ -5,6 +5,8 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Models\FichaKinesiologica;
+use App\Models\RegistroSesion;
 
 class Paciente extends Model
 {
@@ -330,6 +332,19 @@ public function enfermedades()
         })?->pivot;
     }
 
-    
+    public function fichaKinesiologica()
+    {
+        // Un Paciente tiene MUCHAS planillas
+        return $this->hasMany(FichaKinesiologica::class);
+    }
+
+    public function registroSesiones()
+    {
+        // Un Paciente tiene MUCHOS registros de sesiones
+        return $this->hasMany(RegistroSesion::class);
+    }
 }
+
+    
+
 

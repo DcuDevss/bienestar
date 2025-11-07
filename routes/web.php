@@ -52,7 +52,7 @@ use App\Livewire\Stats\LicenciasStats;
 use App\Livewire\Stats\PostulantesStats;
 use App\Http\Controllers\PrintReportsController;
 use App\Livewire\Patient\DeletedPatientList;
-
+use App\Livewire\Kinesiologia\KinesiologiaForm;
 /*
 |--------------------------------------------------------------------------
 | Web Routes ffff
@@ -199,4 +199,9 @@ Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
 /* // NUEVA RUTA para Pacientes Eliminados (Papelera)
 Route::get('/pacientes/eliminados', [PatientController::class, 'eliminados'])->name('pacientes.eliminados'); */
 Route::get('/pacientes/eliminados', DeletedPatientList::class)
-    ->name('pacientes.deleted-patient-list'); 
+    ->name('pacientes.deleted-patient-list');
+
+
+//Kinesiologia
+Route::get('/pacientes/{paciente}/kinesiologia', KinesiologiaForm::class)
+    ->name('kinesiologia.index');

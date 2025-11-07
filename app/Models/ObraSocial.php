@@ -5,13 +5,19 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 
-class Doctor extends Model
+class ObraSocial extends Model
 {
+    protected $table = 'obra_socials';
+
     use HasFactory;
 
-    protected $fillable = ['name', 'nro_matricula', 'especialidad'];
+    protected $fillable = [
+        'nombre',
+        'telefono_contacto',
+        'email_contacto',
+    ];
 
-    // Relación: un doctor puede tener muchas fichas kinesiológicas
+    // Relación: una obra social puede tener muchas fichas
     public function fichas()
     {
         return $this->hasMany(FichaKinesiologica::class);

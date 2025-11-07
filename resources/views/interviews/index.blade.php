@@ -293,6 +293,12 @@
                                 Historial atención médica
                             </a>
                         @endcan
+                        
+        <a href="{{ route('kinesiologia.index', $paciente->id) }}"
+            class="inline-flex items-center justify-center rounded-md border border-slate-200 bg-slate-50 px-3 py-2 text-sm font-medium text-slate-800 hover:bg-slate-100 hover:text-slate-700 transition">
+            Ficha Kinesiología
+        </a>
+    
                         @endrole
                     </div>
 

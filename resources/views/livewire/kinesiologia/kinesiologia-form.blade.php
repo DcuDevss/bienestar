@@ -312,7 +312,7 @@ document.addEventListener('livewire:init', () => {
 
     Swal.fire({
       title,
-      text,
+      text, 
       html,
       icon,
       timer,

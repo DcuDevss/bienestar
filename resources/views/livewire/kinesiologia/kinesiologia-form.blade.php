@@ -38,65 +38,94 @@
                         <h3 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2">Anamnesis</h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+<div class="relative"> <label class="block text-sm font-semibold text-gray-700 mb-1" for="doctor_name">Médico Derivante (Doctor) *</label>
+    
+    <input type="text" id="doctor_name" 
+           wire:model.live.debounce.300ms="doctor_name"
+           class="w-full border-gray-300 rounded-md shadow-sm" 
+           placeholder="Comienza a escribir el nombre del doctor">
 
-                            <!-- Doctor -->
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Doctor</label>
-                                <input type="text" wire:model.defer="doctor_name" wire:blur="verificarDoctor"
-                                       class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
-                                       placeholder="Nombre del doctor">
-                                @error('doctor_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+    @error('doctor_name') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-                                @if ($showDoctorAlert)
-                                    <div class="mt-3 p-3 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg">
-                                        <p>El doctor <strong>{{ $doctor_name }}</strong> no existe en el sistema.</p>
-                                        <p class="text-sm mt-1">¿Desea agregarlo con los datos ingresados?</p>
-                                        <div class="mt-2 flex gap-2">
-                                            <button wire:click="crearDoctor" type="button"
-                                                    class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Sí, agregar</button>
-                                            <button wire:click="$set('showDoctorAlert', false)" type="button"
-                                                    class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Cancelar</button>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
+    @if (!empty($doctor_name) && $doctor_id === null && !$showDoctorAlert && $doctorsFound->count() > 0)
+        <div class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto">
+            @foreach ($doctorsFound as $doctor)
+                <div class="px-4 py-2 cursor-pointer hover:bg-gray-100" 
+                     wire:click="selectDoctor({{ $doctor->id }})">
+                    <p class="font-medium text-gray-800">{{ $doctor->name }}</p>
+                    <p class="text-xs text-gray-500">Mat: {{ $doctor->nro_matricula }} | {{ $doctor->especialidad }}</p>
+                </div>
+            @endforeach
+        </div>
+    @endif
+</div>
 
-                            <!-- Matrícula -->
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Matrícula</label>
-                                <input type="text" wire:model.defer="doctor_matricula"
-                                       class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
-                                       placeholder="Número de matrícula">
-                                @error('doctor_matricula') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
-                            </div>
+@if ($showDoctorAlert)
+    <div class="mt-3 p-3 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg">
+        <p>El doctor <strong>{{ $doctor_name }}</strong> no existe. ¿Desea agregarlo?</p>
+        
+        <div class="mt-2 space-y-2">
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1" for="new_matricula">Matrícula</label>
+                <input type="text" wire:model.defer="doctor_matricula" id="new_matricula"
+                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
+                        placeholder="Número de matrícula (requerido)">
+                @error('doctor_matricula') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            </div>
 
-                            <!-- Especialidad -->
-                            <div>
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Especialidad</label>
-                                <input list="especialidades" wire:model.defer="doctor_especialidad"
-                                       wire:blur="verificarEspecialidad"
-                                       class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
-                                       placeholder="Seleccione o escriba una especialidad...">
-                                <datalist id="especialidades">
-                                    @foreach ($especialidades as $esp)
-                                        <option value="{{ $esp }}"></option>
-                                    @endforeach
-                                </datalist>
-                                @error('doctor_especialidad') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
+            <div>
+                <label class="block text-sm font-semibold text-gray-700 mb-1" for="new_especialidad">Especialidad</label>
+                <input list="especialidades" wire:model.defer="doctor_especialidad" id="new_especialidad"
+                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"
+                        placeholder="Seleccione o escriba una especialidad (requerido)...">
+                
+                <datalist id="especialidades">
+                    @foreach ($especialidades as $esp)
+                        <option value="{{ $esp }}"></option>
+                    @endforeach
+                </datalist>
+                @error('doctor_especialidad') <span class="text-red-500 text-sm">{{ $message }}</span> @enderror
 
-                                @if ($showEspecialidadAlert)
-                                    <div class="mt-3 p-3 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg">
-                                        <p>La especialidad <strong>{{ $doctor_especialidad }}</strong> no existe.</p>
-                                        <p class="text-sm mt-1">¿Desea agregarla al sistema?</p>
-                                        <div class="mt-2 flex gap-2">
-                                            <button wire:click="crearEspecialidad" type="button"
-                                                    class="bg-green-600 text-white px-3 py-1 rounded hover:bg-green-700">Sí, agregar</button>
-                                            <button wire:click="$set('showEspecialidadAlert', false)" type="button"
-                                                    class="bg-gray-400 text-white px-3 py-1 rounded hover:bg-gray-500">Cancelar</button>
-                                        </div>
-                                    </div>
-                                @endif
-                            </div>
+                @if ($showEspecialidadAlert)
+                    <div class="mt-3 p-3 bg-red-100 border border-red-400 text-red-800 rounded-lg">
+                        <p>La especialidad **{{ $doctor_especialidad }}** no existe.</p>
+                        <button wire:click="crearEspecialidad" type="button"
+                                class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm mt-1">
+                            Sí, agregar especialidad
+                        </button>
+                    </div>
+                @endif
+            </div>
+        </div>
+        
+        <div class="mt-4 flex gap-2">
+            <button wire:click="crearDoctor" type="button"
+                    class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition duration-150">
+                ✅ Agregar y Seleccionar Doctor
+            </button>
+            <button wire:click="$set('showDoctorAlert', false)" type="button"
+                    class="bg-gray-400 text-white px-3 py-2 rounded-lg hover:bg-gray-500 transition duration-150">
+                Cancelar
+            </button>
+        </div>
+    </div>
+@endif
+
+@if ($doctor_id)
+    <div class="mt-4 border p-3 rounded-lg bg-blue-50">
+        <p class="font-semibold text-blue-800">Doctor Seleccionado:</p>
+        <p class="text-blue-700">{{ $doctor_name }}</p>
+        <p class="text-sm text-blue-600">Matrícula: {{ $doctor_matricula }} | Especialidad: {{ $doctor_especialidad }}</p>
+        
+        <button type="button" wire:click="$set('doctor_id', null); $set('doctor_name', ''); $set('doctor_matricula', ''); $set('doctor_especialidad', '');"
+                class="mt-2 text-red-500 hover:text-red-700 text-sm">
+            [Cambiar Doctor]
+        </button>
+    </div>
+@else
+    @endif
+
+<input type="hidden" wire:model="doctor_id">
 
                             <!-- Obra Social -->
                             <div>
@@ -152,7 +181,7 @@
 
                             <!-- Antecedentes personales -->
                             <div class="md:col-span-2">
-                                <label class="block text-sm font-semibold text-gray-700 mb-1">Antecedentes personales</label>
+                                <label class="block text-sm font-semibold text-gray-700 mb-1">Antecedentes enfermedades</label>
                                 <textarea wire:model="antecedentes_enfermedades" rows="2"
                                           class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
                             </div>
@@ -297,31 +326,87 @@
 </form>
 </div>
 
-{{-- <!-- SweetAlert2 para alertas Livewire -->
-<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-<script>
-document.addEventListener('livewire:init', () => {
-  Livewire.on('swal', function () {
-    let payload = {};
-    if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
-      payload = arguments[0];
-    } else {
-      payload = { title: arguments[0] ?? '', text: arguments[1] ?? '', icon: arguments[2] ?? 'info' };
-    }
-    const { title='Listo', text='', html=null, icon='success', timer=3000 } = payload;
+ {{-- SweetAlert para mensajes de sesión --}}
+@if (session()->has('message'))
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Swal.fire({
+                icon: 'success',
+                title: 'Listo',
+                text: @json(session('message')),
+                timer: 4000,
+                toast: true,
+                position: 'top-end',
+                showConfirmButton: false,
+            });
+        });
+    </script>
+@endif
 
-    Swal.fire({
-      title,
-      text, 
-      html,
-      icon,
-      timer,
-      toast: true,
-      position: 'top-end',
-      showConfirmButton: false,
-      timerProgressBar: true,
-    });
-  });
-});
-</script>
- --}}
+{{-- SweetAlert para errores de validación --}}
+@if ($errors->any())
+    <script>
+        document.addEventListener('DOMContentLoaded', () => {
+            Swal.fire({
+                icon: 'error',
+                title: 'Revisá los campos',
+                html: `{!! implode('<br>', $errors->all()) !!}`,
+                confirmButtonText: 'OK'
+            });
+        });
+    </script>
+@endif
+
+{{-- Listeners Livewire para SweetAlert --}}
+@once
+    <script>
+        document.addEventListener('livewire:init', () => {
+
+            // ✅ Evento genérico swal
+            Livewire.on('swal', ({
+                title = '',
+                text = '',
+                icon = 'success',
+                timer = 2000,
+                toast = true,
+                position = 'top-end'
+            } = {}) => {
+                Swal.fire({
+                    title,
+                    text,
+                    icon,
+                    toast,
+                    position,
+                    timer,
+                    showConfirmButton: !toast
+                });
+            });
+
+            // ✅ Evento confirm opcional (podés descomentar si querés usar confirmaciones)
+            /*
+            Livewire.on('confirm', ({
+                title = '¿Estás seguro?',
+                text = 'Esta acción no se puede deshacer.',
+                icon = 'warning',
+                confirmText = 'Sí, continuar',
+                cancelText = 'Cancelar',
+                action = null,
+                params = {}
+            } = {}) => {
+                Swal.fire({
+                    title, text, icon,
+                    showCancelButton: true,
+                    confirmButtonText: confirmText,
+                    cancelButtonText: cancelText,
+                    reverseButtons: true,
+                    focusCancel: true,
+                }).then((result) => {
+                    if (result.isConfirmed && action) {
+                        Livewire.dispatch(action, params);
+                    }
+                });
+            });
+            */
+        });
+    </script>
+@endonce

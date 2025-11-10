@@ -12,7 +12,7 @@ class ObraSocial extends Model
     use HasFactory;
 
     protected $fillable = [
-        'nombre',
+        'name',
         'telefono_contacto',
         'email_contacto',
     ];

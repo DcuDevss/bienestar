@@ -24,10 +24,14 @@ class KinesiologiaForm extends Component
     public $obra_social_id;
 
     // Datos del médico
-    public $doctor_name;
-    public $doctor_matricula;
-    public $doctor_especialidad;
-    public $doctor_id;
+    public $doctor_name = ''; // Lo usaremos como campo de entrada principal.
+    public $doctor_matricula = ''; // Se rellenará automáticamente o se usará para agregar.
+    public $doctor_especialidad = ''; // Se rellenará automáticamente o se usará para agregar.
+    public $doctor_id = null; // ID del doctor seleccionado/existente.
+
+    // Variables de control
+    /* public $showDoctorAlert = false; */
+    public $doctorsFound = []; // NUEVA: Para almacenar los resultados de la búsqueda.
 
     // Especialidades
     public $especialidades;
@@ -76,8 +80,6 @@ class KinesiologiaForm extends Component
 
     public function mount(Paciente $paciente)
     {
-        // Log::info("🟢 Entrando a mount() de KinesiologiaForm", ['paciente_id' => $paciente->id]);
-
         $this->paciente = $paciente;
 
         // Inicializamos una ficha vacía
@@ -98,37 +100,63 @@ class KinesiologiaForm extends Component
         $this->registroSesiones = RegistroSesion::where('paciente_id', $paciente->id)
             ->orderBy('fecha_sesion', 'desc')
             ->get();
-
-        // Log::info("✅ mount() completado correctamente");
     }
 
     // ====================
     // MÉTODOS DOCTOR
     // ====================
-    public function verificarDoctor()
-    {
-        // Log::info("👨‍⚕️ Ejecutando verificarDoctor()", ['doctor_name' => $this->doctor_name]);
 
-        if (empty($this->doctor_name)) {
-            $this->showDoctorAlert = false;
+    /**
+     * Se ejecuta automáticamente cuando la propiedad $doctor_name cambia.
+     * Implementa la lógica de búsqueda y alerta.
+     */
+    public function updatedDoctorName($value)
+    {
+        // 1. Limpiar resultados si el campo está vacío o muy corto
+        $this->doctorsFound = [];
+        $this->doctor_id = null; // Reiniciamos el ID para forzar una nueva selección
+        $this->showDoctorAlert = false;
+
+        $searchTerm = trim($value);
+
+        if (strlen($searchTerm) < 3) {
             return;
         }
 
-        $doctor = Doctor::where('name', 'like', trim($this->doctor_name))->first();
+        // 2. Buscar doctores por nombre (case-insensitive)
+        $this->doctorsFound = Doctor::where('name', 'like', '%' . $searchTerm . '%')
+            ->limit(5)
+            ->get();
 
-        if (!$doctor) {
-            // Log::info("⚠️ Doctor no encontrado", ['name' => $this->doctor_name]);
+        // 3. Determinar si mostrar la alerta de "agregar"
+        if ($this->doctorsFound->isEmpty()) {
+            // Si no hay resultados, preparamos la alerta de agregar.
             $this->showDoctorAlert = true;
+            // No limpiamos el nombre, solo la matrícula y especialidad
+            $this->doctor_matricula = '';
+            $this->doctor_especialidad = '';
         } else {
-            // Log::info("✅ Doctor encontrado", [
-            //     'id' => $doctor->id,
-            //     'matricula' => $doctor->nro_matricula,
-            //     'especialidad' => $doctor->especialidad,
-            // ]);
+            $this->showDoctorAlert = false;
+        }
+    }
+
+    /**
+     * Se llama cuando el usuario selecciona un doctor de la lista de sugerencias.
+     */
+    public function selectDoctor($doctorId)
+    {
+        $doctor = Doctor::find($doctorId);
+
+        if ($doctor) {
             $this->doctor_id = $doctor->id;
+            $this->doctor_name = $doctor->name;
             $this->doctor_matricula = $doctor->nro_matricula;
             $this->doctor_especialidad = $doctor->especialidad;
-            $this->showDoctorAlert = false;
+            $this->doctorsFound = []; // Ocultar la lista de sugerencias
+            $this->showDoctorAlert = false; // Ocultar la alerta de agregar
+
+            // Puedes usar dispatch en lugar de session()->flash si quieres un toast/modal en el front
+            $this->dispatch('doctorSelected', $doctor->name);
         }
     }
 
@@ -149,7 +177,6 @@ class KinesiologiaForm extends Component
         $this->doctor_id = $doctor->id;
         $this->showDoctorAlert = false;
 
-        // ESTE ES EL LOG IMPORTANTE DE CONFIRMACIÓN
         Log::info("✅ Doctor creado correctamente", ['doctor_id' => $doctor->id]);
         session()->flash('message', 'Doctor agregado con éxito.');
     }
@@ -157,24 +184,16 @@ class KinesiologiaForm extends Component
     // ====================
     // MÉTODOS ESPECIALIDAD
     // ====================
+
     public function verificarEspecialidad()
     {
-        // Log::info("🔍 Verificando especialidad", ['especialidad' => $this->doctor_especialidad]);
-
         if (empty($this->doctor_especialidad)) {
             $this->showEspecialidadAlert = false;
             return;
         }
 
         $existe = Especialidade::where('name', 'like', trim($this->doctor_especialidad))->first();
-
         $this->showEspecialidadAlert = !$existe;
-
-        if (!$existe) {
-            // Log::info("⚠️ Especialidad no encontrada, mostrar alerta.");
-        } else {
-            // Log::info("✅ Especialidad existente encontrada");
-        }
     }
 
     public function crearEspecialidad()
@@ -194,7 +213,6 @@ class KinesiologiaForm extends Component
         $this->especialidades = Especialidade::orderBy('name')->pluck('name')->toArray();
         $this->showEspecialidadAlert = false;
 
-        // ESTE ES EL LOG IMPORTANTE DE CONFIRMACIÓN
         Log::info("✅ Especialidad creada correctamente", ['id' => $nueva->id]);
         session()->flash('message', 'Especialidad creada correctamente.');
     }
@@ -202,116 +220,71 @@ class KinesiologiaForm extends Component
     // ====================
     // MÉTODO GUARDAR FICHA
     // ====================
+
     public function saveFichaKinesiologica()
     {
-        Log::info("💾 INICIANDO Guardado de ficha kinesiológica para paciente", ['paciente_id' => $this->paciente->id]);
+        Log::info("💾 INICIANDO Guardado de ficha kinesiológica para paciente", [
+            'paciente_id' => $this->paciente->id
+        ]);
 
         try {
-            // ===============================
-            // VALIDACIÓN DE CAMPOS
-            // ===============================
             $this->validate([
                 'doctor_name' => 'required|string|max:255',
                 'doctor_matricula' => 'required|string|max:50',
                 'doctor_especialidad' => 'required|string|max:100',
                 'obra_social_id' => 'nullable|exists:obra_socials,id',
-                'diagnostico' => 'nullable|string|max:255',
-                'motivo_consulta' => 'nullable|string',
+                'diagnostico' => 'required|string|max:255',
+                'motivo_consulta' => 'required|string',
+                'partos' => 'nullable|integer',
+                'estado_salud_general' => 'nullable|in:Bueno,Medio,Malo',
                 'posturas_dolorosas' => 'nullable|string|max:500',
-                'realiza_actividad_fisica' => 'nullable|boolean',
                 'tipo_actividad' => 'nullable|string|max:255',
                 'antecedentes_enfermedades' => 'nullable|string',
                 'antecedentes_familiares' => 'nullable|string',
                 'cirugias' => 'nullable|string',
                 'traumatismos_accidentes' => 'nullable|string',
                 'tratamientos_previos' => 'nullable|string',
-                'menarca' => 'nullable|boolean',
-                'menopausia' => 'nullable|boolean',
-                'partos' => 'nullable|integer',
-                'estado_salud_general' => 'nullable|in:Bueno,Medio,Malo',
-                'alteracion_peso' => 'nullable|boolean',
                 'medicacion_actual' => 'nullable|string',
                 'observaciones_generales_anamnesis' => 'nullable|string',
-
-                // Examen EOM
                 'visceral_palpacion' => 'nullable|string|max:500',
-                'visceral_dermalgias' => 'nullable|string|max:500',
-                'visceral_triggers' => 'nullable|string|max:500',
-                'visceral_fijaciones' => 'nullable|string|max:500',
-                'craneal_forma' => 'nullable|string|max:255',
-                'craneal_triggers' => 'nullable|string|max:255',
-                'craneal_fijaciones' => 'nullable|string|max:255',
-                'craneal_musculos' => 'nullable|string|max:255',
                 'tension_arterial' => 'nullable|string|max:20',
-                'pulsos' => 'nullable|string|max:255',
-                'auscultacion' => 'nullable|string|max:255',
-                'ecg' => 'nullable|string|max:255',
-                'ecodoppler' => 'nullable|string|max:255',
             ]);
 
-            // ===============================
-            // CREAR O ASOCIAR DOCTOR
-            // ===============================
-            $doctor = Doctor::firstOrCreate(
-                [
-                    'name' => trim($this->doctor_name),
-                    'nro_matricula' => trim($this->doctor_matricula),
-                ],
-                [
-                    'especialidad' => trim($this->doctor_especialidad),
-                ]
-            );
+            // Buscar o crear/actualizar doctor
+            if (!empty($this->doctor_id)) {
+                // Opción 1: El doctor ya existe y fue seleccionado
+                $doctor = Doctor::find($this->doctor_id);
+            } else {
+                // Opción 2: El doctor fue recién creado (por crearDoctor) 
+                // o estamos usando la matrícula/nombre para buscar/crear si es el primer guardado
+                $doctor = Doctor::updateOrCreate(
+                    ['nro_matricula' => trim($this->doctor_matricula)],
+                    [
+                        'name' => trim($this->doctor_name),
+                        'especialidad' => trim($this->doctor_especialidad),
+                        // Aquí usamos la matrícula como clave de búsqueda/creación
+                    ]
+                );
+            }
 
-            $this->doctor_id = $doctor->id;
+            $this->doctor_id = $doctor->id; // Aseguramos el ID para la ficha
 
-            // ===============================
-            // CREAR FICHA KINESIOLÓGICA
-            // ===============================
-            $data = [
-                'paciente_id' => $this->paciente->id,
-                'doctor_id' => $doctor->id,
-                'obra_social_id' => $this->obra_social_id,
-                'diagnostico' => $this->diagnostico,
-                'motivo_consulta' => $this->motivo_consulta,
-                'posturas_dolorosas' => $this->posturas_dolorosas,
-                'realiza_actividad_fisica' => $this->realiza_actividad_fisica,
-                'tipo_actividad' => $this->tipo_actividad,
-                'antecedentes_enfermedades' => $this->antecedentes_enfermedades,
-                'antecedentes_familiares' => $this->antecedentes_familiares,
-                'cirugias' => $this->cirugias,
-                'traumatismos_accidentes' => $this->traumatismos_accidentes,
-                'tratamientos_previos' => $this->tratamientos_previos,
-                'menarca' => $this->menarca,
-                'menopausia' => $this->menopausia,
-                'partos' => $this->partos,
-                'estado_salud_general' => $this->estado_salud_general,
-                'alteracion_peso' => $this->alteracion_peso,
-                'medicacion_actual' => $this->medicacion_actual,
-                'observaciones_generales_anamnesis' => $this->observaciones_generales_anamnesis,
-                'visceral_palpacion' => $this->visceral_palpacion,
-                'visceral_dermalgias' => $this->visceral_dermalgias,
-                'visceral_triggers' => $this->visceral_triggers,
-                'visceral_fijaciones' => $this->visceral_fijaciones,
-                'craneal_forma' => $this->craneal_forma,
-                'craneal_triggers' => $this->craneal_triggers,
-                'craneal_fijaciones' => $this->craneal_fijaciones,
-                'craneal_musculos' => $this->craneal_musculos,
-                'tension_arterial' => $this->tension_arterial,
-                'pulsos' => $this->pulsos,
-                'auscultacion' => $this->auscultacion,
-                'ecg' => $this->ecg,
-                'ecodoppler' => $this->ecodoppler,
-            ];
+            // Crear ficha
+            $data = $this->only((new FichaKinesiologica())->getFillable());
+            $data['paciente_id'] = $this->paciente->id;
+            $data['doctor_id'] = $doctor->id;
 
             $this->ficha = FichaKinesiologica::create($data);
 
-            Log::info("✅ Ficha kinesiológica guardada correctamente", ['ficha_id' => $this->ficha->id]);
+            Log::info("✅ FINALIZADO. Ficha guardada correctamente", [
+                'ficha_id' => $this->ficha->id
+            ]);
 
             $this->dispatch('swal', [
                 'title' => 'Ficha guardada',
                 'text' => 'Se ha guardado la ficha correctamente.',
                 'icon' => 'success',
-                'timer' => 3000,
+                'timer' => 3000
             ]);
         } catch (\Illuminate\Validation\ValidationException $e) {
             $msg = collect($e->validator->errors()->all())->implode(' | ');
@@ -333,15 +306,12 @@ class KinesiologiaForm extends Component
         }
     }
 
-
     public function render()
     {
-        // Log::info("🎨 Renderizando vista KinesiologiaForm");
-
         return view('livewire.kinesiologia.kinesiologia-form', [
             'doctores' => $this->doctores,
             'obrasSociales' => $this->obrasSociales,
-            'registroSesiones' => $this->registroSesiones,
+            /* 'registroSesiones' => $this->registroSesiones, */
             'especialidades' => $this->especialidades,
         ])->layout('layouts.app');
     }

@@ -13,21 +13,31 @@
                     </h2>
                 </div>
 
-                <!-- Datos del Paciente -->
-                <div class="overflow-x-auto mb-6">
-                    <table class="w-full text-left text-gray-600 border border-gray-200 rounded-lg">
-                        <tbody>
-                            <tr class="bg-gray-50">
-                                <th class="px-4 py-2 border-b border-gray-200">Nombre</th>
-                                <td class="px-4 py-2 border-b border-gray-200">{{ $paciente->apellido_nombre }}</td>
-                                <th class="px-4 py-2 border-b border-gray-200">DNI</th>
-                                <td class="px-4 py-2 border-b border-gray-200">{{ $paciente->dni }}</td>
-                                <th class="px-4 py-2 border-b border-gray-200">Edad</th>
-                                <td class="px-4 py-2 border-b border-gray-200">{{ $paciente->edad }} años</td>
-                            </tr>
-                        </tbody>
-                    </table>
-                </div>
+              <!-- Datos del Paciente -->
+<div class="bg-gray-50 p-4 rounded-lg shadow mb-6">
+    <h3 class="text-lg font-semibold text-gray-700 mb-3">Datos del Paciente</h3>
+
+    <ul class="space-y-2 text-gray-700">
+        <li>
+            <span class="font-medium text-gray-600"> Nombre:</span>
+            {{ $paciente->apellido_nombre }}
+        </li>
+        <li>
+            <span class="font-medium text-gray-600"> DNI:</span>
+            {{ $paciente->dni }}
+        </li>
+        <li>
+            <span class="font-medium text-gray-600"> Edad:</span>
+            {{ $paciente->edad }} años
+        </li>
+      {{--   @if($paciente->direccion)
+            <li>
+                <span class="font-medium text-gray-600"> Dirección:</span>
+                {{ $paciente->direccion }}
+            </li>
+        @endif --}}
+    </ul>
+</div>
 
                 <!-- Formulario -->
                 <form wire:submit.prevent="saveFichaKinesiologica" class="space-y-10">
@@ -99,10 +109,10 @@
         </div>
         
         <div class="mt-4 flex gap-2">
-            <button wire:click="crearDoctor" type="button"
-                    class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition duration-150">
-                ✅ Agregar y Seleccionar Doctor
-            </button>
+              <button type="button" onclick="confirmarCreacionDoctor()"
+        class="bg-green-600 text-white px-3 py-2 rounded-lg hover:bg-green-700 transition duration-150">
+        ✅ Agregar y Seleccionar Doctor
+    </button>
             <button wire:click="$set('showDoctorAlert', false)" type="button"
                     class="bg-gray-400 text-white px-3 py-2 rounded-lg hover:bg-gray-500 transition duration-150">
                 Cancelar
@@ -326,87 +336,67 @@
 </form>
 </div>
 
- {{-- SweetAlert para mensajes de sesión --}}
-@if (session()->has('message'))
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            Swal.fire({
-                icon: 'success',
-                title: 'Listo',
-                text: @json(session('message')),
-                timer: 4000,
-                toast: true,
-                position: 'top-end',
-                showConfirmButton: false,
-            });
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+<script>
+document.addEventListener('livewire:init', () => {
+    Livewire.on('swal', (payload) => {
+        // 🔧 Si el payload viene como array (caso Livewire 3), lo "desempaquetamos"
+        if (Array.isArray(payload)) {
+            payload = payload[0];
+        }
+
+        const {
+            title = 'Listo',
+            text = '',
+            html = null,
+            icon = 'success',
+            timer = 3000
+        } = payload || {};
+
+        const isErrorOrWarning = (icon === 'error' || icon === 'warning');
+
+        Swal.fire({
+            title,
+            text,
+            html,
+            icon,
+            toast: !isErrorOrWarning,
+            position: isErrorOrWarning ? 'center' : 'top-end',
+            showConfirmButton: isErrorOrWarning,
+            timer: isErrorOrWarning ? null : timer,
+            timerProgressBar: !isErrorOrWarning,
+            allowOutsideClick: !isErrorOrWarning,
         });
-    </script>
-@endif
+    });
+});
 
-{{-- SweetAlert para errores de validación --}}
-@if ($errors->any())
-    <script>
-        document.addEventListener('DOMContentLoaded', () => {
-            Swal.fire({
-                icon: 'error',
-                title: 'Revisá los campos',
-                html: `{!! implode('<br>', $errors->all()) !!}`,
-                confirmButtonText: 'OK'
-            });
-        });
-    </script>
-@endif
+</script>
 
-{{-- Listeners Livewire para SweetAlert --}}
-@once
-    <script>
-        document.addEventListener('livewire:init', () => {
 
-            // ✅ Evento genérico swal
-            Livewire.on('swal', ({
-                title = '',
-                text = '',
-                icon = 'success',
-                timer = 2000,
-                toast = true,
-                position = 'top-end'
-            } = {}) => {
-                Swal.fire({
-                    title,
-                    text,
-                    icon,
-                    toast,
-                    position,
-                    timer,
-                    showConfirmButton: !toast
-                });
-            });
+<script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
-            // ✅ Evento confirm opcional (podés descomentar si querés usar confirmaciones)
-            /*
-            Livewire.on('confirm', ({
-                title = '¿Estás seguro?',
-                text = 'Esta acción no se puede deshacer.',
-                icon = 'warning',
-                confirmText = 'Sí, continuar',
-                cancelText = 'Cancelar',
-                action = null,
-                params = {}
-            } = {}) => {
-                Swal.fire({
-                    title, text, icon,
-                    showCancelButton: true,
-                    confirmButtonText: confirmText,
-                    cancelButtonText: cancelText,
-                    reverseButtons: true,
-                    focusCancel: true,
-                }).then((result) => {
-                    if (result.isConfirmed && action) {
-                        Livewire.dispatch(action, params);
-                    }
-                });
-            });
-            */
-        });
-    </script>
-@endonce
+<script>
+function confirmarCreacionDoctor() {
+    Swal.fire({
+        title: '¿Estás seguro?',
+        text: 'Se creará un nuevo doctor con los datos ingresados.',
+        icon: 'question',
+        showCancelButton: true,
+        confirmButtonText: 'Sí, agregar',
+        cancelButtonText: 'Cancelar',
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+    }).then((result) => {
+        if (result.isConfirmed) {
+            // 👉 Si el usuario confirma, ejecutamos el método Livewire
+            Livewire.dispatch('crearDoctorConfirmado');
+        }
+    });
+}
+
+// Escuchar el evento desde Livewire si querés que lo lance desde el backend también
+document.addEventListener('livewire:init', () => {
+    Livewire.on('confirmarCreacionDoctor', confirmarCreacionDoctor);
+});
+</script>
+

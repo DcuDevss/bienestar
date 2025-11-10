@@ -12,6 +12,8 @@ use App\Models\Especialidade;
 use Livewire\Attributes\Rule;
 use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
+use Livewire\Attributes\On;
+use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
 
 class KinesiologiaForm extends Component
 {
@@ -110,7 +112,7 @@ class KinesiologiaForm extends Component
      * Se ejecuta automáticamente cuando la propiedad $doctor_name cambia.
      * Implementa la lógica de búsqueda y alerta.
      */
-    public function updatedDoctorName($value)
+    /*  public function updatedDoctorName($value)
     {
         // 1. Limpiar resultados si el campo está vacío o muy corto
         $this->doctorsFound = [];
@@ -124,9 +126,8 @@ class KinesiologiaForm extends Component
         }
 
         // 2. Buscar doctores por nombre (case-insensitive)
-        $this->doctorsFound = Doctor::where('name', 'like', '%' . $searchTerm . '%')
-            ->limit(5)
-            ->get();
+        $this->doctorsFound = Doctor::where('name', 'like', "%{$this->doctor_name}%")->get();
+
 
         // 3. Determinar si mostrar la alerta de "agregar"
         if ($this->doctorsFound->isEmpty()) {
@@ -138,7 +139,36 @@ class KinesiologiaForm extends Component
         } else {
             $this->showDoctorAlert = false;
         }
+    } */
+
+    public function updatedDoctorName($value)
+    {
+        $searchTerm = trim($value);
+
+        // Si el usuario borró el texto o escribió menos de 3 letras
+        if (strlen($searchTerm) < 3) {
+            // Aseguramos que sea siempre una colección vacía
+            $this->doctorsFound = collect();
+            $this->doctor_id = null;
+            $this->showDoctorAlert = false;
+            return;
+        }
+
+        // Buscar doctores por nombre (case-insensitive)
+        $this->doctorsFound = Doctor::where('name', 'like', '%' . $searchTerm . '%')
+            ->limit(5)
+            ->get();
+
+        // Mostrar alerta solo si no hay resultados
+        if ($this->doctorsFound->isEmpty()) {
+            $this->showDoctorAlert = true;
+            $this->doctor_matricula = '';
+            $this->doctor_especialidad = '';
+        } else {
+            $this->showDoctorAlert = false;
+        }
     }
+
 
     /**
      * Se llama cuando el usuario selecciona un doctor de la lista de sugerencias.
@@ -159,7 +189,7 @@ class KinesiologiaForm extends Component
             $this->dispatch('doctorSelected', $doctor->name);
         }
     }
-
+    #[On('crearDoctorConfirmado')]
     public function crearDoctor()
     {
         Log::info("🆕 Creando nuevo doctor", [
@@ -223,18 +253,25 @@ class KinesiologiaForm extends Component
 
     public function saveFichaKinesiologica()
     {
-        Log::info("💾 INICIANDO Guardado de ficha kinesiológica para paciente", [
-            'paciente_id' => $this->paciente->id
+        Log::info("💾 [INICIO] Guardado de ficha kinesiológica para paciente", [
+            'paciente_id' => $this->paciente->id ?? null,
+            'inputs' => [
+                'doctor_name' => $this->doctor_name,
+                'doctor_matricula' => $this->doctor_matricula,
+                'doctor_especialidad' => $this->doctor_especialidad,
+                'obra_social_id' => $this->obra_social_id,
+            ],
         ]);
 
         try {
+            Log::info("🧩 Validando datos...");
             $this->validate([
                 'doctor_name' => 'required|string|max:255',
                 'doctor_matricula' => 'required|string|max:50',
                 'doctor_especialidad' => 'required|string|max:100',
                 'obra_social_id' => 'nullable|exists:obra_socials,id',
-                'diagnostico' => 'required|string|max:255',
-                'motivo_consulta' => 'required|string',
+                'diagnostico' => 'nullable|string|max:255',
+                'motivo_consulta' => 'nullable|string',
                 'partos' => 'nullable|integer',
                 'estado_salud_general' => 'nullable|in:Bueno,Medio,Malo',
                 'posturas_dolorosas' => 'nullable|string|max:500',
@@ -249,45 +286,76 @@ class KinesiologiaForm extends Component
                 'visceral_palpacion' => 'nullable|string|max:500',
                 'tension_arterial' => 'nullable|string|max:20',
             ]);
+            Log::info("✅ Validación exitosa");
 
-            // Buscar o crear/actualizar doctor
+            // =============================
+            // Buscar o crear doctor
+            // =============================
             if (!empty($this->doctor_id)) {
-                // Opción 1: El doctor ya existe y fue seleccionado
+                Log::info("👨‍⚕️ Doctor seleccionado manualmente", ['doctor_id' => $this->doctor_id]);
                 $doctor = Doctor::find($this->doctor_id);
-            } else {
-                // Opción 2: El doctor fue recién creado (por crearDoctor) 
-                // o estamos usando la matrícula/nombre para buscar/crear si es el primer guardado
+                if (!$doctor) {
+                    Log::warning("⚠️ Doctor no encontrado, se intentará crear uno nuevo.");
+                }
+            }
+
+            if (empty($doctor)) {
+                Log::info("🆕 Creando o actualizando doctor por matrícula", [
+                    'matricula' => $this->doctor_matricula,
+                    'nombre' => $this->doctor_name,
+                    'especialidad' => $this->doctor_especialidad
+                ]);
+
                 $doctor = Doctor::updateOrCreate(
                     ['nro_matricula' => trim($this->doctor_matricula)],
                     [
                         'name' => trim($this->doctor_name),
                         'especialidad' => trim($this->doctor_especialidad),
-                        // Aquí usamos la matrícula como clave de búsqueda/creación
                     ]
                 );
             }
 
-            $this->doctor_id = $doctor->id; // Aseguramos el ID para la ficha
+            if (!$doctor || !$doctor->id) {
+                Log::error("❌ Error: No se pudo crear o encontrar el doctor");
+                throw new \Exception("No se pudo registrar o encontrar el doctor.");
+            }
 
-            // Crear ficha
+            $this->doctor_id = $doctor->id;
+            Log::info("👨‍⚕️ Doctor listo", ['doctor_id' => $doctor->id, 'doctor_name' => $doctor->name]);
+
+            // =============================
+            // Crear ficha kinesiológica
+            // =============================
+            Log::info("📋 Preparando datos de ficha kinesiológica...");
             $data = $this->only((new FichaKinesiologica())->getFillable());
             $data['paciente_id'] = $this->paciente->id;
             $data['doctor_id'] = $doctor->id;
 
+            Log::info("🧾 Datos a guardar en ficha:", $data);
+
             $this->ficha = FichaKinesiologica::create($data);
 
-            Log::info("✅ FINALIZADO. Ficha guardada correctamente", [
-                'ficha_id' => $this->ficha->id
-            ]);
+            if ($this->ficha && $this->ficha->id) {
+                Log::info("✅ [EXITO] Ficha kinesiológica guardada correctamente", [
+                    'ficha_id' => $this->ficha->id
+                ]);
 
-            $this->dispatch('swal', [
-                'title' => 'Ficha guardada',
-                'text' => 'Se ha guardado la ficha correctamente.',
-                'icon' => 'success',
-                'timer' => 3000
-            ]);
+                $this->dispatch('swal', [
+                    'title' => 'Ficha guardada',
+                    'text' => 'Se ha guardado la ficha correctamente.',
+                    'icon' => 'success',
+                    'timer' => 3000
+                ]);
+
+
+            } else {
+                Log::error("❌ [ERROR] No se creó la ficha (objeto vacío o sin ID)");
+                throw new \Exception("No se pudo guardar la ficha en la base de datos.");
+            }
         } catch (\Illuminate\Validation\ValidationException $e) {
             $msg = collect($e->validator->errors()->all())->implode(' | ');
+            Log::warning("⚠️ Validación fallida", ['errores' => $msg]);
+
             $this->dispatch('swal', [
                 'title' => 'Revisá los campos',
                 'text' => $msg,
@@ -296,7 +364,13 @@ class KinesiologiaForm extends Component
             ]);
             throw $e;
         } catch (\Throwable $e) {
-            Log::error("❌ Error guardando ficha", ['error' => $e->getMessage()]);
+            Log::error("❌ Error inesperado guardando ficha", [
+                'mensaje' => $e->getMessage(),
+                'linea' => $e->getLine(),
+                'archivo' => $e->getFile(),
+                'trace' => $e->getTraceAsString(),
+            ]);
+
             $this->dispatch('swal', [
                 'title' => 'Ups!',
                 'text' => 'Ocurrió un error al guardar la ficha.',
@@ -304,7 +378,11 @@ class KinesiologiaForm extends Component
                 'timer' => 5000
             ]);
         }
+
+        return $this->redirectRoute('interviews.index', ['paciente' => $this->paciente->id]);
     }
+
+
 
     public function render()
     {

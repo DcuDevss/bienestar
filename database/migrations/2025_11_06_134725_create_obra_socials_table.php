@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('obra_socials', function (Blueprint $table) {
             $table->id();
             // Campo principal (Obligatorio)
-            $table->string('name')->unique();
+            $table->string('nombre')->unique();
             $table->string('telefono_contacto')->nullable(); 
             $table->string('email_contacto')->nullable(); 
             $table->timestamps();

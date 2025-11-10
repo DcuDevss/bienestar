@@ -262,30 +262,43 @@ class KinesiologiaForm extends Component
                 'obra_social_id' => $this->obra_social_id,
             ],
         ]);
-
         try {
             Log::info("🧩 Validando datos...");
-            $this->validate([
-                'doctor_name' => 'required|string|max:255',
-                'doctor_matricula' => 'required|string|max:50',
-                'doctor_especialidad' => 'required|string|max:100',
-                'obra_social_id' => 'nullable|exists:obra_socials,id',
-                'diagnostico' => 'nullable|string|max:255',
-                'motivo_consulta' => 'nullable|string',
-                'partos' => 'nullable|integer',
-                'estado_salud_general' => 'nullable|in:Bueno,Medio,Malo',
-                'posturas_dolorosas' => 'nullable|string|max:500',
-                'tipo_actividad' => 'nullable|string|max:255',
-                'antecedentes_enfermedades' => 'nullable|string',
-                'antecedentes_familiares' => 'nullable|string',
-                'cirugias' => 'nullable|string',
-                'traumatismos_accidentes' => 'nullable|string',
-                'tratamientos_previos' => 'nullable|string',
-                'medicacion_actual' => 'nullable|string',
-                'observaciones_generales_anamnesis' => 'nullable|string',
-                'visceral_palpacion' => 'nullable|string|max:500',
-                'tension_arterial' => 'nullable|string|max:20',
-            ]);
+            $this->validate(
+                [
+                    'doctor_name' => 'required|string|max:255',
+                    'doctor_matricula' => 'required|string|max:50',
+                    'doctor_especialidad' => 'required|string|max:100',
+                    'obra_social_id' => 'nullable|exists:obra_socials,id',
+                    'diagnostico' => 'nullable|string|max:255',
+                    'motivo_consulta' => 'nullable|string',
+                    'partos' => 'nullable|integer',
+                    'estado_salud_general' => 'nullable|in:Bueno,Medio,Malo',
+                    'posturas_dolorosas' => 'nullable|string|max:500',
+                    'tipo_actividad' => 'nullable|string|max:255',
+                    'antecedentes_enfermedades' => 'nullable|string',
+                    'antecedentes_familiares' => 'nullable|string',
+                    'cirugias' => 'nullable|string',
+                    'traumatismos_accidentes' => 'nullable|string',
+                    'tratamientos_previos' => 'nullable|string',
+                    'medicacion_actual' => 'nullable|string',
+                    'observaciones_generales_anamnesis' => 'nullable|string',
+                    'visceral_palpacion' => 'nullable|string|max:500',
+                    'tension_arterial' => 'nullable|string|max:20',
+                ],
+                // 2do Argumento (mensajes personalizados): Lo dejamos vacío
+                [],
+                // 3er Argumento: Atributos personalizados (ESTO ES LO NUEVO)
+                [
+                    'doctor_name' => 'Nombre del Doctor',
+                    'doctor_matricula' => 'Matrícula del Doctor',
+                    'doctor_especialidad' => 'Especialidad del Doctor',
+                    'diagnostico' => 'Diagnóstico',
+                    'motivo_consulta' => 'Motivo de Consulta',
+                    // Puedes seguir agregando el resto de campos que quieras traducir:
+                    'obra_social_id' => 'Obra Social',
+                ]
+            );
             Log::info("✅ Validación exitosa");
 
             // =============================

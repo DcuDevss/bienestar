@@ -22,6 +22,14 @@
             <span class="font-medium text-gray-600"> Nombre:</span>
             {{ $paciente->apellido_nombre }}
         </li>
+         <li>
+            <span class="font-medium text-gray-600"> Domicilio:</span>
+            {{ $paciente->domicilio }}
+        </li>
+          <li>
+            <span class="font-medium text-gray-600"> Telefono:</span>
+            {{ $paciente->TelefonoCelular }}
+        </li>
         <li>
             <span class="font-medium text-gray-600"> DNI:</span>
             {{ $paciente->dni }}
@@ -30,14 +38,9 @@
             <span class="font-medium text-gray-600"> Edad:</span>
             {{ $paciente->edad }} años
         </li>
-      {{--   @if($paciente->direccion)
-            <li>
-                <span class="font-medium text-gray-600"> Dirección:</span>
-                {{ $paciente->direccion }}
-            </li>
-        @endif --}}
     </ul>
 </div>
+
 
                 <!-- Formulario -->
                 <form wire:submit.prevent="saveFichaKinesiologica" class="space-y-10">
@@ -48,7 +51,7 @@
                         <h3 class="text-2xl font-semibold text-gray-700 mb-6 border-b pb-2">Anamnesis</h3>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-<div class="relative"> <label class="block text-sm font-semibold text-gray-700 mb-1" for="doctor_name">Médico Derivante (Doctor) *</label>
+<div class="relative"> <label class="block text-sm font-semibold text-gray-700 mb-1" for="doctor_name">Doctor </label>
     
     <input type="text" id="doctor_name" 
            wire:model.live.debounce.300ms="doctor_name"
@@ -315,27 +318,19 @@
                         </div>
                     </div>
 
-                      <!-- Botón de guardar -->
-    <div class="flex justify-center mb-2 mt-4">
-        <button type="submit"
-            class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none">Guardar
-            Cambios
-        </button>
-  {{--        @if (session('message'))
-            <div class="bg-green-100 text-green-800 px-4 py-2 rounded mb-4">
-                {{ session('message') }}
-            </div>
-        @endif --}}
-    </div>
-    <div class="flex justify-center mb-2 mt-4">
-        <button type="button" onclick="window.history.back()"
-            class="px-4 py-2 bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 focus:outline-none">
-            Volver
-        </button>
-    </div>
-</form>
-</div>
+<div class="flex justify-center space-x-4 mb-4 mt-4">
+    
+    <button type="submit"
+        class="px-4 py-2 bg-blue-500 text-white rounded-md shadow-md hover:bg-blue-600 focus:outline-none">
+        Guardar Cambios
+    </button>
+    
+    <button type="button" onclick="window.history.back()"
+        class="px-4 py-2 bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 focus:outline-none">
+        Volver
+    </button>
 
+</div>
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
 document.addEventListener('livewire:init', () => {

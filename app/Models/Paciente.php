@@ -55,7 +55,7 @@ class Paciente extends Model
         'updated_at',
         'user_id',
         'foto'
-    ]; 
+    ];
 
     public function scopeSearch($query, $term)
     {
@@ -255,7 +255,7 @@ public function enfermedades()
 {
     return $this->belongsToMany(\App\Models\Enfermedade::class)
         ->withPivot(
-            'id', 
+            'id',
             'detalle_diagnostico',
             'fecha_atencion_enfermedad',
             'estado_enfermedad',
@@ -330,6 +330,21 @@ public function enfermedades()
         })?->pivot;
     }
 
-    
+    protected static function booted()
+    {
+        static::deleted(function (Paciente $paciente) {
+            // Si querés diferenciar soft vs force:
+            if (method_exists($paciente, 'isForceDeleting') && $paciente->isForceDeleting()) {
+                audit_log('paciente.force_delete', $paciente, 'Eliminación permanente de paciente');
+            } else {
+                audit_log('paciente.delete', $paciente, 'Eliminación de paciente');
+            }
+        });
+
+        static::restored(function (Paciente $paciente) {
+            audit_log('paciente.restore', $paciente, 'Restauración de paciente');
+        });
+    }
+
 }
 

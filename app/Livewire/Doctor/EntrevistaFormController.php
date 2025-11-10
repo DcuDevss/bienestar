@@ -320,6 +320,12 @@ class EntrevistaFormController extends Component
             $entrevista->save();
 
 
+            // ✅ Registrar auditoría general
+            audit_log(
+                'entrevista.create',   // acción
+                $entrevista,           // modelo afectado
+                "Creación de entrevista"
+            );
 
             $this->dispatch(
                 'swal',

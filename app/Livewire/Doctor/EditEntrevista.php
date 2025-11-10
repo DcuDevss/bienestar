@@ -323,6 +323,13 @@ class EditEntrevista extends Component
             // Guardar los cambioos
             $entrevista->save();
 
+            // ✅ Registrar auditoría general
+            audit_log(
+                'entrevista.update',
+                $entrevista,
+                "Actualización de entrevista"
+            );
+
             // Mostrar mensaje de éxito
            session()->flash('message', 'Entrevista editada con éxito.');
 

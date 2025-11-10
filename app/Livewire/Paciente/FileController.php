@@ -71,6 +71,12 @@ class FileController extends Component
                 'file'        => $ruta,
                 'paciente_id' => $this->pacienteId,
             ]);
+                // 🧾 AUDITORÍA
+            \App\Support\AuditLog::log(
+                'archivo.create',
+                $this->patient,
+                "Archivo subido al historial del paciente ({$nombreOriginal})"
+            );
         }
 
         // limpiar estado UI

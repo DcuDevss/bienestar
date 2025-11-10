@@ -287,6 +287,12 @@
                                 </a>
                             @endcan
                             @endrole
+                            @role('admin-jefe')
+                            <a href="{{ route('auditorias.auditoria-general') }}"
+                                class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
+                                Auditoría General
+                            </a>
+                            @endrole
                         </div>
                     </div>
                 </div>

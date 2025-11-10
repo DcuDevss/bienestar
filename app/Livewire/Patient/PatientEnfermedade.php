@@ -215,6 +215,8 @@ class PatientEnfermedade extends Component
                     'updated_at'                   => now(),
                 ]);
 
+            audit_log('enfermedad.update', $this->patient, 'Atención médica actualizada para el paciente');
+
             $this->dispatch('swal', title: 'Actualizado', text: 'Atención médica actualizada.', icon: 'success');
             $this->afterSaveCleanup();
             return;
@@ -240,6 +242,8 @@ class PatientEnfermedade extends Component
             'created_at'                     => now(),
             'updated_at'                     => now(),
         ]);
+
+        audit_log('enfermedad.create', $this->patient, 'Atención médica agregada al paciente');
 
         $this->dispatch('swal', title: 'Agregado', text: 'Atención médica agregada.', icon: 'success');
         $this->afterSaveCleanup();
@@ -273,6 +277,9 @@ class PatientEnfermedade extends Component
 
         $slug = Str::slug($nombre);
         $newDisase = Enfermedade::firstOrCreate(['slug' => $slug], ['name' => $nombre, 'codigo' => '']);
+
+        audit_log('enfermedad.create', $newDisase, 'Nueva enfermedad creada desde PatientEnfermedade');
+        
         $this->enfermedade_id = $newDisase->id;
         $this->name = $newDisase->name;
         $this->addModalDisase($newDisase->id);

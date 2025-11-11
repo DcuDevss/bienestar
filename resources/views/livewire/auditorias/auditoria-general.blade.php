@@ -72,7 +72,7 @@
                                     <th class="px-4 py-3">Usuario</th>
                                     <th class="px-4 py-3">Acción</th>
                                     <th class="px-4 py-3">Descripción</th>
-                                    <th class="px-4 py-3">Entidad</th>
+                                    <th class="px-4 py-3">Paciente</th>
                                     <th class="px-4 py-3">IP</th>
                                 </tr>
                             </thead>

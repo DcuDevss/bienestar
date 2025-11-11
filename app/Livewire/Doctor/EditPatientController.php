@@ -276,9 +276,6 @@ class EditPatientController extends Component
             $customer->enfermedad       = $this->enfermedad;
             $customer->remedios         = $this->remedios;
 
-            $changes = array_diff_assoc($customer->getAttributes(), $before);
-            audit_log('paciente.update', $customer, 'Actualización de datos del paciente: ');
-
             $customer->save();
 
             // 👇 Reemplazo de foto si se subió una nueva
@@ -299,14 +296,6 @@ class EditPatientController extends Component
 
                 $this->reset('foto');
                 $this->uploadIteration++;
-
-                audit_log('paciente.photo.uploaded', $customer, 'Se actualizó la foto del paciente');
-                if ($customer->foto && Storage::disk('public')->exists($customer->foto)) {
-                    Storage::disk('public')->delete($customer->foto);
-                    // Audit: foto anterior eliminada (por reemplazo)
-                    audit_log('paciente.photo.removed', $customer, 'Se eliminó la foto anterior (reemplazo)');
-                }
-
             }
 
             $this->dispatch('swal', title: 'Guardado', text: 'Paciente actualizado correctamente.', icon: 'success');
@@ -365,9 +354,6 @@ class EditPatientController extends Component
 
         $this->reset('foto');
         $this->uploadIteration++;
-        
-        audit_log('paciente.photo.removed', $customer, 'Foto de paciente eliminada manualmente');
-
 
         $this->dispatch('swal', title: 'Foto eliminada', text: 'Se quitó la foto del paciente.', icon: 'error');
     }

@@ -71,8 +71,6 @@ class ControlPaciente extends Component
                 'paciente_id'    => $this->pacienteId,
             ]);
 
-            // ✅ Auditoría: creación de control de enfermería
-            audit_log('enfermeria.control.create', $this->patient, 'Nuevo control de enfermería registrado.');
             // limpiar formulario
             $this->reset([
                 'peso','altura','talla',

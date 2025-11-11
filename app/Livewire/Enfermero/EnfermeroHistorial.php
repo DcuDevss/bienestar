@@ -102,9 +102,6 @@ class EnfermeroHistorial extends Component
             'detalles'       => $this->editForm['detalles']       ?? null,
         ]);
 
-        // ✅ Auditoría: edición de control de enfermería
-        audit_log('enfermeria.control.update', $control, "Editó control del paciente #{$this->pacienteId}");
-
         $this->editModal = false;
         $this->dispatch('swal', title: 'Actualizado', text: 'Tratamiento actualizado correctamente.', icon: 'success');
     }
@@ -129,7 +126,6 @@ class EnfermeroHistorial extends Component
     {
         $control = ControlEnfermero::find($id);
         if ($control) {
-            audit_log('enfermeria.control.delete', $control, "Eliminó control del paciente #{$this->pacienteId}");
             $control->delete();
             $this->dispatch('swal', title: 'Eliminado', text: 'Control eliminado correctamente.', icon: 'success');
         } else {

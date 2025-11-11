@@ -205,7 +205,6 @@ class PatientCertificado extends Component
                 'imagen_frente' => $pathFrente,
                 'imagen_dorso' => $pathDorso,
             ]);
-            audit_log('certificado.create', $this->patient, 'Certificado agregado al paciente');
 
             // Limpiar estado + cerrar modal
             $this->reset([
@@ -315,9 +314,6 @@ class PatientCertificado extends Component
             'slug' => Str::slug($this->search),
             'symptoms' => '',
         ]);
-        
-        audit_log('disase.create', $newDisase, 'Nueva enfermedad creada desde PatientCertificado');
-
         $this->disase = $newDisase;
         $this->name = $newDisase->name;
         $this->addModalDisase($newDisase->id);

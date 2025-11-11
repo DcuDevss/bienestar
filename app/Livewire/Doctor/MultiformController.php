@@ -137,7 +137,6 @@ class MultiformController extends Component
                 'TelefonoCelular'  => $this->TelefonoCelular,
                 'FecIngreso'       => $this->FecIngreso,
             ]);
-            audit_log('paciente.create', $this->customer, "Alta de paciente DNI {$this->dni}");
         }
 
         // Guardar foto si se cargó
@@ -155,7 +154,6 @@ class MultiformController extends Component
 
             $this->customer->foto = $path; // guardar ruta relativa (sin "public/")
             $this->customer->save();
-            audit_log('paciente.photo.uploaded', $this->customer, 'Foto de paciente actualizada');
 
             // limpiar input y forzar rerender del file input
             $this->reset('foto');
@@ -219,7 +217,6 @@ class MultiformController extends Component
             'enfermedad'  => $this->enfermedad,
             'remedios'    => $this->remedios,
         ]);
-        audit_log('paciente.registro.completado', $this->customer, 'Multiform finalizado');
 
         session()->flash('message', 'Registro completado correctamente.');
         $this->registroCompletado = true;
@@ -239,7 +236,6 @@ class MultiformController extends Component
         }
         $this->reset('foto');
         $this->uploadIteration++;
-        audit_log('paciente.photo.removed', $this->customer, 'Foto de paciente eliminada');
         $this->dispatch('swal', title: 'Foto eliminada', text: 'La foto del paciente fue eliminada.', icon: 'error');
     }
 

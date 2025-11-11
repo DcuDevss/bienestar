@@ -67,12 +67,6 @@ class PdfPsiquiatraController extends Component
                 'filepath'    => $path,
             ]);
         }
-        // ✅ Registrar auditoría de carga
-        audit_log(
-            'pdf.create',
-            $this->paciente,
-            "Subida de PDF psiquiátrico '{$orig}'"
-        );
 
         $this->reset('pdfs'); // o $this->pdfs = [];
         $this->loadPdfs();
@@ -100,22 +94,9 @@ class PdfPsiquiatraController extends Component
         if ($pdf) {
             if (Storage::disk('public')->exists($pdf->filepath)) {
                 Storage::disk('public')->delete($pdf->filepath);
-                    // ✅ Registrar auditoría de borrado físico
-                audit_log(
-                    'pdf.deleted.file',
-                    $this->paciente,
-                    "Archivo PDF eliminado físicamente: {$pdf->filename}"
-                );
             }
 
             $pdf->delete();
-            // ✅ Registrar auditoría de borrado lógico
-            audit_log(
-                'pdf.deleted.db',
-                $this->paciente,
-                "Registro PDF eliminado de la base de datos: {$pdf->filename}"
-            );
-
             $this->loadPdfs();
 
             // ✅ éxito

@@ -204,8 +204,8 @@
                                 {{-- Diagnóstico --}}
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Diagnóstico</label>
-                                    <textarea wire:model="diagnostico" rows="3"
-                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
+                                    <input type="text" wire:model="diagnostico" rows="3"
+                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                 </div>
 
                             </div>
@@ -269,30 +269,30 @@
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Antecedentes
                                         enfermedades</label>
-                                    <textarea wire:model="antecedentes_enfermedades" rows="2"
-                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
+                                    <input type="text" wire:model="antecedentes_enfermedades" rows="2"
+                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                 </div>
 
                                 {{-- Antecedentes familiares --}}
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Antecedentes
                                         familiares</label>
-                                    <textarea wire:model="antecedentes_familiares" rows="2"
-                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
+                                    <input type="text" wire:model="antecedentes_familiares" rows="2"
+                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                 </div>
 
                                 {{-- Cirugías --}}
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Cirugías</label>
-                                    <textarea wire:model="cirugias" rows="2" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
+                                    <input type="text" wire:model="cirugias" rows="2" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                 </div>
 
                                 {{-- Traumatismos o accidentes --}}
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Traumatismos o
                                         accidentes</label>
-                                    <textarea wire:model="traumatismos_accidentes" rows="2"
-                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
+                                    <input type="text" wire:model="traumatismos_accidentes" rows="2"
+                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                 </div>
 
                                 {{-- Tratamientos previos --}}
@@ -331,8 +331,8 @@
                                 {{-- Medicación actual --}}
                                 <div class="md:col-span-2">
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Medicación actual</label>
-                                    <textarea wire:model="medicacion_actual" rows="2"
-                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
+                                    <input type="text" wire:model="medicacion_actual" rows="2"
+                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                 </div>
 
                                 {{-- Observaciones generales --}}

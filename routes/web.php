@@ -51,8 +51,11 @@ use Illuminate\Support\Facades\Auth;
 use App\Livewire\Stats\LicenciasStats;
 use App\Livewire\Stats\PostulantesStats;
 use App\Http\Controllers\PrintReportsController;
+use App\Livewire\Kinesiologia\FichaKinesiologicaEdit;
+use App\Livewire\Kinesiologia\FichaKinesiologicaIndex;
 use App\Livewire\Patient\DeletedPatientList;
 use App\Livewire\Kinesiologia\KinesiologiaForm;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes ffff
@@ -181,8 +184,8 @@ Route::resource('roles', RoleController::class)->names('admin-roles');
 //Route::get('/reservar-turno', TurnoReservation::class);
 
 //Nuevo usuario
-Route::get('nuevo_usuario', [NuevoUsuarioController::class,'create'])->name('new-user');
-Route::post('nuevo_usuario', [NuevoUsuarioController::class,'store'])->name('new-user.store');
+Route::get('nuevo_usuario', [NuevoUsuarioController::class, 'create'])->name('new-user');
+Route::post('nuevo_usuario', [NuevoUsuarioController::class, 'store'])->name('new-user.store');
 
 //estadisticas
 Route::get('/stats/licencias-stats', LicenciasStats::class)->name('stats.licencias-stats');
@@ -192,7 +195,7 @@ Route::get('/stats/postulantes-stats', PostulantesStats::class)->name('stats.pos
 Route::get('/prints/postulantes', [PrintReportsController::class, 'postulantes'])
     ->name('prints.postulantes');
 Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
-     ->name('prints.licencias');
+    ->name('prints.licencias');
 // routes/web.php
 
 
@@ -205,3 +208,15 @@ Route::get('/pacientes/eliminados', DeletedPatientList::class)
 //Kinesiologia
 Route::get('/pacientes/{paciente}/kinesiologia', KinesiologiaForm::class)
     ->name('kinesiologia.index');
+
+Route::prefix('fichas-kinesiologicas')->group(function () {
+    Route::get('/{paciente}', FichaKinesiologicaIndex::class)
+        ->name('fichas-kinesiologicas.index');
+
+
+});
+
+
+
+Route::get('/fichas-kinesiologicas/kinesiologia/{ficha}/edit', FichaKinesiologicaEdit::class)
+    ->name('kinesiologia.edit');

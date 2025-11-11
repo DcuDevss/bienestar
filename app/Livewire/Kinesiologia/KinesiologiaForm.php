@@ -79,6 +79,8 @@ class KinesiologiaForm extends Component
 
     public $doctores;
     public $obrasSociales;
+    public $showDoctorSuccess = false;
+
 
     public function mount(Paciente $paciente)
     {
@@ -104,42 +106,7 @@ class KinesiologiaForm extends Component
             ->get();
     }
 
-    // ====================
-    // MÉTODOS DOCTOR
-    // ====================
 
-    /**
-     * Se ejecuta automáticamente cuando la propiedad $doctor_name cambia.
-     * Implementa la lógica de búsqueda y alerta.
-     */
-    /*  public function updatedDoctorName($value)
-    {
-        // 1. Limpiar resultados si el campo está vacío o muy corto
-        $this->doctorsFound = [];
-        $this->doctor_id = null; // Reiniciamos el ID para forzar una nueva selección
-        $this->showDoctorAlert = false;
-
-        $searchTerm = trim($value);
-
-        if (strlen($searchTerm) < 3) {
-            return;
-        }
-
-        // 2. Buscar doctores por nombre (case-insensitive)
-        $this->doctorsFound = Doctor::where('name', 'like', "%{$this->doctor_name}%")->get();
-
-
-        // 3. Determinar si mostrar la alerta de "agregar"
-        if ($this->doctorsFound->isEmpty()) {
-            // Si no hay resultados, preparamos la alerta de agregar.
-            $this->showDoctorAlert = true;
-            // No limpiamos el nombre, solo la matrícula y especialidad
-            $this->doctor_matricula = '';
-            $this->doctor_especialidad = '';
-        } else {
-            $this->showDoctorAlert = false;
-        }
-    } */
 
     public function updatedDoctorName($value)
     {
@@ -206,9 +173,18 @@ class KinesiologiaForm extends Component
 
         $this->doctor_id = $doctor->id;
         $this->showDoctorAlert = false;
+        $this->showDoctorSuccess = true;
+
 
         Log::info("✅ Doctor creado correctamente", ['doctor_id' => $doctor->id]);
         session()->flash('message', 'Doctor agregado con éxito.');
+        // 🔔 Nueva alerta con SweetAlert
+        $this->dispatch('swal', [
+            'title' => 'Doctor agregado correctamente',
+            'text' => 'El doctor ' . $doctor->name . ' fue registrado con éxito.',
+            'icon' => 'success',
+            'timer' => 3000
+        ]);
     }
 
     // ====================
@@ -404,6 +380,7 @@ class KinesiologiaForm extends Component
             'obrasSociales' => $this->obrasSociales,
             /* 'registroSesiones' => $this->registroSesiones, */
             'especialidades' => $this->especialidades,
+            'isEdit' => false, // 👈 Agregá esta línea
         ])->layout('layouts.app');
     }
 }

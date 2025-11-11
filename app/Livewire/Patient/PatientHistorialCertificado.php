@@ -337,6 +337,10 @@ class PatientHistorialCertificado extends Component
                     $paciente->disases()->updateExistingPivot($this->disase_id, $pivotData);
                 }
             }
+
+            // 🧾 AUDITORÍA
+            audit_log('certificado.update', $paciente, 'Certificado del paciente actualizado');
+
         } catch (\Exception $e) {
             Log::error('Error actualizando pivot en editDisase', ['error' => $e->getMessage()]);
             $this->addError('general', 'Error al actualizar el certificado. Revisá logs.');

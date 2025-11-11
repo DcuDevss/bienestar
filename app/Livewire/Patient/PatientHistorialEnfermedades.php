@@ -323,6 +323,14 @@ class PatientHistorialEnfermedades extends Component
             ]);
         }
 
+        // 🧾 AUDITORÍA
+        audit_log(
+            'enfermedad.update',
+            \App\Models\Paciente::find($this->pacienteId),
+            'Edición de atencion medica'
+        );
+
+
         // 8) Feedback + reset + cerrar modal
         $this->dispatch('swal', title:'Actualizado', text:'La enfermedad fue editada correctamente.', icon:'success');
 

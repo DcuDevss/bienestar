@@ -52,6 +52,7 @@ use App\Livewire\Stats\LicenciasStats;
 use App\Livewire\Stats\PostulantesStats;
 use App\Http\Controllers\PrintReportsController;
 use App\Livewire\Patient\DeletedPatientList;
+use App\Livewire\Auditorias\AuditoriaGeneral;
 
 /*
 |--------------------------------------------------------------------------
@@ -200,3 +201,7 @@ Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
 Route::get('/pacientes/eliminados', [PatientController::class, 'eliminados'])->name('pacientes.eliminados'); */
 Route::get('/patient/deleted-patient', DeletedPatientList::class)
     ->name('patient.deleted-patient-list');
+
+    //auditorias generales
+Route::get('/auditorias/auditoria-general', AuditoriaGeneral::class)
+     ->name('auditorias.auditoria-general');

@@ -64,6 +64,7 @@ class DeletedPatientList extends Component
         $paciente = Paciente::withTrashed()->findOrFail($id);
         $paciente->restore();
 
+
         $this->dispatch(
             'swal',
             title: '¡Restaurado!',

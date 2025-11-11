@@ -64,7 +64,7 @@
                     @endrole
 
                     @role('super-admin')
-                      <button
+                     {{--  <button
                         x-data
                         x-on:click.prevent="
                           Swal.fire({
@@ -95,7 +95,7 @@
                         class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 text-sm"
                       >
                         Eliminar
-                      </button>
+                      </button> --}}
                     @endrole
                   </td>
                 </tr>

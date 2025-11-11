@@ -55,6 +55,7 @@ use App\Livewire\Kinesiologia\FichaKinesiologicaEdit;
 use App\Livewire\Kinesiologia\FichaKinesiologicaIndex;
 use App\Livewire\Patient\DeletedPatientList;
 use App\Livewire\Kinesiologia\KinesiologiaForm;
+use App\Livewire\Kinesiologia\ListaPlanillas;
 
 /*
 |--------------------------------------------------------------------------
@@ -220,3 +221,4 @@ Route::prefix('fichas-kinesiologicas')->group(function () {
 
 Route::get('/fichas-kinesiologicas/kinesiologia/{ficha}/edit', FichaKinesiologicaEdit::class)
     ->name('kinesiologia.edit');
+Route::get('/kinesiologia/planillas', ListaPlanillas::class)->name('kinesiologia.planillas');

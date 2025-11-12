@@ -323,6 +323,13 @@ public function enfermedades()
         return $this->hasMany(PdfPsiquiatra::class);
     }
 
+
+    public function pdfsKinesiologia()
+    {
+        return $this->hasMany(PdfKinesiologia::class);
+    }
+
+
     /*Agregado*/
     public function disasePivotById($certificadoId)
     {

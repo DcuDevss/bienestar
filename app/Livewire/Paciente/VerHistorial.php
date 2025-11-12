@@ -5,6 +5,7 @@ namespace App\Livewire\Paciente;
 use App\Models\Paciente;
 use App\Models\PdfHistorial;
 use App\Models\PdfPsiquiatra;
+use App\Models\PdfKinesiologia;
 use Livewire\Component;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
@@ -77,6 +78,8 @@ class VerHistorial extends Component
             ];
         })->filter();
 
+        
+
         // PDFs en el filesystem
         $fromFs = collect(Storage::disk('public')->files($dir))
             ->filter(fn($p) => Str::of($p)->lower()->endsWith('.pdf'))
@@ -94,8 +97,28 @@ class VerHistorial extends Component
                 ];
             });
 
+        // ✅ PDFs Kinesiología
+        $fromKine = \App\Models\PdfKinesiologia::where('paciente_id', $this->pacienteId)->get()->map(function ($row) {
+            $path = $row->filepath;
+            if (!$path || !Storage::exists($path)) return null;
+
+            $realBase = basename($path);
+            Log::info("PDF Kinesiología encontrado: {$realBase}");
+
+            return [
+                'key'      => mb_strtolower($realBase),
+                'filename' => $realBase,
+                'display'  => $row->filename,
+                'path'     => $path,
+                'url'      => Storage::url($path),
+                'source'   => 'kinesiología',
+                'modified' => $this->formatDate($this->lastModifiedSafe($path)),
+            ];
+        })->filter();
+
         // Merge BD + FS
-        $db = $fromHist->concat($fromPsiq)->keyBy('key');
+        $db = $fromHist->concat($fromPsiq)->concat($fromKine)->keyBy('key');
+        /* $db = $fromHist->concat($fromPsiq)->keyBy('key'); */
         $fs = $fromFs->reject(fn($i) => $db->has($i['key']))->keyBy('key');
 
         $this->items = collect($db->concat($fs))

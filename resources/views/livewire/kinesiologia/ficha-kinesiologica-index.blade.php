@@ -1,14 +1,22 @@
 <div class="max-w-6xl mx-auto mt-6">
     <div class="flex justify-between items-center mb-6">
-        <h2 class="text-2xl font-semibold text-gray-700">
-            Fichas Kinesiológicas de {{ $paciente->apellido_nombre }}
-        </h2>
+    <h2 class="text-2xl font-semibold text-gray-700">
+        Fichas Kinesiológicas de {{ $paciente->apellido_nombre }}
+    </h2>
+    <div class="flex space-x-2">
         <a href="{{ route('kinesiologia.index', ['paciente' => $paciente->id]) }}"
             class="px-4 py-2 mb-4 bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 focus:outline-none">
             + Nueva Ficha
         </a>
+
+        {{-- ✅ Nuevo botón --}}
+        <a href="{{ route('kinesiologia.pdfs', ['paciente' => $paciente->id]) }}"
+            class="px-4 py-2 mb-4 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 focus:outline-none">
+            📎 Adjuntar PDFs
+        </a>
     </div>
-    
+</div>
+
     <div class="mb-4 flex items-center space-x-2">
         <input type="date" wire:model.live="fecha" class="border rounded-lg px-3 py-2 w-full md:w-64 focus:ring-indigo-500 focus:border-indigo-500">
         <button wire:click="filtrarPorFecha" class=" bg-gray-500 text-white px-4 py-2 rounded-lg shadow-sm hover:bg-gray-600 transition duration-150">

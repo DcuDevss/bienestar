@@ -56,7 +56,7 @@ use App\Livewire\Kinesiologia\FichaKinesiologicaIndex;
 use App\Livewire\Patient\DeletedPatientList;
 use App\Livewire\Kinesiologia\KinesiologiaForm;
 use App\Livewire\Kinesiologia\ListaPlanillas;
-
+use App\Livewire\Kinesiologia\PdfsKinesiologia;
 /*
 |--------------------------------------------------------------------------
 | Web Routes ffff
@@ -222,3 +222,8 @@ Route::prefix('fichas-kinesiologicas')->group(function () {
 Route::get('/fichas-kinesiologicas/kinesiologia/{ficha}/edit', FichaKinesiologicaEdit::class)
     ->name('kinesiologia.edit');
 Route::get('/kinesiologia/planillas', ListaPlanillas::class)->name('kinesiologia.planillas');
+
+
+//PDF Kinesiologia
+Route::get('/paciente/{paciente}/kinesiologia/pdfs', PdfsKinesiologia::class)
+    ->name('kinesiologia.pdfs');

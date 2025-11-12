@@ -315,8 +315,8 @@ class PatientCertificado extends Component
             'slug' => Str::slug($this->search),
             'symptoms' => '',
         ]);
-        
-        audit_log('disase.create', $newDisase, 'Nueva enfermedad creada desde PatientCertificado');
+
+        audit_log('disase.create', $newDisase, 'Nueva enfermedad creada');
 
         $this->disase = $newDisase;
         $this->name = $newDisase->name;

@@ -47,6 +47,9 @@ class Audit extends Model
             'enfermedad.update'        => 'Atención médica actualizada',
             'control_enfermero.create' => 'Control de enfermería',
             'control_enfermero.update' => 'Edición control de enfermería',
+            'disase.create'            => 'Nueva enfermedad',
+            'pdf.create'               => 'PDF desde psicologo',
+            'archivo.create'           => 'PDF desde archivo',
         ];
 
         if (isset($map[$this->action])) {
@@ -69,18 +72,24 @@ class Audit extends Model
 
         // Si es un Paciente, devolvé su nombre
         if ($model instanceof \App\Models\Paciente) {
-            return $model->apellido_nombre ?: ('Paciente #'.$model->getKey());
+            return $model->apellido_nombre ?: ('Paciente #' . $model->getKey());
+        }
+
+        // Si es una Enfermedad (Disase o Enfermedade), devolvé el nombre
+        if ($model instanceof \App\Models\Disase || $model instanceof \App\Models\Enfermedade) {
+            return $model->name ?: ('Enfermedad #' . $model->getKey());
         }
 
         // Si el modelo relacionado tiene relación paciente(), usala
         if (method_exists($model, 'paciente')) {
             $pac = $model->paciente; // lazy ok para pocos registros
             if ($pac) {
-                return $pac->apellido_nombre ?: ('Paciente #'.$pac->getKey());
+                return $pac->apellido_nombre ?: ('Paciente #' . $pac->getKey());
             }
         }
 
         // fallback genérico
-        return class_basename($model).' #'.$model->getKey();
+        return class_basename($model) . ' #' . $model->getKey();
     }
+
 }

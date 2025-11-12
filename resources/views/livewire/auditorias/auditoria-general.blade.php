@@ -35,6 +35,7 @@
                             <option value="certificado.update">Edición de certificado</option>
                             <option value="enfermedad.create">Atención médica agregada</option>
                             <option value="enfermedad.update">Atención médica actualizada</option>
+                            <option value="disase.create">Alta de Enfermedad</option>
                             <option value="enfermeria.control.create">Control de enfermería</option>
                             <option value="enfermeria.control.update">Edición control de enfermería</option>
                             <option value="archivo.create">Subida de PDF(archivo)</option>
@@ -72,7 +73,7 @@
                                     <th class="px-4 py-3">Usuario</th>
                                     <th class="px-4 py-3">Acción</th>
                                     <th class="px-4 py-3">Descripción</th>
-                                    <th class="px-4 py-3">Paciente</th>
+                                    <th class="px-4 py-3">Entidad</th>
                                     <th class="px-4 py-3">IP</th>
                                 </tr>
                             </thead>

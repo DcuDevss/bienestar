@@ -12,6 +12,7 @@ class FichaKinesiologicaIndex extends Component
 {
     use WithPagination;
 
+    // 🎨 Usamos Tailwind para mantener coherencia visual
     protected $paginationTheme = 'tailwind';
 
     public int $paciente_id;
@@ -19,14 +20,15 @@ class FichaKinesiologicaIndex extends Component
 
     public $fecha = ''; // Filtrar por fecha YYYY-MM-DD
 
-    public ?FichaKinesiologica $fichaSeleccionada = null; // Ficha en edición
+    // 📄 Control de paginación personalizada
+    public $perPage = 3; // ← cantidad de resultados por página
+
+    public ?FichaKinesiologica $fichaSeleccionada = null;
     public bool $editMode = false;
 
-    // 🌟 Modal de detalle completo
     public bool $modalDetalleAbierto = false;
     public ?FichaKinesiologica $fichaParaDetalle = null;
 
-    // 🌟 Modal de campo específico
     public bool $modalCampoAbierto = false;
     public string $campoSeleccionadoTitulo = '';
     public string $campoSeleccionadoContenido = '';
@@ -81,28 +83,31 @@ class FichaKinesiologicaIndex extends Component
         Log::info("FichaKinesiologicaIndex mounted for paciente_id={$paciente->id}");
     }
 
+    // 🔄 Reinicia paginación al cambiar filtros
     public function updatingFecha()
     {
         $this->resetPage();
-        Log::info("Buscando fichas para fecha={$this->fecha}");
+    }
+
+    public function updatingPerPage()
+    {
+        $this->resetPage();
     }
 
     public function filtrarPorFecha()
     {
         $this->resetPage();
-        Log::info("Filtrando fichas por fecha={$this->fecha}");
     }
 
+    // 👁️ Mostrar detalles completos
     public function mostrarDetalles(int $fichaId)
     {
         $this->fichaParaDetalle = FichaKinesiologica::with('doctor')->find($fichaId);
 
         if ($this->fichaParaDetalle) {
             $this->modalDetalleAbierto = true;
-            Log::info("👀 Abriendo modal de detalle para ficha_id={$fichaId}");
         } else {
-            session()->flash('error', 'No se encontró la ficha para ver detalles.');
-            Log::warning("❌ Ficha_id={$fichaId} no encontrada para detalle.");
+            session()->flash('error', 'No se encontró la ficha.');
         }
     }
 
@@ -110,9 +115,9 @@ class FichaKinesiologicaIndex extends Component
     {
         $this->modalDetalleAbierto = false;
         $this->fichaParaDetalle = null;
-        Log::info("❌ Cerrando modal de detalle.");
     }
 
+    // 📋 Mostrar campo específico
     public function mostrarDetalleCampo(int $fichaId, string $campo, string $titulo)
     {
         $ficha = FichaKinesiologica::find($fichaId);
@@ -121,7 +126,6 @@ class FichaKinesiologicaIndex extends Component
             $this->campoSeleccionadoTitulo = $titulo;
             $this->campoSeleccionadoContenido = $ficha->$campo;
             $this->modalCampoAbierto = true;
-            Log::info("👀 Abriendo modal para campo: {$titulo} de ficha_id={$fichaId}");
         }
     }
 
@@ -132,50 +136,32 @@ class FichaKinesiologicaIndex extends Component
         $this->campoSeleccionadoContenido = '';
     }
 
+    // ✏️ Editar ficha
     public function edit($fichaId)
     {
         $this->fichaSeleccionada = FichaKinesiologica::find($fichaId);
-        if ($this->fichaSeleccionada) {
-            $this->editMode = true;
-            Log::info("✏️ Editando ficha_id={$fichaId} del paciente_id={$this->paciente_id}");
-        } else {
-            session()->flash('error', 'No se encontró la ficha.');
-            Log::warning("❌ Ficha_id={$fichaId} no encontrada para paciente_id={$this->paciente_id}");
-        }
+        $this->editMode = (bool) $this->fichaSeleccionada;
     }
 
     public function cancelEdit()
     {
         $this->fichaSeleccionada = null;
         $this->editMode = false;
-        Log::info("❌ Cancelada edición de ficha para paciente_id={$this->paciente_id}");
     }
 
     public function update()
     {
-        if (!$this->fichaSeleccionada) {
-            session()->flash('error', 'No hay ficha seleccionada.');
-            return;
-        }
+        if (!$this->fichaSeleccionada) return;
 
         $this->validate([
             'fichaSeleccionada.diagnostico' => 'nullable|string',
             'fichaSeleccionada.motivo_consulta' => 'nullable|string',
-            'fichaSeleccionada.posturas_dolorosas' => 'nullable|string',
-            'fichaSeleccionada.realiza_actividad_fisica' => 'nullable|string',
-            'fichaSeleccionada.tipo_actividad' => 'nullable|string',
-            'fichaSeleccionada.antecedentes_enfermedades' => 'nullable|string',
-            'fichaSeleccionada.antecedentes_familiares' => 'nullable|string',
-            'fichaSeleccionada.cirugias' => 'nullable|string',
-            'fichaSeleccionada.traumatismos_accidentes' => 'nullable|string',
-            'fichaSeleccionada.tratamientos_previos' => 'nullable|string',
         ]);
 
         $this->fichaSeleccionada->save();
         $this->editMode = false;
 
         session()->flash('success', 'Ficha actualizada correctamente');
-        Log::info("✅ Ficha actualizada: id={$this->fichaSeleccionada->id}");
     }
 
     public function render()
@@ -184,9 +170,7 @@ class FichaKinesiologicaIndex extends Component
             ->where('paciente_id', $this->paciente_id)
             ->when($this->fecha, fn($q) => $q->whereDate('created_at', $this->fecha))
             ->orderByDesc('created_at')
-            ->paginate(3);
-
-        Log::info("📄 Se obtuvieron {$fichas->total()} fichas para paciente_id={$this->paciente_id}");
+            ->paginate($this->perPage); // 👈 ahora depende del select dinámico
 
         return view('livewire.kinesiologia.ficha-kinesiologica-index', [
             'fichas' => $fichas,

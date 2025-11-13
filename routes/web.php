@@ -206,24 +206,22 @@ Route::get('/pacientes/eliminados', DeletedPatientList::class)
     ->name('pacientes.deleted-patient-list');
 
 
-//Kinesiologia
+// Formulario para crear ficha
 Route::get('/pacientes/{paciente}/kinesiologia', KinesiologiaForm::class)
     ->name('kinesiologia.index');
 
-Route::prefix('fichas-kinesiologicas')->group(function () {
-    Route::get('/{paciente}', FichaKinesiologicaIndex::class)
-        ->name('fichas-kinesiologicas.index');
+// Lista de fichas de un paciente
+Route::get('/fichas-kinesiologicas/{paciente}', FichaKinesiologicaIndex::class)
+    ->name('fichas-kinesiologicas.index');
 
-
-});
-
-
-
+// Editar ficha específica
 Route::get('/fichas-kinesiologicas/kinesiologia/{ficha}/edit', FichaKinesiologicaEdit::class)
     ->name('kinesiologia.edit');
-Route::get('/kinesiologia/planillas', ListaPlanillas::class)->name('kinesiologia.planillas');
 
+// Lista general de planillas
+Route::get('/kinesiologia/planillas', ListaPlanillas::class)
+    ->name('lista-planillas');
 
-//PDF Kinesiologia
+// PDFs de Kinesiología
 Route::get('/paciente/{paciente}/kinesiologia/pdfs', PdfsKinesiologia::class)
-    ->name('kinesiologia.pdfs');
+    ->name('pdfs-kinesiologia');

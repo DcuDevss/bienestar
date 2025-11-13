@@ -28,7 +28,7 @@
                 {{-- BLOQUE DE DATOS DEL PACIENTE (NO COLAPSABLE) --}}
                 <div class="bg-gray-50 p-4 rounded-lg shadow mb-8 border border-gray-200">
                     <h3 class="text-lg font-semibold text-gray-700 mb-3">
-                        <span class="inline-block mr-2 text-blue-500">Datos del Paciente
+                        <span class="inline-block mr-2 text-gray-600">Datos del Paciente
                     </h3>
                     <ul class="space-y-2 text-gray-700">
                         <li><span class="font-medium text-gray-600">Nombre:</span> {{ $paciente->apellido_nombre }}</li>
@@ -46,12 +46,12 @@
                     {{-- 1. SECCIÓN: DATOS DE DERIVACIÓN Y DIAGNÓSTICO --}}
                     {{-- ======================================================== --}}
                     <div class="bg-white shadow-lg rounded-lg border border-gray-200">
-                        <div class="p-4 cursor-pointer flex justify-between items-center bg-blue-100 rounded-t-lg hover:bg-blue-200 transition"
+                        <div class="p-4 cursor-pointer flex justify-between items-center bg-gray-200 rounded-t-lg"
                             @click="toggleSection('derivacion')">
-                            <h3 class="text-xl font-bold text-blue-800">
+                            <h3 class="text-xl font-bold text-black">
                                 Datos de Derivación y Diagnóstico
                             </h3>
-                            <svg :class="{'rotate-180': openDerivacion}" class="w-6 h-6 text-blue-800 transform transition-transform duration-300"
+                            <svg :class="{'rotate-180': openDerivacion}" class="w-6 h-6 text-black transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -217,12 +217,12 @@
                     {{-- 2. SECCIÓN: ANAMNESIS --}}
                     {{-- ======================================================== --}}
                     <div class="bg-white shadow-lg rounded-lg border border-gray-200">
-                        <div class="p-4 cursor-pointer flex justify-between items-center bg-green-100 rounded-t-lg hover:bg-green-200 transition"
+                        <div class="p-4 cursor-pointer flex justify-between items-center bg-gray-200 rounded-t-lg"
                             @click="toggleSection('anamnesis')">
-                            <h3 class="text-xl font-bold text-green-800">
+                            <h3 class="text-xl font-bold text-black">
                                 Anamnesis (Historia Clínica)
                             </h3>
-                            <svg :class="{'rotate-180': openAnamnesis}" class="w-6 h-6 text-green-800 transform transition-transform duration-300"
+                            <svg :class="{'rotate-180': openAnamnesis}" class="w-6 h-6 text-black transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -351,12 +351,12 @@
                     {{-- 3. SECCIÓN: ANTECEDENTES GINECOLÓGICOS (Separados de Anamnesis) --}}
                     {{-- ======================================================== --}}
                     <div class="bg-white shadow-lg rounded-lg border border-gray-200">
-                        <div class="p-4 cursor-pointer flex justify-between items-center bg-pink-100 rounded-t-lg hover:bg-pink-200 transition"
+                        <div class="p-4 cursor-pointer flex justify-between items-center  bg-gray-200 rounded-t-lg"
                             @click="toggleSection('ginecologico')">
-                            <h3 class="text-xl font-bold text-pink-800">
+                            <h3 class="text-xl font-bold text-black">
                                  Antecedentes Ginecológicos
                             </h3>
-                            <svg :class="{'rotate-180': openGinecologico}" class="w-6 h-6 text-pink-800 transform transition-transform duration-300"
+                            <svg :class="{'rotate-180': openGinecologico}" class="w-6 h-6 text-black transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>
@@ -403,12 +403,12 @@
                     {{-- 4. SECCIÓN: EXAMEN EOM --}}
                     {{-- ======================================================== --}}
                     <div class="bg-white shadow-lg rounded-lg border border-gray-200">
-                        <div class="p-4 cursor-pointer flex justify-between items-center bg-yellow-100 rounded-t-lg hover:bg-yellow-200 transition"
+                        <div class="p-4 cursor-pointer flex justify-between items-center bg-gray-200 rounded-t-lg"
                             @click="toggleSection('eom')">
-                            <h3 class="text-xl font-bold text-yellow-800">
+                            <h3 class="text-xl font-bold text-black">
                                 Examen EOM (Evaluación Osteopática/Otras Mediciones)
                             </h3>
-                            <svg :class="{'rotate-180': openEOM}" class="w-6 h-6 text-yellow-800 transform transition-transform duration-300"
+                            <svg :class="{'rotate-180': openEOM}" class="w-6 h-6 text-black transform transition-transform duration-300"
                                 fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
                                 <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
                             </svg>

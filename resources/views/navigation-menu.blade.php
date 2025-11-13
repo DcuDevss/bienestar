@@ -288,7 +288,7 @@
                                 </a>
                             @endcan
                             @role('doctor')
-                               <a href="{{ route('kinesiologia.planillas') }}"
+                               <a href="{{ route('lista-planillas') }}"
                             class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
                             Planillas Kinesiológicas
                         </a>

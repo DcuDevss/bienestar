@@ -1,5 +1,54 @@
-<section class="w-[90%] mx-auto bg-gray-100 text-gray-600 h-screen px-4 py-4">
 
+<section class="w-[90%] mx-auto bg-gray-100 text-gray-600 h-screen px-4 py-4">
+<style>
+.full-image-overlay {
+    position: fixed;
+    inset: 0; /* top:0; right:0; bottom:0; left:0 */
+    background: rgba(0, 0, 0, 0.75);
+    display: none;              /* oculto por defecto */
+    align-items: center;        /* centrar vertical */
+    justify-content: center;    /* centrar horizontal */
+    z-index: 9999;
+}
+
+.full-image-container {
+    position: relative;
+    max-width: 80vw;   /* antes 60 — ahora mucho más pequeño */
+    max-height: 80vh;  /* antes 60 — evita que cubra pantalla */
+}
+
+#full-image {
+    width: 100%;
+    height: auto;
+    max-height: 80vh;
+    border-radius: 10px;
+}
+
+
+.full-image-container img {
+    max-width: 100%;
+    max-height: 100%;
+    display: block;
+    border-radius: 0.5rem;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.action-button {
+    position: absolute;
+    top: 0.5rem;
+    right: 0.5rem;
+    background: rgba(0,0,0,0.7);
+    color: #fff;
+    border: none;
+    padding: 0.25rem 0.75rem;
+    border-radius: 0.375rem;
+    font-size: 0.8rem;
+    cursor: pointer;
+}
+.action-button:hover {
+    background: rgba(0,0,0,0.9);
+}
+</style>
     <!-- REGISTROS DATA-TABLES -->
     <div class="w-full bg-white p-2">
         <div class="flex justify-between">
@@ -98,17 +147,19 @@
                             @if ($disase->pivot->imagen_frente)
                                 {{-- <a href=" {{ Storage::url($disase->pivot->imagen_frente) }}" target="_blank">Ver PDF</a> --}}
 
-                                <img src="{{ Storage::url($disase->pivot->imagen_frente) }}" alt="Imagen"
-                                    id="image" onclick="showFullImage(this)" class="w-24 h-24 text-center">
+                               <img src="{{ Storage::url($disase->pivot->imagen_frente) }}"
+                                    alt="Imagen"
+                                    onclick="showFullImage(this)"
+                                    class="w-24 h-24 text-center cursor-pointer">
 
                                 <!-- Plantilla para la imagen ampliada -->
                                 <div id="full-image-overlay" class="full-image-overlay">
                                     <div class="full-image-container">
                                         <img id="full-image" src="" alt="Imagen Ampliada">
-                                        <button id="close-button" class="action-button"
-                                            onclick="closeFullImage()">Cerrar</button>
+                                        <button id="close-button" class="action-button" onclick="closeFullImage()">Cerrar</button>
                                     </div>
                                 </div>
+
                             @else
                                 Sin Archivo
                                 <div class="bottom-0 pt-2">
@@ -308,38 +359,27 @@
     </x-dialog-modal>
     <!-- LIGHTBOX -->
     <script>
-        /funcionalidad para ampliar la imagen al darle click y cerrar/
-
         function showFullImage(image) {
-            var fullImageOverlay = document.getElementById('full-image-overlay');
-            var fullImage = document.getElementById('full-image');
+            const fullImageOverlay = document.getElementById('full-image-overlay');
+            const fullImage        = document.getElementById('full-image');
 
-            // Establecer la fuente de la imagen ampliada
             fullImage.src = image.src;
-
-            // Mostrar la imagen ampliada
-            fullImageOverlay.style.display = 'block';
-
-            // Agregar el evento para cerrar la imagen al presionar la tecla Escape
-            document.addEventListener('keydown', function(event) {
-                if (event.key === 'Escape') {
-                    closeFullImage();
-                }
-            });
+            fullImageOverlay.style.display = 'flex'; // coincide con flex de CSS
         }
 
         function closeFullImage() {
-            var fullImageOverlay = document.getElementById('full-image-overlay');
-
-            // Ocultar la imagen ampliada
+            const fullImageOverlay = document.getElementById('full-image-overlay');
             fullImageOverlay.style.display = 'none';
         }
 
-        function performAction() {
-            // Acción adicional al hacer clic en el otro botón
-            console.log('Acción realizada');
-        }
+        // Cerrar con ESC
+        document.addEventListener('keydown', function (event) {
+            if (event.key === 'Escape') {
+                closeFullImage();
+            }
+        });
     </script>
+    {{-- SweetAlert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
     document.addEventListener('livewire:init', () => {

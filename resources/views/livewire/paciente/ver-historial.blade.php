@@ -10,7 +10,7 @@
                         <label for="perPage" class="text-gray-400 mr-2 text-[14px]">Mostrar</label>
                         {{-- Propiedad perPage del componente Livewire --}}
                         <select wire:model.live="perPage" id="perPage"
-                            class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1 appearance-none cursor-pointer">
+                            class="bg-white border border-gray-600 text-black text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 p-1 appearance-none cursor-pointer">
                             {{-- Paginacion --}}
                             <option value="8">8</option>
                             <option value="15">15</option>
@@ -32,13 +32,11 @@
                         class="text-blue-600 hover:text-blue-400 font-semibold truncate block">
                         📄 {{ $item['display'] }}
                         </a>
-
-
                         <span class="text-xs text-gray-500">
                             Fuente: {{ $item['source'] }}
                             @php
                                 $ts = $item['modified'];
-                                echo $ts ? ' · ' . \Carbon\Carbon::createFromTimestamp($ts)->format('d-m-Y H:i') : '';
+                                echo $ts;
                             @endphp
                         </span>
                     </div>

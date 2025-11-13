@@ -39,18 +39,24 @@
         @else
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($fichas as $index => $ficha)
-                    <div x-data="{ expand: false }"
-                        {{-- class="bg-white shadow-md hover:shadow-lg transition-all rounded-2xl overflow-hidden border border-gray-200 relative"> --}}
-
-                        <!-- ENCABEZADO CARD -->
+                    <div x-data="{ expand: false }" {{-- class="bg-white shadow-md hover:shadow-lg transition-all rounded-2xl overflow-hidden border border-gray-200 relative"> --}} <!-- ENCABEZADO CARD -->
                         <div class="bg-gray-100 px-5 py-3 flex justify-between items-center border-b border-gray-300">
                             <div>
-                                <p class="text-sm text-gray-700">
-                                    <span class="font-semibold">{{ $ficha->created_at->format('d/m/Y') }}</span>
-                                    <span>{{ $ficha->created_at->format('H:i') }}</span>
+                                @php
+                                    $created = \Carbon\Carbon::parse($ficha->created_at);
+                                    // Día de la semana en mayúsculas y en español
+                                    $diaSemana = strtoupper($created->locale('es')->dayName);
+                                @endphp
+
+                                <p class="text-sm text-gray-700 font-semibold">
+                                    {{ $diaSemana }} - {{ $created->format('d/m/Y') }}
                                 </p>
                                 <p class="text-sm text-gray-600 mt-1">
-                                    <span class="font-semibold text-gray-700">{{ $ficha->doctor->name ?? 'Sin asignar' }}</span>
+                                    Hora: {{ $created->format('H:i') }}
+                                </p>
+                                <p class="text-sm text-gray-600 mt-1">
+                                    <span
+                                        class="font-semibold text-gray-700">{{ $ficha->doctor->name ?? 'Sin asignar' }}</span>
                                 </p>
                             </div>
 
@@ -60,62 +66,62 @@
                                     <span x-show="!expand">⬇️ Ver</span>
                                     <span x-show="expand">⬆️ Ocultar</span>
                                 </button>
-
-                                {{-- <a href="{{ route('kinesiologia.edit', ['ficha' => $ficha->id]) }}"
-                                    class="bg-gray-700 hover:bg-gray-800 text-white text-sm font-semibold px-3 py-1.5 rounded-lg shadow transition">
-                                    Editar
-                                </a> --}}
                             </div>
                         </div>
+
+
 
                         <!-- CONTENIDO CARD -->
                         <div class="p-5 space-y-3 text-sm text-gray-700" x-show="expand" x-transition>
                             <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">
-                                 Planilla Kinesiológica
+                                Planilla Kinesiológica
                             </h3>
 
                             @foreach ([
-                                'diagnostico' => 'Diagnóstico',
-                                'motivo_consulta' => 'Motivo de consulta',
-                                'posturas_dolorosas' => 'Posturas dolorosas',
-                                'realiza_actividad_fisica' => 'Realiza actividad física',
-                                'tipo_actividad' => 'Tipo de actividad',
-                                'antecedentes_enfermedades' => 'Antecedentes de enfermedades',
-                                'antecedentes_familiares' => 'Antecedentes familiares',
-                                'cirugias' => 'Cirugías',
-                                'traumatismos_accidentes' => 'Traumatismos/Accidentes',
-                                'tratamientos_previos' => 'Tratamientos previos',
-                                'menarca' => 'Menarca',
-                                'menopausia' => 'Menopausia',
-                                'partos' => 'Partos',
-                                'estado_salud_general' => 'Estado de salud general',
-                                'alteracion_peso' => 'Alteración de peso',
-                                'medicacion_actual' => 'Medicación actual',
-                                'observaciones_generales_anamnesis' => 'Observaciones generales',
-                                'visceral_palpacion' => 'Visceral palpación',
-                                'visceral_dermalgias' => 'Visceral dermalgias',
-                                'visceral_triggers' => 'Visceral triggers',
-                                'visceral_fijaciones' => 'Visceral fijaciones',
-                                'craneal_forma' => 'Craneal forma',
-                                'craneal_triggers' => 'Craneal triggers',
-                                'craneal_fijaciones' => 'Craneal fijaciones',
-                                'craneal_musculos' => 'Craneal músculos',
-                                'tension_arterial' => 'Tensión arterial',
-                                'pulsos' => 'Pulsos',
-                                'auscultacion' => 'Auscultación',
-                                'ecg' => 'ECG',
-                                'ecodoppler' => 'Ecodoppler',
-                            ] as $campo => $label)
+        'diagnostico' => 'Diagnóstico',
+        'motivo_consulta' => 'Motivo de consulta',
+        'posturas_dolorosas' => 'Posturas dolorosas',
+        'realiza_actividad_fisica' => 'Realiza actividad física',
+        'tipo_actividad' => 'Tipo de actividad',
+        'antecedentes_enfermedades' => 'Antecedentes de enfermedades',
+        'antecedentes_familiares' => 'Antecedentes familiares',
+        'cirugias' => 'Cirugías',
+        'traumatismos_accidentes' => 'Traumatismos/Accidentes',
+        'tratamientos_previos' => 'Tratamientos previos',
+        'menarca' => 'Menarca',
+        'menopausia' => 'Menopausia',
+        'partos' => 'Partos',
+        'estado_salud_general' => 'Estado de salud general',
+        'alteracion_peso' => 'Alteración de peso',
+        'medicacion_actual' => 'Medicación actual',
+        'observaciones_generales_anamnesis' => 'Observaciones generales',
+        'visceral_palpacion' => 'Visceral palpación',
+        'visceral_dermalgias' => 'Visceral dermalgias',
+        'visceral_triggers' => 'Visceral triggers',
+        'visceral_fijaciones' => 'Visceral fijaciones',
+        'craneal_forma' => 'Craneal forma',
+        'craneal_triggers' => 'Craneal triggers',
+        'craneal_fijaciones' => 'Craneal fijaciones',
+        'craneal_musculos' => 'Craneal músculos',
+        'tension_arterial' => 'Tensión arterial',
+        'pulsos' => 'Pulsos',
+        'auscultacion' => 'Auscultación',
+        'ecg' => 'ECG',
+        'ecodoppler' => 'Ecodoppler',
+    ] as $campo => $label)
                                 @if (!empty($ficha->$campo) || $ficha->$campo === '0' || $ficha->$campo === 0 || $ficha->$campo === false)
                                     @php
                                         $valor = $ficha->$campo;
-                                        $mostrarDirecto = is_scalar($valor) && strlen(strip_tags((string) $valor)) <= 60;
+                                        $mostrarDirecto =
+                                            is_scalar($valor) && strlen(strip_tags((string) $valor)) <= 60;
                                     @endphp
-                                    <div class="flex justify-between items-center bg-gray-50 hover:bg-gray-100 p-2 rounded-md transition">
+                                    <div
+                                        class="flex justify-between items-center bg-gray-50 hover:bg-gray-100 p-2 rounded-md transition">
                                         <span class="font-medium text-gray-700">{{ $label }}</span>
 
-                                        @if($mostrarDirecto)
-                                            <span class="text-sm text-gray-600">{{ is_bool($valor) ? ($valor ? 'Sí' : 'No') : $valor }}</span>
+                                        @if ($mostrarDirecto)
+                                            <span
+                                                class="text-sm text-gray-600">{{ is_bool($valor) ? ($valor ? 'Sí' : 'No') : $valor }}</span>
                                         @else
                                             <button
                                                 wire:click="mostrarDetalleCampo({{ $ficha->id }}, '{{ $campo }}', '{{ $label }} Completo')"
@@ -130,7 +136,7 @@
                             <div class="flex gap-2 mt-3">
                                 <a href="{{ route('kinesiologia.pdfs', ['paciente' => $paciente->id, 'ficha' => $ficha->id]) }}"
                                     class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-md text-sm">
-                                   Adjuntar PDFs
+                                    Adjuntar PDFs
                                 </a>
                                 <a href="{{ route('kinesiologia.edit', ['ficha' => $ficha->id]) }}"
                                     class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
@@ -150,17 +156,13 @@
         <!-- MODAL DETALLE -->
         @if ($modalCampoAbierto)
             <div class="fixed inset-0 bg-gray-900 bg-opacity-70 z-50 flex items-center justify-center p-4"
-                 wire:click.self="cerrarModalCampo"
-                 x-data="{ open: true }"
-                 x-show="open"
-                 x-transition.opacity>
+                wire:click.self="cerrarModalCampo" x-data="{ open: true }" x-show="open" x-transition.opacity>
 
                 <div class="bg-white rounded-2xl shadow-2xl w-full max-w-md transform transition-all scale-100"
-                     x-transition.scale>
+                    x-transition.scale>
                     <div class="p-4 border-b bg-gray-100 rounded-t-2xl flex justify-between items-center">
                         <h4 class="font-semibold text-gray-700 text-lg">{{ $campoSeleccionadoTitulo }}</h4>
-                        <button wire:click="cerrarModalCampo"
-                            class="text-gray-600 hover:text-gray-900">
+                        <button wire:click="cerrarModalCampo" class="text-gray-600 hover:text-gray-900">
                             ✖
                         </button>
                     </div>

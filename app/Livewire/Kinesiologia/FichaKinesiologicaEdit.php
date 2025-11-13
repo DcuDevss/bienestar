@@ -89,6 +89,12 @@ class FichaKinesiologicaEdit extends Component
         $this->obra_social_id = $this->ficha->obra_social_id;
         $this->obrasSociales = ObraSocial::all();
         $this->especialidades = Especialidade::pluck('name')->toArray();
+
+        // Normalizar los campos booleanos para los selects
+        $this->alteracion_peso = $this->ficha->alteracion_peso === null ? '' : (int) $this->ficha->alteracion_peso;
+        $this->realiza_actividad_fisica = $this->ficha->realiza_actividad_fisica === null ? '' : (int) $this->ficha->realiza_actividad_fisica;
+        $this->menarca = $this->ficha->menarca === null ? '' : (int) $this->ficha->menarca;
+        $this->menopausia = $this->ficha->menopausia === null ? '' : (int) $this->ficha->menopausia;
     }
 
     public function updateFichaKinesiologica()

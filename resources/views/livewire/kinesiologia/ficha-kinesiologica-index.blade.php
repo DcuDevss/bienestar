@@ -4,20 +4,20 @@
         <!-- ENCABEZADO -->
         <div class="flex flex-col sm:flex-row sm:items-center sm:justify-between mb-8">
             <h2 class="text-3xl font-bold text-gray-800 mb-4 sm:mb-0 flex items-center gap-2">
-                🩺 <span>Fichas Kinesiológicas de</span>
+                <span>Fichas Kinesiológicas de</span>
                 <span class="text-gray-700">{{ $paciente->apellido_nombre }}</span>
             </h2>
 
             <div class="flex flex-wrap gap-3">
                 <a href="{{ route('kinesiologia.index', ['paciente' => $paciente->id]) }}"
                     class="flex items-center gap-2 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-xl shadow-lg transition transform hover:scale-105">
-                    ➕ Nueva Ficha
+                    Nueva Ficha
                 </a>
 
-               {{--  <a href="{{ route('kinesiologia.pdfs', ['paciente' => $paciente->id]) }}"
+                <a href="{{ route('kinesiologia.pdfs', ['paciente' => $paciente->id]) }}"
                     class="flex items-center gap-2 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl shadow-lg transition transform hover:scale-105">
-                    📎 Adjuntar PDFs
-                </a> --}}
+                    Adjuntar PDFs
+                </a>
             </div>
         </div>
 
@@ -27,7 +27,7 @@
                 class="border border-gray-300 rounded-lg px-3 py-2 w-full sm:w-64 focus:ring-2 focus:ring-gray-400 focus:outline-none transition">
             <button wire:click="filtrarPorFecha"
                 class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-lg shadow transition transform hover:scale-105">
-                🔍 Buscar
+                Buscar
             </button>
         </div>
 
@@ -40,17 +40,17 @@
             <div class="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
                 @foreach ($fichas as $index => $ficha)
                     <div x-data="{ expand: false }"
-                        class="bg-white shadow-md hover:shadow-lg transition-all rounded-2xl overflow-hidden border border-gray-200 relative">
+                        {{-- class="bg-white shadow-md hover:shadow-lg transition-all rounded-2xl overflow-hidden border border-gray-200 relative"> --}}
 
                         <!-- ENCABEZADO CARD -->
                         <div class="bg-gray-100 px-5 py-3 flex justify-between items-center border-b border-gray-300">
                             <div>
                                 <p class="text-sm text-gray-700">
-                                    📅 <span class="font-semibold">{{ $ficha->created_at->format('d/m/Y') }}</span>
-                                    • 🕒 <span>{{ $ficha->created_at->format('H:i') }}</span>
+                                    <span class="font-semibold">{{ $ficha->created_at->format('d/m/Y') }}</span>
+                                    <span>{{ $ficha->created_at->format('H:i') }}</span>
                                 </p>
                                 <p class="text-sm text-gray-600 mt-1">
-                                    👨‍⚕️ <span class="font-semibold text-gray-700">{{ $ficha->doctor->name ?? 'Sin asignar' }}</span>
+                                    <span class="font-semibold text-gray-700">{{ $ficha->doctor->name ?? 'Sin asignar' }}</span>
                                 </p>
                             </div>
 
@@ -63,7 +63,7 @@
 
                                 {{-- <a href="{{ route('kinesiologia.edit', ['ficha' => $ficha->id]) }}"
                                     class="bg-gray-700 hover:bg-gray-800 text-white text-sm font-semibold px-3 py-1.5 rounded-lg shadow transition">
-                                    ✏️ Editar
+                                    Editar
                                 </a> --}}
                             </div>
                         </div>
@@ -71,7 +71,7 @@
                         <!-- CONTENIDO CARD -->
                         <div class="p-5 space-y-3 text-sm text-gray-700" x-show="expand" x-transition>
                             <h3 class="text-lg font-semibold text-gray-700 border-b pb-2">
-                                🧾 Planilla Kinesiológica
+                                 Planilla Kinesiológica
                             </h3>
 
                             @foreach ([
@@ -130,11 +130,11 @@
                             <div class="flex gap-2 mt-3">
                                 <a href="{{ route('kinesiologia.pdfs', ['paciente' => $paciente->id, 'ficha' => $ficha->id]) }}"
                                     class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-md text-sm">
-                                    📎 Adjuntar PDFs
+                                   Adjuntar PDFs
                                 </a>
                                 <a href="{{ route('kinesiologia.edit', ['ficha' => $ficha->id]) }}"
                                     class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
-                                    ✏️ Editar Planilla
+                                    Editar Planilla
                                 </a>
                             </div>
                         </div>

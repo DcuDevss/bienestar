@@ -12,24 +12,25 @@ class FichaKinesiologicaIndex extends Component
 {
     use WithPagination;
 
-    public Paciente $paciente;
+    protected $paginationTheme = 'tailwind';
+
+    public int $paciente_id;
+    public $paciente;
 
     public $fecha = ''; // Filtrar por fecha YYYY-MM-DD
 
     public ?FichaKinesiologica $fichaSeleccionada = null; // Ficha en edición
-    public bool $editMode = false;      // Indica si se está editando
+    public bool $editMode = false;
 
-    // 🌟 INICIO DE PROPIEDADES Y LÓGICA DEL MODAL DE DETALLE DE LA FICHA COMPLETA 🌟
+    // 🌟 Modal de detalle completo
     public bool $modalDetalleAbierto = false;
     public ?FichaKinesiologica $fichaParaDetalle = null;
 
-    // 🌟 PROPIEDADES PARA EL MODAL DE DETALLE DE CAMPO ESPECÍFICO 🌟
+    // 🌟 Modal de campo específico
     public bool $modalCampoAbierto = false;
     public string $campoSeleccionadoTitulo = '';
     public string $campoSeleccionadoContenido = '';
 
-
-    // Estructura de campos agrupados para el modal
     public $camposDetallesAgrupados = [
         'Anamnesis y Antecedentes' => [
             'diagnostico' => 'Diagnóstico',
@@ -70,10 +71,28 @@ class FichaKinesiologicaIndex extends Component
             'auscultacion' => 'Auscultación',
             'ecg' => 'ECG',
             'ecodoppler' => 'Ecodoppler',
-        ]
+        ],
     ];
 
-    // Método para abrir el modal de detalle de la ficha completa
+    public function mount(Paciente $paciente)
+    {
+        $this->paciente_id = $paciente->id;
+        $this->paciente = $paciente;
+        Log::info("FichaKinesiologicaIndex mounted for paciente_id={$paciente->id}");
+    }
+
+    public function updatingFecha()
+    {
+        $this->resetPage();
+        Log::info("Buscando fichas para fecha={$this->fecha}");
+    }
+
+    public function filtrarPorFecha()
+    {
+        $this->resetPage();
+        Log::info("Filtrando fichas por fecha={$this->fecha}");
+    }
+
     public function mostrarDetalles(int $fichaId)
     {
         $this->fichaParaDetalle = FichaKinesiologica::with('doctor')->find($fichaId);
@@ -87,20 +106,15 @@ class FichaKinesiologicaIndex extends Component
         }
     }
 
-    // Método para cerrar el modal de detalle de la ficha completa
     public function cerrarModalDetalle()
     {
         $this->modalDetalleAbierto = false;
-        $this->fichaParaDetalle = null; // Limpiar los datos
+        $this->fichaParaDetalle = null;
         Log::info("❌ Cerrando modal de detalle.");
     }
 
-    // ----------------------------------------------------
-    // MÉTODOS PARA EL MODAL DE CAMPO ESPECÍFICO (EL NUEVO)
-    // ----------------------------------------------------
     public function mostrarDetalleCampo(int $fichaId, string $campo, string $titulo)
     {
-        // Se asegura de cargar la ficha por si acaso, aunque ya debería estar cargada
         $ficha = FichaKinesiologica::find($fichaId);
 
         if ($ficha && !empty($ficha->$campo)) {
@@ -118,39 +132,15 @@ class FichaKinesiologicaIndex extends Component
         $this->campoSeleccionadoContenido = '';
     }
 
-    // ----------------------------------------------------
-    // RESTO DE LA LÓGICA DEL COMPONENTE (MÉTODOS DE PAGINACIÓN, EDICIÓN, RENDER)
-    // ----------------------------------------------------
-
-    protected $paginationTheme = 'tailwind';
-
-    public function mount(Paciente $paciente)
-    {
-        $this->paciente = $paciente;
-        Log::info("FichaKinesiologicaIndex mounted for paciente_id={$paciente->id}");
-    }
-
-    public function updatingFecha()
-    {
-        $this->resetPage();
-        Log::info("Buscando fichas para fecha={$this->fecha}");
-    }
-
-    public function filtrarPorFecha()
-    {
-        $this->resetPage();
-        Log::info("Filtrando fichas por fecha={$this->fecha}");
-    }
-
     public function edit($fichaId)
     {
         $this->fichaSeleccionada = FichaKinesiologica::find($fichaId);
         if ($this->fichaSeleccionada) {
             $this->editMode = true;
-            Log::info("✏️ Editando ficha_id={$fichaId} del paciente_id={$this->paciente->id}");
+            Log::info("✏️ Editando ficha_id={$fichaId} del paciente_id={$this->paciente_id}");
         } else {
             session()->flash('error', 'No se encontró la ficha.');
-            Log::warning("❌ Ficha_id={$fichaId} no encontrada para paciente_id={$this->paciente->id}");
+            Log::warning("❌ Ficha_id={$fichaId} no encontrada para paciente_id={$this->paciente_id}");
         }
     }
 
@@ -158,7 +148,7 @@ class FichaKinesiologicaIndex extends Component
     {
         $this->fichaSeleccionada = null;
         $this->editMode = false;
-        Log::info("❌ Cancelada edición de ficha para paciente_id={$this->paciente->id}");
+        Log::info("❌ Cancelada edición de ficha para paciente_id={$this->paciente_id}");
     }
 
     public function update()
@@ -179,7 +169,6 @@ class FichaKinesiologicaIndex extends Component
             'fichaSeleccionada.cirugias' => 'nullable|string',
             'fichaSeleccionada.traumatismos_accidentes' => 'nullable|string',
             'fichaSeleccionada.tratamientos_previos' => 'nullable|string',
-            // Agrega aquí otros campos
         ]);
 
         $this->fichaSeleccionada->save();
@@ -192,15 +181,16 @@ class FichaKinesiologicaIndex extends Component
     public function render()
     {
         $fichas = FichaKinesiologica::with('doctor')
-            ->where('paciente_id', $this->paciente->id)
+            ->where('paciente_id', $this->paciente_id)
             ->when($this->fecha, fn($q) => $q->whereDate('created_at', $this->fecha))
             ->orderByDesc('created_at')
             ->paginate(3);
 
-        Log::info("📄 Se obtuvieron {$fichas->total()} fichas para paciente_id={$this->paciente->id}");
+        Log::info("📄 Se obtuvieron {$fichas->total()} fichas para paciente_id={$this->paciente_id}");
 
         return view('livewire.kinesiologia.ficha-kinesiologica-index', [
             'fichas' => $fichas,
+            'paciente' => $this->paciente,
         ])->layout('layouts.app');
     }
 }

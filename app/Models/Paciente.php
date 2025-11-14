@@ -345,10 +345,10 @@ public function enfermedades()
         return $this->hasMany(FichaKinesiologica::class);
     }
 
-    public function registroSesiones()
+    // Relación: un paciente tiene muchas sesiones
+    public function sesiones()
     {
-        // Un Paciente tiene MUCHOS registros de sesiones
-        return $this->hasMany(RegistroSesion::class);
+        return $this->hasMany(RegistroSesion::class, 'paciente_id');
     }
 }
 

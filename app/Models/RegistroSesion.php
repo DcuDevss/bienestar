@@ -19,7 +19,7 @@ class RegistroSesion extends Model
         'fecha_sesion',
         'tratamiento_fisiokinetico',
         'evolucion_sesion',
-        'kinesiologo_id',
+        
     ];
 
     protected $casts = [

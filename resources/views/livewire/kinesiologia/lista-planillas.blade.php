@@ -8,7 +8,7 @@
                     <h4 class="text-lg font-bold text-white">Ficha Kinesiológica del Paciente</h4>
                 </div>
 
-                {{-- ✅ Área superior: Buscar + Mostrar --}}
+                {{-- Área superior: Buscar + Mostrar --}}
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-4">
 
                     {{-- Buscar --}}
@@ -47,6 +47,7 @@
                                 <th class="px-4 py-3">Jerarquía</th>
                                 <th class="px-4 py-3">Nombre</th>
                                 <th class="px-4 py-3">Fecha / Hora de Planilla</th>
+                                <th class="px-4 py-3">Estado Sesión</th>
                                 <th class="px-4 py-3">Acción</th>
                             </tr>
                         </thead>
@@ -62,6 +63,28 @@
                                     <td class="px-4 py-2 text-white">
                                         {{ $planilla->created_at->format('d-m-Y H:i:s') }}
                                     </td>
+
+                                    {{-- Columna Estado Sesión --}}
+                                    <td class="px-4 py-2">
+                                        @php
+                                            $ultimaSesion = $planilla->paciente?->sesiones()->latest('id')->first();
+                                        @endphp
+
+                                        @if($ultimaSesion?->firma_paciente_digital === 0)
+                                            <span class="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">
+                                                Activa
+                                            </span>
+                                        @elseif($ultimaSesion?->firma_paciente_digital === 1)
+                                            <span class="px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded-full">
+                                                Inactiva
+                                            </span>
+                                        @else
+                                            <span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-full">
+                                                N/D
+                                            </span>
+                                        @endif
+                                    </td>
+
                                     <td class="px-4 py-2">
                                         <a href="{{ route('fichas-kinesiologicas.index', ['paciente' => $planilla->paciente_id]) }}"
                                             class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-500 transition">
@@ -71,7 +94,7 @@
                                 </tr>
                             @empty
                                 <tr>
-                                    <td colspan="4" class="px-4 py-4 text-center text-white">
+                                    <td colspan="5" class="px-4 py-4 text-center text-white">
                                         No hay planillas disponibles.
                                     </td>
                                 </tr>
@@ -80,7 +103,7 @@
                     </table>
                 </div>
 
-                {{-- ✅ Paginación --}}
+                {{-- Paginación --}}
                 <div class="p-4 bg-gray-900 border-t border-gray-700 flex flex-col md:flex-row items-center justify-between">
                     <span class="text-gray-400 text-[14px] mb-2 md:mb-0">
                         Mostrando {{ $planillas->firstItem() ?? 0 }} a {{ $planillas->lastItem() ?? 0 }} de {{ $planillas->total() }} resultados

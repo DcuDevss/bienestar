@@ -57,6 +57,9 @@ use App\Livewire\Patient\DeletedPatientList;
 use App\Livewire\Kinesiologia\KinesiologiaForm;
 use App\Livewire\Kinesiologia\ListaPlanillas;
 use App\Livewire\Kinesiologia\PdfsKinesiologia;
+use App\Livewire\Kinesiologia\SesionKinesiologica;
+
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes ffff
@@ -225,3 +228,8 @@ Route::get('/kinesiologia/planillas', ListaPlanillas::class)
 // PDFs de Kinesiología
 Route::get('/paciente/{paciente}/kinesiologia/pdfs', PdfsKinesiologia::class)
     ->name('pdfs-kinesiologia');
+
+
+
+Route::get('/pacientes/{paciente}/sesiones', SesionKinesiologica::class)
+    ->name('sesion-kinesiologia');

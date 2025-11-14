@@ -78,6 +78,53 @@
                                         <p><strong>Tiene Embargos:</strong>
                                             {{ $entrevista->tiene_embargos == 1 ? 'Sí' : 'No' }}</p>
                                     @endif
+                                    @if (!empty($entrevista->posee_vivienda_propia))
+                                        <p><strong>¿Posee vivienda propia?</strong>
+                                            {{ $entrevista->posee_vivienda_propia }}
+                                        </p>
+                                    @endif
+
+                                    @if (!empty($entrevista->destino_anterior))
+                                        <p><strong>Destino anterior:</strong>
+                                            {{ $entrevista->destino_anterior }}
+                                        </p>
+                                    @endif
+
+                                    @if (!empty($entrevista->tiempo_en_ultimo_destino))
+                                        <p><strong>¿Hace cuánto tiempo se desempeña en su último destino?</strong>
+                                            {{ $entrevista->tiempo_en_ultimo_destino }}
+                                        </p>
+                                    @endif
+
+                                    @if (!empty($entrevista->fecha_ultimo_ascenso))
+                                        <p><strong>Fecha de último ascenso:</strong>
+                                            {{ \Carbon\Carbon::parse($entrevista->fecha_ultimo_ascenso)->format('d-m-Y') }}
+                                        </p>
+                                    @endif
+
+                                    @if (!empty($entrevista->horario_laboral))
+                                        <p><strong>Horario laboral:</strong>
+                                            {{ $entrevista->horario_laboral }}
+                                        </p>
+                                    @endif
+
+                                    @if (!empty($entrevista->hace_adicionales))
+                                        <p><strong>¿Hace adicionales?</strong>
+                                            {{ $entrevista->hace_adicionales }}
+                                        </p>
+                                    @endif
+
+                                    @if (!empty($entrevista->anios_residencia_isla))
+                                        <p><strong>Años de residencia en la isla:</strong>
+                                            {{ $entrevista->anios_residencia_isla }}
+                                        </p>
+                                    @endif
+
+                                    @if (!empty($entrevista->posee_oficio_profesion))
+                                        <p><strong>Posee otro oficio o profesión:</strong>
+                                            {{ $entrevista->posee_oficio_profesion }}
+                                        </p>
+                                    @endif
                                 </div>
                             </div>
 
@@ -141,6 +188,10 @@
                                         <p><strong>Realiza Actividades:</strong>
                                             {{ $entrevista->realiza_actividades == 1 ? 'Si' : 'No' }}</p>
                                     @endif
+                                    @if (!empty($entrevista->posee_oficio_profesion))
+                                        <p><strong>Oficio o Profesión:</strong> {{ $entrevista->posee_oficio_profesion ?? 'Sin Datos' }}
+                                        </p>
+                                    @endif
                                     @if (!empty($entrevista->actividades))
                                         <p><strong>Actividades:</strong> {{ $entrevista->actividades ?? 'Sin Datos' }}
                                         </p>
@@ -153,7 +204,78 @@
                                         <p><strong>Duerme Suficiente:</strong>
                                             {{ $entrevista->horas_suficientes == 1 ? 'Si' : 'No' }}</p>
                                     @endif
-
+                                    @if (!empty($entrevista->pesadillas_trabajo))
+                                        <p><strong>Pesadillas acerca del trabajo:</strong>
+                                            <span id="pesadillas_trabajo_{{ $entrevista->id }}" class="hidden">
+                                                {{ $entrevista->pesadillas_trabajo ?? 'Sin Datos' }}
+                                            </span>
+                                            <button type="button"
+                                                onclick="openModal('pesadillas_trabajo_{{ $entrevista->id }}')"
+                                                class="text-blue-500 text-sm mt-1">
+                                                Ver Detalle
+                                            </button>
+                                        </p>
+                                    @endif
+                                    @if (!empty($entrevista->situacion_laboral))
+                                        <p><strong>Situación laboral:</strong>
+                                            <span id="situacion_laboral_{{ $entrevista->id }}" class="hidden">
+                                                {{ $entrevista->situacion_laboral ?? 'Sin Datos' }}
+                                            </span>
+                                            <button type="button"
+                                                onclick="openModal('situacion_laboral_{{ $entrevista->id }}')"
+                                                class="text-blue-500 text-sm mt-1">
+                                                Ver Detalle
+                                            </button>
+                                        </p>
+                                    @endif
+                                    @if (!empty($entrevista->relacion_companieros_superiores))
+                                        <p><strong>Relación con compañeros y superiores:</strong>
+                                            <span id="relacion_companieros_superiores_{{ $entrevista->id }}" class="hidden">
+                                                {{ $entrevista->relacion_companieros_superiores ?? 'Sin Datos' }}
+                                            </span>
+                                            <button type="button"
+                                                onclick="openModal('relacion_companieros_superiores_{{ $entrevista->id }}')"
+                                                class="text-blue-500 text-sm mt-1">
+                                                Ver Detalle
+                                            </button>
+                                        </p>
+                                    @endif
+                                    @if (!empty($entrevista->situacion_familiar))
+                                        <p><strong>Situación familiar:</strong>
+                                            <span id="situacion_familiar_{{ $entrevista->id }}" class="hidden">
+                                                {{ $entrevista->situacion_familiar ?? 'Sin Datos' }}
+                                            </span>
+                                            <button type="button"
+                                                onclick="openModal('situacion_familiar_{{ $entrevista->id }}')"
+                                                class="text-blue-500 text-sm mt-1">
+                                                Ver Detalle
+                                            </button>
+                                        </p>
+                                    @endif
+                                    @if (!empty($entrevista->ultimos_6_meses))
+                                        <p><strong>Últimos 6 meses:</strong>
+                                            <span id="ultimos_6_meses_{{ $entrevista->id }}" class="hidden">
+                                                {{ $entrevista->ultimos_6_meses ?? 'Sin Datos' }}
+                                            </span>
+                                            <button type="button"
+                                                onclick="openModal('ultimos_6_meses_{{ $entrevista->id }}')"
+                                                class="text-blue-500 text-sm mt-1">
+                                                Ver Detalle
+                                            </button>
+                                        </p>
+                                    @endif
+                                    @if (!empty($entrevista->ultimos_dias_semanas))
+                                        <p><strong>Últimos días o semanas:</strong>
+                                            <span id="ultimos_dias_semanas_{{ $entrevista->id }}" class="hidden">
+                                                {{ $entrevista->ultimos_dias_semanas ?? 'Sin Datos' }}
+                                            </span>
+                                            <button type="button"
+                                                onclick="openModal('ultimos_dias_semanas_{{ $entrevista->id }}')"
+                                                class="text-blue-500 text-sm mt-1">
+                                                Ver Detalle
+                                            </button>
+                                        </p>
+                                    @endif
                                     @if (!empty($entrevista->estado_entrevista_id))
                                         @php
                                             // Define los colores basados en el id del estado de la entrevista
@@ -173,14 +295,18 @@
                                                     break;
                                             }
                                         @endphp
+                                        @if (!empty($entrevista->actitudEntrevista))
                                         <p >
                                             <strong>Actitud del Paciente:</strong>
                                             {{ $entrevista->actitudEntrevista->name ?? 'Sin Datos' }}
                                         </p>
+                                        @endif
+                                        @if (!empty($entrevista->indicacionTerapeutica))
                                         <p>
                                             <strong>Indicacion Terapéutica:</strong>
                                             {{ $entrevista->indicacionTerapeutica->name ?? 'Sin Datos' }}
                                         </p>
+                                        @endif
                                          @if (!empty($entrevista->portacion_id))
                                         <p class="bg-gray-500">
                                             <strong>Continuar/Realizar Tratamiento:</strong> {{ $entrevista->recomendacion == 1 ? 'Sí' : 'No' }}

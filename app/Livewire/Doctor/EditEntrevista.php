@@ -72,6 +72,21 @@ class EditEntrevista extends Component
     public $horas_suficientes= '';
     public $horas_dormir= '';
 
+    /* campos nuevos */
+    public $posee_vivienda_propia = '';
+    public $tiempo_en_ultimo_destino = '';
+    public $destino_anterior = '';
+    public $fecha_ultimo_ascenso = '';
+    public $horario_laboral = '';
+    public $hace_adicionales = '';
+    public $anios_residencia_isla = '';
+    public $posee_oficio_profesion = '';
+    public $situacion_laboral = '';
+    public $relacion_companieros_superiores = '';
+    public $situacion_familiar = '';
+    public $ultimos_6_meses = '';
+    public $ultimos_dias_semanas = '';
+    public $pesadillas_trabajo = '';
 
     public function mount($entrevista_id)
     {
@@ -126,6 +141,22 @@ class EditEntrevista extends Component
         $this->actividades = $entrevista->actividades;
         $this->horas_suficientes = $entrevista->horas_suficientes;
         $this->horas_dormir = $entrevista->horas_dormir;
+
+        $this->posee_vivienda_propia                  = $entrevista->posee_vivienda_propia;
+        $this->tiempo_en_ultimo_destino            = $entrevista->tiempo_en_ultimo_destino;
+        $this->destino_anterior                 = $entrevista->destino_anterior;
+        $this->fecha_ultimo_ascenso             = $entrevista->fecha_ultimo_ascenso;
+        $this->horario_laboral                  = $entrevista->horario_laboral;
+        $this->hace_adicionales                 = $entrevista->hace_adicionales;
+        $this->anios_residencia_isla            = $entrevista->anios_residencia_isla;
+        $this->posee_oficio_profesion           = $entrevista->posee_oficio_profesion;
+        $this->situacion_laboral                = $entrevista->situacion_laboral;
+        $this->relacion_companieros_superiores  = $entrevista->relacion_companieros_superiores;
+        $this->situacion_familiar               = $entrevista->situacion_familiar;
+        $this->ultimos_6_meses                  = $entrevista->ultimos_6_meses;
+        $this->ultimos_dias_semanas             = $entrevista->ultimos_dias_semanas;
+        $this->pesadillas_trabajo               = $entrevista->pesadillas_trabajo;
+
         $this->miembros = $entrevista->grupoFamiliar;
         Log::debug('Valor asignado a this->estado_entrevista_id:', [$this->estado_entrevista_id]);
 
@@ -273,6 +304,20 @@ class EditEntrevista extends Component
             'actividades' => 'nullable|string|max:1000',
             'horas_suficientes' => 'nullable|boolean',
             'horas_dormir' => 'nullable|integer|between:0,24',
+            'posee_vivienda_propia'                 => 'nullable|string|max:255',
+            'tiempo_en_ultimo_destino'           => 'nullable|string|max:255',
+            'destino_anterior'                => 'nullable|string|max:255',
+            'fecha_ultimo_ascenso'            => 'nullable|date',
+            'horario_laboral'                 => 'nullable|string|max:255',
+            'hace_adicionales'                => 'nullable|string|max:255',
+            'anios_residencia_isla'           => 'nullable|string|max:255',
+            'posee_oficio_profesion'          => 'nullable|string|max:255',
+            'situacion_laboral'               => 'nullable|string|max:255',
+            'relacion_companieros_superiores' => 'nullable|string|max:255',
+            'situacion_familiar'              => 'nullable|string|max:1000',
+            'ultimos_6_meses'                 => 'nullable|string|max:1000',
+            'ultimos_dias_semanas'            => 'nullable|string|max:1000',
+            'pesadillas_trabajo'              => 'nullable|string',
         ]);
 
         $entrevista = Entrevista::find($this->entrevista_id);
@@ -318,6 +363,22 @@ class EditEntrevista extends Component
                 $entrevista->actividades = $this->emptyToNull($this->actividades);
                 $entrevista->horas_suficientes = $this->emptyToNull($this->horas_suficientes);
                 $entrevista->horas_dormir = $this->emptyToNull($this->horas_dormir);
+
+                $entrevista->posee_vivienda_propia                 = $this->emptyToNull($this->posee_vivienda_propia);
+                $entrevista->tiempo_en_ultimo_destino           = $this->emptyToNull($this->tiempo_en_ultimo_destino);
+                $entrevista->destino_anterior                = $this->emptyToNull($this->destino_anterior);
+                $entrevista->fecha_ultimo_ascenso            = $this->emptyToNull($this->fecha_ultimo_ascenso);
+                $entrevista->horario_laboral                 = $this->emptyToNull($this->horario_laboral);
+                $entrevista->hace_adicionales                = $this->emptyToNull($this->hace_adicionales);
+                $entrevista->anios_residencia_isla           = $this->emptyToNull($this->anios_residencia_isla);
+                $entrevista->posee_oficio_profesion          = $this->emptyToNull($this->posee_oficio_profesion);
+                $entrevista->situacion_laboral               = $this->emptyToNull($this->situacion_laboral);
+                $entrevista->relacion_companieros_superiores = $this->emptyToNull($this->relacion_companieros_superiores);
+                $entrevista->situacion_familiar              = $this->emptyToNull($this->situacion_familiar);
+                $entrevista->ultimos_6_meses                 = $this->emptyToNull($this->ultimos_6_meses);
+                $entrevista->ultimos_dias_semanas            = $this->emptyToNull($this->ultimos_dias_semanas);
+                $entrevista->pesadillas_trabajo              = $this->emptyToNull($this->pesadillas_trabajo);
+
 
 
             // Guardar los cambioos

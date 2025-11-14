@@ -39,7 +39,21 @@
                     indicacionterapeutica_id: @entangle('indicacionterapeutica_id'),
                     abordaje_id: @entangle('abordaje_id'),
                     derivacion_psiquiatrica: @entangle('derivacion_psiquiatrica'),
-                    evolucion_tratamiento: @entangle('evolucion_tratamiento')
+                    evolucion_tratamiento: @entangle('evolucion_tratamiento'),
+                    posee_vivienda_propia:        @entangle('posee_vivienda_propia'),
+                    tiempo_en_ultimo_destino:        @entangle('tiempo_en_ultimo_destino'),
+                    destino_anterior:             @entangle('destino_anterior'),
+                    fecha_ultimo_ascenso:         @entangle('fecha_ultimo_ascenso'),
+                    horario_laboral:              @entangle('horario_laboral'),
+                    hace_adicionales:             @entangle('hace_adicionales'),
+                    anios_residencia_isla:        @entangle('anios_residencia_isla'),
+                    posee_oficio_profesion:       @entangle('posee_oficio_profesion'),
+                    situacion_laboral:            @entangle('situacion_laboral'),
+                    relacion_companieros_superiores: @entangle('relacion_companieros_superiores'),
+                    situacion_familiar:           @entangle('situacion_familiar'),
+                    ultimos_6_meses:              @entangle('ultimos_6_meses'),
+                    ultimos_dias_semanas:         @entangle('ultimos_dias_semanas'),
+                    pesadillas_trabajo:           @entangle('pesadillas_trabajo'),
                 }"> <!-- Usamos x-data para manejar el estado en Alpine -->
 
                     <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
@@ -160,6 +174,52 @@
                                 <option value="0">No</option>
                             </select>
                         </div>
+
+                        <div x-show="" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">¿Posee vivienda propia?</label>
+                            <input type="text" wire:model="posee_vivienda_propia"
+                                class="mt-1 p-2 w-full border rounded-md">
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">Destino anterior</label>
+                            <input type="text" wire:model="destino_anterior"
+                                class="mt-1 p-2 w-full border rounded-md">
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">
+                                ¿Hace cuánto tiempo se desempeña en su último destino?
+                            </label>
+                            <input type="text" wire:model="tiempo_en_ultimo_destino"
+                                class="mt-1 p-2 w-full border rounded-md">
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">Fecha de último ascenso</label>
+                            <input type="date" wire:model="fecha_ultimo_ascenso"
+                                class="mt-1 p-2 w-full border rounded-md">
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">Horario laboral</label>
+                            <input type="text" wire:model="horario_laboral"
+                                class="mt-1 p-2 w-full border rounded-md">
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">¿Hace adicionales?</label>
+                            <input type="text" wire:model="hace_adicionales"
+                                class="mt-1 p-2 w-full border rounded-md">
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">Años de residencia en la isla</label>
+                            <input type="text" wire:model="anios_residencia_isla"
+                                class="mt-1 p-2 w-full border rounded-md">
+                        </div>
+
+
                     </div>
                 </div>
 
@@ -453,6 +513,13 @@
                         </div>
 
                         <div class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">¿Posee otro oficio o profesión?(especifique)</label>
+                            <textarea type="text" wire:model="posee_oficio_profesion"
+                                class="mt-1 p-2 w-full border rounded-md"></textarea>
+                        </div>
+
+
+                        <div class="mb-4">
                             <label for="actividades" class="block text-sm font-medium text-gray-700">Qué actividades
                                 realiza?</label>
                             <textarea type="text" wire:model="actividades" class="mt-1 p-2 w-full border rounded-md"></textarea>
@@ -487,8 +554,120 @@
                                     <span class="text-red-500">{{ $message }}</span>
                                 @enderror
                             </select>
-
                         </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">
+                                ¿Tuviste o tenés pesadillas acerca de tu trabajo?
+                            </label>
+                            <textarea wire:model="pesadillas_trabajo"
+                                class="mt-1 p-2 w-full border rounded-md"></textarea>
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">Situación laboral</label>
+                                <p class="font-semibold mb-1">Preguntas orientativas para esta sección:</p>
+                                    <ul class="list-disc ml-4 space-y-1">
+                                        <li>¿Qué tarea realiza actualmente? ¿Le gusta?</li>
+                                        <li>¿Por qué has decidido ser Policía?</li>
+                                        <li>¿Qué ventajas creés que tiene ser policía?</li>
+                                        <li>¿Qué papel creés que juega la empatía en el trabajo policial?</li>
+                                        <li>¿Cuál fue la situación más difícil vivida en lo laboral?</li>
+                                        <li>¿Pensás que hacés bien o mal tu trabajo?</li>
+                                        <li>¿Qué percepción del ambiente laboral tenés?</li>
+                                        <li>Describa su trabajo en 3 palabras.</li>
+                                    </ul>
+                            <textarea type="text" wire:model="situacion_laboral"
+                                class="mt-1 p-2 w-full border rounded-md"></textarea>
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Relación con compañeros y superiores
+                            </label>
+
+                            <p class="font-semibold mb-1">Preguntas orientativas para esta sección:</p>
+                            <ul class="list-disc ml-4 space-y-1">
+                                <li>Relaciones interpersonales en general.</li>
+                                <li>¿Qué papel creés que juega la empatía en el trabajo policial?</li>
+                                <li>¿Qué es algo que no soportás de los demás?</li>
+                                <li>¿Qué es lo que más valorás de los demás?</li>
+                                <li>¿Te considerás una persona disciplinada? ¿Por qué?</li>
+                                <li>¿Cómo describirías tu capacidad de liderazgo?</li>
+                                <li>¿Cómo resolvés un problema laboral?</li>
+                            </ul>
+
+                            <textarea
+                                wire:model="relacion_companieros_superiores"
+                                class="mt-1 p-2 w-full border rounded-md"
+                            ></textarea>
+                        </div>
+
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">
+                                Situación familiar
+                            </label>
+
+                            <p class="font-semibold mb-1">Preguntas orientativas para esta sección:</p>
+                            <ul class="list-disc ml-4 space-y-1">
+                                <li>Última licencia anual — ¿cómo la pasó?</li>
+                                <li>Episodios de violencia o conflictos familiares.</li>
+                                <li>Describa a su familia en 3 palabras.</li>
+                            </ul>
+
+                            <textarea wire:model="situacion_familiar" class="mt-1 p-2 w-full border rounded-md"></textarea>
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">Últimos 6 meses</label>
+
+                            <p class="font-semibold mb-1">Preguntas orientativas para esta sección:</p>
+                            <ul class="list-disc ml-4 space-y-1">
+                                <li>Fallecimiento de familiares.</li>
+                                <li>Accidentes graves o enfermedad de riesgo de vida de un familiar.</li>
+                                <li>Violencia familiar o laboral.</li>
+                                <li>Situación o pensamientos suicidas.</li>
+                            </ul>
+
+                            <textarea wire:model="ultimos_6_meses" class="mt-1 p-2 w-full border rounded-md"></textarea>
+                        </div>
+
+                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                            <label class="block text-sm font-medium text-gray-700">Últimos días o semanas</label>
+
+                            <p class="font-semibold mb-1">Preguntas orientativas para esta sección:</p>
+                            <ul class="list-disc ml-4 space-y-1">
+                                <li>¿Has percibido que estás más irritable con tu familia?</li>
+                                <li>¿Estás intolerante con tus amigos?</li>
+                                <li>¿Estás sin ánimos de salir?</li>
+                                <li>¿Con ganas de quedarte solo?</li>
+                                <li>¿Tu trabajo ya no te parece tan bueno como antes?</li>
+                                <li>¿Te cuesta mantener la atención?</li>
+                                <li>¿No te podés concentrar en las tareas laborales?</li>
+                                <li>¿Has tenido dificultades con tu memoria?</li>
+                                <li>¿Has aumentado el consumo de alcohol?</li>
+                                <li>¿Has aumentado el consumo de cigarrillos?</li>
+                                <li>¿Has tenido que consumir algún fármaco?</li>
+                                <li>¿Has cambiado tus hábitos de alimentación?</li>
+                                <li>¿Estás más ansioso?</li>
+                                <li>¿Has tenido dolores de estómago?</li>
+                                <li>¿Has padecido de hipertensión o hipotensión?</li>
+                                <li>¿Tuviste sudoración excesiva sin haber realizado esfuerzo físico?</li>
+                                <li>¿Problemas dermatológicos?</li>
+                                <li>¿Problemas cardíacos?</li>
+                                <li>¿Problemas gastrointestinales?</li>
+                                <li>¿Frecuentes dolores de cabeza?</li>
+                                <li>¿Problemas alérgicos?</li>
+                            </ul>
+
+                            <textarea
+                                wire:model="ultimos_dias_semanas"
+                                class="mt-1 p-2 w-full border rounded-md"
+                            ></textarea>
+                        </div>
+
+
 
 
                         <div class="mb-4">

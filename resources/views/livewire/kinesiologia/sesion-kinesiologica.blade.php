@@ -12,31 +12,40 @@
         </div>
     @endif
 
-    {{-- TITULO --}}
     {{-- BLOQUE DE DATOS DEL PACIENTE (NO COLAPSABLE) --}}
-                <div class="bg-gray-50 p-4 rounded-lg shadow mb-8 border border-gray-200">
-                    <h3 class="text-lg font-semibold text-gray-700 mb-3">
-                        <span class="inline-block mr-2 text-gray-600">Datos del Paciente
-                    </h3>
-                    <ul class="space-y-2 text-gray-700">
-                        <li><span class="font-medium text-gray-600">Nombre:</span> {{ $paciente->apellido_nombre }}</li>
-                        <li><span class="font-medium text-gray-600">Domicilio:</span> {{ $paciente->domicilio }}</li>
-                        <li><span class="font-medium text-gray-600">Teléfono:</span> {{ $paciente->TelefonoCelular }}</li>
-                        <li><span class="font-medium text-gray-600">DNI:</span> {{ $paciente->dni }}</li>
-                        <li><span class="font-medium text-gray-600">Edad:</span> {{ $paciente->edad }} años</li>
-                    </ul>
-                </div>
+    <div class="bg-gray-50 p-4 rounded-lg shadow mb-8 border border-gray-200">
+        <h3 class="text-lg font-semibold text-gray-700 mb-3">
+            <span class="inline-block mr-2 text-gray-600">Datos del Paciente</span>
+        </h3>
+        <ul class="space-y-2 text-gray-700">
+            <li><span class="font-medium text-gray-600">Nombre:</span> {{ $paciente->apellido_nombre }}</li>
+            <li><span class="font-medium text-gray-600">Domicilio:</span> {{ $paciente->domicilio }}</li>
+            <li><span class="font-medium text-gray-600">Teléfono:</span> {{ $paciente->TelefonoCelular }}</li>
+            <li><span class="font-medium text-gray-600">DNI:</span> {{ $paciente->dni }}</li>
+            <li><span class="font-medium text-gray-600">Edad:</span> {{ $paciente->edad }} años</li>
+        </ul>
+    </div>
 
-    {{-- CONTADOR + BARRA PROGRESIVA --}}
+    {{-- CONTADOR + BARRA PROGRESIVA CON ALERTA VISUAL --}}
     @php
         $activas = $serieActiva->count();
         $limite = $limiteSerie;
         $porcentaje = $limite > 0 ? ($activas / $limite) * 100 : 0;
+        // Clase para resaltar visualmente el contador
+        $alertaClase = '';
+        if ($activas === $limite - 1) { // Sesión 9/10
+            $alertaClase = 'border-4 border-yellow-500 bg-yellow-50/50 shadow-md';
+        } elseif ($activas >= $limite) { // Sesión 10/10 o más
+            $alertaClase = 'border-4 border-red-500 bg-red-50/50 shadow-lg';
+        }
     @endphp
 
-    <div class="mb-4">
-        <p class="font-semibold mb-1">
-            Sesiones activas: {{ $activas }} / {{ $limite }}
+    <div class="mb-4 p-3 rounded-lg {{ $alertaClase }}">
+        <p class="font-semibold mb-1 text-lg">
+            Sesiones activas: 
+            <span class="{{ $activas >= $limite ? 'text-red-600 font-extrabold' : 'text-blue-600' }}">
+                {{ $activas }}
+            </span> / {{ $limite }}
         </p>
         <div class="w-full h-3 bg-gray-300 rounded overflow-hidden">
             <div class="h-3 bg-blue-600 transition-[width] duration-700 ease-out"
@@ -67,7 +76,7 @@
 
     {{-- BOTÓN REGISTRAR NUEVA SESIÓN --}}
     <div class="text-left mb-5">
-        <button @click="modal = true"
+        <button @click="modal = true" wire:click="resetCampos"
             class="px-4 py-2 bg-green-600 text-white rounded shadow hover:bg-green-700 transition">
             Registrar sesión
         </button>
@@ -180,10 +189,12 @@
                             </button>
 
                             {{-- ELIMINAR --}}
+                            @role('super-admin')
                             <button wire:click="eliminarSesion({{ $sesion->id }})"
                                 class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-xs">
                                 Eliminar
                             </button>
+                            @endrole
                         </td>
                     </tr>
                 @endforeach
@@ -191,32 +202,51 @@
         </table>
     </div>
 
-    {{-- BOTÓN FINALIZAR SESIÓN --}}
-    <div class="mt-6 text-right">
+    {{-- BOTONES --}}
+    <div class="mt-6 flex justify-end gap-4">
+        {{-- Botón Finalizar Sesión --}}
         <button wire:click="finalizarSerie"
             class="bg-blue-700 text-white px-4 py-2 rounded shadow hover:bg-blue-800 transition">
             Finalizar Sesión
         </button>
+
+        {{-- Botón Ver Historial de Fichas --}}
+        <a href="{{ route('fichas-kinesiologicas.index', ['paciente' => $paciente->id]) }}"
+            class="bg-green-600 text-white px-6 py-2 rounded-xl shadow-lg hover:bg-green-700 transition duration-150 transform hover:scale-105 flex items-center">
+            Ver Historial de Fichas
+        </a>
     </div>
 
 </div>
 
-{{-- SweetAlert2 --}}
+{{-- SweetAlert2 Scripts --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
 document.addEventListener('livewire:initialized', () => {
 
-    // CONFIRMACIÓN FINALIZAR SESIÓN
+    // 1. MANEJADOR DE ALERTA INSTANTÁNEA (swal) - Usado para "No hay activas"
+    Livewire.on('swal', (event) => {
+        const data = event[0];
+        Swal.fire({
+            title: data.title,
+            text: data.text,
+            icon: data.icon,
+            timer: 3000, // Se cierra automáticamente
+            showConfirmButton: false
+        });
+    });
+
+    // 2. CONFIRMACIÓN FINALIZAR SERIE
     Livewire.on('confirmarFinalizarSerie', () => {
         Swal.fire({
-            title: "¿Finalizar sesión?",
-            text: "Esto marcará todas las sesiones activas como inactivas.",
+            title: "¿Finalizar serie de sesiones?",
+            text: "Esto marcará todas las sesiones activas como inactivas. ¿Confirmas la finalización?",
             icon: "warning",
             showCancelButton: true,
-            confirmButtonColor: "#3085d6",
-            cancelButtonColor: "#d33",
-            confirmButtonText: "Sí, finalizar",
+            confirmButtonColor: "#DC2626", // Rojo
+            cancelButtonColor: "#6B7280",
+            confirmButtonText: "Sí, Finalizar",
             cancelButtonText: "Cancelar"
         }).then((result) => {
             if (result.isConfirmed) {
@@ -224,12 +254,12 @@ document.addEventListener('livewire:initialized', () => {
             }
         });
     });
-
-    // CONFIRMACIÓN GUARDADO SESIÓN
+    
+    // 3. CONFIRMACIÓN GUARDADO SESIÓN (Flujo normal)
     Livewire.on('confirmarGuardado', () => {
         Swal.fire({
             title: "¿Guardar sesión?",
-            text: "Se registrará la sesión.",
+            text: "Se registrará la sesión con los datos ingresados.",
             icon: "question",
             showCancelButton: true,
             confirmButtonColor: "#10B981",
@@ -242,8 +272,8 @@ document.addEventListener('livewire:initialized', () => {
             }
         });
     });
-
-    // SESIÓN GUARDADA
+    
+    // 4. SESIÓN GUARDADA (Mensaje de éxito genérico)
     Livewire.on('sesionGuardada', (event) => {
         const data = event[0];
         Swal.fire({
@@ -254,6 +284,57 @@ document.addEventListener('livewire:initialized', () => {
             showConfirmButton: false
         });
     });
+
+    // ************************************************
+    // 5. NUEVA ALERTA: ADVERTENCIA DE LÍMITE INMINENTE (Sesión 9/10)
+    // ************************************************
+    Livewire.on('alertaLimite', (event) => {
+        const data = event[0];
+        Swal.fire({
+            title: data.title,
+            text: data.text,
+            icon: "info",
+            showCancelButton: true,
+            confirmButtonColor: "#F59E0B", // Amarillo/Naranja (Continuar)
+            cancelButtonColor: "#6B7280", // Gris (Cancelar)
+            confirmButtonText: "Continuar y Guardar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Llama al método para guardar forzando el salto de la verificación
+                Livewire.dispatch('continuarGuardadoForzado');
+            }
+        });
+    });
+
+    // ************************************************
+    // 6. NUEVA ALERTA: LÍMITE ALCANZADO (Sesión 10/10 o más)
+    // ************************************************
+    Livewire.on('alertaContinuar', (event) => {
+        const data = event[0];
+        Swal.fire({
+            title: data.title,
+            text: data.text,
+            icon: "warning",
+            showCancelButton: true,
+            showDenyButton: true,
+            confirmButtonColor: "#10B981", // Verde (Guardar Extra)
+            cancelButtonColor: "#6B7280", // Gris (Cancelar)
+            denyButtonColor: "#DC2626", // Rojo (Finalizar Serie)
+            confirmButtonText: "Guardar Sesión Extra",
+            denyButtonText: "Finalizar Serie Ahora",
+            cancelButtonText: "Cancelar y Revisar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // Opción: Guardar sesión extra (Llama al guardado forzado)
+                Livewire.dispatch('continuarGuardadoForzado');
+            } else if (result.isDenied) {
+                // Opción: Finalizar la serie actual
+                Livewire.dispatch('finalizarSerieConfirmada');
+            }
+        });
+    });
+    // ************************************************
 
 });
 </script>

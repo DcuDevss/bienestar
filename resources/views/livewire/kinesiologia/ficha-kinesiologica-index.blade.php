@@ -13,8 +13,13 @@
                     Nueva Ficha
                 </a>
 
+                <a href="{{ route('sesion-kinesiologia', ['paciente' => $paciente->id]) }}"
+                    class="flex items-center gap-1 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-xl shadow transition transform hover:scale-105 text-sm">
+                    Sesiones de Kinesiología
+                </a>
+
                 <a href="{{ route('pdfs-kinesiologia', ['paciente' => $paciente->id]) }}"
-                    class="flex items-center gap-1 bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded-xl shadow transition transform hover:scale-105 text-sm">
+                    class="flex items-center gap-1 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-xl shadow transition transform hover:scale-105 text-sm">
                     Adjuntar PDFs
                 </a>
             </div>
@@ -131,7 +136,7 @@
 
                             <div class="flex gap-2 mt-3 justify-center">
                                 <a href="{{ route('pdfs-kinesiologia', ['paciente' => $paciente->id, 'ficha' => $ficha->id]) }}"
-                                    class="bg-gray-500 hover:bg-gray-600 text-white px-3 py-1.5 rounded-md text-sm">
+                                    class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
                                     Adjuntar PDFs
                                 </a>
 
@@ -140,7 +145,7 @@
                                     Editar Planilla
                                 </a>
                                 <a href="{{ route('sesion-kinesiologia', ['paciente' => $paciente->id]) }}"
-                                    class="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1.5 rounded-md text-sm">
+                                    class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
                                     Sesiones de Kinesiología
                                 </a>
                             </div>

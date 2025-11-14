@@ -64,23 +64,27 @@
                                         {{ $planilla->created_at->format('d-m-Y H:i:s') }}
                                     </td>
 
-                                    {{-- Columna Estado Sesión --}}
+                                    {{-- Columna Estado Sesión - CORRECCIÓN APLICADA AQUÍ --}}
                                     <td class="px-4 py-2">
                                         @php
+                                            // Asumimos que $planilla->paciente es el Paciente y tiene la relación sesiones()
                                             $ultimaSesion = $planilla->paciente?->sesiones()->latest('id')->first();
                                         @endphp
 
-                                        @if($ultimaSesion?->firma_paciente_digital === 0)
+                                        @if(is_null($ultimaSesion))
+                                            {{-- Caso 1: No hay ninguna sesión registrada --}}
+                                            <span class="px-2 py-0.5 text-xs bg-gray-600 text-gray-200 rounded-full">
+                                                Sin Registros
+                                            </span>
+                                        @elseif($ultimaSesion->firma_paciente_digital === 0)
+                                            {{-- Caso 2: Última sesión activa (firma_paciente_digital = 0) --}}
                                             <span class="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">
                                                 Activa
                                             </span>
-                                        @elseif($ultimaSesion?->firma_paciente_digital === 1)
+                                        @elseif($ultimaSesion->firma_paciente_digital === 1)
+                                            {{-- Caso 3: Última sesión inactiva (firma_paciente_digital = 1) --}}
                                             <span class="px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded-full">
                                                 Inactiva
-                                            </span>
-                                        @else
-                                            <span class="px-2 py-0.5 text-xs bg-gray-100 text-gray-700 rounded-full">
-                                                N/D
                                             </span>
                                         @endif
                                     </td>

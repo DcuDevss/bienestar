@@ -11,11 +11,12 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('doctors', function (Blueprint $table) {
+        Schema::create('obra_socials', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('nro_matricula')->nullable(); // matrícula como string
-            $table->string('especialidad')->nullable();
+            // Campo principal (Obligatorio)
+            $table->string('nombre')->unique();
+            $table->string('telefono_contacto')->nullable(); 
+            $table->string('email_contacto')->nullable(); 
             $table->timestamps();
         });
     }
@@ -25,6 +26,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctors');
+        Schema::dropIfExists('obra_socials');
     }
 };

@@ -1,5 +1,10 @@
 <div class="p-6" x-data="{ modal: false }" x-cloak>
 
+    {{-- 🔑 TÍTULO AGREGADO AQUÍ --}}
+    <h1 class="text-3xl font-extrabold text-center text-gray-800 mb-6 border-b pb-2">
+        Sesión Kinesiologica
+    </h1>
+
     {{-- FLASH MESSAGE --}}
     @if (session('mensaje'))
         <div 

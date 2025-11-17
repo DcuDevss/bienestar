@@ -166,7 +166,8 @@
                             ? 'bg-green-50'
                             : 'bg-red-50' }}">
                         <td class="border px-2 py-1">{{ $sesion->sesion_nro }}</td>
-                        <td class="border px-2 py-1">{{ $sesion->fecha_sesion }}</td>
+                        <td class="border px-2 py-1">{{ Carbon\Carbon::parse($sesion->fecha_sesion)->format('d/m/Y') }}</td>
+                        {{-- <td class="border px-2 py-1">{{ $sesion->fecha_sesion }}</td> --}}
                         <td class="border px-2 py-1">{{ $sesion->tratamiento_fisiokinetico }}</td>
                         <td class="border px-2 py-1">{{ $sesion->evolucion_sesion }}</td>
                         <td class="border px-2 py-1">

@@ -35,8 +35,11 @@
                             <option value="certificado.update">Edición de certificado</option>
                             <option value="enfermedad.create">Atención médica agregada</option>
                             <option value="enfermedad.update">Atención médica actualizada</option>
+                            <option value="disase.create">Alta de Enfermedad</option>
                             <option value="enfermeria.control.create">Control de enfermería</option>
                             <option value="enfermeria.control.update">Edición control de enfermería</option>
+                            <option value="archivo.create">Subida de PDF(archivo)</option>
+                            <option value="pdf.create">Subida de PDF(psicologo)</option>
                         </select>
 
                         <!-- Usuario -->

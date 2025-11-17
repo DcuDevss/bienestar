@@ -227,7 +227,7 @@ Route::get('/kinesiologia/planillas', ListaPlanillas::class)
 
 // PDFs de Kinesiología
 Route::get('/paciente/{paciente}/kinesiologia/pdfs', PdfsKinesiologia::class)
-    ->name('pdfs-kinesiologia');
+    ->name('pdfs-kinesiologia'); 
 
 
 

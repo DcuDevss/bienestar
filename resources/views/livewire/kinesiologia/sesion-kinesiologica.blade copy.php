@@ -26,40 +26,32 @@
         </ul>
     </div>
 
-   {{-- CONTADOR + BARRA PROGRESIVA CON ALERTA VISUAL --}}
-@php
-    $activas = $serieActiva->count();
-    $limiteBase = $limiteSerie; // El límite original de 10
+    {{-- CONTADOR + BARRA PROGRESIVA CON ALERTA VISUAL --}}
+    @php
+        $activas = $serieActiva->count();
+        $limite = $limiteSerie;
+        $porcentaje = $limite > 0 ? ($activas / $limite) * 100 : 0;
+        // Clase para resaltar visualmente el contador
+        $alertaClase = '';
+        if ($activas === $limite - 1) { // Sesión 9/10
+            $alertaClase = 'border-4 border-yellow-500 bg-yellow-50/50 shadow-md';
+        } elseif ($activas >= $limite) { // Sesión 10/10 o más
+            $alertaClase = 'border-4 border-red-500 bg-red-50/50 shadow-lg';
+        }
+    @endphp
 
-    // 💡 CORRECCIÓN: El límite visible ($limite) debe ser el máximo entre las activas y el límite base (10).
-    $limite = max($activas, $limiteBase); 
-
-    // Recalcula el porcentaje usando el límite dinámico ($limite)
-    $porcentaje = $limite > 0 ? ($activas / $limite) * 100 : 0; 
-
-    // Clase para resaltar visualmente el contador (usa $limiteBase para la ALERTA)
-    $alertaClase = '';
-    if ($activas === $limiteBase - 1) { // Sesión 9/10
-        $alertaClase = 'border-4 border-yellow-500 bg-yellow-50/50 shadow-md';
-    } elseif ($activas >= $limiteBase) { // Sesión 10/10 o más
-        $alertaClase = 'border-4 border-red-500 bg-red-50/50 shadow-lg';
-    }
-@endphp
-
-<div class="mb-4 p-3 rounded-lg {{ $alertaClase }}">
-    <p class="font-semibold mb-1 text-lg">
-        Sesiones activas: 
-        {{-- Usamos $limiteBase para el color, que es cuando el contador pasa 10 --}}
-        <span class="{{ $activas >= $limiteBase ? 'text-red-600 font-extrabold' : 'text-blue-600' }}">
-            {{ $activas }}
-        </span> / {{ $limite }}
-        {{-- Aquí se usa $limite (que será 11 si $activas es 11) --}}
-    </p>
-    <div class="w-full h-3 bg-gray-300 rounded overflow-hidden">
-        <div class="h-3 bg-blue-600 transition-[width] duration-700 ease-out"
-            style="width: {{ $porcentaje }}%;"></div>
+    <div class="mb-4 p-3 rounded-lg {{ $alertaClase }}">
+        <p class="font-semibold mb-1 text-lg">
+            Sesiones activas: 
+            <span class="{{ $activas >= $limite ? 'text-red-600 font-extrabold' : 'text-blue-600' }}">
+                {{ $activas }}
+            </span> / {{ $limite }}
+        </p>
+        <div class="w-full h-3 bg-gray-300 rounded overflow-hidden">
+            <div class="h-3 bg-blue-600 transition-[width] duration-700 ease-out"
+                style="width: {{ $porcentaje }}%;"></div>
+        </div>
     </div>
-</div>
 
     {{-- FILTROS --}}
     <div class="mb-6 flex gap-2">

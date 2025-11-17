@@ -99,6 +99,7 @@
                 <div>
                     <label class="block text-sm font-medium">N° Sesión</label>
                     <input type="number" wire:model="sesion_nro"
+                    readonly
                         class="border rounded w-full px-2 py-1">
                     @error('sesion_nro') 
                         <span class="text-red-600 text-sm">{{ $message }}</span> 

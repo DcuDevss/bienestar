@@ -97,20 +97,29 @@ class VerHistorial extends Component
                 ];
             });
 
-        // ✅ PDFs Kinesiología
-        $fromKine = \App\Models\PdfKinesiologia::where('paciente_id', $this->pacienteId)->get()->map(function ($row) {
-            $path = $row->filepath;
-            if (!$path || !Storage::exists($path)) return null;
+        // ✅ PDFs Kinesiología (Adaptado al disco 'public' y fallback de path/display)
+        $fromKine = \App\Models\PdfKinesiologia::where('paciente_id', $this->pacienteId)->get()->map(function ($row) use ($dir) {
+            // 🚨 Adaptación 1: Añadir lógica de fallback para el path, como Psiquiatría
+            $path = $row->filepath ?: "{$dir}/" . basename($row->filename ?? '');
+
+            // 🚨 Adaptación 2: Especificar el disco 'public' para la verificación de existencia
+            if (!$path || !Storage::disk('public')->exists($path)) return null;
 
             $realBase = basename($path);
+
+            // 🚨 Adaptación 3: Añadir lógica de fallback para el display, como Psiquiatría
+            $display = $row->filename ?: $realBase;
+
             Log::info("PDF Kinesiología encontrado: {$realBase}");
 
             return [
                 'key'      => mb_strtolower($realBase),
                 'filename' => $realBase,
-                'display'  => $row->filename,
+                // Usar la variable display adaptada
+                'display'  => $display,
                 'path'     => $path,
-                'url'      => Storage::url($path),
+                // 🚨 Adaptación 4: Especificar el disco 'public' para la generación de la URL
+                'url'      => Storage::disk('public')->url($path),
                 'source'   => 'kinesiología',
                 'modified' => $this->formatDate($this->lastModifiedSafe($path)),
             ];

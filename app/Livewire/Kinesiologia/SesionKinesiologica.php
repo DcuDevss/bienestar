@@ -28,8 +28,8 @@ class SesionKinesiologica extends Component
     // Listeners para eventos de SweetAlert2
     protected $listeners = [
         'finalizarSerieConfirmada' => 'finalizarSerieConfirmada',
-        'guardarSesionConfirmada' => 'guardarSesion', // Flujo normal de confirmación
-        'continuarGuardadoForzado' => 'guardarSesion', // Flujo forzado desde alertas de límite
+        'guardarSesionConfirmada' => 'guardarSesion',
+        'continuarGuardadoForzado' => 'guardarSesion',
     ];
 
     protected $rules = [
@@ -49,11 +49,38 @@ class SesionKinesiologica extends Component
         Log::info("[MOUNT] Componente SesionKinesiologica montado para Paciente ID: {$paciente->id}");
         $this->paciente = $paciente;
         $this->cargarSesiones();
+        // 💡 Inicializa el formulario para la primera sesión
+        $this->resetCampos();
     }
+    
+    // ----------------------------------------------------------------------
+    // 🔑 CORRECCIÓN CLAVE: Lógica de Numeración Basada en Sesiones ACTIVAS
+    // ----------------------------------------------------------------------
 
     /**
-     * Propiedad computada para filtrar las sesiones mostradas en la tabla.
+     * Calcula el número de sesión consecutivo.
+     * Si no hay sesiones activas, la próxima sesión es 1, iniciando una nueva serie.
      */
+    private function calcularProximaSesionNro(): int
+    {
+        // 💡 BUSCA EL MÁXIMO NÚMERO DE SESIÓN SÓLO DE LA SERIE ACTIVA (digital = 0)
+        $lastSesionNroActiva = Sesion::where('paciente_id', $this->paciente->id)
+            ->where('firma_paciente_digital', 0)
+            ->max('sesion_nro');
+
+        if ($lastSesionNroActiva) {
+            // Si hay activas, continuamos la serie (Ej: si max es 4, devuelve 5)
+            return $lastSesionNroActiva + 1;
+        }
+
+        // Si no hay activas (serie finalizada), devuelve 1 para iniciar la nueva serie.
+        return 1;
+    }
+
+    // ----------------------------------------------------------------------
+    // FIN CORRECCIÓN
+    // ----------------------------------------------------------------------
+
     public function getSesionesFiltradasProperty()
     {
         if ($this->filtro === 'activas') {
@@ -67,9 +94,6 @@ class SesionKinesiologica extends Component
         return $this->sesiones;
     }
 
-    /**
-     * Carga las sesiones del paciente y configura el formulario para la próxima sesión.
-     */
     public function cargarSesiones()
     {
         $this->sesiones = Sesion::where('paciente_id', $this->paciente->id)
@@ -77,41 +101,24 @@ class SesionKinesiologica extends Component
             ->get();
 
         $this->serieActiva = $this->sesiones->where('firma_paciente_digital', 0);
-
-        // Lógica de autoincremento: Debe basarse en el número de sesión MÁS ALTO de todas las sesiones.
-        if ($this->sesiones->count() > 0) {
-            // El número de la próxima sesión es +1 del último número de sesión total
-            $lastSesionNro = $this->sesiones->max('sesion_nro');
-            $this->sesion_nro = $lastSesionNro ? $lastSesionNro + 1 : 1;
-        } else {
-            // Si es la primera sesión del paciente
-            $this->sesion_nro = 1;
-        }
-
         $this->fecha_sesion = Carbon::today()->toDateString();
+
         $this->reset(['filtro']);
         Log::info("[LOAD] Sesiones cargadas. Activas: {$this->serieActiva->count()}");
     }
 
-    /* -------------------------------------------------
-     * FLUJO DE GUARDADO CON CONFIRMACIÓN (SweetAlert2)
-     * Lógica de ALERTA DE LÍMITE RESTAURADA
-     ------------------------------------------------- */
     public function confirmarGuardarSesion()
     {
         Log::info("[GUARDAR_CONFIRM] Iniciando confirmación de guardado. Sesion ID: {$this->sesionId}");
 
         try {
-            // 1. Validar datos
             $validatedData = $this->validate();
 
-            // 2. Lógica de ALERTA DE LÍMITE (solo si es una *nueva* sesión, no una edición)
             if (is_null($this->sesionId)) {
                 $activas = $this->serieActiva->count();
                 $limite = $this->limiteSerie;
 
                 if ($activas === $limite - 1) {
-                    // Advertencia de límite inminente (ej. 9/10)
                     Log::info("[GUARDAR_CONFIRM] Límite inminente ({$activas}/{$limite}). Despachando alertaLimite.");
                     return $this->dispatch('alertaLimite', [
                         'title' => '¡Atención!',
@@ -120,7 +127,6 @@ class SesionKinesiologica extends Component
                 }
 
                 if ($activas >= $limite) {
-                    // Límite alcanzado o superado (ej. 10/10 o más)
                     Log::warning("[GUARDAR_CONFIRM] Límite alcanzado ({$activas}/{$limite}). Despachando alertaContinuar.");
                     return $this->dispatch('alertaContinuar', [
                         'title' => '¡Límite de Sesiones!',
@@ -129,21 +135,17 @@ class SesionKinesiologica extends Component
                 }
             }
 
-            // 3. Si no hay alerta de límite (o es edición), continuar con la confirmación normal
             Log::info("[GUARDAR_CONFIRM] Datos validados correctamente. Despachando confirmación normal.");
             $this->dispatch('confirmarGuardado');
         } catch (\Illuminate\Validation\ValidationException $e) {
             Log::warning("[GUARDAR_CONFIRM] Validación fallida: " . json_encode($e->errors()));
-            throw $e; // Relanzar la excepción para que Livewire maneje los errores
+            throw $e;
         }
     }
 
-    // Este método solo se ejecuta si el usuario confirma en SweetAlert (flujo normal o forzado)
     public function guardarSesion()
     {
-        // Volvemos a validar por si el usuario editó los datos durante el proceso de confirmación
         $validatedData = $this->validate();
-
         Log::info("[GUARDAR_FINAL] Confirmación recibida. Ejecutando guardado final.");
 
         $isUpdate = !is_null($this->sesionId);
@@ -163,10 +165,8 @@ class SesionKinesiologica extends Component
 
         Log::info("[GUARDAR_FINAL] Sesión {$action} con ID: {$sesion->id}");
 
-        $this->resetCampos();
-        $this->cargarSesiones();
+        $this->resetCampos(); // Reinicia el formulario al próximo número y recarga la lista
 
-        // Disparar SweetAlert de éxito
         $this->dispatch('sesionGuardada', [
             'title' => '¡Éxito!',
             'text' => "Sesión {$action} correctamente.",
@@ -174,17 +174,13 @@ class SesionKinesiologica extends Component
         ]);
     }
 
-    /* -------------------------------------------------
-     * EDICIÓN Y ELIMINACIÓN
-     ------------------------------------------------- */
     public function editarSesion($id)
     {
         Log::info("[EDICIÓN] Iniciando edición de Sesión ID: {$id}");
         $sesion = Sesion::findOrFail($id);
 
         $this->sesionId = $sesion->id;
-        $this->sesion_nro = $sesion->sesion_nro;
-        // Se corrige el parseo de fecha para asegurar formato Y-m-d
+        $this->sesion_nro = $sesion->sesion_nro; // Mantiene el N° Sesión para edición
         $this->fecha_sesion = Carbon::parse($sesion->fecha_sesion)->toDateString();
         $this->tratamiento_fisiokinetico = $sesion->tratamiento_fisiokinetico;
         $this->evolucion_sesion = $sesion->evolucion_sesion;
@@ -200,7 +196,6 @@ class SesionKinesiologica extends Component
         try {
             Sesion::findOrFail($id)->delete();
             $this->resetCampos();
-            $this->cargarSesiones();
 
             $this->dispatch('swal', [
                 'title' => '¡Eliminada!',
@@ -217,9 +212,6 @@ class SesionKinesiologica extends Component
         }
     }
 
-    /* -------------------------------------------------
-     * FINALIZAR SERIE – con confirmación SweetAlert2
-     ------------------------------------------------- */
     public function finalizarSerie()
     {
         Log::info("[FINALIZAR_CONFIRM] Iniciando confirmación para finalizar serie.");
@@ -227,10 +219,8 @@ class SesionKinesiologica extends Component
         $activas = $this->serieActiva->count();
 
         if ($activas > 0) {
-            // Si hay sesiones activas, disparamos la CONFIRMACIÓN SweetAlert
             $this->dispatch('confirmarFinalizarSerie');
         } else {
-            // Si NO hay sesiones activas, disparamos la ALERTA INSTANTÁNEA
             $this->dispatch('swal', [
                 'title' => 'Atención',
                 'text' => 'No existen sesiones activas para finalizar.',
@@ -245,6 +235,7 @@ class SesionKinesiologica extends Component
         $count = $this->serieActiva->count();
 
         if ($count > 0) {
+            // Marca todas las sesiones activas como inactivas
             Sesion::where('paciente_id', $this->paciente->id)
                 ->where('firma_paciente_digital', 0)
                 ->update(['firma_paciente_digital' => 1]);
@@ -258,24 +249,21 @@ class SesionKinesiologica extends Component
             ]);
         }
 
-
-        $this->resetCampos();
-        $this->cargarSesiones();
+        $this->resetCampos(); // Esto llama a calcularProximaSesionNro() y lo resetea a 1.
     }
 
-    /**
-     * Resetea los campos del formulario de edición/creación, la validación,
-     * y recarga las sesiones para obtener el siguiente número consecutivo.
-     * Se cambió a PUBLIC para que Livewire pueda llamarlo directamente.
-     */
     public function resetCampos(): void
     {
         Log::debug("[RESET] Reseteando campos del formulario.");
+
         $this->sesionId = null;
-        $this->tratamiento_fisiokinetico = null; // null en lugar de '' para consistencia
-        $this->evolucion_sesion = null; // null en lugar de '' para consistencia
+        $this->tratamiento_fisiokinetico = null;
+        $this->evolucion_sesion = null;
         $this->resetValidation();
-        // Recalculamos el número de sesión y fecha para el próximo registro
+
+        // 💡 Usa la nueva lógica que devuelve 1 si no hay sesiones activas.
+        $this->sesion_nro = $this->calcularProximaSesionNro();
+
         $this->cargarSesiones();
     }
 

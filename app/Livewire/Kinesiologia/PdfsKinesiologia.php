@@ -33,28 +33,31 @@ class PdfsKinesiologia extends Component
         ]);
 
         foreach ($this->pdfs as $pdf) {
-            // 🕒 Fecha actual para el nombre del archivo
-            $fecha = Carbon::now()->setTimezone('America/Argentina/Buenos_Aires')->format('d-m-Y_H-i-s');
-
-            // 📄 Obtener nombre original sin extensión
-            $originalName = pathinfo($pdf->getClientOriginalName(), PATHINFO_FILENAME);
+            // 1. Obtener datos originales
+            $originalFilename = $pdf->getClientOriginalName();
+            $baseName = pathinfo($originalFilename, PATHINFO_FILENAME);
             $extension = $pdf->getClientOriginalExtension();
 
-            // 🔠 Generar nombre único y descriptivo
-            $uniqueName = "{$originalName}_{$fecha}.{$extension}";
+            // 2. 💡 CORRECCIÓN: Convertir el nombre base a un "slug" seguro
+            $safeName = \Illuminate\Support\Str::slug($baseName); // Ej: "informe-final-paciente"
+
+            // 3. Generar sello de tiempo (formato 'd-m-Y_H-i-s')
+            $fecha = Carbon::now()->setTimezone('America/Argentina/Buenos_Aires')->format('d-m-Y_H-i-s');
+
+            // 4. Construir el nombre final único y seguro
+            $uniqueName = "{$safeName}_{$fecha}.{$extension}";
 
             // La ruta de almacenamiento sigue la estructura: storage/app/public/pdfhistoriales/{paciente_id}/...
             $path = $pdf->storeAs(
                 "public/pdfhistoriales/{$this->paciente->id}",
-                $uniqueName
+                $uniqueName // Usamos el nombre seguro
             );
 
             // 🧩 Crear registro en BD
             PdfKinesiologia::create([
                 'paciente_id' => $this->paciente->id,
-                'filename' => $uniqueName,
-                // Almacenamos la ruta relativa al disco 'public'
-                'filepath' => str_replace('public/', '', $path),
+                'filename' => $originalFilename, // 💡 Guardamos el nombre original para mostrar al usuario
+                'filepath' => str_replace('public/', '', $path), // Almacenamos la ruta relativa al disco 'public'
             ]);
         }
 

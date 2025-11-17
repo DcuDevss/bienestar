@@ -51,8 +51,14 @@ use Illuminate\Support\Facades\Auth;
 use App\Livewire\Stats\LicenciasStats;
 use App\Livewire\Stats\PostulantesStats;
 use App\Http\Controllers\PrintReportsController;
+use App\Livewire\Kinesiologia\FichaKinesiologicaEdit;
+use App\Livewire\Kinesiologia\FichaKinesiologicaIndex;
 use App\Livewire\Patient\DeletedPatientList;
-use App\Livewire\Auditorias\AuditoriaGeneral;
+use App\Livewire\Kinesiologia\KinesiologiaForm;
+use App\Livewire\Kinesiologia\ListaPlanillas;
+use App\Livewire\Kinesiologia\PdfsKinesiologia;
+use App\Livewire\Kinesiologia\SesionKinesiologica;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -182,8 +188,8 @@ Route::resource('roles', RoleController::class)->names('admin-roles');
 //Route::get('/reservar-turno', TurnoReservation::class);
 
 //Nuevo usuario
-Route::get('nuevo_usuario', [NuevoUsuarioController::class,'create'])->name('new-user');
-Route::post('nuevo_usuario', [NuevoUsuarioController::class,'store'])->name('new-user.store');
+Route::get('nuevo_usuario', [NuevoUsuarioController::class, 'create'])->name('new-user');
+Route::post('nuevo_usuario', [NuevoUsuarioController::class, 'store'])->name('new-user.store');
 
 //estadisticas
 Route::get('/stats/licencias-stats', LicenciasStats::class)->name('stats.licencias-stats');
@@ -193,15 +199,37 @@ Route::get('/stats/postulantes-stats', PostulantesStats::class)->name('stats.pos
 Route::get('/prints/postulantes', [PrintReportsController::class, 'postulantes'])
     ->name('prints.postulantes');
 Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
-     ->name('prints.licencias');
+    ->name('prints.licencias');
 // routes/web.php
 
 
 /* // NUEVA RUTA para Pacientes Eliminados (Papelera)
 Route::get('/pacientes/eliminados', [PatientController::class, 'eliminados'])->name('pacientes.eliminados'); */
-Route::get('/patient/deleted-patient', DeletedPatientList::class)
-    ->name('patient.deleted-patient-list');
+Route::get('/pacientes/eliminados', DeletedPatientList::class)
+    ->name('pacientes.deleted-patient-list');
 
-    //auditorias generales
-Route::get('/auditorias/auditoria-general', AuditoriaGeneral::class)
-     ->name('auditorias.auditoria-general');
+
+// Formulario para crear ficha
+Route::get('/pacientes/{paciente}/kinesiologia', KinesiologiaForm::class)
+    ->name('kinesiologia.index');
+
+// Lista de fichas de un paciente
+Route::get('/fichas-kinesiologicas/{paciente}', FichaKinesiologicaIndex::class)
+    ->name('fichas-kinesiologicas.index');
+
+// Editar ficha específica
+Route::get('/fichas-kinesiologicas/kinesiologia/{ficha}/edit', FichaKinesiologicaEdit::class)
+    ->name('kinesiologia.edit');
+
+// Lista general de planillas
+Route::get('/kinesiologia/planillas', ListaPlanillas::class)
+    ->name('lista-planillas');
+
+// PDFs de Kinesiología
+Route::get('/paciente/{paciente}/kinesiologia/pdfs', PdfsKinesiologia::class)
+    ->name('pdfs-kinesiologia'); 
+
+
+
+Route::get('/pacientes/{paciente}/sesiones', SesionKinesiologica::class)
+    ->name('sesion-kinesiologia');

@@ -275,24 +275,24 @@
                             @endcan
                             <!-- Enlace a Estadísticas -->
                             @can('oficinas.index')
-                            <a href="{{ route('stats.licencias-stats') }}"
-                                class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
-                                Estadísticas
-                            </a>
-
+                                <a href="{{ route('stats.licencias-stats') }}"
+                                    class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
+                                    Estadísticas
+                                </a>
+                            @endrole
                             @role('super-admin')
                                 <a href="{{ route('patient.deleted-patient-list') }}"
                                     class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
                                     Pacientes Eliminados
                                 </a>
                             @endcan
-                            @endrole
-                            @role('admin-jefe')
-                            <a href="{{ route('auditorias.auditoria-general') }}"
-                                class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
-                                Auditoría General
-                            </a>
-                            @endrole
+                            @role('kinesiologo')
+                               <a href="{{ route('lista-planillas') }}"
+                            class="block text-sm text-gray-800 hover:bg-slate-300 px-4 py-2 m-0">
+                            Planillas Kinesiológicas
+                        </a>
+                        @endrole
+
                         </div>
                     </div>
                 </div>

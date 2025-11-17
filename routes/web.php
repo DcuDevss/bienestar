@@ -206,7 +206,7 @@ Route::get('/prints/licencias', [PrintReportsController::class, 'licencias'])
 /* // NUEVA RUTA para Pacientes Eliminados (Papelera)
 Route::get('/pacientes/eliminados', [PatientController::class, 'eliminados'])->name('pacientes.eliminados'); */
 Route::get('/pacientes/eliminados', DeletedPatientList::class)
-    ->name('pacientes.deleted-patient-list');
+    ->name('patient.deleted-patient-list');
 
 
 // Formulario para crear ficha
@@ -215,21 +215,21 @@ Route::get('/pacientes/{paciente}/kinesiologia', KinesiologiaForm::class)
 
 // Lista de fichas de un paciente
 Route::get('/fichas-kinesiologicas/{paciente}', FichaKinesiologicaIndex::class)
-    ->name('fichas-kinesiologicas.index');
+    ->name('kinesiologia.fichas-kinesiologicas-index');
 
 // Editar ficha específica
 Route::get('/fichas-kinesiologicas/kinesiologia/{ficha}/edit', FichaKinesiologicaEdit::class)
-    ->name('kinesiologia.edit');
+    ->name('kinesiologia.ficha-kinesiologica-edit');
 
 // Lista general de planillas
 Route::get('/kinesiologia/planillas', ListaPlanillas::class)
-    ->name('lista-planillas');
+    ->name('kinesiologia.lista-planillas');
 
 // PDFs de Kinesiología
 Route::get('/paciente/{paciente}/kinesiologia/pdfs', PdfsKinesiologia::class)
-    ->name('pdfs-kinesiologia'); 
+    ->name('kinesiologia.pdfs-kinesiologia'); 
 
 
 
 Route::get('/pacientes/{paciente}/sesiones', SesionKinesiologica::class)
-    ->name('sesion-kinesiologia');
+    ->name('kinesiologia.sesion-kinesiologica');

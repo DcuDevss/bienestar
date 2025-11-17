@@ -90,7 +90,7 @@
                                     </td>
 
                                     <td class="px-4 py-2">
-                                        <a href="{{ route('fichas-kinesiologicas.index', ['paciente' => $planilla->paciente_id]) }}"
+                                        <a href="{{ route('kinesiologia.fichas-kinesiologicas-index', ['paciente' => $planilla->paciente_id]) }}"
                                             class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-500 transition">
                                             Ver Planilla
                                         </a>

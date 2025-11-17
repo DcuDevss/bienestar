@@ -13,12 +13,12 @@
                     Nueva Ficha
                 </a>
 
-                <a href="{{ route('sesion-kinesiologia', ['paciente' => $paciente->id]) }}"
+                <a href="{{ route('kinesiologia.sesion-kinesiologica', ['paciente' => $paciente->id]) }}"
                     class="flex items-center gap-1 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-xl shadow transition transform hover:scale-105 text-sm">
                     Sesiones de Kinesiología
                 </a>
 
-                <a href="{{ route('pdfs-kinesiologia', ['paciente' => $paciente->id]) }}"
+                <a href="{{ route('kinesiologia.pdfs-kinesiologia', ['paciente' => $paciente->id]) }}"
                     class="flex items-center gap-1 bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-xl shadow transition transform hover:scale-105 text-sm">
                     Adjuntar PDFs
                 </a>
@@ -135,16 +135,16 @@
                             @endforeach
 
                             <div class="flex gap-2 mt-3 justify-center">
-                                <a href="{{ route('pdfs-kinesiologia', ['paciente' => $paciente->id, 'ficha' => $ficha->id]) }}"
+                                <a href="{{ route('kinesiologia.pdfs-kinesiologia', ['paciente' => $paciente->id, 'ficha' => $ficha->id]) }}"
                                     class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
                                     Adjuntar PDFs
                                 </a>
 
-                                <a href="{{ route('kinesiologia.edit', ['ficha' => $ficha->id]) }}"
+                                <a href="{{ route('kinesiologia.ficha-kinesiologica-edit', ['ficha' => $ficha->id]) }}"
                                     class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
                                     Editar Planilla
                                 </a>
-                                <a href="{{ route('sesion-kinesiologia', ['paciente' => $paciente->id]) }}"
+                                <a href="{{ route('kinesiologia.sesion-kinesiologica', ['paciente' => $paciente->id]) }}"
                                     class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
                                     Sesiones de Kinesiología
                                 </a>

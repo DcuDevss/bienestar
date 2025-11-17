@@ -339,7 +339,17 @@ public function enfermedades()
         })?->pivot;
     }
 
-    
+    public function fichaKinesiologica()
+    {
+        // Un Paciente tiene MUCHAS planillas
+        return $this->hasMany(FichaKinesiologica::class);
+    }
+
+    // Relación: un paciente tiene muchas sesiones
+    public function sesiones()
+    {
+        return $this->hasMany(RegistroSesion::class, 'paciente_id');
+    }
 }
 
     

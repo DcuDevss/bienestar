@@ -151,6 +151,42 @@
         </div>
     </div>
 
+
+  <div class="flex justify-start items-center mb-4">
+    <div class="flex items-center space-x-2 text-sm text-gray-700">
+        {{-- Etiqueta del SELECT --}}
+        <label for="perPage" class="font-medium">Mostrar</label>
+        
+        {{-- SELECT para el número de sesiones por página --}}
+        <select wire:model.live="perPage" id="perPage"
+            class="py-1 pl-2 pr-7 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
+            {{-- Opciones restauradas --}}
+            <option value="5">5</option>
+            <option value="10">10</option>
+            <option value="15">15</option>
+            <option value="20">20</option>
+            <option value="50">50</option>
+        </select>
+        
+        <span class="text-gray-500">sesiones por página</span>
+    </div>
+
+    {{-- 🔑 INFORMACIÓN DE CONTEO TOTAL --}}
+    @if ($sesionesFiltradas->total() > 0)
+        <span class="ml-auto text-sm text-gray-600 font-medium">
+            Mostrando
+            <span class="font-bold text-blue-600">{{ $sesionesFiltradas->firstItem() }}</span>
+            a
+            <span class="font-bold text-blue-600">{{ $sesionesFiltradas->lastItem() }}</span>
+            de
+            <span class="font-bold text-blue-600">{{ $sesionesFiltradas->total() }}</span>
+            sesiones totales.
+            {{-- 🔑 Se agrega la información de la página actual --}}
+        (Página <span class="font-bold text-blue-600">{{ $sesionesFiltradas->currentPage() }}</span>)
+        </span>
+    @endif
+</div>
+
     {{-- TABLA DE SESIONES --}}
     <div class="bg-white shadow p-4 rounded">
         <h3 class="font-semibold mb-3">Listado de Sesiones</h3>
@@ -166,16 +202,18 @@
                     <th class="px-2 py-1 border">Acciones</th>
                 </tr>
             </thead>
+            
 
             <tbody>
-                @foreach ($this->sesionesFiltradas as $sesion)
+                {{-- La variable $sesionesFiltradas DEBE retornar ahora un Paginator --}}
+                @foreach ($this->sesionesFiltradas as $sesion) 
                     <tr x-transition.opacity.duration.300ms
                         class="{{ $sesion->firma_paciente_digital == 0
                             ? 'bg-green-50'
                             : 'bg-red-50' }}">
                         <td class="border px-2 py-1">{{ $sesion->sesion_nro }}</td>
+                        {{-- Formateado para mostrar d/m/Y --}}
                         <td class="border px-2 py-1">{{ Carbon\Carbon::parse($sesion->fecha_sesion)->format('d/m/Y') }}</td>
-                        {{-- <td class="border px-2 py-1">{{ $sesion->fecha_sesion }}</td> --}}
                         <td class="border px-2 py-1">{{ $sesion->tratamiento_fisiokinetico }}</td>
                         <td class="border px-2 py-1">{{ $sesion->evolucion_sesion }}</td>
                         <td class="border px-2 py-1">
@@ -210,8 +248,15 @@
                 @endforeach
             </tbody>
         </table>
+        
+        {{-- 🔑 LINKS DEL PAGINADOR: Usar la variable de las sesiones filtradas --}}
+        <div class="mt-4">
+            {{ $this->sesionesFiltradas->links() }}
+        </div>
     </div>
-
+    
+    {{-- El bloque anterior que tenías de $pdfsList era redundante y se eliminó --}}
+    
     {{-- BOTONES --}}
     <div class="mt-6 flex justify-end gap-4">
         {{-- Botón Finalizar Sesión --}}

@@ -192,73 +192,75 @@
     @endif
 </div>
 
-    {{-- TABLA DE SESIONES --}}
-    <div class="bg-white shadow p-4 rounded">
-        <h3 class="font-semibold mb-3">Listado de Sesiones</h3>
+  {{-- TABLA DE SESIONES --}}
+<div class="bg-white shadow p-4 rounded">
+    <h3 class="font-semibold mb-3">Listado de Sesiones</h3>
 
-        <table class="w-full text-left border">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-2 py-1 border">#</th>
-                    <th class="px-2 py-1 border">Fecha</th>
-                    <th class="px-2 py-1 border">Tratamiento</th>
-                    <th class="px-2 py-1 border">Evolución</th>
-                    <th class="px-2 py-1 border">Estado</th>
-                    <th class="px-2 py-1 border">Acciones</th>
+    <table class="w-full text-left border">
+        <thead class="bg-gray-100">
+            <tr>
+                {{-- ID (#) ELIMINADO --}}
+                <th class="px-2 py-1 border">Fecha</th>
+                <th class="px-2 py-1 border">Tratamiento</th>
+                <th class="px-2 py-1 border">Evolución</th>
+                <th class="px-2 py-1 border">Estado</th>
+                <th class="px-2 py-1 border">Acciones</th>
+            </tr>
+        </thead>
+
+        <tbody>
+            {{-- La variable $sesionesFiltradas DEBE retornar ahora un Paginator --}}
+            @foreach ($this->sesionesFiltradas as $sesion) 
+                <tr x-transition.opacity.duration.300ms
+                    class="{{ $sesion->firma_paciente_digital == 0
+                        ? 'bg-green-50'
+                        : 'bg-red-50' }}">
+                    
+                    {{-- ID (sesion_nro) ELIMINADO --}}
+                    {{-- <td class="border px-2 py-1">{{ $sesion->sesion_nro }}</td> --}}
+
+                    {{-- Formateado para mostrar d/m/Y --}}
+                    <td class="border px-2 py-1">{{ Carbon\Carbon::parse($sesion->fecha_sesion)->format('d/m/Y') }}</td>
+                    <td class="border px-2 py-1">{{ $sesion->tratamiento_fisiokinetico }}</td>
+                    <td class="border px-2 py-1">{{ $sesion->evolucion_sesion }}</td>
+                    <td class="border px-2 py-1">
+                        @if ($sesion->firma_paciente_digital == 0)
+                            <span class="flex items-center gap-1 px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">
+                                <span class="w-2 h-2 bg-green-600 rounded-full"></span> Activa
+                            </span>
+                        @else
+                            <span class="flex items-center gap-1 px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded-full">
+                                <span class="w-2 h-2 bg-red-600 rounded-full"></span> Inactiva
+                            </span>
+                        @endif
+                    </td>
+
+                    <td class="border px-2 py-1 flex gap-2">
+                        {{-- EDITAR --}}
+                        <button wire:click="editarSesion({{ $sesion->id }})"
+                            @click="modal=true"
+                            class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-xs">
+                            Editar
+                        </button>
+
+                        {{-- ELIMINAR --}}
+                        @role('super-admin')
+                        <button wire:click="eliminarSesion({{ $sesion->id }})"
+                            class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-xs">
+                            Eliminar
+                        </button>
+                        @endrole
+                    </td>
                 </tr>
-            </thead>
-            
-
-            <tbody>
-                {{-- La variable $sesionesFiltradas DEBE retornar ahora un Paginator --}}
-                @foreach ($this->sesionesFiltradas as $sesion) 
-                    <tr x-transition.opacity.duration.300ms
-                        class="{{ $sesion->firma_paciente_digital == 0
-                            ? 'bg-green-50'
-                            : 'bg-red-50' }}">
-                        <td class="border px-2 py-1">{{ $sesion->sesion_nro }}</td>
-                        {{-- Formateado para mostrar d/m/Y --}}
-                        <td class="border px-2 py-1">{{ Carbon\Carbon::parse($sesion->fecha_sesion)->format('d/m/Y') }}</td>
-                        <td class="border px-2 py-1">{{ $sesion->tratamiento_fisiokinetico }}</td>
-                        <td class="border px-2 py-1">{{ $sesion->evolucion_sesion }}</td>
-                        <td class="border px-2 py-1">
-                            @if ($sesion->firma_paciente_digital == 0)
-                                <span class="flex items-center gap-1 px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">
-                                    <span class="w-2 h-2 bg-green-600 rounded-full"></span> Activa
-                                </span>
-                            @else
-                                <span class="flex items-center gap-1 px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded-full">
-                                    <span class="w-2 h-2 bg-red-600 rounded-full"></span> Inactiva
-                                </span>
-                            @endif
-                        </td>
-
-                        <td class="border px-2 py-1 flex gap-2">
-                            {{-- EDITAR --}}
-                            <button wire:click="editarSesion({{ $sesion->id }})"
-                                @click="modal=true"
-                                class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-xs">
-                                Editar
-                            </button>
-
-                            {{-- ELIMINAR --}}
-                            @role('super-admin')
-                            <button wire:click="eliminarSesion({{ $sesion->id }})"
-                                class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-xs">
-                                Eliminar
-                            </button>
-                            @endrole
-                        </td>
-                    </tr>
-                @endforeach
-            </tbody>
-        </table>
-        
-        {{-- 🔑 LINKS DEL PAGINADOR: Usar la variable de las sesiones filtradas --}}
-        <div class="mt-4">
-            {{ $this->sesionesFiltradas->links() }}
-        </div>
+            @endforeach
+        </tbody>
+    </table>
+    
+    {{-- 🔑 LINKS DEL PAGINADOR: Usar la variable de las sesiones filtradas --}}
+    <div class="mt-4">
+        {{ $this->sesionesFiltradas->links() }}
     </div>
+</div>
     
     {{-- El bloque anterior que tenías de $pdfsList era redundante y se eliminó --}}
     

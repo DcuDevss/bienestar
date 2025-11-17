@@ -45,6 +45,7 @@ use App\Livewire\Patient\PatientHistorialEnfermedades;
 use App\Livewire\Patient\PatientTratamiento;
 use App\Livewire\Patient\PatientEntrevistas;
 use App\Livewire\Auditorias\AuditoriaList;
+use App\Livewire\Auditorias\AuditoriaGeneral;
 use App\Models\Paciente;
 use GuzzleHttp\Middleware;
 use Illuminate\Support\Facades\Auth;
@@ -149,6 +150,8 @@ Route::get('/interviews/{paciente}', [InterviewController::class, 'index'])->mid
 Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])->name('reset-sums'); // web.php
 Route::get('/pdfs/{filename}', [PdfController::class, 'show'])->name('pdf.show');
 Route::get('/auditorias', AuditoriaList::class)->name('auditorias.index');
+Route::get('/auditorias/general', AuditoriaGeneral::class)->name('auditorias.auditoria-general');
+
 
 
 
@@ -227,9 +230,8 @@ Route::get('/kinesiologia/planillas', ListaPlanillas::class)
 
 // PDFs de Kinesiología
 Route::get('/paciente/{paciente}/kinesiologia/pdfs', PdfsKinesiologia::class)
-    ->name('kinesiologia.pdfs-kinesiologia'); 
+    ->name('kinesiologia.pdfs-kinesiologia');
 
-
-
+    //registro de sesiones
 Route::get('/pacientes/{paciente}/sesiones', SesionKinesiologica::class)
     ->name('kinesiologia.sesion-kinesiologica');

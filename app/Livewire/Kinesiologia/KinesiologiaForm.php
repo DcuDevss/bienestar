@@ -366,7 +366,9 @@ class KinesiologiaForm extends Component
                     'title' => 'Ficha guardada',
                     'text' => 'Se ha guardado la ficha correctamente.',
                     'icon' => 'success',
-                    'timer' => 3000
+                    'timer' => 3000, // <--- ¡AQUÍ ESTABA LA COMA FALTANTE!
+                    // 🟢 AGREGAMOS EL PARÁMETRO 'redirect'
+                    'redirect' => route('interviews.index', ['paciente' => $this->paciente->id])
                 ]);
 
 
@@ -401,7 +403,7 @@ class KinesiologiaForm extends Component
             ]);
         }
 
-        return $this->redirectRoute('interviews.index', ['paciente' => $this->paciente->id]);
+        /* return $this->redirectRoute('interviews.index', ['paciente' => $this->paciente->id]); */
     }
 
 

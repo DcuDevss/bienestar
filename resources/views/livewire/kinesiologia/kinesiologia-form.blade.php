@@ -474,7 +474,7 @@
         Livewire.on('swal', (payload) => {
             if (Array.isArray(payload)) payload = payload[0];
             const {
-                title = 'Listo', text = '', html = null, icon = 'success', timer = 3000
+                title = 'Listo', text = '', html = null, icon = 'success', timer = 3000, redirect = null // 👈 1. CAPTURAR LA PROPIEDAD 'redirect'
             } = payload || {};
             const isErrorOrWarning = (icon === 'error' || icon === 'warning');
             Swal.fire({
@@ -487,6 +487,12 @@
                 showConfirmButton: isErrorOrWarning,
                 timer: isErrorOrWarning ? null : timer,
                 timerProgressBar: !isErrorOrWarning,
+                }).then((result) => {
+                // 👈 2. AGREGAR LA LÓGICA DE REDIRECCIÓN AQUÍ
+                // Redirige solo si existe una URL de redirección y NO es un error/warning.
+                if (redirect && !isErrorOrWarning) {
+                    window.location.href = redirect; 
+                }
             });
         });
 
@@ -499,7 +505,7 @@
                 toast: true,
                 position: 'top-end',
                 showConfirmButton: false,
-                timer: 1500,
+                timer: 2000,
                 timerProgressBar: true,
             });
         });

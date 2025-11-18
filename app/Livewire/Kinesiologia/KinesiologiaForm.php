@@ -14,6 +14,7 @@ use Illuminate\Support\Str;
 use Illuminate\Support\Facades\Log;
 use Livewire\Attributes\On;
 use SebastianBergmann\CodeCoverage\Report\Html\Dashboard;
+use Illuminate\Support\Facades\Auth;
 
 class KinesiologiaForm extends Component
 {
@@ -175,6 +176,13 @@ class KinesiologiaForm extends Component
         $this->showDoctorAlert = false;
         $this->showDoctorSuccess = true;
 
+        // LÍNEA DONDE OCURRE EL ERROR
+        audit_log(
+            'Doctor.Creacion',
+            $this->paciente, // ⬅️ CORRECCIÓN: Usar la propiedad de la clase ($this->paciente)
+            "Se registró un nuevo doctor: {$doctor->name} (Matrícula: {$doctor->nro_matricula})."
+        );
+
 
         Log::info("✅ Doctor creado correctamente", ['doctor_id' => $doctor->id]);
         session()->flash('message', 'Doctor agregado con éxito.');
@@ -218,6 +226,13 @@ class KinesiologiaForm extends Component
 
         $this->especialidades = Especialidade::orderBy('name')->pluck('name')->toArray();
         $this->showEspecialidadAlert = false;
+
+        // 🧾 AUDITORÍA: Creación de Especialidad
+        audit_log(
+            'Especialidad.Creacion',
+            $nueva,
+            "Se registró una nueva especialidad: {$nueva->name}."
+        );
 
         Log::info("✅ Especialidad creada correctamente", ['id' => $nueva->id]);
         session()->flash('message', 'Especialidad creada correctamente.');
@@ -328,6 +343,13 @@ class KinesiologiaForm extends Component
                 Log::info("✅ [EXITO] Ficha kinesiológica guardada correctamente", [
                     'ficha_id' => $this->ficha->id
                 ]);
+
+                // 🧾 AUDITORÍA: Creación de Ficha Kinesiológica
+                audit_log(
+                    'Ficha.Kinesiologia.Creacion',
+                    $this->ficha,
+                    "Se creó la Ficha Kinesiológica, para el paciente {$this->paciente->apellido_nombre}."
+                );
 
                 $this->dispatch('swal', [
                     'title' => 'Ficha guardada',

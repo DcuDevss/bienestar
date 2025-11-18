@@ -257,9 +257,10 @@
     </table>
     
     {{-- 🔑 LINKS DEL PAGINADOR: Usar la variable de las sesiones filtradas --}}
-    <div class="mt-4">
-        {{ $this->sesionesFiltradas->links() }}
-    </div>
+  <div class="mt-4">
+    {{-- ✅ CORRECCIÓN: Añade data: ['scrollTo' => false] --}}
+    {{ $this->sesionesFiltradas->links(data: ['scrollTo' => false]) }}
+</div>
 </div>
     
     {{-- El bloque anterior que tenías de $pdfsList era redundante y se eliminó --}}

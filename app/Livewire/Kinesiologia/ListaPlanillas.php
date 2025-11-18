@@ -7,6 +7,7 @@ use App\Models\FichaKinesiologica;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth; // Necesario para audit_log
 
 class ListaPlanillas extends Component
 {

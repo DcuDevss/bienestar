@@ -106,6 +106,15 @@ class FichaKinesiologicaIndex extends Component
 
         if ($this->fichaParaDetalle) {
             $this->modalDetalleAbierto = true;
+
+            // 🧾 AUDITORÍA: Acceso a detalles de la ficha
+            audit_log(
+                'Ficha.Kinesiologia.Detalle',
+                $this->fichaParaDetalle,
+                "Visualización de la Ficha Kinesiológica, del paciente {$this->paciente->apellido_nombre}."
+            );
+            // -------------------------
+
         } else {
             session()->flash('error', 'No se encontró la ficha.');
         }
@@ -126,6 +135,15 @@ class FichaKinesiologicaIndex extends Component
             $this->campoSeleccionadoTitulo = $titulo;
             $this->campoSeleccionadoContenido = $ficha->$campo;
             $this->modalCampoAbierto = true;
+
+            // 🧾 AUDITORÍA: Acceso a campo específico
+            audit_log(
+                'Ficha.Kinesiologia.Campo.Acceso',
+                $ficha,
+                "Visualización detallada del campo '{$titulo}' ({$campo})."
+            );
+            // -------------------------
+
         }
     }
 
@@ -159,6 +177,15 @@ class FichaKinesiologicaIndex extends Component
         ]);
 
         $this->fichaSeleccionada->save();
+
+        // 🧾 AUDITORÍA: Actualización de ficha
+        audit_log(
+            'Ficha.Kinesiologia.Actualizacion',
+            $this->fichaSeleccionada,
+            "Actualización de datos en la Ficha Kinesiológica, del paciente {$this->paciente->apellido_nombre}."
+        );
+        // -------------------------
+
         $this->editMode = false;
 
         session()->flash('success', 'Ficha actualizada correctamente');

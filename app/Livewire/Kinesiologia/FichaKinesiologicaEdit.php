@@ -183,8 +183,17 @@ class FichaKinesiologicaEdit extends Component
             'ecodoppler' => $this->ecodoppler,
         ]);
 
+        // 🧾 AUDITORÍA: Actualización de ficha
+        audit_log(
+            'Ficha.Kinesiologia.Actualizacion',
+            $this->ficha,
+            "Actualización de la Ficha Kinesiológica, para el paciente {$this->paciente->apellido_nombre}."
+        );
+        // -------------------------
+
+
         $this->dispatch('swal', ['title' => 'Ficha actualizada correctamente', 'icon' => 'success']);
-        return redirect()->route('fichas-kinesiologicas.index', ['paciente' => $this->ficha->paciente_id]);
+        return redirect()->route('kinesiologia.fichas-kinesiologicas-index', ['paciente' => $this->ficha->paciente_id]);
     }
 
 
@@ -234,6 +243,14 @@ class FichaKinesiologicaEdit extends Component
 
         $this->doctor_id = $doctor->id;
         $this->showDoctorAlert = false;
+
+        // 🧾 AUDITORÍA: Creación de Doctor
+        audit_log(
+            'Doctor.Creacion',
+            $doctor,
+            "Se registró un nuevo doctor ({$doctor->name}) desde el formulario de edición de ficha kinesiologica #{$this->ficha->id}."
+        );
+        // -------------------------
 
         $this->dispatch('swal', [
             'title' => 'Doctor creado y asignado correctamente',

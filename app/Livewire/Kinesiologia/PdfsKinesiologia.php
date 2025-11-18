@@ -8,6 +8,7 @@ use App\Models\PdfKinesiologia;
 use App\Models\Paciente;
 use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
+use Illuminate\Support\Facades\Auth; // Asegúrate de importar Auth si usas el usuario logeado en audit_log
 
 class PdfsKinesiologia extends Component
 {
@@ -31,6 +32,8 @@ class PdfsKinesiologia extends Component
         $this->validate([
             'pdfs.*' => 'required|mimes:pdf|max:10240', // Máx 10MB por archivo
         ]);
+
+        $uploadedCount = 0; // Contador para la auditoría
 
         foreach ($this->pdfs as $pdf) {
             // 1. Obtener datos originales
@@ -59,6 +62,15 @@ class PdfsKinesiologia extends Component
                 'filename' => $originalFilename, // 💡 Guardamos el nombre original para mostrar al usuario
                 'filepath' => str_replace('public/', '', $path), // Almacenamos la ruta relativa al disco 'public'
             ]);
+
+            $uploadedCount++;
+        }
+
+        // 🧾 AUDITORÍA (Después de completar la subida)
+        if ($uploadedCount > 0) {
+            // Primer parámetro (Acción): 'PDF Kinesiologia'
+            // Tercer parámetro (Descripción): 'Se adjunta PDF Kinesiologia'
+            audit_log('PDF Kinesiologia', $this->paciente, 'Se adjunta PDF al Paciente');
         }
 
         // 🔄 Limpiar input y recargar la lista de PDFs
@@ -81,6 +93,8 @@ class PdfsKinesiologia extends Component
         $pdf = PdfKinesiologia::find($id);
 
         if ($pdf) {
+            $filenameForLog = $pdf->filename; // Capturar el nombre antes de la eliminación
+
             // Se asume que el filepath en la DB está sin el prefijo 'public/'.
             // Lo añadimos para que Storage::exists funcione en el disco 'public'.
             $fullPath = 'public/' . $pdf->filepath;
@@ -91,6 +105,11 @@ class PdfsKinesiologia extends Component
 
             $pdf->delete();
 
+            // 🧾 AUDITORÍA (Después de la eliminación exitosa)
+            // Primer parámetro (Acción): 'Se elimino PDF Paciente Kinesiologia'
+            // Tercer parámetro (Descripción): 'Se elimina PDF'
+            audit_log('Se elimino PDF Paciente Kinesiologia', $this->paciente, 'PDF Eliminado');
+
             $this->dispatch('pdfsActualizados'); // Evento para actualizar la vista
 
             $this->dispatch('swal', [
@@ -99,6 +118,8 @@ class PdfsKinesiologia extends Component
             ]);
         }
     }
+    
+    // ... resto del componente ...
 
     /**
      * Propiedad Calculada (Computed Property) para obtener la lista de PDFs.

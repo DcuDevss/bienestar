@@ -217,7 +217,7 @@ class FichaKinesiologicaEdit extends Component
             $this->doctorsFound = [];
         }
     }
-
+//crear doctor
     #[\Livewire\Attributes\On('crearDoctor')]
     public function crearDoctor()
     {

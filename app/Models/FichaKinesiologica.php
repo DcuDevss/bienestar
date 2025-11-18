@@ -55,11 +55,14 @@ class FichaKinesiologica extends Model
     ];
 
     protected $casts = [
-        'realiza_actividad_fisica' => 'boolean',
-        'menarca' => 'boolean',
-        'menopausia' => 'boolean',
-        'alteracion_peso' => 'boolean',
+        'realiza_actividad_fisica' => 'integer',
+        'menarca' => 'integer',
+        'menopausia' => 'integer',
+        'alteracion_peso' => 'integer',
     ];
+
+
+
 
     // === Relaciones ===
 

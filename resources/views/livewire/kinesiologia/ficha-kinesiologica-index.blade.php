@@ -47,9 +47,16 @@
                         <div class="bg-gray-100 px-5 py-3 flex justify-between items-start border-b border-gray-300">
                             <div class="flex flex-col gap-1">
                                 @php
-                                    $created = \Carbon\Carbon::parse($ficha->created_at);
+                                    $created = \Carbon\Carbon::parse($ficha->created_at)->timezone(
+                                        'America/Argentina/Buenos_Aires',
+                                    );
+
                                     $diaSemana = strtoupper($created->locale('es')->dayName);
                                 @endphp
+
+                                {{-- {{ $diaSemana }} - {{ $created->translatedFormat('d/m/Y - H:i') }} hrs. --}}
+
+
                                 <p class="text-sm text-gray-700 font-semibold">
                                     {{ $diaSemana }} - {{ $created->format('d/m/Y') }}
                                 </p>
@@ -120,8 +127,16 @@
                                         class="flex justify-between items-center bg-gray-50 hover:bg-gray-100 p-2 rounded-md transition">
                                         <span class="font-medium text-gray-700">{{ $label }}</span>
                                         @if ($mostrarDirecto)
-                                            <span
-                                                class="text-sm text-gray-600">{{ is_bool($valor) ? ($valor ? 'Sí' : 'No') : $valor }}</span>
+                                            <span class="text-sm text-gray-600">
+                                                @if ($valor === null || $valor === '')
+                                                @elseif ($valor === 1 || $valor === true)
+                                                    Sí
+                                                @elseif ($valor === 0 || $valor === false)
+                                                    No
+                                                @else
+                                                    {{ $valor }}
+                                                @endif
+                                            </span>
                                         @else
                                             <button
                                                 wire:click="mostrarDetalleCampo({{ $ficha->id }}, '{{ $campo }}', '{{ $label }} Completo')"

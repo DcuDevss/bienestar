@@ -43,18 +43,18 @@ class KinesiologiaForm extends Component
     public $diagnostico = '';
     public $motivo_consulta = '';
     public $posturas_dolorosas;
-    public $realiza_actividad_fisica = false;
+    public $realiza_actividad_fisica = null;
     public $tipo_actividad;
     public $antecedentes_enfermedades;
     public $antecedentes_familiares;
     public $cirugias;
     public $traumatismos_accidentes;
     public $tratamientos_previos;
-    public $menarca = false;
-    public $menopausia = false;
+    public $menarca = null;
+    public $menopausia = null;
     public $partos;
-    public $estado_salud_general;
-    public $alteracion_peso = false;
+    public $estado_salud_general = null;
+    public $alteracion_peso = null;
     public $medicacion_actual;
     public $observaciones_generales_anamnesis;
 
@@ -93,10 +93,11 @@ class KinesiologiaForm extends Component
 
         // Cargar valores por defecto
         foreach ($this->ficha->getAttributes() as $key => $value) {
-            if (property_exists($this, $key)) {
+            if (property_exists($this, $key) && $value !== null) {
                 $this->$key = $value;
             }
         }
+
 
         $this->doctores = Doctor::orderBy('name')->get();
         $this->obrasSociales = ObraSocial::orderBy('nombre')->get();
@@ -326,6 +327,21 @@ class KinesiologiaForm extends Component
             // Crear ficha kinesiológica
             // =============================
             Log::info("📋 Preparando datos de ficha kinesiológica...");
+            // Normalizar selects que pueden quedar vacíos
+            $selects = [
+                'realiza_actividad_fisica',
+                'menarca',
+                'menopausia',
+                'alteracion_peso',
+                'estado_salud_general',
+            ];
+
+            foreach ($selects as $campo) {
+                if ($this->$campo === '' || $this->$campo === 'Seleccionar') {
+                    $this->$campo = null;
+                }
+            }
+
             $data = $this->only((new FichaKinesiologica())->getFillable());
             $data['paciente_id'] = $this->paciente->id;
             $data['doctor_id'] = $doctor->id;

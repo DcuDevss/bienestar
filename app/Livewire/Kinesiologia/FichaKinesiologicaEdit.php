@@ -10,6 +10,8 @@ use App\Models\ObraSocial;
 
 class FichaKinesiologicaEdit extends Component
 {
+    // ... (otras propiedades)
+
     public $isEdit = false;
 
     public $showDoctorAlert = false;
@@ -42,7 +44,6 @@ class FichaKinesiologicaEdit extends Component
             'diagnostico',
             'motivo_consulta',
             'posturas_dolorosas',
-            'realiza_actividad_fisica',
             'tipo_actividad',
             'antecedentes_enfermedades',
             'antecedentes_familiares',
@@ -50,11 +51,8 @@ class FichaKinesiologicaEdit extends Component
             'traumatismos_accidentes',
             'tratamientos_previos',
             'estado_salud_general',
-            'alteracion_peso',
             'medicacion_actual',
             'observaciones_generales_anamnesis',
-            'menarca',
-            'menopausia',
             'partos',
             'visceral_palpacion',
             'visceral_dermalgias',
@@ -71,6 +69,12 @@ class FichaKinesiologicaEdit extends Component
             'ecodoppler',
         ]));
 
+        // CORREGIDO: convertir valores 0/1 a strings para selects
+        $this->alteracion_peso          = $this->ficha->alteracion_peso !== null ? (string)$this->ficha->alteracion_peso : '';
+        $this->realiza_actividad_fisica = $this->ficha->realiza_actividad_fisica !== null ? (string)$this->ficha->realiza_actividad_fisica : '';
+        $this->menarca                  = $this->ficha->menarca !== null ? (string)$this->ficha->menarca : '';
+        $this->menopausia               = $this->ficha->menopausia !== null ? (string)$this->ficha->menopausia : '';
+
         $doctor = $this->ficha->doctor;
         if ($doctor) {
             $this->doctor_id = $doctor->id;
@@ -82,29 +86,23 @@ class FichaKinesiologicaEdit extends Component
         $this->obra_social_id = $this->ficha->obra_social_id;
         $this->obrasSociales = ObraSocial::all();
         $this->especialidades = Especialidade::pluck('name')->toArray();
-
-        // Normalizar selects booleanos
-        $this->alteracion_peso           = $this->ficha->alteracion_peso           ?? '';
-        $this->realiza_actividad_fisica  = $this->ficha->realiza_actividad_fisica  ?? '';
-        $this->menarca                   = $this->ficha->menarca                   ?? '';
-        $this->menopausia                = $this->ficha->menopausia                ?? '';
     }
 
     /**
-     * Normalizar selects 0/1/"" → null o bool
+     * Normaliza select "" → null, "0" → 0, "1" → 1
      */
-    private function normalizeBooleanValue($value): ?bool
+    private function normalizeBooleanValue($value): ?int
     {
         if ($value === '' || $value === null) {
             return null;
         }
-        return (bool) $value;
+        return (int)$value;
     }
 
     /**
-     * Normalizar campos string que pueden venir ""
+     * Normaliza string vacío a NULL
      */
-    private function normalizeString($value)
+    private function normalizeString($value): ?string
     {
         return $value === '' ? null : $value;
     }
@@ -112,75 +110,93 @@ class FichaKinesiologicaEdit extends Component
     public function updateFichaKinesiologica()
     {
         $this->validate([
-            'diagnostico' => 'nullable|string',
-            'motivo_consulta' => 'nullable|string',
+            'doctor_id' => 'required|exists:doctors,id',
+            'obra_social_id' => 'nullable|integer|exists:obra_socials,id',
+
+            'diagnostico' => 'nullable|string|max:65535',
+            'motivo_consulta' => 'nullable|string|max:65535',
+            'posturas_dolorosas' => 'nullable|string|max:65535',
+            'tipo_actividad' => 'nullable|string|max:255',
+            'antecedentes_enfermedades' => 'nullable|string|max:65535',
+            'antecedentes_familiares' => 'nullable|string|max:65535',
+            'cirugias' => 'nullable|string|max:65535',
+            'traumatismos_accidentes' => 'nullable|string|max:65535',
+            'tratamientos_previos' => 'nullable|string|max:65535',
+            'estado_salud_general' => 'nullable|string|max:255',
+            'medicacion_actual' => 'nullable|string|max:65535',
+            'observaciones_generales_anamnesis' => 'nullable|string|max:65535',
 
             'alteracion_peso' => 'nullable|in:0,1',
             'realiza_actividad_fisica' => 'nullable|in:0,1',
             'menarca' => 'nullable|in:0,1',
             'menopausia' => 'nullable|in:0,1',
 
-            'estado_salud_general' => 'nullable|string',
+            'partos' => 'nullable|integer|min:0',
+
+            'visceral_palpacion' => 'nullable|string|max:255',
+            'visceral_dermalgias' => 'nullable|string|max:255',
+            'visceral_triggers' => 'nullable|string|max:255',
+            'visceral_fijaciones' => 'nullable|string|max:255',
+            'craneal_forma' => 'nullable|string|max:255',
+            'craneal_triggers' => 'nullable|string|max:255',
+            'craneal_fijaciones' => 'nullable|string|max:255',
+            'craneal_musculos' => 'nullable|string|max:255',
+
+            'tension_arterial' => 'nullable|string|max:50',
+            'pulsos' => 'nullable|string|max:50',
+            'auscultacion' => 'nullable|string|max:255',
+            'ecg' => 'nullable|string|max:255',
+            'ecodoppler' => 'nullable|string|max:255',
         ]);
 
-        // Normalizar valores
+        // Normalización
         $alteracionPeso = $this->normalizeBooleanValue($this->alteracion_peso);
-        $realizaActividadFisica = $this->normalizeBooleanValue($this->realiza_actividad_fisica);
+        $realizaActividad = $this->normalizeBooleanValue($this->realiza_actividad_fisica);
         $menarca = $this->normalizeBooleanValue($this->menarca);
         $menopausia = $this->normalizeBooleanValue($this->menopausia);
-
-        $estadoSalud = $this->normalizeString($this->estado_salud_general);
 
         $this->ficha->update([
             'doctor_id' => $this->doctor_id,
             'obra_social_id' => $this->obra_social_id,
-            'diagnostico' => $this->diagnostico,
-            'motivo_consulta' => $this->motivo_consulta,
-            'posturas_dolorosas' => $this->posturas_dolorosas,
 
-            'realiza_actividad_fisica' => $realizaActividadFisica,
-
-            'tipo_actividad' => $this->tipo_actividad,
-            'antecedentes_enfermedades' => $this->antecedentes_enfermedades,
-            'antecedentes_familiares' => $this->antecedentes_familiares,
-            'cirugias' => $this->cirugias,
-            'traumatismos_accidentes' => $this->traumatismos_accidentes,
-            'tratamientos_previos' => $this->tratamientos_previos,
-
-            'estado_salud_general' => $estadoSalud,
+            'diagnostico' => $this->normalizeString($this->diagnostico),
+            'motivo_consulta' => $this->normalizeString($this->motivo_consulta),
+            'posturas_dolorosas' => $this->normalizeString($this->posturas_dolorosas),
+            'realiza_actividad_fisica' => $realizaActividad,
+            'tipo_actividad' => $this->normalizeString($this->tipo_actividad),
+            'antecedentes_enfermedades' => $this->normalizeString($this->antecedentes_enfermedades),
+            'antecedentes_familiares' => $this->normalizeString($this->antecedentes_familiares),
+            'cirugias' => $this->normalizeString($this->cirugias),
+            'traumatismos_accidentes' => $this->normalizeString($this->traumatismos_accidentes),
+            'tratamientos_previos' => $this->normalizeString($this->tratamientos_previos),
+            'estado_salud_general' => $this->normalizeString($this->estado_salud_general),
 
             'alteracion_peso' => $alteracionPeso,
-
-            'medicacion_actual' => $this->medicacion_actual,
-            'observaciones_generales_anamnesis' => $this->observaciones_generales_anamnesis,
+            'medicacion_actual' => $this->normalizeString($this->medicacion_actual),
+            'observaciones_generales_anamnesis' => $this->normalizeString($this->observaciones_generales_anamnesis),
 
             'menarca' => $menarca,
             'menopausia' => $menopausia,
-
             'partos' => $this->partos,
-            'visceral_palpacion' => $this->visceral_palpacion,
-            'visceral_dermalgias' => $this->visceral_dermalgias,
-            'visceral_triggers' => $this->visceral_triggers,
-            'visceral_fijaciones' => $this->visceral_fijaciones,
-            'craneal_forma' => $this->craneal_forma,
-            'craneal_triggers' => $this->craneal_triggers,
-            'craneal_fijaciones' => $this->craneal_fijaciones,
-            'craneal_musculos' => $this->craneal_musculos,
-            'tension_arterial' => $this->tension_arterial,
-            'pulsos' => $this->pulsos,
-            'auscultacion' => $this->auscultacion,
-            'ecg' => $this->ecg,
-            'ecodoppler' => $this->ecodoppler,
+
+            'visceral_palpacion' => $this->normalizeString($this->visceral_palpacion),
+            'visceral_dermalgias' => $this->normalizeString($this->visceral_dermalgias),
+            'visceral_triggers' => $this->normalizeString($this->visceral_triggers),
+            'visceral_fijaciones' => $this->normalizeString($this->visceral_fijaciones),
+            'craneal_forma' => $this->normalizeString($this->craneal_forma),
+            'craneal_triggers' => $this->normalizeString($this->craneal_triggers),
+            'craneal_fijaciones' => $this->normalizeString($this->craneal_fijaciones),
+            'craneal_musculos' => $this->normalizeString($this->craneal_musculos),
+            'tension_arterial' => $this->normalizeString($this->tension_arterial),
+            'pulsos' => $this->normalizeString($this->pulsos),
+            'auscultacion' => $this->normalizeString($this->auscultacion),
+            'ecg' => $this->normalizeString($this->ecg),
+            'ecodoppler' => $this->normalizeString($this->ecodoppler),
         ]);
 
-        // 🧾 AUDITORÍA: Actualización de ficha
-        audit_log(
-            'ficha.kinesiologia.actualizacion',
-            $this->ficha,
-            "Edicion de la Ficha Kinesiológica"
-        );
-        // -------------------------
-
+        if (function_exists('audit_log')) {
+            audit_log('ficha.kinesiologia.actualizacion', $this->ficha, "Edicion de la Ficha Kinesiológica");
+        }
 
         $this->dispatch('swal', [
             'title' => 'Ficha actualizada correctamente',
@@ -217,7 +233,7 @@ class FichaKinesiologicaEdit extends Component
             $this->doctorsFound = [];
         }
     }
-//crear doctor
+
     #[\Livewire\Attributes\On('crearDoctor')]
     public function crearDoctor()
     {

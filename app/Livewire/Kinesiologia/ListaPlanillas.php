@@ -7,7 +7,6 @@ use App\Models\FichaKinesiologica;
 use Livewire\WithPagination;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Auth; // Necesario para audit_log
 
 class ListaPlanillas extends Component
 {
@@ -15,18 +14,27 @@ class ListaPlanillas extends Component
 
     public $search = '';
     public $perPage = 8;
+    public $statusFilter = ''; // 🟢 nuevo filtro
 
-    // Resetear paginación al actualizar búsqueda
+    // Reset cuando cambian los filtros
     public function updatingSearch()
     {
         $this->resetPage();
-        Log::info("🔄 Reset page triggered because search is being updated to '{$this->search}'");
+    }
+    public function updatingStatusFilter()
+    {
+        $this->resetPage();
+    }
+    public function updatingPerPage()
+    {
+        $this->resetPage();
     }
 
     public function render()
     {
-        Log::info('⚡ Render ListaPlanillas iniciado', [
+        Log::info('⚡ Render ListaPlanillas', [
             'search' => $this->search,
+            'status' => $this->statusFilter,
             'perPage' => $this->perPage
         ]);
 
@@ -34,45 +42,53 @@ class ListaPlanillas extends Component
         $subQuery = FichaKinesiologica::select(DB::raw('MAX(id) as last_id'))
             ->groupBy('paciente_id');
 
-        // Query principal: unir con la tabla para traer datos completos
-        $query = FichaKinesiologica::with('paciente.jerarquias')
+        // Query principal
+        $query = FichaKinesiologica::with('paciente.jerarquias', 'paciente.sesiones')
             ->joinSub($subQuery, 'last', function ($join) {
                 $join->on('fichas_kinesiologicas.id', '=', 'last.last_id');
             })
             ->orderBy('created_at', 'desc');
 
-        // Filtro de búsqueda por nombre o jerarquía
+        // 🔍 FILTRO DE BÚSQUEDA
         if ($this->search) {
             $search = strtolower($this->search);
+
             $query->whereHas('paciente', function ($q) use ($search) {
                 $q->whereRaw('LOWER(apellido_nombre) LIKE ?', ["%{$search}%"])
                     ->orWhereHas('jerarquias', function ($j) use ($search) {
                         $j->whereRaw('LOWER(name) LIKE ?', ["%{$search}%"]);
                     });
             });
-            Log::info('🔍 Aplicando filtro de búsqueda', ['search' => $this->search]);
         }
 
-        // Paginar resultados
+        // 🟢 FILTRO DE ESTADO DE SESIÓN
+        if ($this->statusFilter === 'sin_registro') {
+            // Pacientes sin sesiones
+            $query->whereDoesntHave('paciente.sesiones');
+        }
+
+        if ($this->statusFilter === 'activa') {
+            // Última sesión con firma_paciente_digital = 0
+            $query->whereHas('paciente.sesiones', function ($q) {
+                $q->latest('id')->limit(1);
+            })
+                ->whereHas('paciente.sesiones', function ($q) {
+                    $q->where('firma_paciente_digital', 0);
+                });
+        }
+
+        if ($this->statusFilter === 'inactiva') {
+            // Última sesión con firma_paciente_digital = 1
+            $query->whereHas('paciente.sesiones', function ($q) {
+                $q->latest('id')->limit(1);
+            })
+                ->whereHas('paciente.sesiones', function ($q) {
+                    $q->where('firma_paciente_digital', 1);
+                });
+        }
+
+        // 🟦 PAGINAR
         $planillas = $query->paginate($this->perPage);
-
-        Log::info('✅ Planillas filtradas y paginadas', [
-            'search' => $this->search,
-            'count' => $planillas->count(),
-            'total' => $planillas->total(),
-            'perPage' => $planillas->perPage(),
-            'currentPage' => $planillas->currentPage()
-        ]);
-
-        foreach ($planillas as $planilla) {
-            Log::info('📌 Planilla', [
-                'planilla_id' => $planilla->id,
-                'paciente_id' => $planilla->paciente_id,
-                'nombre' => $planilla->paciente?->apellido_nombre,
-                'jerarquia' => $planilla->paciente?->jerarquias?->name ?? 'N/D',
-                'created_at' => $planilla->created_at->toDateTimeString()
-            ]);
-        }
 
         return view('livewire.kinesiologia.lista-planillas', [
             'planillas' => $planillas

@@ -10,23 +10,18 @@ use App\Models\ObraSocial;
 
 class FichaKinesiologicaEdit extends Component
 {
-    // ... (otras propiedades)
-
     public $isEdit = false;
 
-
     public $showDoctorAlert = false;
-
     public $showEspecialidadAlert = false;
     public $doctorsFound = [];
-
 
     public $ficha;
     public $paciente;
     public $obrasSociales = [];
     public $especialidades = [];
 
-    // Campos del formulario (los mismos que en creación)
+    // Campos del formulario
     public $doctor_id, $doctor_name, $doctor_matricula, $doctor_especialidad;
     public $obra_social_id, $diagnostico, $motivo_consulta, $posturas_dolorosas,
         $realiza_actividad_fisica, $tipo_actividad, $antecedentes_enfermedades,
@@ -43,7 +38,6 @@ class FichaKinesiologicaEdit extends Component
         $this->ficha = FichaKinesiologica::with('paciente', 'doctor')->findOrFail($ficha);
         $this->paciente = $this->ficha->paciente;
 
-        // Precargar valores desde la base
         $this->fill($this->ficha->only([
             'diagnostico',
             'motivo_consulta',
@@ -89,56 +83,54 @@ class FichaKinesiologicaEdit extends Component
         $this->obrasSociales = ObraSocial::all();
         $this->especialidades = Especialidade::pluck('name')->toArray();
 
-        // Normalizar los campos booleanos para los selects
-        // Al montar, si es null en DB, se establece como '' para que el select muestre "Seleccionar"
-        $this->alteracion_peso = $this->ficha->alteracion_peso === null ? '' : (int) $this->ficha->alteracion_peso;
-        $this->realiza_actividad_fisica = $this->ficha->realiza_actividad_fisica === null ? '' : (int) $this->ficha->realiza_actividad_fisica;
-        $this->menarca = $this->ficha->menarca === null ? '' : (int) $this->ficha->menarca;
-        $this->menopausia = $this->ficha->menopausia === null ? '' : (int) $this->ficha->menopausia;
+        // Normalizar selects booleanos
+        $this->alteracion_peso           = $this->ficha->alteracion_peso           ?? '';
+        $this->realiza_actividad_fisica  = $this->ficha->realiza_actividad_fisica  ?? '';
+        $this->menarca                   = $this->ficha->menarca                   ?? '';
+        $this->menopausia                = $this->ficha->menopausia                ?? '';
     }
 
     /**
-     * Normaliza un valor (usualmente de un select) que puede ser '' (string vacío) a null 
-     * si no fue seleccionado, o a booleano si fue 0 o 1.
-     * Esto resuelve el error 1366 'Incorrect integer value: '''.
+     * Normalizar selects 0/1/"" → null o bool
      */
     private function normalizeBooleanValue($value): ?bool
     {
-        // Si el valor es null, o un string vacío (que viene de <option value="">), 
-        // lo devuelve como null para guardarlo en la DB.
-        if ($value === null || $value === '') {
+        if ($value === '' || $value === null) {
             return null;
         }
-
-        // Si es 0/false o 1/true (o un string '0'/'1'), lo devuelve como booleano.
         return (bool) $value;
     }
 
+    /**
+     * Normalizar campos string que pueden venir ""
+     */
+    private function normalizeString($value)
+    {
+        return $value === '' ? null : $value;
+    }
 
     public function updateFichaKinesiologica()
     {
-        // 1. Aplicar la normalización a las propiedades antes de la validación si es necesario,
-        // o antes de la actualización si la validación lo permite. 
-        // Lo aplicaremos antes de la actualización, pero primero validamos el formato aceptado.
-
         $this->validate([
             'diagnostico' => 'nullable|string',
             'motivo_consulta' => 'nullable|string',
-            // Aseguramos que los campos booleanos solo acepten 0, 1 o null (vía el string vacío '')
+
             'alteracion_peso' => 'nullable|in:0,1',
             'realiza_actividad_fisica' => 'nullable|in:0,1',
             'menarca' => 'nullable|in:0,1',
             'menopausia' => 'nullable|in:0,1',
-            // Puedes agregar aquí otras validaciones de campos (por ejemplo, 'estado_salud_general' => 'nullable|string|in:Bueno,Medio,Malo')
+
+            'estado_salud_general' => 'nullable|string',
         ]);
 
-        // 2. Normalizar los valores para la base de datos
+        // Normalizar valores
         $alteracionPeso = $this->normalizeBooleanValue($this->alteracion_peso);
         $realizaActividadFisica = $this->normalizeBooleanValue($this->realiza_actividad_fisica);
         $menarca = $this->normalizeBooleanValue($this->menarca);
         $menopausia = $this->normalizeBooleanValue($this->menopausia);
 
-        // 3. Actualizar la ficha utilizando los valores normalizados
+        $estadoSalud = $this->normalizeString($this->estado_salud_general);
+
         $this->ficha->update([
             'doctor_id' => $this->doctor_id,
             'obra_social_id' => $this->obra_social_id,
@@ -146,7 +138,6 @@ class FichaKinesiologicaEdit extends Component
             'motivo_consulta' => $this->motivo_consulta,
             'posturas_dolorosas' => $this->posturas_dolorosas,
 
-            // Usar valores normalizados
             'realiza_actividad_fisica' => $realizaActividadFisica,
 
             'tipo_actividad' => $this->tipo_actividad,
@@ -155,15 +146,14 @@ class FichaKinesiologicaEdit extends Component
             'cirugias' => $this->cirugias,
             'traumatismos_accidentes' => $this->traumatismos_accidentes,
             'tratamientos_previos' => $this->tratamientos_previos,
-            'estado_salud_general' => $this->estado_salud_general,
 
-            // Usar valor normalizado
+            'estado_salud_general' => $estadoSalud,
+
             'alteracion_peso' => $alteracionPeso,
 
             'medicacion_actual' => $this->medicacion_actual,
             'observaciones_generales_anamnesis' => $this->observaciones_generales_anamnesis,
 
-            // Usar valores normalizados
             'menarca' => $menarca,
             'menopausia' => $menopausia,
 
@@ -192,12 +182,16 @@ class FichaKinesiologicaEdit extends Component
         // -------------------------
 
 
-        $this->dispatch('swal', ['title' => 'Ficha actualizada correctamente', 'icon' => 'success']);
-        return redirect()->route('kinesiologia.fichas-kinesiologicas-index', ['paciente' => $this->ficha->paciente_id]);
+        $this->dispatch('swal', [
+            'title' => 'Ficha actualizada correctamente',
+            'icon' => 'success'
+        ]);
+
+        return redirect()->route('kinesiologia.fichas-kinesiologicas-index', [
+            'paciente' => $this->ficha->paciente_id
+        ]);
     }
 
-
-    // Buscar doctores en vivo mientras escribe
     public function updatedDoctorName($value)
     {
         $this->showDoctorAlert = false;
@@ -212,7 +206,6 @@ class FichaKinesiologicaEdit extends Component
         }
     }
 
-    // Seleccionar un doctor de la lista
     public function selectDoctor($doctorId)
     {
         $doctor = Doctor::find($doctorId);
@@ -225,7 +218,6 @@ class FichaKinesiologicaEdit extends Component
         }
     }
 
-    // Crear nuevo doctor si no existe
     #[\Livewire\Attributes\On('crearDoctor')]
     public function crearDoctor()
     {
@@ -244,18 +236,15 @@ class FichaKinesiologicaEdit extends Component
         $this->doctor_id = $doctor->id;
         $this->showDoctorAlert = false;
 
-    
-
         $this->dispatch('swal', [
             'title' => 'Doctor creado y asignado correctamente',
             'icon' => 'success'
         ]);
     }
 
-
     public function render()
     {
         return view('livewire.kinesiologia.ficha-kinesiologica-edit')
-            ->layout('layouts.app'); // 👈 tu layout base
+            ->layout('layouts.app');
     }
 }

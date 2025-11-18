@@ -8,26 +8,41 @@
                     <h4 class="text-lg font-bold text-white">Ficha Kinesiológica del Paciente</h4>
                 </div>
 
-                {{-- Área superior: Buscar + Mostrar --}}
+                {{-- Área superior: Filtros y Paginación --}}
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-4">
 
-                    {{-- Buscar --}}
-                    <div class="w-full md:w-1/3 relative mb-2 md:mb-0">
-                        <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
-                            <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
-                                <path fill-rule="evenodd"
-                                    d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                    clip-rule="evenodd" />
-                            </svg>
+                    {{-- Contenedor de Búsqueda y Filtro de Estado --}}
+                    <div class="flex flex-col md:flex-row items-start md:items-center gap-x-3 w-full md:w-auto"> 
+
+                        {{-- Buscar --}}
+                        <div class="w-full md:w-56 relative mb-2 md:mb-0">
+                            <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                    <path fill-rule="evenodd"
+                                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                          clip-rule="evenodd" />
+                                </svg>
+                            </div>
+
+                            <input wire:model.live.debounce.300ms="search" type="text"
+                                class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2"
+                                placeholder="Buscar paciente o jerarquía...">
                         </div>
 
-                        <input wire:model.live.debounce.300ms="search" type="text"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2"
-                            placeholder="Buscar paciente o jerarquía...">
-                    </div>
+                        {{-- 🟢 Filtro de Estado de Sesión 🟢 --}}
+                        <select wire:model.live="statusFilter" wire:change="resetPage"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2 w-full md:w-56 mb-2 md:mb-0">
+                            <option value="">Todos los Estados</option>
+                            <option value="activa">Activa</option>
+                            <option value="inactiva">Inactiva</option>
+                            <option value="sin_registro">Sin Registros</option>
+                        </select>
+                        {{-- Fin del Filtro de Estado --}}
 
+                    </div> {{-- Fin del Contenedor de Búsqueda y Filtro de Estado --}}
+                    
                     {{-- Mostrar por página --}}
-                    <div class="flex items-center gap-2">
+                    <div class="flex items-center gap-2 mt-2 md:mt-0">
                         <label for="perPage" class="text-gray-400 text-[14px]">Mostrar</label>
                         <select wire:model.live="perPage" id="perPage"
                             class="bg-gray-700 border border-gray-600 text-white text-sm rounded-lg p-1 cursor-pointer">
@@ -64,7 +79,7 @@
                                         {{ $planilla->created_at->format('d-m-Y H:i:s') }}
                                     </td>
 
-                                    {{-- Columna Estado Sesión - CORRECCIÓN APLICADA AQUÍ --}}
+                                    {{-- Columna Estado Sesión --}}
                                     <td class="px-4 py-2">
                                         @php
                                             // Asumimos que $planilla->paciente es el Paciente y tiene la relación sesiones()

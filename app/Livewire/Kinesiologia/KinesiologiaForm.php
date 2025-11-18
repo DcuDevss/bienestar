@@ -227,12 +227,7 @@ class KinesiologiaForm extends Component
         $this->especialidades = Especialidade::orderBy('name')->pluck('name')->toArray();
         $this->showEspecialidadAlert = false;
 
-        // 🧾 AUDITORÍA: Creación de Especialidad
-        audit_log(
-            'Especialidad.Creacion',
-            $nueva,
-            "Se registró una nueva especialidad: {$nueva->name}."
-        );
+      
 
         Log::info("✅ Especialidad creada correctamente", ['id' => $nueva->id]);
         session()->flash('message', 'Especialidad creada correctamente.');
@@ -346,9 +341,9 @@ class KinesiologiaForm extends Component
 
                 // 🧾 AUDITORÍA: Creación de Ficha Kinesiológica
                 audit_log(
-                    'Ficha.Kinesiologia.Creacion',
+                    'ficha.kinesiologia.creacion',
                     $this->ficha,
-                    "Se creó la Ficha Kinesiológica, para el paciente {$this->paciente->apellido_nombre}."
+                    "Se creó la Ficha Kinesiológica",
                 );
 
                 $this->dispatch('swal', [

@@ -206,6 +206,15 @@ class SesionKinesiologica extends Component
         Log::info("[EDICIÓN] Iniciando edición de Sesión ID: {$id}");
         $sesion = Sesion::findOrFail($id);
 
+
+        // ✅ LÍNEA CORREGIDA
+        audit_log(
+            'sesion.edit',  // <-- Argumento 1: Evento
+            $sesion,        // <-- Argumento 2: Objeto (Modelo)
+            "Se Edito el registro" // <-- Argumento 3: Descripción
+        );
+
+
         $this->sesionId = $sesion->id;
         $this->sesion_nro = $sesion->sesion_nro; // Mantiene el N° Sesión para edición
         $this->fecha_sesion = Carbon::parse($sesion->fecha_sesion)->toDateString();
@@ -268,6 +277,13 @@ class SesionKinesiologica extends Component
                 ->update(['firma_paciente_digital' => 1]);
 
             Log::info("[FINALIZAR_FINAL] {$count} sesiones marcadas como inactivas.");
+
+            // 🧾 AUDITORÍA: Finalización de la Serie de Sesiones
+            audit_log(
+                'sesion.finalizada',
+                $this->paciente,
+                "Se finalizó la serie de {$count} sesiones activas"
+            );
 
             $this->dispatch('sesionGuardada', [
                 'title' => '¡Serie Finalizada!',

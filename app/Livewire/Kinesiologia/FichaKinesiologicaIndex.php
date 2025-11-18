@@ -81,6 +81,8 @@ class FichaKinesiologicaIndex extends Component
         $this->paciente_id = $paciente->id;
         $this->paciente = $paciente;
         Log::info("FichaKinesiologicaIndex mounted for paciente_id={$paciente->id}");
+
+   
     }
 
     // 🔄 Reinicia paginación al cambiar filtros
@@ -136,13 +138,7 @@ class FichaKinesiologicaIndex extends Component
             $this->campoSeleccionadoContenido = $ficha->$campo;
             $this->modalCampoAbierto = true;
 
-            // 🧾 AUDITORÍA: Acceso a campo específico
-            audit_log(
-                'Ficha.Kinesiologia.Campo.Acceso',
-                $ficha,
-                "Visualización detallada del campo '{$titulo}' ({$campo})."
-            );
-            // -------------------------
+            
 
         }
     }
@@ -178,13 +174,14 @@ class FichaKinesiologicaIndex extends Component
 
         $this->fichaSeleccionada->save();
 
-        // 🧾 AUDITORÍA: Actualización de ficha
+        // 🧾 AUDITORÍA: Edición de la ficha
         audit_log(
-            'Ficha.Kinesiologia.Actualizacion',
+            'Ficha.Kinesiologia.Update',
             $this->fichaSeleccionada,
-            "Actualización de datos en la Ficha Kinesiológica, del paciente {$this->paciente->apellido_nombre}."
+            "Edición de la Ficha Kinesiológica ID: {$this->fichaSeleccionada->id} del paciente {$this->paciente->apellido_nombre}."
         );
         // -------------------------
+
 
         $this->editMode = false;
 

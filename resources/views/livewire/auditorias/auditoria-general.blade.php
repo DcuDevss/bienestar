@@ -40,6 +40,13 @@
                             <option value="enfermeria.control.update">Edición control de enfermería</option>
                             <option value="archivo.create">Subida de PDF(archivo)</option>
                             <option value="pdf.create">Subida de PDF(psicologo)</option>
+                            <option value="ficha.kinesiologia.actualizacion">Editar Ficha kinesiologica</option>
+                            <option value="Doctor.Creacion">Registro Doctor</option>
+                            <option value="ficha.kinesiologia.creacion">Fichas Creadas</option>
+                            <option value="pdf.kinesiologia">Subida de PDF(kinesiologia)</option>
+                            <option value="eliminar.pdf">PDF Eliminado (Kinesiologia)</option>
+                            <option value="sesion.edit">Sesiones Editadas</option>
+                            <option value="sesion.finalizada">Sesion Finalizadas</option>
                         </select>
 
                         <!-- Usuario -->

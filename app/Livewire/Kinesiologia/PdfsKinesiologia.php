@@ -70,7 +70,7 @@ class PdfsKinesiologia extends Component
         if ($uploadedCount > 0) {
             // Primer parámetro (Acción): 'PDF Kinesiologia'
             // Tercer parámetro (Descripción): 'Se adjunta PDF Kinesiologia'
-            audit_log('PDF Kinesiologia', $this->paciente, 'Se adjunta PDF al Paciente');
+            audit_log('pdf.Kinesiologia', $this->paciente, 'Se adjunta PDF al Paciente');
         }
 
         // 🔄 Limpiar input y recargar la lista de PDFs
@@ -106,9 +106,7 @@ class PdfsKinesiologia extends Component
             $pdf->delete();
 
             // 🧾 AUDITORÍA (Después de la eliminación exitosa)
-            // Primer parámetro (Acción): 'Se elimino PDF Paciente Kinesiologia'
-            // Tercer parámetro (Descripción): 'Se elimina PDF'
-            audit_log('Se elimino PDF Paciente Kinesiologia', $this->paciente, 'PDF Eliminado');
+            audit_log('eliminar.pdf', $this->paciente, 'PDF Eliminado');
 
             $this->dispatch('pdfsActualizados'); // Evento para actualizar la vista
 
@@ -119,7 +117,7 @@ class PdfsKinesiologia extends Component
         }
     }
     
-    // ... resto del componente ...
+  
 
     /**
      * Propiedad Calculada (Computed Property) para obtener la lista de PDFs.

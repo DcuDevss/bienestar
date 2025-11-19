@@ -47,43 +47,52 @@
                         <div class="bg-gray-100 px-5 py-3 flex justify-between items-start border-b border-gray-300">
                             <div class="flex flex-col gap-1">
                                 @php
-                                    // --- Lógica de Fecha de CREACIÓN (created_at) ---
-                                    $created = \Carbon\Carbon::parse($ficha->created_at)->timezone(
-                                        'America/Argentina/Buenos_Aires',
-                                    )->locale('es');
+                                    $created = \Carbon\Carbon::parse($ficha->created_at)
+                                        ->timezone('America/Argentina/Buenos_Aires')
+                                        ->locale('es');
                                     $diaSemanaCreacion = ucfirst($created->dayName);
 
-                                    // --- Lógica de Fecha de ÚLTIMA EDICIÓN (updated_at) ---
-                                    $updated = \Carbon\Carbon::parse($ficha->updated_at)->timezone(
-                                        'America/Argentina/Buenos_Aires',
-                                    )->locale('es');
+                                    $updated = \Carbon\Carbon::parse($ficha->updated_at)
+                                        ->timezone('America/Argentina/Buenos_Aires')
+                                        ->locale('es');
                                     $diaSemanaEdicion = ucfirst($updated->dayName);
-                                    // Formato deseado: "miércoles, 19/11/2025 09:55"
                                     $fechaEdicionTexto = $diaSemanaEdicion . ', ' . $updated->format('d/m/Y H:i');
                                 @endphp
 
-                                {{-- Muestra la fecha de CREACIÓN --}}
+                                {{-- Fecha creación --}}
                                 <p class="text-sm text-gray-700 font-semibold">
-                                    Creada: {{ $diaSemanaCreacion }} - {{ $created->format('d/m/Y H:i') }}
+                                    {{ $diaSemanaCreacion }} - {{ $created->format('d/m/Y H:i') }}
                                 </p>
 
-                                {{-- 🚀 CAMBIO APLICADO AQUÍ: Muestra el usuario (Kinesiólogo) que creó la ficha --}}
-<p class="text-xs text-gray-600 font-medium">
-    Ficha creada por: <span
-        class="text-red-500 font-bold">{{ $ficha->user->name ?? 'Sin Datos' }}</span>
-</p>
+                                {{-- Usuario creador --}}
+                                <p class="text-xs text-gray-600 font-medium">
+                                    Ficha creada por:
+                                    <span class="text-red-500 font-bold">
+                                        {{ $ficha->user->name ?? 'Sin Datos' }}
+                                    </span>
+                                </p>
 
-                                {{-- Muestra la fecha de ÚLTIMA EDICIÓN, solo si es diferente a la de creación --}}
+                                {{-- Ultima edición --}}
                                 @if ($ficha->created_at != $ficha->updated_at)
-                                <p class="text-xs text-black font-semibold">
-                                    Última edición: {{ $fechaEdicionTexto }}
-                                </p>
+                                    <p class="text-xs text-black font-semibold">
+                                        Última edición: {{ $fechaEdicionTexto }}
+                                    </p>
+
+                                    {{-- Usuario editor (usa el mismo user_id) --}}
+                                    {{-- <p class="text-xs text-yellow-600 font-semibold">
+                                        Editado por:
+                                        {{ $ficha->user->name ?? 'Sin Datos' }}
+                                    </p> --}}
                                 @endif
 
-                                <p class="text-sm text-gray-600 font-medium">{{ $ficha->doctor->name ?? 'Sin asignar' }}
+                                {{-- Doctor derivante --}}
+                                <p class="text-sm text-gray-600 font-medium">
+                                    Doctor Asignado:
+                                    <span class="font-semibold">
+                                        {{ $ficha->doctor->name ?? 'Sin asignar' }}
+                                    </span>
                                 </p>
                             </div>
-
 
                             <button @click="expand = !expand"
                                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-semibold px-3 py-1.5 rounded-lg transition self-start">
@@ -104,7 +113,7 @@
                                 'realiza_actividad_fisica' => 'Realiza actividad física',
                                 'tipo_actividad' => 'Tipo de actividad',
                                 'antecedentes_enfermedades' => 'Antecedentes de enfermedades',
-                                'antecedentes_familiares' => 'Antecedentes familiares',
+                                'antecedentes_famililes' => 'Antecedentes familiares',
                                 'cirugias' => 'Cirugías',
                                 'traumatismos_accidentes' => 'Traumatismos/Accidentes',
                                 'tratamientos_previos' => 'Tratamientos previos',
@@ -129,16 +138,9 @@
                                 'ecg' => 'ECG',
                                 'ecodoppler' => 'Ecodoppler',
                             ] as $campo => $label)
-                                {{-- 🛠 INICIO DE LA LÓGICA CORREGIDA --}}
                                 @php
                                     $valor = $ficha->$campo;
-
-                                    // Muestra el campo si NO es NULO y NO es una cadena vacía.
-                                    // Esto permite mostrar TRUE/1, FALSE/0, números y strings no vacíos.
-                                    $mostrarCampo =
-                                        !is_null($valor) && (is_string($valor) ? trim($valor) !== '' : true);
-
-                                    // Prepara la lógica de visualización para el contenido
+                                    $mostrarCampo = !is_null($valor) && (is_string($valor) ? trim($valor) !== '' : true);
                                     $mostrarDirecto = is_scalar($valor) && strlen(strip_tags((string) $valor)) <= 60;
                                 @endphp
 
@@ -146,10 +148,10 @@
                                     <div
                                         class="flex justify-between items-center bg-gray-50 hover:bg-gray-100 p-2 rounded-md transition">
                                         <span class="font-medium text-gray-700">{{ $label }}</span>
+
                                         @if ($mostrarDirecto)
                                             <span class="text-sm text-gray-600">
-                                                @if ($valor === null || $valor === '')
-                                                @elseif ($valor === 1 || $valor === true)
+                                                @if ($valor === 1 || $valor === true)
                                                     Sí
                                                 @elseif ($valor === 0 || $valor === false)
                                                     No
@@ -166,7 +168,6 @@
                                         @endif
                                     </div>
                                 @endif
-                                {{-- 🛠 FIN DE LA LÓGICA CORREGIDA --}}
                             @endforeach
 
                             <div class="flex gap-2 mt-3 justify-center">
@@ -179,6 +180,7 @@
                                     class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
                                     Editar Planilla
                                 </a>
+
                                 <a href="{{ route('kinesiologia.sesion-kinesiologica', ['paciente' => $paciente->id]) }}"
                                     class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
                                     Sesiones de Kinesiología
@@ -189,11 +191,8 @@
                 @endforeach
             </div>
 
-            {{-- ✅ Sección inferior de paginación personalizada --}}
             <div class="p-4 border-t border-gray-700 mt-6 rounded-b-lg">
                 <div class="flex flex-col md:flex-row items-center justify-between text-xs">
-
-                    {{-- Selector de cantidad + info de resultados --}}
                     <div class="flex items-center mb-4 md:mb-0 gap-4">
                         <label for="perPage" class="text-black text-[14px]">Mostrar</label>
                         <select wire:model.live="perPage" id="perPage"
@@ -204,14 +203,12 @@
                             <option value="25">25</option>
                         </select>
 
-                        {{-- Texto de resultados solo visible en esta vista --}}
                         <span class="text-gray-800 text-sm">
                             Mostrando {{ $fichas->firstItem() }} al {{ $fichas->lastItem() }} de
                             {{ $fichas->total() }} resultados
                         </span>
                     </div>
 
-                    {{-- Enlaces de paginación --}}
                     <div class="w-full md:w-auto mt-2 md:mt-0">
                         {{ $fichas->links() }}
                     </div>
@@ -219,17 +216,11 @@
                 </div>
             </div>
 
-
-            {{-- CSS local solo para esta vista --}}
             <style>
-                /* Cambia el color del texto "Mostrando X al Y de Z resultados" solo aquí */
                 .pagination-info p {
                     color: #1f2937 !important;
-                    /* Gris oscuro (equivale a text-gray-800) */
                 }
             </style>
-
-
 
         @endif
 

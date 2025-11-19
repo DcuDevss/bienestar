@@ -122,9 +122,10 @@
     </tbody>
   </table>
 
-  <div class="footer">
-    Generado el — {{ now()->format('d/m/Y H:i') }}
-  </div>
+    <div class="footer">
+        Generado el — {{ now()->timezone('America/Argentina/Buenos_Aires')->format('d/m/Y H:i') }}
+    </div>
+
 
 </body>
 </html>

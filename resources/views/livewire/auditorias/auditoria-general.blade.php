@@ -88,7 +88,7 @@
                                 @foreach ($audits as $a)
                                     <tr class="border-b border-gray-700 hover:bg-[#204060]">
                                         <td class="px-4 py-3 text-white">
-                                            {{ $a->created_at->format('d/m/Y H:i') }}
+                                            {{ $a->created_at->timezone('America/Argentina/Buenos_Aires')->format('d/m/Y H:i') }}
                                         </td>
                                         <td class="px-4 py-3 text-white">
                                             {{ $a->user?->name ?? '—' }}

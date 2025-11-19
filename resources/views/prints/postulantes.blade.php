@@ -100,7 +100,7 @@
 </table>
 
 <div class="footer">
-  Generado automáticamente — {{ now()->format('d/m/Y H:i') }}
+  Generado automáticamente — {{ now()->timezone('America/Argentina/Buenos_Aires')->format('d/m/Y H:i') }}
 </div>
 
 </body>

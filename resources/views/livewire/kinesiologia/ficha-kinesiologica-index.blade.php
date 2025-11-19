@@ -51,11 +51,9 @@
                                         'America/Argentina/Buenos_Aires',
                                     );
 
-                                    $diaSemana = strtoupper($created->locale('es')->dayName);
+                                    // ✅ CORRECCIÓN: Usamos ucfirst() para que solo la primera letra sea mayúscula (ej: "Miércoles")
+                                    $diaSemana = ucfirst($created->locale('es')->dayName);
                                 @endphp
-
-                                {{-- {{ $diaSemana }} - {{ $created->translatedFormat('d/m/Y - H:i') }} hrs. --}}
-
 
                                 <p class="text-sm text-gray-700 font-semibold">
                                     {{ $diaSemana }} - {{ $created->format('d/m/Y') }}
@@ -64,6 +62,7 @@
                                 <p class="text-sm text-gray-600 font-medium">{{ $ficha->doctor->name ?? 'Sin asignar' }}
                                 </p>
                             </div>
+
 
                             <button @click="expand = !expand"
                                 class="bg-gray-300 hover:bg-gray-400 text-gray-800 text-sm font-semibold px-3 py-1.5 rounded-lg transition self-start">

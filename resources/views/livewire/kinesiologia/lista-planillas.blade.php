@@ -12,15 +12,16 @@
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-4">
 
                     {{-- Contenedor de Búsqueda y Filtro de Estado --}}
-                    <div class="flex flex-col md:flex-row items-start md:items-center gap-x-3 w-full md:w-auto"> 
+                    <div class="flex flex-col md:flex-row items-start md:items-center gap-x-3 w-full md:w-auto">
 
                         {{-- Buscar --}}
                         <div class="w-full md:w-56 relative mb-2 md:mb-0">
                             <div class="absolute pl-2 mt-2 flex items-center pointer-events-none">
-                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor" viewBox="0 0 20 20">
+                                <svg aria-hidden="true" class="w-5 h-5 text-gray-500" fill="currentColor"
+                                    viewBox="0 0 20 20">
                                     <path fill-rule="evenodd"
-                                          d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
-                                          clip-rule="evenodd" />
+                                        d="M8 4a4 4 0 100 8 4 4 0 000-8zM2 8a6 6 0 1110.89 3.476l4.817 4.817a1 1 0 01-1.414 1.414l-4.816-4.816A6 6 0 012 8z"
+                                        clip-rule="evenodd" />
                                 </svg>
                             </div>
 
@@ -40,7 +41,7 @@
                         {{-- Fin del Filtro de Estado --}}
 
                     </div> {{-- Fin del Contenedor de Búsqueda y Filtro de Estado --}}
-                    
+
                     {{-- Mostrar por página --}}
                     <div class="flex items-center gap-2 mt-2 md:mt-0">
                         <label for="perPage" class="text-gray-400 text-[14px]">Mostrar</label>
@@ -76,7 +77,15 @@
                                         {{ $planilla->paciente?->apellido_nombre ?? 'Paciente Eliminado' }}
                                     </td>
                                     <td class="px-4 py-2 text-white">
-                                        {{ $planilla->created_at->format('d-m-Y H:i:s') }}
+                                        @php
+                                            // Ajustamos la hora a la zona horaria de Buenos Aires
+                                            $created_at_local = $planilla->created_at->setTimezone(
+                                                'America/Argentina/Buenos_Aires',
+                                            );
+                                        @endphp
+
+                                        {{-- Mostramos la fecha y hora con el formato deseado --}}
+                                        {{ $created_at_local->format('d-m-Y H:i:s') }}
                                     </td>
 
                                     {{-- Columna Estado Sesión --}}
@@ -86,7 +95,7 @@
                                             $ultimaSesion = $planilla->paciente?->sesiones()->latest('id')->first();
                                         @endphp
 
-                                        @if(is_null($ultimaSesion))
+                                        @if (is_null($ultimaSesion))
                                             {{-- Caso 1: No hay ninguna sesión registrada --}}
                                             <span class="px-2 py-0.5 text-xs bg-gray-600 text-gray-200 rounded-full">
                                                 Sin Registros
@@ -123,9 +132,11 @@
                 </div>
 
                 {{-- Paginación --}}
-                <div class="p-4 bg-gray-900 border-t border-gray-700 flex flex-col md:flex-row items-center justify-between">
+                <div
+                    class="p-4 bg-gray-900 border-t border-gray-700 flex flex-col md:flex-row items-center justify-between">
                     <span class="text-gray-400 text-[14px] mb-2 md:mb-0">
-                        Mostrando {{ $planillas->firstItem() ?? 0 }} a {{ $planillas->lastItem() ?? 0 }} de {{ $planillas->total() }} resultados
+                        Mostrando {{ $planillas->firstItem() ?? 0 }} a {{ $planillas->lastItem() ?? 0 }} de
+                        {{ $planillas->total() }} resultados
                     </span>
                     <div>
                         {{ $planillas->links() }}

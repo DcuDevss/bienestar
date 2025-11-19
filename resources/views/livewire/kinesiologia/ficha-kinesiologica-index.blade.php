@@ -67,7 +67,7 @@
                                 {{-- Usuario creador --}}
                                 <p class="text-xs text-gray-600 font-medium">
                                     Ficha creada por:
-                                    <span class="text-red-500 font-bold">
+                                    <span class="text-black font-bold">
                                         {{ $ficha->user->name ?? 'Sin Datos' }}
                                     </span>
                                 </p>
@@ -78,11 +78,20 @@
                                         Última edición: {{ $fechaEdicionTexto }}
                                     </p>
 
-                                    {{-- Usuario editor (usa el mismo user_id) --}}
-                                    {{-- <p class="text-xs text-yellow-600 font-semibold">
-                                        Editado por:
-                                        {{ $ficha->user->name ?? 'Sin Datos' }}
-                                    </p> --}}
+                                    {{-- Usuario editor (obtenido del registro de auditoría) --}}
+                                    @if ($ficha->ultimo_editor_name)
+                                        <p class="text-xs text-black font-semibold">
+                                            Editado por:
+                                            <span class="font-bold">
+                                                {{ $ficha->ultimo_editor_name }}
+                                            </span>
+                                        </p>
+                                    @else
+                                        {{-- Esto se mostraría si la ficha fue editada, pero el registro de auditoría no se encontró o está incompleto --}}
+                                        <p class="text-xs text-black font-semibold">
+                                            Editado (Usuario no registrado en auditoría)
+                                        </p>
+                                    @endif
                                 @endif
 
                                 {{-- Doctor derivante --}}
@@ -107,40 +116,41 @@
                             </h3>
 
                             @foreach ([
-                                'diagnostico' => 'Diagnóstico',
-                                'motivo_consulta' => 'Motivo de consulta',
-                                'posturas_dolorosas' => 'Posturas dolorosas',
-                                'realiza_actividad_fisica' => 'Realiza actividad física',
-                                'tipo_actividad' => 'Tipo de actividad',
-                                'antecedentes_enfermedades' => 'Antecedentes de enfermedades',
-                                'antecedentes_famililes' => 'Antecedentes familiares',
-                                'cirugias' => 'Cirugías',
-                                'traumatismos_accidentes' => 'Traumatismos/Accidentes',
-                                'tratamientos_previos' => 'Tratamientos previos',
-                                'menarca' => 'Menarca',
-                                'menopausia' => 'Menopausia',
-                                'partos' => 'Partos',
-                                'estado_salud_general' => 'Estado de salud general',
-                                'alteracion_peso' => 'Alteración de peso',
-                                'medicacion_actual' => 'Medicación actual',
-                                'observaciones_generales_anamnesis' => 'Observaciones generales',
-                                'visceral_palpacion' => 'Visceral palpación',
-                                'visceral_dermalgias' => 'Visceral dermalgias',
-                                'visceral_triggers' => 'Visceral triggers',
-                                'visceral_fijaciones' => 'Visceral fijaciones',
-                                'craneal_forma' => 'Craneal forma',
-                                'craneal_triggers' => 'Craneal triggers',
-                                'craneal_fijaciones' => 'Craneal fijaciones',
-                                'craneal_musculos' => 'Craneal músculos',
-                                'tension_arterial' => 'Tensión arterial',
-                                'pulsos' => 'Pulsos',
-                                'auscultacion' => 'Auscultación',
-                                'ecg' => 'ECG',
-                                'ecodoppler' => 'Ecodoppler',
-                            ] as $campo => $label)
+        'diagnostico' => 'Diagnóstico',
+        'motivo_consulta' => 'Motivo de consulta',
+        'posturas_dolorosas' => 'Posturas dolorosas',
+        'realiza_actividad_fisica' => 'Realiza actividad física',
+        'tipo_actividad' => 'Tipo de actividad',
+        'antecedentes_enfermedades' => 'Antecedentes de enfermedades',
+        'antecedentes_famililes' => 'Antecedentes familiares',
+        'cirugias' => 'Cirugías',
+        'traumatismos_accidentes' => 'Traumatismos/Accidentes',
+        'tratamientos_previos' => 'Tratamientos previos',
+        'menarca' => 'Menarca',
+        'menopausia' => 'Menopausia',
+        'partos' => 'Partos',
+        'estado_salud_general' => 'Estado de salud general',
+        'alteracion_peso' => 'Alteración de peso',
+        'medicacion_actual' => 'Medicación actual',
+        'observaciones_generales_anamnesis' => 'Observaciones generales',
+        'visceral_palpacion' => 'Visceral palpación',
+        'visceral_dermalgias' => 'Visceral dermalgias',
+        'visceral_triggers' => 'Visceral triggers',
+        'visceral_fijaciones' => 'Visceral fijaciones',
+        'craneal_forma' => 'Craneal forma',
+        'craneal_triggers' => 'Craneal triggers',
+        'craneal_fijaciones' => 'Craneal fijaciones',
+        'craneal_musculos' => 'Craneal músculos',
+        'tension_arterial' => 'Tensión arterial',
+        'pulsos' => 'Pulsos',
+        'auscultacion' => 'Auscultación',
+        'ecg' => 'ECG',
+        'ecodoppler' => 'Ecodoppler',
+    ] as $campo => $label)
                                 @php
                                     $valor = $ficha->$campo;
-                                    $mostrarCampo = !is_null($valor) && (is_string($valor) ? trim($valor) !== '' : true);
+                                    $mostrarCampo =
+                                        !is_null($valor) && (is_string($valor) ? trim($valor) !== '' : true);
                                     $mostrarDirecto = is_scalar($valor) && strlen(strip_tags((string) $valor)) <= 60;
                                 @endphp
 

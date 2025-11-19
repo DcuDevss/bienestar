@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use App\Models\Audit;
 
 class FichaKinesiologica extends Model
 {
@@ -91,4 +92,35 @@ class FichaKinesiologica extends Model
         // Asume que la clave foránea es 'user_id'
         return $this->belongsTo(User::class);
     }
+
+    /**
+     * Relación Polimórfica con el modelo Audit.
+     * Esto trae TODOS los registros de auditoría relacionados con esta ficha.
+     */
+    public function audits()
+    {
+        // 'auditable' es el nombre del método en el modelo Audit (auditable_type, auditable_id)
+        return $this->morphMany(Audit::class, 'auditable');
+    }
+
+    /**
+     * Busca y devuelve el nombre del usuario que realizó la última edición.
+     */
+    public function getUltimoEditorNameAttribute(): ?string
+    {
+        // La clave de acción para la edición es 'ficha.kinesiologia.actualizacion'
+        $audit = $this->audits()
+            ->where('action', 'ficha.kinesiologia.actualizacion')
+            ->latest() // Ordena por el created_at de forma descendente (el más reciente)
+            ->first(); // Toma solo el primero (el último)
+
+        // Si se encuentra un registro de auditoría, devuelve el nombre del usuario relacionado
+        if ($audit && $audit->user) {
+            return $audit->user->name;
+        }
+
+        // Si no hay ediciones, o no se encuentra el usuario, devuelve NULL
+        return null;
+    }
 }
+

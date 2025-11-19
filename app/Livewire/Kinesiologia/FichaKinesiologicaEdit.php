@@ -7,12 +7,14 @@ use App\Models\FichaKinesiologica;
 use App\Models\Doctor;
 use App\Models\Especialidade;
 use App\Models\ObraSocial;
+use Carbon\Carbon;
 
 class FichaKinesiologicaEdit extends Component
 {
     // ... (otras propiedades)
 
     public $isEdit = false;
+    public $ultimaEdicionTexto;
 
     public $showDoctorAlert = false;
     public $showEspecialidadAlert = false;
@@ -39,6 +41,24 @@ class FichaKinesiologicaEdit extends Component
         $this->isEdit = true;
         $this->ficha = FichaKinesiologica::with('paciente', 'doctor')->findOrFail($ficha);
         $this->paciente = $this->ficha->paciente;
+
+        // ==========================================================
+        // INICIO: LÓGICA DE CÁLCULO DE FECHA EN EL COMPONENTE
+        // ==========================================================
+
+        $updated = Carbon::parse($this->ficha->updated_at)
+            ->setTimezone('America/Argentina/Buenos_Aires')
+            ->locale('es');
+
+        $diaSemana = ucfirst($updated->dayName);
+        $mes = $updated->monthName;
+
+        // Formato final: "miércoles, 19 noviembre 2025 a las 09:55 hrs."
+        $this->ultimaEdicionTexto = $diaSemana . ', ' . $updated->day . ' ' . $mes . ' ' . $updated->year . ' a las ' . $updated->format('H:i') . ' hrs.';
+
+        // ==========================================================
+        // FIN: LÓGICA DE CÁLCULO DE FECHA EN EL COMPONENTE
+        // ==========================================================
 
         $this->fill($this->ficha->only([
             'diagnostico',

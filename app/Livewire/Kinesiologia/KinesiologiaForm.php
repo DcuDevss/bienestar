@@ -345,10 +345,12 @@ class KinesiologiaForm extends Component
             $data = $this->only((new FichaKinesiologica())->getFillable());
             $data['paciente_id'] = $this->paciente->id;
             $data['doctor_id'] = $doctor->id;
+            $data['user_id'] = auth()->id();
 
             Log::info("🧾 Datos a guardar en ficha:", $data);
 
             $this->ficha = FichaKinesiologica::create($data);
+            Log::info("✅ Ficha kinesiológica creada con ID: " . $this->ficha->id);
 
             if ($this->ficha && $this->ficha->id) {
                 Log::info("✅ [EXITO] Ficha kinesiológica guardada correctamente", [

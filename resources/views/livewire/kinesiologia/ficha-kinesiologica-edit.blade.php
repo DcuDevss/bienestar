@@ -2,8 +2,7 @@
     <!-- Formulario -->
     <form wire:submit.prevent="updateFichaKinesiologica" class="space-y-10">
         @csrf
-
-      
+              
        @include('livewire.kinesiologia.kinesiologia-form', ['isEdit' => true])
 
       

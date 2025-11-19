@@ -47,18 +47,39 @@
                         <div class="bg-gray-100 px-5 py-3 flex justify-between items-start border-b border-gray-300">
                             <div class="flex flex-col gap-1">
                                 @php
+                                    // --- Lógica de Fecha de CREACIÓN (created_at) ---
                                     $created = \Carbon\Carbon::parse($ficha->created_at)->timezone(
                                         'America/Argentina/Buenos_Aires',
-                                    );
+                                    )->locale('es');
+                                    $diaSemanaCreacion = ucfirst($created->dayName);
 
-                                    // ✅ CORRECCIÓN: Usamos ucfirst() para que solo la primera letra sea mayúscula (ej: "Miércoles")
-                                    $diaSemana = ucfirst($created->locale('es')->dayName);
+                                    // --- Lógica de Fecha de ÚLTIMA EDICIÓN (updated_at) ---
+                                    $updated = \Carbon\Carbon::parse($ficha->updated_at)->timezone(
+                                        'America/Argentina/Buenos_Aires',
+                                    )->locale('es');
+                                    $diaSemanaEdicion = ucfirst($updated->dayName);
+                                    // Formato deseado: "miércoles, 19/11/2025 09:55"
+                                    $fechaEdicionTexto = $diaSemanaEdicion . ', ' . $updated->format('d/m/Y H:i');
                                 @endphp
 
+                                {{-- Muestra la fecha de CREACIÓN --}}
                                 <p class="text-sm text-gray-700 font-semibold">
-                                    {{ $diaSemana }} - {{ $created->format('d/m/Y') }}
+                                    Creada: {{ $diaSemanaCreacion }} - {{ $created->format('d/m/Y H:i') }}
                                 </p>
-                                <p class="text-sm text-gray-600">Hora: {{ $created->format('H:i') }}</p>
+
+                                {{-- 🚀 CAMBIO APLICADO AQUÍ: Muestra el usuario (Kinesiólogo) que creó la ficha --}}
+<p class="text-xs text-gray-600 font-medium">
+    Ficha creada por: <span
+        class="text-red-500 font-bold">{{ $ficha->user->name ?? 'Sin Datos' }}</span>
+</p>
+
+                                {{-- Muestra la fecha de ÚLTIMA EDICIÓN, solo si es diferente a la de creación --}}
+                                @if ($ficha->created_at != $ficha->updated_at)
+                                <p class="text-xs text-black font-semibold">
+                                    Última edición: {{ $fechaEdicionTexto }}
+                                </p>
+                                @endif
+
                                 <p class="text-sm text-gray-600 font-medium">{{ $ficha->doctor->name ?? 'Sin asignar' }}
                                 </p>
                             </div>
@@ -77,37 +98,37 @@
                             </h3>
 
                             @foreach ([
-        'diagnostico' => 'Diagnóstico',
-        'motivo_consulta' => 'Motivo de consulta',
-        'posturas_dolorosas' => 'Posturas dolorosas',
-        'realiza_actividad_fisica' => 'Realiza actividad física',
-        'tipo_actividad' => 'Tipo de actividad',
-        'antecedentes_enfermedades' => 'Antecedentes de enfermedades',
-        'antecedentes_familiares' => 'Antecedentes familiares',
-        'cirugias' => 'Cirugías',
-        'traumatismos_accidentes' => 'Traumatismos/Accidentes',
-        'tratamientos_previos' => 'Tratamientos previos',
-        'menarca' => 'Menarca',
-        'menopausia' => 'Menopausia',
-        'partos' => 'Partos',
-        'estado_salud_general' => 'Estado de salud general',
-        'alteracion_peso' => 'Alteración de peso',
-        'medicacion_actual' => 'Medicación actual',
-        'observaciones_generales_anamnesis' => 'Observaciones generales',
-        'visceral_palpacion' => 'Visceral palpación',
-        'visceral_dermalgias' => 'Visceral dermalgias',
-        'visceral_triggers' => 'Visceral triggers',
-        'visceral_fijaciones' => 'Visceral fijaciones',
-        'craneal_forma' => 'Craneal forma',
-        'craneal_triggers' => 'Craneal triggers',
-        'craneal_fijaciones' => 'Craneal fijaciones',
-        'craneal_musculos' => 'Craneal músculos',
-        'tension_arterial' => 'Tensión arterial',
-        'pulsos' => 'Pulsos',
-        'auscultacion' => 'Auscultación',
-        'ecg' => 'ECG',
-        'ecodoppler' => 'Ecodoppler',
-    ] as $campo => $label)
+                                'diagnostico' => 'Diagnóstico',
+                                'motivo_consulta' => 'Motivo de consulta',
+                                'posturas_dolorosas' => 'Posturas dolorosas',
+                                'realiza_actividad_fisica' => 'Realiza actividad física',
+                                'tipo_actividad' => 'Tipo de actividad',
+                                'antecedentes_enfermedades' => 'Antecedentes de enfermedades',
+                                'antecedentes_familiares' => 'Antecedentes familiares',
+                                'cirugias' => 'Cirugías',
+                                'traumatismos_accidentes' => 'Traumatismos/Accidentes',
+                                'tratamientos_previos' => 'Tratamientos previos',
+                                'menarca' => 'Menarca',
+                                'menopausia' => 'Menopausia',
+                                'partos' => 'Partos',
+                                'estado_salud_general' => 'Estado de salud general',
+                                'alteracion_peso' => 'Alteración de peso',
+                                'medicacion_actual' => 'Medicación actual',
+                                'observaciones_generales_anamnesis' => 'Observaciones generales',
+                                'visceral_palpacion' => 'Visceral palpación',
+                                'visceral_dermalgias' => 'Visceral dermalgias',
+                                'visceral_triggers' => 'Visceral triggers',
+                                'visceral_fijaciones' => 'Visceral fijaciones',
+                                'craneal_forma' => 'Craneal forma',
+                                'craneal_triggers' => 'Craneal triggers',
+                                'craneal_fijaciones' => 'Craneal fijaciones',
+                                'craneal_musculos' => 'Craneal músculos',
+                                'tension_arterial' => 'Tensión arterial',
+                                'pulsos' => 'Pulsos',
+                                'auscultacion' => 'Auscultación',
+                                'ecg' => 'ECG',
+                                'ecodoppler' => 'Ecodoppler',
+                            ] as $campo => $label)
                                 {{-- 🛠 INICIO DE LA LÓGICA CORREGIDA --}}
                                 @php
                                     $valor = $ficha->$campo;

@@ -13,6 +13,7 @@ class FichaKinesiologica extends Model
         'paciente_id',
         'doctor_id',
         'obra_social_id',
+        'user_id',
 
         // === I. DATOS ADMINISTRATIVOS / ANAMNESIS ===
         'diagnostico',
@@ -82,5 +83,12 @@ class FichaKinesiologica extends Model
     public function obraSocial()
     {
         return $this->belongsTo(ObraSocial::class);
+    }
+
+    // 🚀 NUEVA RELACIÓN: Una ficha pertenece a un Usuario (Kinesiólogo creador)
+    public function user()
+    {
+        // Asume que la clave foránea es 'user_id'
+        return $this->belongsTo(User::class);
     }
 }

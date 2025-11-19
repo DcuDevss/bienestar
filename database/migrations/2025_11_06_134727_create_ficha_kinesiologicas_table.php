@@ -10,7 +10,7 @@ return new class extends Migration
     {
         Schema::create('fichas_kinesiologicas', function (Blueprint $table) {
             $table->id();
-
+            
 
 
 
@@ -63,6 +63,11 @@ return new class extends Migration
             //relaciones
             $table->unsignedBigInteger('paciente_id')->nullable();  // Campo que vincula la entrevista con el paciente
             $table->foreign('paciente_id')->references('id')->on('pacientes')->onDelete('cascade');
+
+            // user_id → corregido (solo se declara una vez)
+            $table->unsignedBigInteger('user_id')->nullable();
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
+
 
             $table->unsignedBigInteger('doctor_id')->nullable();
             $table->foreign('doctor_id')->references('id')->on('doctors')->onDelete('cascade');

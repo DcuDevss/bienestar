@@ -51,5 +51,6 @@ class DatabaseSeeder extends Seeder
          $this->call(PacienteSeeder::class);
          $this->call(CiudadSeeder::class);
          $this->call(SaludMentalesSeeder::class);
+        $this->call(ObraSocialSeeder::class);
     }
 }

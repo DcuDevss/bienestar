@@ -7,7 +7,7 @@
 
     {{-- FLASH MESSAGE --}}
     @if (session('mensaje'))
-        <div 
+        <div
             x-data="{show:true}"
             x-show="show"
             x-init="setTimeout(()=>show=false,2500)"
@@ -37,10 +37,10 @@
     $limiteBase = $limiteSerie; // El límite original de 10
 
     // 💡 CORRECCIÓN: El límite visible ($limite) debe ser el máximo entre las activas y el límite base (10).
-    $limite = max($activas, $limiteBase); 
+    $limite = max($activas, $limiteBase);
 
     // Recalcula el porcentaje usando el límite dinámico ($limite)
-    $porcentaje = $limite > 0 ? ($activas / $limite) * 100 : 0; 
+    $porcentaje = $limite > 0 ? ($activas / $limite) * 100 : 0;
 
     // Clase para resaltar visualmente el contador (usa $limiteBase para la ALERTA)
     $alertaClase = '';
@@ -53,7 +53,7 @@
 
 <div class="mb-4 p-3 rounded-lg {{ $alertaClase }}">
     <p class="font-semibold mb-1 text-lg">
-        Sesiones activas: 
+        Sesiones activas:
         {{-- Usamos $limiteBase para el color, que es cuando el contador pasa 10 --}}
         <span class="{{ $activas >= $limiteBase ? 'text-red-600 font-extrabold' : 'text-blue-600' }}">
             {{ $activas }}
@@ -69,19 +69,19 @@
     {{-- FILTROS --}}
     <div class="mb-6 flex gap-2">
         <button wire:click="$set('filtro','todas')"
-            class="px-3 py-1 rounded shadow 
+            class="px-3 py-1 rounded shadow
                 {{ $filtro=='todas'?'bg-blue-600 text-white':'bg-gray-200 hover:bg-gray-300' }}">
             Todas
         </button>
 
         <button wire:click="$set('filtro','activas')"
-            class="px-3 py-1 rounded shadow 
+            class="px-3 py-1 rounded shadow
                 {{ $filtro=='activas'?'bg-blue-600 text-white':'bg-gray-200 hover:bg-gray-300' }}">
             Activas
         </button>
 
         <button wire:click="$set('filtro','inactivas')"
-            class="px-3 py-1 rounded shadow 
+            class="px-3 py-1 rounded shadow
                 {{ $filtro=='inactivas'?'bg-blue-600 text-white':'bg-gray-200 hover:bg-gray-300' }}">
             Inactivas
         </button>
@@ -114,8 +114,8 @@
                     <input type="number" wire:model="sesion_nro"
                     readonly
                         class="border rounded w-full px-2 py-1">
-                    @error('sesion_nro') 
-                        <span class="text-red-600 text-sm">{{ $message }}</span> 
+                    @error('sesion_nro')
+                        <span class="text-red-600 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
 
@@ -123,8 +123,8 @@
                     <label class="block text-sm font-medium">Fecha</label>
                     <input type="date" wire:model="fecha_sesion"
                         class="border rounded w-full px-2 py-1">
-                    @error('fecha_sesion') 
-                        <span class="text-red-600 text-sm">{{ $message }}</span> 
+                    @error('fecha_sesion')
+                        <span class="text-red-600 text-sm">{{ $message }}</span>
                     @enderror
                 </div>
 
@@ -161,7 +161,7 @@
     <div class="flex items-center space-x-2 text-sm text-gray-700">
         {{-- Etiqueta del SELECT --}}
         <label for="perPage" class="font-medium">Mostrar</label>
-        
+
         {{-- SELECT para el número de sesiones por página --}}
         <select wire:model.live="perPage" id="perPage"
             class="py-1 pl-2 pr-7 border border-gray-300 bg-white rounded-md shadow-sm focus:outline-none focus:ring-blue-500 focus:border-blue-500 text-sm">
@@ -172,7 +172,7 @@
             <option value="20">20</option>
             <option value="50">50</option>
         </select>
-        
+
         <span class="text-gray-500">sesiones por página</span>
     </div>
 
@@ -210,12 +210,12 @@
 
         <tbody>
             {{-- La variable $sesionesFiltradas DEBE retornar ahora un Paginator --}}
-            @foreach ($this->sesionesFiltradas as $sesion) 
+            @foreach ($this->sesionesFiltradas as $sesion)
                 <tr x-transition.opacity.duration.300ms
                     class="{{ $sesion->firma_paciente_digital == 0
                         ? 'bg-green-50'
                         : 'bg-red-50' }}">
-                    
+
                     {{-- ID (sesion_nro) ELIMINADO --}}
                     {{-- <td class="border px-2 py-1">{{ $sesion->sesion_nro }}</td> --}}
 
@@ -255,16 +255,16 @@
             @endforeach
         </tbody>
     </table>
-    
+
     {{-- 🔑 LINKS DEL PAGINADOR: Usar la variable de las sesiones filtradas --}}
   <div class="mt-4">
     {{-- ✅ CORRECCIÓN: Añade data: ['scrollTo' => false] --}}
     {{ $this->sesionesFiltradas->links(data: ['scrollTo' => false]) }}
 </div>
 </div>
-    
+
     {{-- El bloque anterior que tenías de $pdfsList era redundante y se eliminó --}}
-    
+
     {{-- BOTONES --}}
     <div class="mt-6 flex justify-end gap-4">
         {{-- Botón Finalizar Sesión --}}
@@ -274,7 +274,7 @@
         </button>
 
         {{-- Botón Ver Historial de Fichas --}}
-        <a href="{{ route('kinesiologia.fichas-kinesiologicas-index', ['paciente' => $paciente->id]) }}"
+        <a href="{{ route('kinesiologia.ficha-kinesiologica-index', ['paciente' => $paciente->id]) }}"
             class="bg-green-600 text-white px-6 py-2 rounded-xl shadow-lg hover:bg-green-700 transition duration-150 transform hover:scale-105 flex items-center">
             Ver Historial de Fichas
         </a>
@@ -317,7 +317,7 @@ document.addEventListener('livewire:initialized', () => {
             }
         });
     });
-    
+
     // 3. CONFIRMACIÓN GUARDADO SESIÓN (Flujo normal)
     Livewire.on('confirmarGuardado', () => {
         Swal.fire({
@@ -335,7 +335,7 @@ document.addEventListener('livewire:initialized', () => {
             }
         });
     });
-    
+
     // 4. SESIÓN GUARDADA (Mensaje de éxito genérico)
     Livewire.on('sesionGuardada', (event) => {
         const data = event[0];

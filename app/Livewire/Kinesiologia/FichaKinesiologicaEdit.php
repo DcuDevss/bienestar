@@ -223,7 +223,7 @@ class FichaKinesiologicaEdit extends Component
             'icon' => 'success'
         ]);
 
-        return redirect()->route('kinesiologia.fichas-kinesiologicas-index', [
+        return redirect()->route('kinesiologia.ficha-kinesiologica-index', [
             'paciente' => $this->ficha->paciente_id
         ]);
     }

@@ -450,7 +450,7 @@
                              Guardar Ficha Kinesiológica
                         </button>
 
-                        <a href="{{ route('kinesiologia.fichas-kinesiologicas-index', ['paciente' => $paciente->id]) }}"
+                        <a href="{{ route('kinesiologia.ficha-kinesiologica-index', ['paciente' => $paciente->id]) }}"
                             class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-150 transform hover:scale-105 flex items-center">
                              Ver Historial de Fichas
                         </a>
@@ -491,7 +491,7 @@
                 // 👈 2. AGREGAR LA LÓGICA DE REDIRECCIÓN AQUÍ
                 // Redirige solo si existe una URL de redirección y NO es un error/warning.
                 if (redirect && !isErrorOrWarning) {
-                    window.location.href = redirect; 
+                    window.location.href = redirect;
                 }
             });
         });

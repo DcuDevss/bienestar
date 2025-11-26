@@ -218,7 +218,7 @@ Route::get('/pacientes/{paciente}/kinesiologia', KinesiologiaForm::class)
 
 // Lista de fichas de un paciente
 Route::get('/fichas-kinesiologicas/{paciente}', FichaKinesiologicaIndex::class)
-    ->name('kinesiologia.fichas-kinesiologicas-index');
+    ->name('kinesiologia.ficha-kinesiologica-index');
 
 // Editar ficha específica
 Route::get('/fichas-kinesiologicas/kinesiologia/{ficha}/edit', FichaKinesiologicaEdit::class)

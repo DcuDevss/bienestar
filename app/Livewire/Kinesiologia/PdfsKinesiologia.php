@@ -7,20 +7,44 @@ use Livewire\WithFileUploads;
 use App\Models\PdfKinesiologia;
 use App\Models\Paciente;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 use Carbon\Carbon;
-use Illuminate\Support\Facades\Auth; // Asegúrate de importar Auth si usas el usuario logeado en audit_log
 
 class PdfsKinesiologia extends Component
 {
     use WithFileUploads;
 
     public Paciente $paciente;
-    // Propiedad usada para bindear los archivos en el formulario de subida
     public $pdfs = [];
+    public $pdfsList;
 
+    /**
+     * Inicializa el componente.
+     */
     public function mount(Paciente $paciente)
     {
         $this->paciente = $paciente;
+        $this->loadPdfs();
+    }
+
+    /**
+     * Retorna el directorio donde se guardarán los PDFs.
+     */
+    protected function storageDir(): string
+    {
+        return "pdfhistoriales/{$this->paciente->id}";
+    }
+
+    /**
+     * Carga los PDFs existentes en BD + storage.
+     */
+    public function loadPdfs()
+    {
+        $this->pdfsList = PdfKinesiologia::where('paciente_id', $this->paciente->id)
+            ->latest()
+            ->get()
+            ->filter(fn($r) => Storage::disk('public')->exists($r->filepath))
+            ->values();
     }
 
     /**
@@ -28,110 +52,118 @@ class PdfsKinesiologia extends Component
      */
     public function uploadPdfs()
     {
-        // Validación de los archivos subidos
         $this->validate([
-            // Incluyo 'max:10240' de nuevo, ya que es una buena práctica (10MB)
-            'pdfs.*' => 'required|mimes:pdf|max:10240',
+            'pdfs'   => 'required|array|min:1',
+            'pdfs.*' => 'file|mimes:pdf|max:10240',
         ]);
 
-        $uploadedCount = 0; // Contador para la auditoría
-
         foreach ($this->pdfs as $pdf) {
-            // 1. Obtener datos originales
-            $originalFilename = $pdf->getClientOriginalName();
-            $baseName = pathinfo($originalFilename, PATHINFO_FILENAME);
-            $extension = $pdf->getClientOriginalExtension();
 
-            // 2. ✅ CORRECCIÓN: Limpieza simple para nombre de archivo (evita Str::slug)
-            // Esto reemplaza espacios y caracteres no seguros por guiones bajos ('_')
-            $safeBaseName = str_replace([' ', '/', '\\', '..', '(', ')', '[', ']'], '_', $baseName);
-            // Elimina guiones bajos repetidos, útil si el nombre original ya tenía muchos espacios
-            $safeBaseName = preg_replace('/_+/', '_', $safeBaseName);
+            // Datos originales
+            $orig  = $pdf->getClientOriginalName();
+            $ext   = $pdf->getClientOriginalExtension();
+            $base  = pathinfo($orig, PATHINFO_FILENAME);
 
-            // 3. Generar sello de tiempo (formato 'd-m-Y_H-i-s')
-            $fecha = Carbon::now()->setTimezone('America/Argentina/Buenos_Aires')->format('d-m-Y_H-i-s');
+            // Igual que Psiquiatría → solo SLUG
+            $safe  = \Illuminate\Support\Str::slug($base);
 
-            // 4. Construir el nombre final único y seguro
-            // Ahora el nombre en disco usará guiones bajos, coincidiendo con lo que parece esperar tu sistema.
-            $uniqueName = "{$safeBaseName}_{$fecha}.{$extension}";
+            // Timestamp argentino
+            $fecha = now()
+                ->setTimezone('America/Argentina/Buenos_Aires')
+                ->format('d-m-Y_His');
 
-            // La ruta de almacenamiento sigue la estructura: storage/app/public/pdfhistoriales/{paciente_id}/...
+            // Nombre final UNIFICADO
+            $name = "{$safe}_{$fecha}_" . \Illuminate\Support\Str::random(6) . ".{$ext}";
+
+            // Guardar igual que antes
             $path = $pdf->storeAs(
-                "public/pdfhistoriales/{$this->paciente->id}",
-                $uniqueName // Usamos el nombre seguro con guiones bajos
+                $this->storageDir(),
+                $name,
+                'public'
             );
 
-            // 🧩 Crear registro en BD
             PdfKinesiologia::create([
                 'paciente_id' => $this->paciente->id,
-                'filename' => $originalFilename, // Nombre para mostrar al usuario (OK)
-                // filepath ahora contiene la ruta y el nombre del archivo con guiones bajos
-                'filepath' => str_replace('public/', '', $path),
+                'filename'    => $orig,
+                'filepath'    => $path,
             ]);
-
-            $uploadedCount++;
         }
 
-        // 🧾 AUDITORÍA (Después de completar la subida)
-        if ($uploadedCount > 0) {
-            audit_log('pdf.Kinesiologia', $this->paciente, 'Se adjunta PDF al Paciente');
-        }
+        audit_log(
+            'pdf.kinesiologia.create',
+            $this->paciente,
+            "PDFs cargados"
+        );
 
-        // 🔄 Limpiar input y recargar la lista de PDFs
         $this->reset('pdfs');
-        $this->dispatch('pdfsActualizados'); // Evento para actualizar la vista
+        $this->loadPdfs();
 
-        // ✅ Notificación
         $this->dispatch('swal', [
             'title' => 'PDFs subidos correctamente',
-            'icon' => 'success',
+            'icon'  => 'success',
+        ]);
+    }
+
+
+    /**
+     * Confirmación desde el botón Eliminar.
+     */
+    public function confirmarEliminar($pdfId)
+    {
+        $this->dispatch('confirm', [
+            'title'       => '¿Eliminar PDF?',
+            'text'        => 'Esta acción no se puede deshacer.',
+            'icon'        => 'warning',
+            'confirmText' => 'Sí, eliminar',
+            'cancelText'  => 'Cancelar',
+            'id'          => $pdfId,
         ]);
     }
 
     /**
      * Elimina un PDF del storage y de la base de datos.
-     * @param int $id ID del PdfKinesiologia a eliminar
      */
     public function eliminarPdf($id)
     {
         $pdf = PdfKinesiologia::find($id);
 
-        if ($pdf) {
-            $filenameForLog = $pdf->filename; // Capturar el nombre antes de la eliminación
-
-            // 1. Ruta relativa almacenada en la DB
-            $relative_path = $pdf->filepath;
-
-            // 2. Eliminar del disco 'public' (usando el disco explícitamente, mejor práctica)
-            if (Storage::disk('public')->exists($relative_path)) {
-                Storage::disk('public')->delete($relative_path);
-            }
-
-            // 3. Eliminar de la base de datos
-            $pdf->delete();
-
-            // 🧾 AUDITORÍA (Después de la eliminación exitosa)
-            audit_log('eliminar.pdf', $this->paciente, 'PDF Eliminado');
-
-            $this->dispatch('pdfsActualizados'); // Evento para actualizar la vista
-
+        if (!$pdf) {
             $this->dispatch('swal', [
-                'title' => 'PDF eliminado correctamente',
-                'icon' => 'success',
+                'title' => 'No encontrado',
+                'text'  => 'El PDF no existe.',
+                'icon'  => 'error',
             ]);
+            return;
         }
-    }
 
-    /**
-     * Propiedad Calculada (Computed Property) para obtener la lista de PDFs.
-     * Livewire la mapea a $this->pdfsList.
-     * @return \Illuminate\Database\Eloquent\Collection
-     */
-    public function getPdfsListProperty()
-    {
-        return PdfKinesiologia::where('paciente_id', $this->paciente->id)
-            ->latest()
-            ->get();
+        $filenameForLog = $pdf->filename;
+
+        // Eliminar archivo físico
+        if (Storage::disk('public')->exists($pdf->filepath)) {
+            Storage::disk('public')->delete($pdf->filepath);
+
+            audit_log(
+                'pdf.kinesiologia.deleted.file',
+                $this->paciente,
+                "Archivo PDF eliminado: {$filenameForLog}"
+            );
+        }
+
+        // Eliminar BD
+        $pdf->delete();
+
+        audit_log(
+            'pdf.kinesiologia.deleted.db',
+            $this->paciente,
+            "Registro PDF eliminado: {$filenameForLog}"
+        );
+
+        $this->loadPdfs();
+
+        $this->dispatch('swal', [
+            'title' => 'PDF eliminado correctamente',
+            'icon'  => 'success',
+        ]);
     }
 
     /**
@@ -140,7 +172,6 @@ class PdfsKinesiologia extends Component
     public function render()
     {
         return view('livewire.kinesiologia.pdfs-kinesiologia', [
-            // Accedemos a la propiedad calculada usando su nombre de variable
             'pdfsList' => $this->pdfsList,
         ])->layout('layouts.app');
     }

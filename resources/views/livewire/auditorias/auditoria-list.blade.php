@@ -34,7 +34,7 @@
                             @forelse ($auditorias as $auditoria)
                                 <tr class="border-b border-gray-700 hover:bg-[#204060]">
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
-                                        {{ $auditoria->created_at->format('d/m/Y H:i') }}
+                                        {{ $auditoria->created_at->timezone('America/Argentina/Buenos_Aires')->format('d/m/Y H:i') }}
                                     </td>
                                     <td class="tiBody px-4 py-1 text-[14px] text-gray-300">
                                         {{ $auditoria->user->name ?? 'Sistema' }}

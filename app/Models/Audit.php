@@ -51,6 +51,13 @@ class Audit extends Model
             'disase.create'            => 'Nueva enfermedad',
             'pdf.create'               => 'PDF desde psicologo',
             'archivo.create'           => 'PDF desde archivo',
+            'ficha.kinesiologia.actualizacion' => 'Editar Ficha kinesiologica',
+            'Doctor.Creacion'      => "Se registro un nuevo Doctor",
+            'ficha.kinesiologia.creacion' => 'Ceracion de Ficha Kinesiologica',
+            'pdf.Kinesiologia' => 'PDF Kinesiologia',
+            'eliminar.pdf' => 'Eliminar PDF Kinesiologia',
+            'sesion.edit' => 'Edicion Sesion',
+            'sesion.finalizada' => 'Finalizar Sesion',
         ];
 
         if (isset($map[$this->action])) {

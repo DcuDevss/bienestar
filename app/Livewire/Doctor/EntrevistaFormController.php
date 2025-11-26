@@ -68,6 +68,23 @@ class EntrevistaFormController extends Component
     public $salud_mentale_id = '';
     public $salud_mentales = [];
 
+    // 🔹 NUEVOS CAMPOS
+    public $posee_vivienda_propia;
+    public $tiempo_en_ultimo_destino;
+    public $destino_anterior;
+    public $fecha_ultimo_ascenso;
+    public $horario_laboral;
+    public $hace_adicionales;
+    public $anios_residencia_isla;
+
+    public $posee_oficio_profesion;
+    public $situacion_laboral;
+    public $relacion_companieros_superiores;
+    public $situacion_familiar;
+    public $ultimos_6_meses;
+    public $ultimos_dias_semanas;
+    public $pesadillas_trabajo;
+
     public $tipos_entrevista;
     public $actitudes_entrevista;
     public $indicacionterapeuticas;
@@ -215,6 +232,22 @@ class EntrevistaFormController extends Component
             $this->recomendacion = ($this->recomendacion === '') ? null : (int) $this->recomendacion;
             $this->salud_mentale_id = ($this->salud_mentale_id === '' || $this->salud_mentale_id === null) ? null : (int) $this->salud_mentale_id;
 
+            $this->posee_vivienda_propia          = $this->posee_vivienda_propia ?: null;
+            $this->tiempo_en_ultimo_destino      = $this->tiempo_en_ultimo_destino ?: null;
+            $this->destino_anterior               = $this->destino_anterior ?: null;
+            $this->fecha_ultimo_ascenso           = $this->fecha_ultimo_ascenso ?: null;
+            $this->horario_laboral                = $this->horario_laboral ?: null;
+            $this->hace_adicionales               = $this->hace_adicionales ?: null;
+            $this->anios_residencia_isla          = $this->anios_residencia_isla ?: null;
+
+            $this->posee_oficio_profesion         = $this->posee_oficio_profesion ?: null;
+            $this->situacion_laboral              = $this->situacion_laboral ?: null;
+            $this->relacion_companieros_superiores = $this->relacion_companieros_superiores ?: null;
+            $this->situacion_familiar             = $this->situacion_familiar ?: null;
+            $this->ultimos_6_meses               = $this->ultimos_6_meses ?: null;
+            $this->ultimos_dias_semanas          = $this->ultimos_dias_semanas ?: null;
+            $this->pesadillas_trabajo            = $this->pesadillas_trabajo ?: null;
+
             $this->validate([
                 'tipo_entrevista_id' => 'required|integer',
                 'actitud_entrevista_id' => 'nullable|integer',
@@ -267,6 +300,22 @@ class EntrevistaFormController extends Component
                 'horas_dormir' => 'nullable|integer|between:0,24', // Horas de sueño
                 'recomendacion' => 'nullable|in:0,1', // Recomendacion (sí/no)
 
+                'posee_vivienda_propia'        => 'nullable|string|max:255',
+                'tiempo_en_ultimo_destino'    => 'nullable|string|max:255',
+                'destino_anterior'             => 'nullable|string|max:255',
+                'fecha_ultimo_ascenso'         => 'nullable|date',
+                'horario_laboral'              => 'nullable|string|max:255',
+                'hace_adicionales'             => 'nullable|string|max:255',
+                'anios_residencia_isla'        => 'nullable|string|max:255',
+
+                'posee_oficio_profesion'       => 'nullable|string|max:255',
+                'situacion_laboral'            => 'nullable|string|max:255',
+                'relacion_companieros_superiores' => 'nullable|string|max:255',
+                'situacion_familiar'           => 'nullable|string|max:1000',
+                'ultimos_6_meses'             => 'nullable|string|max:1000',
+                'ultimos_dias_semanas'        => 'nullable|string|max:1000',
+                'pesadillas_trabajo'          => 'nullable|string|max:1000',
+
             ]);
 
 
@@ -314,8 +363,23 @@ class EntrevistaFormController extends Component
             $entrevista->aptitud_reintegro = $this->aptitud_reintegro ?? null;
             $entrevista->estado_entrevista_id = $this->estado_entrevista_id ?? null;
             $entrevista->user_id = auth()->id();
-
             $entrevista->paciente_id = $this->paciente_id;
+
+            $entrevista->posee_vivienda_propia        = $this->posee_vivienda_propia;
+            $entrevista->tiempo_en_ultimo_destino    = $this->tiempo_en_ultimo_destino;
+            $entrevista->destino_anterior             = $this->destino_anterior;
+            $entrevista->fecha_ultimo_ascenso         = $this->fecha_ultimo_ascenso;
+            $entrevista->horario_laboral              = $this->horario_laboral;
+            $entrevista->hace_adicionales             = $this->hace_adicionales;
+            $entrevista->anios_residencia_isla        = $this->anios_residencia_isla;
+
+            $entrevista->posee_oficio_profesion       = $this->posee_oficio_profesion;
+            $entrevista->situacion_laboral            = $this->situacion_laboral;
+            $entrevista->relacion_companieros_superiores = $this->relacion_companieros_superiores;
+            $entrevista->situacion_familiar           = $this->situacion_familiar;
+            $entrevista->ultimos_6_meses             = $this->ultimos_6_meses;
+            $entrevista->ultimos_dias_semanas        = $this->ultimos_dias_semanas;
+            $entrevista->pesadillas_trabajo          = $this->pesadillas_trabajo;
 
             $entrevista->save();
 
@@ -400,6 +464,20 @@ class EntrevistaFormController extends Component
                 'aptitud_reintegro',
                 'estado_entrevista_id',
                 'paciente_id',
+                'posee_vivienda_propia',
+                'tiempo_en_ultimo_destino',
+                'destino_anterior',
+                'fecha_ultimo_ascenso',
+                'horario_laboral',
+                'hace_adicionales',
+                'anios_residencia_isla',
+                'posee_oficio_profesion',
+                'situacion_laboral',
+                'relacion_companieros_superiores',
+                'situacion_familiar',
+                'ultimos_6_meses',
+                'ultimos_dias_semanas',
+                'pesadillas_trabajo',
             ]);
 
 

@@ -109,12 +109,12 @@ class PdfPsiquiatraController extends Component
             }
 
             $pdf->delete();
-            // ✅ Registrar auditoría de borrado lógico
+            /* // ✅ Registrar auditoría de borrado lógico
             audit_log(
                 'pdf.deleted.db',
                 $this->paciente,
                 "Registro PDF eliminado de la base de datos: {$pdf->filename}"
-            );
+            ); */
 
             $this->loadPdfs();
 

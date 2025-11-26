@@ -9,13 +9,13 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up(): void
+    public function up()
     {
-        Schema::create('doctors', function (Blueprint $table) {
+        Schema::create('pdf_kinesiologias', function (Blueprint $table) {
             $table->id();
-            $table->string('name');
-            $table->string('nro_matricula')->nullable(); // matrícula como string
-            $table->string('especialidad')->nullable();
+            $table->foreignId('paciente_id')->constrained('pacientes')->onDelete('cascade');
+            $table->string('filename');
+            $table->string('filepath');
             $table->timestamps();
         });
     }
@@ -25,6 +25,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('doctors');
+        Schema::dropIfExists('pdf_kinesiologias');
     }
 };

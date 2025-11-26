@@ -11,6 +11,7 @@ use App\Models\Estado;
 use App\Models\EstadoEntrevista;
 use App\Models\Portacion;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Artisan; // <-- Asegúrate de tener esta línea
 
 class DatabaseSeeder extends Seeder
 {
@@ -51,5 +52,10 @@ class DatabaseSeeder extends Seeder
          $this->call(PacienteSeeder::class);
          $this->call(CiudadSeeder::class);
          $this->call(SaludMentalesSeeder::class);
+        $this->call(ObraSocialSeeder::class);
+
+        // *** LLAMADA AUTOMÁTICA DEL COMANDO DE ARTISAN ***
+        // Esto se ejecutará justo después de que se inserten todos los datos.
+        Artisan::call('pacientes:asignar-ciudad-id');
     }
 }

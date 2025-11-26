@@ -22,7 +22,7 @@
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/lightbox2/2.11.3/css/lightbox.min.css">
-    
+
     @livewireStyles
 </head>
 <style>
@@ -72,19 +72,19 @@ document.addEventListener('DOMContentLoaded', () => {
     <script src="https://cdn.jsdelivr.net/npm/tom-select@2.2.2/dist/js/tom-select.complete.min.js"></script>
 
     {{-- 1. LIVEWIRE SCRIPTS --}}
-    @livewireScripts 
+    @livewireScripts
 
     {{-- 2. SWEETALERT2 --}}
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script> 
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
     {{-- 3. CÓDIGO JS FINAL: Solución para Livewire.emit y manejo de SweetAlert2 --}}
     <script>
         document.addEventListener("DOMContentLoaded", function () {
-            
+
             // ----------------------------------------------------
             // A. FUNCIONES GLOBALES DE CONFIRMACIÓN (Livewire.emit)
             // ----------------------------------------------------
-            
+
             // Definir y exponer al ámbito global para que los botones onclick funcionen
             window.confirmRestore = function (id, nombre) {
                 Swal.fire({
@@ -126,13 +126,13 @@ document.addEventListener('DOMContentLoaded', () => {
             // ----------------------------------------------------
             // B. MANEJO DE NOTIFICACIONES DISPATCH (SweetAlert2)
             // ----------------------------------------------------
-            
+
             // Escucha el evento 'swal' enviado por $this->dispatch() en PHP
             document.addEventListener('swal', event => {
                 const data = event.detail;
 
                 Swal.fire({
-                    title: data.title, 
+                    title: data.title,
                     text: data.text,
                     icon: data.icon,
                     toast: true,
@@ -144,10 +144,10 @@ document.addEventListener('DOMContentLoaded', () => {
             });
         });
     </script>
-    
-</body>
-<footer class="text-center py-6 bg-gray-800 font-semibold text-xs text-white shadow-lg ">
-    <p>&copy; 2025 Policía de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>
-</footer>
 
+</body>
+<footer class="py-6 bg-gray-800 font-semibold text-xs text-white shadow-lg flex items-center justify-center space-x-3">
+    <img src="{{ asset('assets/escudo_128x128.png') }}" alt="Escudo" class="h-8 w-auto">
+    <p class="m-0">2025 Policía de la Provincia de Tierra del Fuego, Antártida e Islas del Atlántico Sur.</p>
+</footer>
 </html>

@@ -1,24 +1,21 @@
 <?php
 
+
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\MorphTo;
+/* cambioo */
 
-class Audit extends Model
+class Auditoria extends Model
 {
     protected $fillable = [
-        'user_id','action','auditable_type','auditable_id',
-        'description','ip_address','user_agent',
+        'user_id',
+        'accion',
+        'detalle',
     ];
 
-    public function auditable(): MorphTo {
-        return $this->morphTo();
-    }
-
-    public function user() {
+    public function user()
+    {
         return $this->belongsTo(User::class);
     }
 }
-
-

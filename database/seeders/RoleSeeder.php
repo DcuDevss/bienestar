@@ -12,51 +12,81 @@ class RoleSeeder extends Seeder
     public function run(): void
     {
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
-
+        Permission::firstOrCreate(['name' => 'kinesiologia.fichas.index', 'guard_name' => 'web']);
         // Crear roles (idempotente) con guard 'web'
         $R = [];
-        foreach ([
-            'super-admin',
-            'admin-jefe',
-            'administrativo',
-            'doctor',
-            'psicologa',
-            'nutricionista',
-            'enfermero',
-            'profesorgym',
-            'user_policia',
-            'user_civil',
-        ] as $name) {
+        foreach (
+            [
+                'super-admin',
+                'admin-jefe',
+                'administrativo',
+                'doctor',
+                'psicologa',
+                'nutricionista',
+                'enfermero',
+                'kinesiologo', // ¡NUEVO ROL AÑADIDO!
+                'profesorgym',
+                'user_policia',
+                'user_civil',
+            ] as $name
+        ) {
             $R[$name] = Role::firstOrCreate(['name' => $name, 'guard_name' => 'web']);
         }
 
         // Sets de permisos poor rol (por NOMBRE)
         $adminJefe = [
-            'users.index','users.edit','users.update',
-            'roles.index','roles.edit','roles.create','roles.show',
-            'oficinas.index','diadetrabajos.index','curriculum.index',
-            'interviews.index','disases.index','multiform.index',
-            'patient-certificados.show','patient-enfermedades.show','patient-certificado.edit',
-            'paciente.ver-historial','psicologo.index','enfermero.enfermero-historial',
+            'users.index',
+            'users.edit',
+            'users.update',
+            'roles.index',
+            'roles.edit',
+            'roles.create',
+            'roles.show',
+            'oficinas.index',
+            'diadetrabajos.index',
+            'curriculum.index',
+            'interviews.index',
+            'disases.index',
+            'multiform.index',
+            'patient-certificados.show',
+            'patient-enfermedades.show',
+            'patient-certificado.edit',
+            'paciente.ver-historial',
+            'psicologo.index',
+            'enfermero.enfermero-historial',
         ];
 
         $administrativo = [
-            'oficinas.index','diadetrabajos.index','curriculum.index',
-            'interviews.index','disases.index','multiform.index',
-            'patient-certificados.show','patient-enfermedades.show',
+            'oficinas.index',
+            'diadetrabajos.index',
+            'curriculum.index',
+            'interviews.index',
+            'disases.index',
+            'multiform.index',
+            'patient-certificados.show',
+            'patient-enfermedades.show',
             'paciente.ver-historial',
         ];
 
         $doctor = [
             'interviews.index',
-            'patient-certificados.show','patient-enfermedades.show','patient-certificado.edit',
+            'patient-certificados.show',
+            'patient-enfermedades.show',
+            'patient-certificado.edit',
             'paciente.ver-historial',
         ];
 
-        $psico     = ['psicologo.index','interviews.index','paciente.ver-historial'];
-        $nutri     = ['interviews.index','paciente.ver-historial'];
-        $enfermero = ['enfermero.enfermero-historial','paciente.ver-historial', 'interviews.index'];
-        $profeGym  = ['interviews.index','paciente.ver-historial'];
+        // 3. DEFINICIÓN DE PERMISOS PARA KINESIÓLOGO
+        $kinesiologo = [
+            'interviews.index', // Probablemente necesita ver las entrevistas
+            'paciente.ver-historial', // Probablemente necesita ver historial
+            'kinesiologia.fichas.index', // Permiso específico
+        ];
+
+        $psico     = ['psicologo.index', 'interviews.index', 'paciente.ver-historial'];
+        $nutri     = ['interviews.index', 'paciente.ver-historial'];
+        $enfermero = ['enfermero.enfermero-historial', 'paciente.ver-historial', 'interviews.index'];
+        $profeGym  = ['interviews.index', 'paciente.ver-historial'];
 
         // Asignaciones (colecciones por nombre, se agrego cambios)
         $R['super-admin']->syncPermissions(Permission::where('guard_name', 'web')->get());
@@ -67,10 +97,13 @@ class RoleSeeder extends Seeder
         $R['nutricionista']->syncPermissions(Permission::whereIn('name', $nutri)->get());
         $R['enfermero']->syncPermissions(Permission::whereIn('name', $enfermero)->get());
         $R['profesorgym']->syncPermissions(Permission::whereIn('name', $profeGym)->get());
+        $R['kinesiologo']->syncPermissions(Permission::whereIn('name', $kinesiologo)->get()); // ¡NUEVA ASIGNACIÓN!
 
         // Usuarios finales por ahora sin permisos
         $R['user_policia']->syncPermissions([]);
         $R['user_civil']->syncPermissions([]);
+
+      
 
         app()[PermissionRegistrar::class]->forgetCachedPermissions();
     }

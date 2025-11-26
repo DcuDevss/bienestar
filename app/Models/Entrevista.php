@@ -54,6 +54,20 @@ class Entrevista extends Model
         'estado_entrevista_id',
         'paciente_id',
         'user_id',
+        'posee_vivienda_propia',
+        'tiempo_en_ultimo_destino',
+        'destino_anterior',
+        'fecha_ultimo_ascenso',
+        'horario_laboral',
+        'hace_adicionales',
+        'anios_residencia_isla',
+        'posee_oficio_profesion',
+        'situacion_laboral',
+        'relacion_companieros_superiores',
+        'situacion_familiar',
+        'ultimos_6_meses',
+        'ultimos_dias_semanas',
+        'pesadillas_trabajo',
     ];
 
     public function scopeSearch($query, $value)

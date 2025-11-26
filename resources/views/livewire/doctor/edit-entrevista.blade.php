@@ -26,7 +26,21 @@
         indicacionterapeutica_id: @entangle('indicacionterapeutica_id'),
         abordaje_id: @entangle('abordaje_id'),
         derivacion_psiquiatrica: @entangle('derivacion_psiquiatrica'),
-        evolucion_tratamiento: @entangle('evolucion_tratamiento')
+        evolucion_tratamiento: @entangle('evolucion_tratamiento'),
+        posee_vivienda_propia:        @entangle('posee_vivienda_propia'),
+        tiempo_en_ultimo_destino:        @entangle('tiempo_ultimo_destino'),
+        destino_anterior:             @entangle('destino_anterior'),
+        fecha_ultimo_ascenso:         @entangle('fecha_ultimo_ascenso'),
+        horario_laboral:              @entangle('horario_laboral'),
+        hace_adicionales:             @entangle('hace_adicionales'),
+        anios_residencia_isla:        @entangle('anios_residencia_isla'),
+        posee_oficio_profesion:       @entangle('posee_oficio_profesion'),
+        situacion_laboral:            @entangle('situacion_laboral'),
+        relacion_companieros_superiores: @entangle('relacion_companieros_superiores'),
+        situacion_familiar:           @entangle('situacion_familiar'),
+        ultimos_6_meses:              @entangle('ultimos_6_meses'),
+        ultimos_dias_semanas:         @entangle('ultimos_dias_semanas'),
+        pesadillas_trabajo:           @entangle('pesadillas_trabajo'),
     }">
         <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4">
             <!-- Tipo de Entrevista -->
@@ -138,6 +152,57 @@
                 @error('tiene_embargos')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
+            </div>
+
+            <div class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">¿Posee vivienda propia?</label>
+                <input type="text" wire:model="posee_vivienda_propia"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+                        focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">Destino anterior</label>
+                <input type="text" wire:model="destino_anterior"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+                        focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">
+                    ¿Hace cuánto tiempo se desempeña en su último destino?
+                </label>
+                <input type="text" wire:model="tiempo_en_ultimo_destino"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+                        focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">Fecha de último ascenso</label>
+                <input type="date" wire:model="fecha_ultimo_ascenso"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+                        focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">Horario laboral</label>
+                <input type="text" wire:model="horario_laboral"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+                        focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">¿Hace adicionales?</label>
+                <input type="text" wire:model="hace_adicionales"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+                        focus:ring-indigo-500 focus:border-indigo-500">
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">Años de residencia en la isla</label>
+                <input type="text" wire:model="anios_residencia_isla"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm
+                        focus:ring-indigo-500 focus:border-indigo-500">
             </div>
 
             <!-- Enfermedad Preexistente -->
@@ -379,6 +444,15 @@
                 @enderror
             </div>
 
+            <div class="mb-4 mx-auto px-4 w-9/12">
+                <label for="posee_oficio_profesion" class="block text-sm font-medium">Posee oficio o profesion?(especifique)</label>
+                <textarea id="posee_oficio_profesion" wire:model="posee_oficio_profesion"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                @error('posee_oficio_profesion')
+                    <span class="text-red-500">{{ $message }}</span>
+                @enderror
+            </div>
+
             <!-- Actividades -->
             <div class="mb-4 mx-auto px-4 w-9/12">
                 <label for="actividades" class="block text-sm font-medium">Actividades</label>
@@ -410,6 +484,101 @@
                 @error('horas_suficientes')
                     <span class="text-red-500">{{ $message }}</span>
                 @enderror
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label for="pesadillas_trabajo" class="block text-sm font-medium">¿Tuviste o tenés pesadillas acerca de tu trabajo?</label>
+                <textarea id="pesadillas_trabajo" wire:model="pesadillas_trabajo"
+                    class="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+                @error('pesadillas_trabajo')
+                    <span class="text-red-500">{{ $message }}</span>
+                @enderror
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">Situación laboral</label>
+
+                <p class="font-semibold mb-1">Preguntas orientativas:</p>
+                <ul class="list-disc ml-4 space-y-1 text-sm">
+                    <li>¿Qué tarea realiza actualmente? ¿Le gusta?</li>
+                    <li>¿Por qué decidiste ser Policía?</li>
+                    <li>¿Qué ventajas creés que tiene ser policía?</li>
+                    <li>¿Qué papel juega la empatía en el trabajo policial?</li>
+                    <li>Situación más difícil vivida en lo laboral.</li>
+                    <li>¿Pensás que hacés bien o mal tu trabajo?</li>
+                    <li>¿Qué percepción del ambiente laboral tenés?</li>
+                    <li>Describí tu trabajo en 3 palabras.</li>
+                </ul>
+
+                <textarea wire:model="situacion_laboral"
+                    class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">Relación con compañeros y superiores</label>
+
+                <p class="font-semibold mb-1">Preguntas orientativas:</p>
+                <ul class="list-disc ml-4 space-y-1 text-sm">
+                    <li>¿Qué papel juega la empatía en el trabajo policial?</li>
+                    <li>¿Qué es algo que no soportás de los demás?</li>
+                    <li>¿Qué es lo que más valorás de los demás?</li>
+                    <li>¿Te considerás disciplinado? ¿Por qué?</li>
+                    <li>¿Cómo describís tu capacidad de liderazgo?</li>
+                    <li>¿Cómo resolvés un problema laboral?</li>
+                </ul>
+
+                <textarea wire:model="relacion_companieros_superiores"
+                    class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">Situación familiar</label>
+
+                <p class="font-semibold mb-1">Preguntas orientativas:</p>
+                <ul class="list-disc ml-4 space-y-1 text-sm">
+                    <li>Última licencia anual — ¿cómo la pasó?</li>
+                    <li>Episodios de violencia o conflictos familiares.</li>
+                    <li>Describí a tu familia en 3 palabras.</li>
+                </ul>
+
+                <textarea wire:model="situacion_familiar"
+                    class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">Últimos 6 meses</label>
+
+                <p class="font-semibold mb-1">Preguntas orientativas:</p>
+                <ul class="list-disc ml-4 space-y-1 text-sm">
+                    <li>Fallecimiento de familiares.</li>
+                    <li>Accidentes graves o enfermedad de riesgo de vida en familiares.</li>
+                    <li>Violencia familiar o laboral.</li>
+                    <li>Situación o pensamientos suicidas.</li>
+                </ul>
+
+                <textarea wire:model="ultimos_6_meses"
+                    class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
+            </div>
+
+            <div x-show="tipo_entrevista_id == 12" class="mb-4 mx-auto px-4 w-9/12">
+                <label class="block text-sm font-medium">Últimos días o semanas</label>
+
+                <p class="font-semibold mb-1">Preguntas orientativas:</p>
+                <ul class="list-disc ml-4 space-y-1 text-sm">
+                    <li>Mayor irritabilidad o intolerancia.</li>
+                    <li>Falta de ánimos, aislamiento.</li>
+                    <li>Dificultad para concentrarse o mantener atención.</li>
+                    <li>Problemas de memoria.</li>
+                    <li>Aumento de consumo de alcohol o cigarrillos.</li>
+                    <li>Consumo de fármacos.</li>
+                    <li>Cambios de alimentación.</li>
+                    <li>Aumento de ansiedad.</li>
+                    <li>Dolores físicos (estómago, cabeza, etc.).</li>
+                    <li>Problemas dermatológicos, cardíacos, gastrointestinales, alérgicos.</li>
+                </ul>
+
+                <textarea wire:model="ultimos_dias_semanas"
+                    class="mt-2 block w-full rounded-md border-gray-300 shadow-sm focus:ring-indigo-500 focus:border-indigo-500"></textarea>
             </div>
 
             <div class="mb-4 mx-auto px-4 w-9/12">

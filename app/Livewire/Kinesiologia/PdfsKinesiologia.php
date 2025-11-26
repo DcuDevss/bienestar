@@ -30,7 +30,8 @@ class PdfsKinesiologia extends Component
     {
         // Validación de los archivos subidos
         $this->validate([
-            'pdfs.*' => 'required|mimes:pdf|max:10240', // Máx 10MB por archivo
+            // Incluyo 'max:10240' de nuevo, ya que es una buena práctica (10MB)
+            'pdfs.*' => 'required|mimes:pdf|max:10240',
         ]);
 
         $uploadedCount = 0; // Contador para la auditoría
@@ -41,26 +42,31 @@ class PdfsKinesiologia extends Component
             $baseName = pathinfo($originalFilename, PATHINFO_FILENAME);
             $extension = $pdf->getClientOriginalExtension();
 
-            // 2. 💡 CORRECCIÓN: Convertir el nombre base a un "slug" seguro
-            $safeName = \Illuminate\Support\Str::slug($baseName); // Ej: "informe-final-paciente"
+            // 2. ✅ CORRECCIÓN: Limpieza simple para nombre de archivo (evita Str::slug)
+            // Esto reemplaza espacios y caracteres no seguros por guiones bajos ('_')
+            $safeBaseName = str_replace([' ', '/', '\\', '..', '(', ')', '[', ']'], '_', $baseName);
+            // Elimina guiones bajos repetidos, útil si el nombre original ya tenía muchos espacios
+            $safeBaseName = preg_replace('/_+/', '_', $safeBaseName);
 
             // 3. Generar sello de tiempo (formato 'd-m-Y_H-i-s')
             $fecha = Carbon::now()->setTimezone('America/Argentina/Buenos_Aires')->format('d-m-Y_H-i-s');
 
             // 4. Construir el nombre final único y seguro
-            $uniqueName = "{$safeName}_{$fecha}.{$extension}";
+            // Ahora el nombre en disco usará guiones bajos, coincidiendo con lo que parece esperar tu sistema.
+            $uniqueName = "{$safeBaseName}_{$fecha}.{$extension}";
 
             // La ruta de almacenamiento sigue la estructura: storage/app/public/pdfhistoriales/{paciente_id}/...
             $path = $pdf->storeAs(
                 "public/pdfhistoriales/{$this->paciente->id}",
-                $uniqueName // Usamos el nombre seguro
+                $uniqueName // Usamos el nombre seguro con guiones bajos
             );
 
             // 🧩 Crear registro en BD
             PdfKinesiologia::create([
                 'paciente_id' => $this->paciente->id,
-                'filename' => $originalFilename, // 💡 Guardamos el nombre original para mostrar al usuario
-                'filepath' => str_replace('public/', '', $path), // Almacenamos la ruta relativa al disco 'public'
+                'filename' => $originalFilename, // Nombre para mostrar al usuario (OK)
+                // filepath ahora contiene la ruta y el nombre del archivo con guiones bajos
+                'filepath' => str_replace('public/', '', $path),
             ]);
 
             $uploadedCount++;
@@ -68,8 +74,6 @@ class PdfsKinesiologia extends Component
 
         // 🧾 AUDITORÍA (Después de completar la subida)
         if ($uploadedCount > 0) {
-            // Primer parámetro (Acción): 'PDF Kinesiologia'
-            // Tercer parámetro (Descripción): 'Se adjunta PDF Kinesiologia'
             audit_log('pdf.Kinesiologia', $this->paciente, 'Se adjunta PDF al Paciente');
         }
 
@@ -86,7 +90,7 @@ class PdfsKinesiologia extends Component
 
     /**
      * Elimina un PDF del storage y de la base de datos.
-     * * @param int $id ID del PdfKinesiologia a eliminar
+     * @param int $id ID del PdfKinesiologia a eliminar
      */
     public function eliminarPdf($id)
     {
@@ -95,14 +99,15 @@ class PdfsKinesiologia extends Component
         if ($pdf) {
             $filenameForLog = $pdf->filename; // Capturar el nombre antes de la eliminación
 
-            // Se asume que el filepath en la DB está sin el prefijo 'public/'.
-            // Lo añadimos para que Storage::exists funcione en el disco 'public'.
-            $fullPath = 'public/' . $pdf->filepath;
+            // 1. Ruta relativa almacenada en la DB
+            $relative_path = $pdf->filepath;
 
-            if (Storage::exists($fullPath)) {
-                Storage::delete($fullPath);
+            // 2. Eliminar del disco 'public' (usando el disco explícitamente, mejor práctica)
+            if (Storage::disk('public')->exists($relative_path)) {
+                Storage::disk('public')->delete($relative_path);
             }
 
+            // 3. Eliminar de la base de datos
             $pdf->delete();
 
             // 🧾 AUDITORÍA (Después de la eliminación exitosa)
@@ -116,8 +121,6 @@ class PdfsKinesiologia extends Component
             ]);
         }
     }
-    
-  
 
     /**
      * Propiedad Calculada (Computed Property) para obtener la lista de PDFs.

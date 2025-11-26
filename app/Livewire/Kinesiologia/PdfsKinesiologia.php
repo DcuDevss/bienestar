@@ -56,17 +56,25 @@ class PdfsKinesiologia extends Component
             $uniqueName = "{$safeBaseName}_{$fecha}.{$extension}";
 
             // La ruta de almacenamiento sigue la estructura: storage/app/public/pdfhistoriales/{paciente_id}/...
-            $path = $pdf->storeAs(
+            /*$path = $pdf->storeAs(
                 "public/pdfhistoriales/{$this->paciente->id}",
                 $uniqueName // Usamos el nombre seguro con guiones bajos
-            );
+            );*/
+            $path = $pdf->storeAs(
+              "pdfhistoriales/{$this->paciente->id}",  // sin "public/"
+              $uniqueName,
+            'public'                                 // disco explícito
+         );
+
 
             // 🧩 Crear registro en BD
             PdfKinesiologia::create([
                 'paciente_id' => $this->paciente->id,
                 'filename' => $originalFilename, // Nombre para mostrar al usuario (OK)
                 // filepath ahora contiene la ruta y el nombre del archivo con guiones bajos
-                'filepath' => str_replace('public/', '', $path),
+               // 'filepath' => str_replace('public/', '', $path),
+               'filepath' => "pdfhistoriales/{$this->paciente->id}/{$uniqueName}",
+
             ]);
 
             $uploadedCount++;

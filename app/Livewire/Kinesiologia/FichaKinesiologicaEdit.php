@@ -197,7 +197,7 @@ class FichaKinesiologicaEdit extends Component
 
             'menarca' => $menarca,
             'menopausia' => $menopausia,
-            'partos' => $this->partos,
+            'partos' => $this->normalizeString($this->partos),
 
             'visceral_palpacion' => $this->normalizeString($this->visceral_palpacion),
             'visceral_dermalgias' => $this->normalizeString($this->visceral_dermalgias),

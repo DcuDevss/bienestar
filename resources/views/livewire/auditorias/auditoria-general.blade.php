@@ -47,6 +47,8 @@
                             <option value="eliminar.pdf">PDF Eliminado (Kinesiologia)</option>
                             <option value="sesion.edit">Sesiones Editadas</option>
                             <option value="sesion.finalizada">Sesion Finalizadas</option>
+                            <option value="paciente.photo.removed">Foto Eliminada</option>
+                            <option value="paciente.photo.uploaded">Foto Actualizada</option>
                         </select>
 
                         <!-- Usuario -->

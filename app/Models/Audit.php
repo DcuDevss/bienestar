@@ -58,6 +58,8 @@ class Audit extends Model
             'eliminar.pdf' => 'Eliminar PDF Kinesiologia',
             'sesion.edit' => 'Edicion Sesion',
             'sesion.finalizada' => 'Finalizar Sesion',
+            'paciente.photo.uploaded' => 'Actualizacion Foto del Paciente',
+            'paciente.photo.removed'    => 'Eliminación Foto del Paciente',
         ];
 
         if (isset($map[$this->action])) {

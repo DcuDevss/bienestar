@@ -71,8 +71,9 @@ class FichaKinesiologica extends Model
     // Una ficha pertenece a un paciente
     public function paciente()
     {
-        return $this->belongsTo(Paciente::class);
+        return $this->belongsTo(Paciente::class)->withTrashed();
     }
+
 
     // Una ficha pertenece a un doctor
     public function doctor()

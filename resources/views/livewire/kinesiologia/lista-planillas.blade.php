@@ -8,10 +8,9 @@
                     <h4 class="text-lg font-bold text-white">Ficha Kinesiológica del Paciente</h4>
                 </div>
 
-                {{-- Área superior: Filtros y Paginación --}}
+                {{-- Área superior --}}
                 <div class="flex flex-col md:flex-row items-start md:items-center justify-between p-4">
 
-                    {{-- Contenedor de Búsqueda y Filtro de Estado --}}
                     <div class="flex flex-col md:flex-row items-start md:items-center gap-x-3 w-full md:w-auto">
 
                         {{-- Buscar --}}
@@ -30,13 +29,14 @@
                                 placeholder="Buscar paciente o jerarquía...">
                         </div>
 
-                        {{-- 🟢 Filtro de Estado de Sesión 🟢 --}}
+                        {{-- Filtro de Estado --}}
                         <select wire:model.live="statusFilter" wire:change="resetPage"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 p-2 w-full md:w-56 mb-2 md:mb-0">
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg p-2 w-full md:w-56 mb-2 md:mb-0">
                             <option value="">Todos los Estados</option>
                             <option value="activa">Activa</option>
                             <option value="inactiva">Inactiva</option>
                             <option value="sin_registro">Sin Registros</option>
+                            <option value="paciente_eliminado">Paciente Eliminado</option>
                         </select>
 
                     </div>
@@ -66,41 +66,55 @@
                                 <th class="px-4 py-3">Acción</th>
                             </tr>
                         </thead>
+
                         <tbody>
                             @forelse ($planillas as $planilla)
+                                @php
+                                    $paciente = $planilla->paciente;
+                                    $estaEliminado = $paciente && $paciente->trashed();
+                                @endphp
+
                                 <tr class="border-b border-gray-700 hover:bg-[#204060]">
+
                                     {{-- Jerarquía --}}
                                     <td class="px-4 py-2 text-white">
-                                        {{ $planilla->paciente?->jerarquias?->name ?? 'N/D' }}
+                                        {{ $paciente?->jerarquias?->name
+                                            ?? $planilla->jerarquia
+                                            ?? 'Jerarquía' }}
                                     </td>
 
                                     {{-- Nombre --}}
                                     <td class="px-4 py-2 text-white">
-                                        {{ $planilla->paciente?->apellido_nombre ?? 'Paciente Eliminado' }}
+                                        {{ $paciente?->apellido_nombre
+                                            ?? $planilla->apellido_nombre
+                                            ?? 'Nombre' }}
                                     </td>
 
-                                    {{-- Fecha/Hora --}}
+                                    {{-- Fecha --}}
                                     <td class="px-4 py-2 text-white">
-                                        @php
-                                            $created_at_local = $planilla->created_at->setTimezone('America/Argentina/Buenos_Aires');
-                                        @endphp
-                                        {{ $created_at_local->format('d-m-Y H:i:s') }}
+                                        {{ $planilla->created_at->setTimezone('America/Argentina/Buenos_Aires')->format('d-m-Y H:i:s') }}
                                     </td>
 
                                     {{-- Estado Sesión --}}
                                     <td class="px-4 py-2">
                                         @php
-                                            $ultimaSesion = $planilla->paciente?->sesiones()->latest('id')->first();
-                                            $estadoSesion = 'Sin Registros';
-                                            $colorBg = 'bg-gray-600 text-gray-200';
+                                            if ($estaEliminado) {
+                                                $estadoSesion = 'Paciente Eliminado';
+                                                $colorBg = 'bg-gray-500 text-gray-100';
+                                            } else {
+                                                $ultimaSesion = $paciente?->sesiones()->latest('id')->first();
 
-                                            if($ultimaSesion) {
-                                                if(intval($ultimaSesion->firma_paciente_digital) === 0){
-                                                    $estadoSesion = 'Activa';
-                                                    $colorBg = 'bg-green-100 text-green-700';
-                                                } else {
-                                                    $estadoSesion = 'Inactiva';
-                                                    $colorBg = 'bg-red-100 text-red-700';
+                                                $estadoSesion = 'Sin Registros';
+                                                $colorBg = 'bg-gray-600 text-gray-200';
+
+                                                if ($ultimaSesion) {
+                                                    if (intval($ultimaSesion->firma_paciente_digital) === 0) {
+                                                        $estadoSesion = 'Activa';
+                                                        $colorBg = 'bg-green-100 text-green-700';
+                                                    } else {
+                                                        $estadoSesion = 'Inactiva';
+                                                        $colorBg = 'bg-red-100 text-red-700';
+                                                    }
                                                 }
                                             }
                                         @endphp
@@ -112,11 +126,19 @@
 
                                     {{-- Acción --}}
                                     <td class="px-4 py-2">
-                                        <a href="{{ route('kinesiologia.ficha-kinesiologica-index', ['paciente' => $planilla->paciente?->id]) }}"
-                                            class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-500 transition">
-                                            Ver Planilla
-                                        </a>
+                                        @if ($paciente && !$estaEliminado)
+                                            <a href="{{ route('kinesiologia.ficha-kinesiologica-index', ['paciente' => $paciente->id]) }}"
+                                                class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-500 transition">
+                                                Ver Planilla
+                                            </a>
+                                        @else
+                                            <span
+                                                class="bg-gray-500 text-white px-3 py-1 rounded opacity-70 cursor-not-allowed">
+                                                No disponible
+                                            </span>
+                                        @endif
                                     </td>
+
                                 </tr>
                             @empty
                                 <tr>
@@ -126,6 +148,7 @@
                                 </tr>
                             @endforelse
                         </tbody>
+
                     </table>
                 </div>
 

@@ -23,6 +23,8 @@ class PatientHistorialCertificado extends Component
         $horas_salud, $suma_salud, $estado_certificado, $tipolicencia_id, $imagen_frente, $imagen_dorso, $tipodelicencia,
         $disase_id, $patient_disases, $patient, $disase, $suma_auxiliar;
 
+        
+
     public $fecha_enfermedad, $tipo_enfermedad, $fecha_finalizacion, $fecha_atencion, $activo,
         $paciente_id, $disases, $archivo;
 
@@ -123,7 +125,7 @@ class PatientHistorialCertificado extends Component
     } */
     public $old_imagen_frente, $old_imagen_dorso;
     /*Nuevo Modal */
-    public function editModalDisase($disaseId, $certificadoId)
+    /*   public function editModalDisase($disaseId, $certificadoId)
     {
         Log::info('Entrando a editModalDisase', [
             'disaseId' => $disaseId,
@@ -173,6 +175,62 @@ class PatientHistorialCertificado extends Component
             'disase_id' => $this->disase_id,
             'certificado_id' => $this->certificado_id,
         ]);
+    } */
+
+    //NUEVO METODO PARA AGREGAR Y GUARDAR enfermedades
+    public function editModalDisase($disaseId, $certificadoId)
+    {
+        Log::info('Entrando a editModalDisase', [
+            'disaseId' => $disaseId,
+            'certificadoId' => $certificadoId,
+            'pacienteId' => $this->pacienteId,
+        ]);
+
+        $this->disase_id = $disaseId;
+        $this->certificado_id = $certificadoId;
+        // 🔑 CLAVE: Almacenar el ID original.
+        $this->original_disase_id = $disaseId; // <-- ¡Añadida la línea aquí!
+
+        // Buscar pivot directamente
+        $pivot = DB::table('disase_paciente')
+            ->where('id', $certificadoId)
+            ->first();
+
+        if (!$pivot) {
+            Log::warning('No se encontró certificado pivot', ['certificadoId' => $certificadoId]);
+            return;
+        }
+
+        $disase = \App\Models\Disase::find($pivot->disase_id);
+
+        if (!$disase) {
+            Log::warning('No se encontró disase', ['disase_id' => $pivot->disase_id]);
+            return;
+        }
+
+        $this->name = $disase->name;
+        $this->editedDisaseName = $disase->name;
+        $this->tipolicencia_id = $pivot->tipolicencia_id;
+        $this->fecha_presentacion_certificado = $pivot->fecha_presentacion_certificado;
+        $this->fecha_inicio_licencia = $pivot->fecha_inicio_licencia;
+        $this->fecha_finalizacion_licencia = $pivot->fecha_finalizacion_licencia;
+        $this->horas_salud = $pivot->horas_salud;
+        $this->suma_salud = $pivot->suma_auxiliar;
+        $this->detalle_certificado = $pivot->detalle_certificado;
+        // ASIGNA las rutas antiguas a las nuevas propiedades de respaldo (old_)
+        $this->old_imagen_frente = $pivot->imagen_frente; //
+        $this->old_imagen_dorso = $pivot->imagen_dorso;  //
+
+        $this->modal = true;
+        $this->editPickerOpen = false;
+
+        Log::info('Variables seteadas para modal', [
+            'name' => $this->name,
+            'editedDisaseName' => $this->editedDisaseName,
+            'disase_id' => $this->disase_id,
+            'original_disase_id' => $this->original_disase_id, // Añadido para el log
+            'certificado_id' => $this->certificado_id,
+        ]);
     }
 
     /** Buscar sugerencias al tipear en el input del modal */
@@ -204,7 +262,8 @@ class PatientHistorialCertificado extends Component
 
         Log::info('Search results', ['count' => count($this->editOptions), 'options' => $this->editOptions]);
 
-        $this->editPickerOpen = !empty($this->editOptions);
+        $this->editPickerOpen = true; // Forzar apertura si hay texto
+        /* $this->editPickerOpen = !empty($this->editOptions); */
         $this->editIndex = 0;
     }
 
@@ -226,6 +285,32 @@ class PatientHistorialCertificado extends Component
             $this->editPickerOpen   = false;
         }
     }
+
+
+
+    public function addNewEditedDisase()
+    {
+        $newDisaseName = trim($this->editedDisaseName);
+
+        if (empty($newDisaseName) || strlen($newDisaseName) < 3) {
+            $this->dispatch('swal', title: 'Error', text: 'El nombre debe ser más largo para crearlo.', icon: 'warning');
+            return;
+        }
+
+        // 1. Crear el nuevo registro
+        $newDisase = \App\Models\Disase::firstOrCreate(
+            ['name' => mb_strtolower($newDisaseName)],
+            ['slug' => Str::slug($newDisaseName), 'symptoms' => '']
+        );
+
+        // 2. Seleccionar el nuevo padecimiento
+        $this->pickEditedDisase($newDisase->id);
+
+        // 3. Opcional: Notificación de éxito
+        $this->dispatch('swal', title: 'Agregado', text: 'Padecimiento "' . $newDisaseName . '" creado y seleccionado.', icon: 'success');
+    }
+
+
 
     /** Guardar cambios */
 
@@ -297,6 +382,7 @@ class PatientHistorialCertificado extends Component
             'fecha_finalizacion_licencia'   => $data['fecha_finalizacion_licencia'],
             'horas_salud'                   => $data['horas_salud'],
             'suma_salud'                    => $suma_auxiliar,
+            'disase_id'                      => $this->disase_id,
             'suma_auxiliar'                 => $suma_auxiliar,
             'estado_certificado'            => $data['estado_certificado'] ?? true,
             'tipolicencia_id'               => $data['tipolicencia_id'],

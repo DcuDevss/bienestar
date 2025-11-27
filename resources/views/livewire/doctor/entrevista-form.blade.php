@@ -181,13 +181,13 @@
                                 class="mt-1 p-2 w-full border rounded-md">
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Destino anterior</label>
                             <input type="text" wire:model="destino_anterior"
                                 class="mt-1 p-2 w-full border rounded-md">
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">
                                 ¿Hace cuánto tiempo se desempeña en su último destino?
                             </label>
@@ -195,25 +195,25 @@
                                 class="mt-1 p-2 w-full border rounded-md">
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Fecha de último ascenso</label>
                             <input type="date" wire:model="fecha_ultimo_ascenso"
                                 class="mt-1 p-2 w-full border rounded-md">
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Horario laboral</label>
                             <input type="text" wire:model="horario_laboral"
                                 class="mt-1 p-2 w-full border rounded-md">
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">¿Hace adicionales?</label>
                             <input type="text" wire:model="hace_adicionales"
                                 class="mt-1 p-2 w-full border rounded-md">
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Años de residencia en la isla</label>
                             <input type="text" wire:model="anios_residencia_isla"
                                 class="mt-1 p-2 w-full border rounded-md">
@@ -556,7 +556,7 @@
                             </select>
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">
                                 ¿Tuviste o tenés pesadillas acerca de tu trabajo?
                             </label>
@@ -564,7 +564,7 @@
                                 class="mt-1 p-2 w-full border rounded-md"></textarea>
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Situación laboral</label>
                                 <p class="font-semibold mb-1">Preguntas orientativas para esta sección:</p>
                                     <ul class="list-disc ml-4 space-y-1">
@@ -581,7 +581,7 @@
                                 class="mt-1 p-2 w-full border rounded-md"></textarea>
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">
                                 Relación con compañeros y superiores
                             </label>
@@ -604,7 +604,7 @@
                         </div>
 
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">
                                 Situación familiar
                             </label>
@@ -619,7 +619,7 @@
                             <textarea wire:model="situacion_familiar" class="mt-1 p-2 w-full border rounded-md"></textarea>
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Últimos 6 meses</label>
 
                             <p class="font-semibold mb-1">Preguntas orientativas para esta sección:</p>
@@ -633,7 +633,7 @@
                             <textarea wire:model="ultimos_6_meses" class="mt-1 p-2 w-full border rounded-md"></textarea>
                         </div>
 
-                        <div x-show="tipo_entrevista_id == 12" class="mb-4">
+                        <div x-show="tipo_entrevista_id == 1" class="mb-4">
                             <label class="block text-sm font-medium text-gray-700">Últimos días o semanas</label>
 
                             <p class="font-semibold mb-1">Preguntas orientativas para esta sección:</p>

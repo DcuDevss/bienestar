@@ -282,7 +282,7 @@ class EditPatientController extends Component
             $customer->save();
 
             // 👇 Reemplazo de foto si se subió una nueva
-            if ($this->foto) {
+/*             if ($this->foto) {
                 // borrar anterior si existe
                 if ($customer->foto && Storage::disk('public')->exists($customer->foto)) {
                     Storage::disk('public')->delete($customer->foto);
@@ -307,6 +307,28 @@ class EditPatientController extends Component
                     audit_log('paciente.photo.removed', $customer, 'Se eliminó la foto anterior (reemplazo)');
                 }
 
+            } */
+           if ($this->foto) {
+
+                // borrar anterior si existe
+                if ($customer->foto && Storage::disk('public')->exists($customer->foto)) {
+                    Storage::disk('public')->delete($customer->foto);
+                }
+
+                $dir = "pacientes/{$customer->id}";
+                Storage::disk('public')->makeDirectory($dir);
+
+                $filename = uniqid() . '_' . $this->foto->getClientOriginalName();
+                $path = $this->foto->storeAs($dir, $filename, 'public');
+
+                // guardar nueva foto
+                $customer->foto = $path;
+                $customer->save();
+
+                $this->reset('foto');
+                $this->uploadIteration++;
+
+                audit_log('paciente.photo.uploaded', $customer, 'Se actualizó la foto del paciente');
             }
 
             $this->dispatch('swal', title: 'Guardado', text: 'Paciente actualizado correctamente.', icon: 'success');
@@ -365,7 +387,7 @@ class EditPatientController extends Component
 
         $this->reset('foto');
         $this->uploadIteration++;
-        
+
         audit_log('paciente.photo.removed', $customer, 'Foto de paciente eliminada manualmente');
 
 

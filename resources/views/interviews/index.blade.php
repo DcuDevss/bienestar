@@ -192,7 +192,7 @@
 
                         <div class="border-b border-slate-100 pb-1">
                             <dt class="text-slate-500 font-medium">Estado</dt>
-                            <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->estados->name }}</dd>
+                            <dd class="font-semibold text-slate-800 capitalize">{{ $paciente->estados?->name ?? 'Sin estado' }}</dd>
                         </div>
 
                         <div class="border-b border-slate-100 pb-1">

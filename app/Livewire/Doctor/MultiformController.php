@@ -41,8 +41,8 @@ class MultiformController extends Component
     public $ciudad_id;
     public $ciudades;
     public $edad;
-    public $estado_id = '';
-    public $factore_id = '';
+    public $estado_id = null;
+    public $factore_id = null;
     public $jerarquia_id = '';
     public $NroCredencial;
     public $antiguedad;
@@ -107,8 +107,8 @@ class MultiformController extends Component
             'sexo'              => 'required|in:Masculino,Femenino',
             'domicilio'         => 'required',
             'fecha_nacimiento'  => 'required|date',
-            'email'             => 'required|email',
-            'TelefonoCelular'   => 'required|numeric',
+            'email'             => 'nullable|email',
+            'TelefonoCelular'   => 'nullable|numeric',
             'foto'              => 'nullable|image|max:5120', // 5MB para evitar cortes
         ]);
 
@@ -173,16 +173,20 @@ class MultiformController extends Component
     public function submit2()
     {
         $this->validate([
-            'legajo'         => 'required',
+            'legajo'         => 'nullable',
             'jerarquia_id'   => 'required|exists:jerarquias,id',
-            'destino_actual' => 'required',
+            'destino_actual' => 'nullable',
             'ciudad_id'      => 'required|exists:ciudades,id',
-            'edad'           => 'required|numeric',
-            'estado_id'      => 'required|exists:estados,id',
-            'NroCredencial'  => 'required',
-            'antiguedad'     => 'required|numeric',
-            'chapa'          => 'required',
+            'edad'           => 'nullable|numeric',
+            'estado_id'      => 'nullable|integer|exists:estados,id',
+            'NroCredencial'  => 'nullable',
+            'antiguedad'     => 'nullable|numeric',
+            'chapa'          => 'nullable',
         ]);
+
+        if ($this->estado_id === '') {
+            $this->estado_id = null;
+        }
 
         $this->customer->update([
             'legajo'         => $this->legajo,
@@ -205,13 +209,17 @@ class MultiformController extends Component
     public function submit3()
     {
         $this->validate([
-            'peso'        => 'required|numeric',
-            'altura'      => 'required',
-            'factore_id'  => 'required|exists:factores,id',
-            'enfermedad'  => 'required|string',
-            'remedios'    => 'required|string',
+            'peso'        => 'nullable|numeric',
+            'altura'      => 'nullable',
+            'factore_id'  => 'nullable|integer|exists:factores,id',
+            'enfermedad'  => 'nullable|string',
+            'remedios'    => 'nullable|string',
         ]);
 
+        if ($this->factore_id === '') {
+            $this->factore_id = null;
+        }
+        
         $this->customer->update([
             'peso'        => $this->peso,
             'altura'      => $this->altura,

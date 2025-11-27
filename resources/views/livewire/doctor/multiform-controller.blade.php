@@ -191,12 +191,15 @@
                             <label for="estado_id" class="">Estado</label>
                             <select wire:model.lazy="estado_id"
                                 class="h-9 w-full rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                                <option disabled value="">Seleccionar Estado</option>
+                                {{-- Placeholder seleccionable --}}
+                                <option value="" @selected($estado_id === null)>Seleccionar Estado</option>
                                 @foreach ($estados as $estado)
-                                    <option value="{{ $estado->id }}" class="text-[#666666]">{{ $estado->name }}
+                                    <option value="{{ $estado->id }}" class="text-[#666666]">
+                                        {{ $estado->name }}
                                     </option>
                                 @endforeach
                             </select>
+
                             <!-- JERARQUIA -->
                             <label for="jerarquia_id" class="">Jerarquia</label>
                             <select wire:model.lazy="jerarquia_id"
@@ -289,13 +292,16 @@
                         <div class="flex flex-col gap-y-2 p-5 w-[80%] mx-auto">
                             <label for="factore_id" class="">Grupo y Factor Sanguineo</label>
                             <select wire:model.lazy="factore_id"
-                                class="h-8 rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
-                                <option disabled selected value="">Seleccionar</option>
-                                @foreach ($factores as $factore)
-                                    <option value="{{ $factore->id }}" class="text-[#666666]">{{ $factore->name }}
+                                    class="h-9 w-full rounded-md focus:outline-none focus:border-1 focus:border-solid focus:border-[#2d5986]">
+                                <option value="" @selected($factore_id === null)>Sin factor / Seleccionar</option>
+
+                                @foreach ($factores as $factor)
+                                    <option value="{{ $factor->id }}" class="text-[#666666]">
+                                        {{ $factor->name }}
                                     </option>
                                 @endforeach
                             </select>
+
                             <!-- PESO -->
                             <label for="peso">Peso:</label>
                             <input type="number" wire:model.lazy="peso" placeholder="peso" step="any"

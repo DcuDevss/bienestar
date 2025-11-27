@@ -154,7 +154,6 @@ Route::get('/auditorias/general', AuditoriaGeneral::class)->name('auditorias.aud
 
 
 
-
 //Route::get('/disases', Multiform::class)->name('multiform.index');
 Route::get('/disases', DisaseController::class)->middleware('can:disases.index')->name('disases.index');
 Route::get('/multiform', MultiformController::class)->middleware('can:multiform.index')->name('multiform.index');
@@ -163,7 +162,6 @@ Route::get('paciente/{paciente_id}/entrevista/create', EntrevistaFormController:
 Route::get('/entrevistas/{paciente_id}', EntrevistaIndex::class)->name('entrevistas.index');
 Route::get('/entrevistas/editar/{entrevista_id}', EditEntrevista::class)->name('entrevistas.edit');
 Route::get('/entervistas/pdf-psiquiatra/{paciente}', PdfPsiquiatraController::class)->name('entrevistas.pdf-psiquiatra');
-
 
 
 Route::get('patient/show/{paciente}', PatientHistorialCertificado::class)->middleware('can:patient-certificados.show')->name('patient-certificados.show');
@@ -178,7 +176,6 @@ Route::get('/patient/patient-entrevistas', PatientEntrevistas::class)->name('pat
 
 Route::get('/patient/patient-control-historial/{paciente}/{enfermedade_paciente_id}', PatientControlHistorial::class)
     ->name('patient.patient-control-historial');
-
 
 
 Route::get('/paciente/ver-historial/{paciente}', VerHistorial::class)->middleware('can:paciente.ver-historial')->name('paciente.ver-historial');

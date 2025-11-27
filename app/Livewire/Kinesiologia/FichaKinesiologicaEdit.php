@@ -198,7 +198,6 @@ class FichaKinesiologicaEdit extends Component
             'menarca' => $menarca,
             'menopausia' => $menopausia,
             'partos' => $this->normalizeString($this->partos),
-
             'visceral_palpacion' => $this->normalizeString($this->visceral_palpacion),
             'visceral_dermalgias' => $this->normalizeString($this->visceral_dermalgias),
             'visceral_triggers' => $this->normalizeString($this->visceral_triggers),
@@ -219,12 +218,13 @@ class FichaKinesiologicaEdit extends Component
         }
 
         $this->dispatch('swal', [
-            'title' => 'Ficha actualizada correctamente',
-            'icon' => 'success'
-        ]);
-
-        return redirect()->route('kinesiologia.ficha-kinesiologica-index', [
-            'paciente' => $this->ficha->paciente_id
+            'title' => 'Ficha Editada',
+            'text' => 'Se ha editado la ficha correctamente.',
+            'icon' => 'success',
+            'timer' => 3000,
+            'redirect' => route('kinesiologia.ficha-kinesiologica-index', [
+                'paciente' => $this->ficha->paciente_id
+            ])
         ]);
     }
 

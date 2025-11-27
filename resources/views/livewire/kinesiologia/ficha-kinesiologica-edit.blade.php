@@ -13,3 +13,25 @@
         </div>
     </form>
 </div>
+
+
+<script>
+    document.addEventListener('livewire:load', function () {
+        window.addEventListener('swal', event => {
+            Swal.fire({
+                title: event.detail.title,
+                text: event.detail.text,
+                icon: event.detail.icon,
+                timer: event.detail.timer,
+                showConfirmButton: false
+            });
+
+            if (event.detail.redirect) {
+                setTimeout(() => {
+                    window.location.href = event.detail.redirect;
+                }, event.detail.timer);
+            }
+        });
+    });
+</script>
+

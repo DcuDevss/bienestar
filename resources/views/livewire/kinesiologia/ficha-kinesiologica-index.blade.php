@@ -128,7 +128,7 @@
         'tratamientos_previos' => 'Tratamientos previos',
         'menarca' => 'Menarca',
         'menopausia' => 'Menopausia',
-        'partos' => 'Partos',
+        'partos' => 'Partos', // <- Campo objetivo de la modificación
         'estado_salud_general' => 'Estado de salud general',
         'alteracion_peso' => 'Alteración de peso',
         'medicacion_actual' => 'Medicación actual',
@@ -149,8 +149,16 @@
     ] as $campo => $label)
                                 @php
                                     $valor = $ficha->$campo;
+
+                                    // Lógica base para mostrar: no nulo y no cadena vacía
                                     $mostrarCampo =
                                         !is_null($valor) && (is_string($valor) ? trim($valor) !== '' : true);
+
+                                    // EXCEPCIÓN AÑADIDA: Si el campo es 'partos' y el valor es exactamente 0 (cero), NO mostrar la fila.
+                                    if ($campo === 'partos' && $valor === 0) {
+                                        $mostrarCampo = false;
+                                    }
+
                                     $mostrarDirecto = is_scalar($valor) && strlen(strip_tags((string) $valor)) <= 60;
                                 @endphp
 
@@ -161,7 +169,11 @@
 
                                         @if ($mostrarDirecto)
                                             <span class="text-sm text-gray-600">
-                                                @if ($valor === 1 || $valor === true)
+                                                {{-- EXCEPCIÓN AÑADIDA: Si es 'partos', imprimir el número directamente (1, 2, 3...) --}}
+                                                @if ($campo === 'partos')
+                                                    {{ $valor }}
+                                                    {{-- Lógica original para otros campos booleanos (muestra Sí/No) --}}
+                                                @elseif ($valor === 1 || $valor === true)
                                                     Sí
                                                 @elseif ($valor === 0 || $valor === false)
                                                     No

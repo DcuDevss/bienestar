@@ -589,7 +589,6 @@
                             <p class="font-semibold mb-1">Preguntas orientativas para esta sección:</p>
                             <ul class="list-disc ml-4 space-y-1">
                                 <li>Relaciones interpersonales en general.</li>
-                                <li>¿Qué papel creés que juega la empatía en el trabajo policial?</li>
                                 <li>¿Qué es algo que no soportás de los demás?</li>
                                 <li>¿Qué es lo que más valorás de los demás?</li>
                                 <li>¿Te considerás una persona disciplinada? ¿Por qué?</li>

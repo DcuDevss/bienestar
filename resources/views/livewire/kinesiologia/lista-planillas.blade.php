@@ -38,9 +38,8 @@
                             <option value="inactiva">Inactiva</option>
                             <option value="sin_registro">Sin Registros</option>
                         </select>
-                        {{-- Fin del Filtro de Estado --}}
 
-                    </div> {{-- Fin del Contenedor de Búsqueda y Filtro de Estado --}}
+                    </div>
 
                     {{-- Mostrar por página --}}
                     <div class="flex items-center gap-2 mt-2 md:mt-0">
@@ -70,51 +69,50 @@
                         <tbody>
                             @forelse ($planillas as $planilla)
                                 <tr class="border-b border-gray-700 hover:bg-[#204060]">
+                                    {{-- Jerarquía --}}
                                     <td class="px-4 py-2 text-white">
                                         {{ $planilla->paciente?->jerarquias?->name ?? 'N/D' }}
                                     </td>
+
+                                    {{-- Nombre --}}
                                     <td class="px-4 py-2 text-white">
                                         {{ $planilla->paciente?->apellido_nombre ?? 'Paciente Eliminado' }}
                                     </td>
+
+                                    {{-- Fecha/Hora --}}
                                     <td class="px-4 py-2 text-white">
                                         @php
-                                            // Ajustamos la hora a la zona horaria de Buenos Aires
-                                            $created_at_local = $planilla->created_at->setTimezone(
-                                                'America/Argentina/Buenos_Aires',
-                                            );
+                                            $created_at_local = $planilla->created_at->setTimezone('America/Argentina/Buenos_Aires');
                                         @endphp
-
-                                        {{-- Mostramos la fecha y hora con el formato deseado --}}
                                         {{ $created_at_local->format('d-m-Y H:i:s') }}
                                     </td>
 
-                                    {{-- Columna Estado Sesión --}}
+                                    {{-- Estado Sesión --}}
                                     <td class="px-4 py-2">
                                         @php
-                                            // Asumimos que $planilla->paciente es el Paciente y tiene la relación sesiones()
                                             $ultimaSesion = $planilla->paciente?->sesiones()->latest('id')->first();
+                                            $estadoSesion = 'Sin Registros';
+                                            $colorBg = 'bg-gray-600 text-gray-200';
+
+                                            if($ultimaSesion) {
+                                                if(intval($ultimaSesion->firma_paciente_digital) === 0){
+                                                    $estadoSesion = 'Activa';
+                                                    $colorBg = 'bg-green-100 text-green-700';
+                                                } else {
+                                                    $estadoSesion = 'Inactiva';
+                                                    $colorBg = 'bg-red-100 text-red-700';
+                                                }
+                                            }
                                         @endphp
 
-                                        @if (is_null($ultimaSesion))
-                                            {{-- Caso 1: No hay ninguna sesión registrada --}}
-                                            <span class="px-2 py-0.5 text-xs bg-gray-600 text-gray-200 rounded-full">
-                                                Sin Registros
-                                            </span>
-                                        @elseif($ultimaSesion->firma_paciente_digital === 0)
-                                            {{-- Caso 2: Última sesión activa (firma_paciente_digital = 0) --}}
-                                            <span class="px-2 py-0.5 text-xs bg-green-100 text-green-700 rounded-full">
-                                                Activa
-                                            </span>
-                                        @elseif($ultimaSesion->firma_paciente_digital === 1)
-                                            {{-- Caso 3: Última sesión inactiva (firma_paciente_digital = 1) --}}
-                                            <span class="px-2 py-0.5 text-xs bg-red-100 text-red-700 rounded-full">
-                                                Inactiva
-                                            </span>
-                                        @endif
+                                        <span class="px-2 py-0.5 text-xs rounded-full {{ $colorBg }}">
+                                            {{ $estadoSesion }}
+                                        </span>
                                     </td>
 
+                                    {{-- Acción --}}
                                     <td class="px-4 py-2">
-                                        <a href="{{ route('kinesiologia.ficha-kinesiologica-index', ['paciente' => $planilla->paciente_id]) }}"
+                                        <a href="{{ route('kinesiologia.ficha-kinesiologica-index', ['paciente' => $planilla->paciente?->id]) }}"
                                             class="bg-blue-600 text-white px-3 py-1 rounded hover:bg-blue-500 transition">
                                             Ver Planilla
                                         </a>
@@ -132,8 +130,7 @@
                 </div>
 
                 {{-- Paginación --}}
-                <div
-                    class="p-4 bg-gray-900 border-t border-gray-700 flex flex-col md:flex-row items-center justify-between">
+                <div class="p-4 bg-gray-900 border-t border-gray-700 flex flex-col md:flex-row items-center justify-between">
                     <span class="text-gray-400 text-[14px] mb-2 md:mb-0">
                         Mostrando {{ $planillas->firstItem() ?? 0 }} a {{ $planillas->lastItem() ?? 0 }} de
                         {{ $planillas->total() }} resultados

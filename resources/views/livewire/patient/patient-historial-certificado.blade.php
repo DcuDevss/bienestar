@@ -336,25 +336,43 @@
                 </div>
 
                 <!-- Imágenes -->
-                <div class="col-span-2 grid grid-cols-2 gap-4">
-                    <div>
-                        <label for="imagen_frente" class="block text-sm font-medium text-gray-700">
-                            {{ __('Frente certificado') }}
-                        </label>
-                        <input id="imagen_frente" type="file" class="rounded py-2"
-                            wire:model.defer="imagen_frente" accept="image/*"/>
-                        <x-input-error for="imagen_frente" />
-                    </div>
+               <div>
+    <label for="imagen_frente" class="block text-sm font-medium text-gray-700">
+        {{ __('Frente certificado') }}
+    </label>
+    <input id="imagen_frente" type="file" 
+        class="rounded py-2"
+        wire:model.defer="imagen_frente" 
+        accept="image/*"
+    />
+    
+    {{-- Muestra el mensaje de error de validación (Ej: "El tamaño del archivo... no debe exceder 1 MB.") --}}
+    <x-input-error for="imagen_frente" />
+    
+    {{-- Opcional: Indicador de que hay un archivo existente --}}
+    @if ($old_imagen_frente && !$imagen_frente)
+        <p class="text-xs text-gray-500 mt-1">Archivo actual cargado.</p>
+    @endif
+</div>
 
-                    <div>
-                        <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">
-                            {{ __('Dorso certificado') }}
-                        </label>
-                        <input id="imagen_dorso" type="file" class="rounded py-2" wire:model.defer="imagen_dorso"
-                            accept="image/*"/>
-                        <x-input-error for="imagen_dorso" />
-                    </div>
-                </div>
+                  <div>
+    <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">
+        {{ __('Dorso certificado') }}
+    </label>
+    <input id="imagen_dorso" type="file" 
+        class="rounded py-2" 
+        wire:model.defer="imagen_dorso" 
+        accept="image/*"
+    />
+    
+    {{-- Muestra el mensaje de error de validación --}}
+    <x-input-error for="imagen_dorso" />
+
+    {{-- Opcional: Indicador de que hay un archivo existente --}}
+    @if ($old_imagen_dorso && !$imagen_dorso)
+        <p class="text-xs text-gray-500 mt-1">Archivo actual cargado.</p>
+    @endif
+</div>
 
                 <!-- Detalle certificado -->
                 <div class="col-span-2">

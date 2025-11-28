@@ -26,7 +26,7 @@
 
                             <input wire:model.live.debounce.300ms="search" type="text"
                                 class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg block w-full pl-10 p-2"
-                                placeholder="Buscar paciente o jerarquía...">
+                                placeholder="Buscar por nombre o jerarquía...">
                         </div>
 
                         {{-- Filtro de Estado --}}
@@ -36,7 +36,8 @@
                             <option value="activa">Activa</option>
                             <option value="inactiva">Inactiva</option>
                             <option value="sin_registro">Sin Registros</option>
-                            <option value="paciente_eliminado">Paciente Eliminado</option>
+                            <option value="eliminado">Paciente Eliminado</option>
+
                         </select>
 
                     </div>
@@ -78,16 +79,12 @@
 
                                     {{-- Jerarquía --}}
                                     <td class="px-4 py-2 text-white">
-                                        {{ $paciente?->jerarquias?->name
-                                            ?? $planilla->jerarquia
-                                            ?? 'Jerarquía' }}
+                                        {{ $paciente?->jerarquias?->name ?? 'Jerarquía' }}
                                     </td>
 
                                     {{-- Nombre --}}
                                     <td class="px-4 py-2 text-white">
-                                        {{ $paciente?->apellido_nombre
-                                            ?? $planilla->apellido_nombre
-                                            ?? 'Nombre' }}
+                                        {{ $paciente?->apellido_nombre ?? 'Nombre' }}
                                     </td>
 
                                     {{-- Fecha --}}
@@ -98,24 +95,20 @@
                                     {{-- Estado Sesión --}}
                                     <td class="px-4 py-2">
                                         @php
+                                            $ultimaSesion = $paciente?->sesiones()->latest('id')->first();
+
                                             if ($estaEliminado) {
                                                 $estadoSesion = 'Paciente Eliminado';
                                                 $colorBg = 'bg-gray-500 text-gray-100';
-                                            } else {
-                                                $ultimaSesion = $paciente?->sesiones()->latest('id')->first();
-
+                                            } elseif (!$ultimaSesion) {
                                                 $estadoSesion = 'Sin Registros';
                                                 $colorBg = 'bg-gray-600 text-gray-200';
-
-                                                if ($ultimaSesion) {
-                                                    if (intval($ultimaSesion->firma_paciente_digital) === 0) {
-                                                        $estadoSesion = 'Activa';
-                                                        $colorBg = 'bg-green-100 text-green-700';
-                                                    } else {
-                                                        $estadoSesion = 'Inactiva';
-                                                        $colorBg = 'bg-red-100 text-red-700';
-                                                    }
-                                                }
+                                            } elseif ($ultimaSesion->firma_paciente_digital == 0) {
+                                                $estadoSesion = 'Activa';
+                                                $colorBg = 'bg-green-100 text-green-700';
+                                            } else {
+                                                $estadoSesion = 'Inactiva';
+                                                $colorBg = 'bg-red-100 text-red-700';
                                             }
                                         @endphp
 
@@ -153,7 +146,8 @@
                 </div>
 
                 {{-- Paginación --}}
-                <div class="p-4 bg-gray-900 border-t border-gray-700 flex flex-col md:flex-row items-center justify-between">
+                <div
+                    class="p-4 bg-gray-900 border-t border-gray-700 flex flex-col md:flex-row items-center justify-between">
                     <span class="text-gray-400 text-[14px] mb-2 md:mb-0">
                         Mostrando {{ $planillas->firstItem() ?? 0 }} a {{ $planillas->lastItem() ?? 0 }} de
                         {{ $planillas->total() }} resultados

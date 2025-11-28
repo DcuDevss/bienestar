@@ -336,43 +336,95 @@
                 </div>
 
                 <!-- Imágenes -->
-               <div>
-    <label for="imagen_frente" class="block text-sm font-medium text-gray-700">
-        {{ __('Frente certificado') }}
-    </label>
-    <input id="imagen_frente" type="file" 
-        class="rounded py-2"
-        wire:model.defer="imagen_frente" 
-        accept="image/*"
-    />
-    
-    {{-- Muestra el mensaje de error de validación (Ej: "El tamaño del archivo... no debe exceder 1 MB.") --}}
-    <x-input-error for="imagen_frente" />
-    
-    {{-- Opcional: Indicador de que hay un archivo existente --}}
-    @if ($old_imagen_frente && !$imagen_frente)
-        <p class="text-xs text-gray-500 mt-1">Archivo actual cargado.</p>
-    @endif
-</div>
+                <div x-data>
+                    <label for="imagen_frente" class="block text-sm font-medium text-gray-700">
+                        {{ __('Frente certificado') }}
+                    </label>
 
-                  <div>
-    <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">
-        {{ __('Dorso certificado') }}
-    </label>
-    <input id="imagen_dorso" type="file" 
-        class="rounded py-2" 
-        wire:model.defer="imagen_dorso" 
-        accept="image/*"
-    />
-    
-    {{-- Muestra el mensaje de error de validación --}}
-    <x-input-error for="imagen_dorso" />
+                    <input id="imagen_frente" type="file"
+                        class="rounded py-2 cursor-pointer"
+                        accept="image/*"
+                        x-on:change="
+                                const file = $event.target.files[0];
+                                if (!file) return;
 
-    {{-- Opcional: Indicador de que hay un archivo existente --}}
-    @if ($old_imagen_dorso && !$imagen_dorso)
-        <p class="text-xs text-gray-500 mt-1">Archivo actual cargado.</p>
-    @endif
-</div>
+                                if (file.size > 5 * 1024 * 1024) {
+                                    Swal.fire({
+                                        title: 'Imagen muy grande',
+                                        text: 'La imagen de frente no debe superar los 5 MB.',
+                                        icon: 'error',
+                                        confirmButtonColor: '#2d5986'
+                                    });
+                                    $event.target.value = '';
+                                    return;
+                                }
+
+                                $wire.upload('imagen_frente', file,
+                                    () => {},
+                                    (err) => {
+                                        Swal.fire({
+                                            title: 'Error al subir la imagen',
+                                            text: err,
+                                            icon: 'error',
+                                            confirmButtonColor: '#2d5986'
+                                        });
+                                    }
+                                );
+                        "
+                    />
+
+                    <x-input-error for="imagen_frente" />
+
+                    @if ($old_imagen_frente && !$imagen_frente)
+                        <p class="text-xs text-gray-500 mt-1">Archivo actual cargado.</p>
+                    @endif
+                </div>
+
+
+                <div x-data>
+                    <label for="imagen_dorso" class="block text-sm font-medium text-gray-700">
+                        {{ __('Dorso certificado') }}
+                    </label>
+
+                    <input id="imagen_dorso" type="file"
+                        class="rounded py-2 cursor-pointer"
+                        accept="image/*"
+                        x-on:change="
+                                const file = $event.target.files[0];
+                                if (!file) return;
+
+                                if (file.size > 5 * 1024 * 1024) {
+                                    Swal.fire({
+                                        title: 'Imagen muy grande',
+                                        text: 'La imagen del dorso no debe superar los 5 MB.',
+                                        icon: 'error',
+                                        confirmButtonColor: '#2d5986'
+                                    });
+                                    $event.target.value = '';
+                                    return;
+                                }
+
+                                $wire.upload('imagen_dorso', file,
+                                    () => {},
+                                    (err) => {
+                                        Swal.fire({
+                                            title: 'Error al subir la imagen',
+                                            text: err,
+                                            icon: 'error',
+                                            confirmButtonColor: '#2d5986'
+                                        });
+                                    }
+                                );
+                        "
+                    />
+
+                    <x-input-error for="imagen_dorso" />
+
+                    @if ($old_imagen_dorso && !$imagen_dorso)
+                        <p class="text-xs text-gray-500 mt-1">Archivo actual cargado.</p>
+                    @endif
+                </div>
+
 
                 <!-- Detalle certificado -->
                 <div class="col-span-2">

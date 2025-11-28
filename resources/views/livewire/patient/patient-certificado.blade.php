@@ -160,21 +160,92 @@
                     @enderror
                 </div>
 
-                <div>
+                <div x-data>
                     <label for="imagen_frente"
-                        class="block text-sm font-medium text-gray-700">{{ __('Imagen frente') }}</label>
-                    <input id="imagen_frente" class="rounded py-2 cursor-pointer" type="file"
-                        wire:model="imagen_frente" accept="image/*" />
+                        class="block text-sm font-medium text-gray-700">
+                        {{ __('Imagen frente') }}
+                    </label>
+
+                    <input id="imagen_frente"
+                        class="rounded py-2 cursor-pointer"
+                        type="file"
+                        accept="image/*"
+                        x-on:change="
+                                const file = $event.target.files[0];
+                                if (!file) return;
+
+                                if (file.size > 5 * 1024 * 1024) {
+                                    Swal.fire({
+                                        title: 'Archivo demasiado grande',
+                                        text: 'La imagen de frente no debe superar los 5MB.',
+                                        icon: 'error',
+                                        confirmButtonColor: '#2d5986'
+                                    });
+                                    $event.target.value = '';
+                                    return;
+                                }
+
+                                // 👇 SOLO acá arrancamos la subida en Livewire
+                                $wire.upload('imagen_frente', file,
+                                    () => {}, // éxito (podés dejar vacío)
+                                    (err) => {
+                                        Swal.fire({
+                                            title: 'Error al subir la imagen',
+                                            text: err,
+                                            icon: 'error',
+                                            confirmButtonColor: '#2d5986'
+                                        });
+                                    }
+                                );
+                        "
+                    />
+
                     <x-input-error for="imagen_frente" />
                 </div>
 
-                <div>
+
+                <div x-data>
                     <label for="imagen_dorso"
-                        class="block text-sm font-medium text-gray-700">{{ __('Imagen dorso') }}</label>
-                    <input id="imagen_dorso" class="rounded py-2 cursor-pointer" type="file"
-                        wire:model="imagen_dorso" accept="image/*" />
+                        class="block text-sm font-medium text-gray-700">
+                        {{ __('Imagen dorso') }}
+                    </label>
+
+                    <input id="imagen_dorso"
+                        class="rounded py-2 cursor-pointer"
+                        type="file"
+                        accept="image/*"
+                        x-on:change="
+                                const file = $event.target.files[0];
+                                if (!file) return;
+
+                                if (file.size > 5 * 1024 * 1024) {
+                                    Swal.fire({
+                                        title: 'Archivo demasiado grande',
+                                        text: 'La imagen del dorso no debe superar los 5MB.',
+                                        icon: 'error',
+                                        confirmButtonColor: '#2d5986'
+                                    });
+                                    $event.target.value = '';
+                                    return;
+                                }
+
+                                $wire.upload('imagen_dorso', file,
+                                    () => {},
+                                    (err) => {
+                                        Swal.fire({
+                                            title: 'Error al subir la imagen',
+                                            text: err,
+                                            icon: 'error',
+                                            confirmButtonColor: '#2d5986'
+                                        });
+                                    }
+                                );
+                        "
+                    />
+
                     <x-input-error for="imagen_dorso" />
                 </div>
+
 
                 <div class="col-span-2">
                     <label for="detalle_certificado"

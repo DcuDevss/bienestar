@@ -97,9 +97,7 @@
     <div x-show="modal" x-transition.opacity x-on:cerrar-modal.window="modal = false"
         class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-40" style="display:none">
 
-         <div @mousesdown.away="modal=false"
-             x-transition.scale
-            class="bg-white w-full max-w-lg p-6 rounded shadow-lg">
+        <div @mousesdown.away="modal=false" x-transition.scale class="bg-white w-full max-w-lg p-6 rounded shadow-lg">
 
             <h3 class="font-semibold text-lg mb-3">Registrar / Editar Sesión</h3>
 

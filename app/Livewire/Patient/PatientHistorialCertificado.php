@@ -23,7 +23,7 @@ class PatientHistorialCertificado extends Component
         $horas_salud, $suma_salud, $estado_certificado, $tipolicencia_id, $imagen_frente, $imagen_dorso, $tipodelicencia,
         $disase_id, $patient_disases, $patient, $disase, $suma_auxiliar;
 
-        
+
 
     public $fecha_enfermedad, $tipo_enfermedad, $fecha_finalizacion, $fecha_atencion, $activo,
         $paciente_id, $disases, $archivo;
@@ -70,8 +70,8 @@ class PatientHistorialCertificado extends Component
 
     // 🔑 CLAVE: Añade la propiedad $messages aquí.
     protected $messages = [
-        'imagen_frente.max' => 'El tamaño del archivo Frente Certificado no debe exceder 1 MB.',
-        'imagen_dorso.max'  => 'El tamaño del archivo Dorso Certificado no debe exceder 1 MB.',
+        'imagen_frente.max' => 'El tamaño del archivo Frente Certificado no debe exceder 2.5 MB.',
+        'imagen_dorso.max'  => 'El tamaño del archivo Dorso Certificado no debe exceder 2.5 MB.',
         'imagen_frente.image' => 'El archivo Frente debe ser una imagen válida (JPG, PNG, etc.).',
         'imagen_dorso.image'  => 'El archivo Dorso debe ser una imagen válida (JPG, PNG, etc.).',
     ];
@@ -435,7 +435,6 @@ class PatientHistorialCertificado extends Component
 
             // 🧾 AUDITORÍA
             audit_log('certificado.update', $paciente, 'Certificado del paciente actualizado');
-
         } catch (\Exception $e) {
             Log::error('Error actualizando pivot en editDisase', ['error' => $e->getMessage()]);
             $this->addError('general', 'Error al actualizar el certificado. Revisá logs.');
@@ -449,8 +448,8 @@ class PatientHistorialCertificado extends Component
         $this->dispatch(
             'swal',
             title: 'Actualizado',
-            text:  'El certificado fue actualizado correctamente.',
-            icon:  'success'
+            text: 'El certificado fue actualizado correctamente.',
+            icon: 'success'
         );
 
 

@@ -94,10 +94,19 @@
     </div>
 
     {{-- MODAL --}}
-    <div x-show="modal" x-transition.opacity
+    <div x-show="modal" x-transition.opacity x-on:cerrar-modal.window="modal = false"
         class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-40" style="display:none">
 
-        <div @mousedown.away="modal=false" x-transition.scale class="bg-white w-full max-w-lg p-6 rounded shadow-lg">
+        <div x-transition.scale class="relative bg-white w-full max-w-lg p-6 rounded shadow-lg">
+
+            {{-- BOTÓN X ROJO --}}
+            <button @click="modal = false"
+                class="absolute top-3 right-3
+                   text-red-600 hover:text-red-800
+                   text-3xl font-bold leading-none
+                   transition transform hover:scale-110">
+                &times;
+            </button>
 
             <h3 class="font-semibold text-lg mb-3">Registrar / Editar Sesión</h3>
 
@@ -140,8 +149,11 @@
                 </div>
 
             </form>
+
         </div>
     </div>
+
+
 
 
     <div class="flex justify-start items-center mb-4">
@@ -232,11 +244,13 @@
 
                             {{-- ELIMINAR --}}
                             @role('super-admin')
-                                <button wire:click="eliminarSesion({{ $sesion->id }})"
+                                <button onclick="confirmarEliminarSesion({{ $sesion->id }})"
                                     class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-xs">
                                     Eliminar
                                 </button>
                             @endrole
+
+
                         </td>
                     </tr>
                 @endforeach
@@ -387,4 +401,24 @@
         // ************************************************
 
     });
+
+    // *** NUEVO: Confirmación para eliminar ***
+    function confirmarEliminarSesion(id) {
+        Swal.fire({
+            title: "¿Eliminar sesión?",
+            text: "Esta acción no se puede deshacer.",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: "#DC2626",
+            cancelButtonColor: "#6B7280",
+            confirmButtonText: "Sí, eliminar",
+            cancelButtonText: "Cancelar"
+        }).then((result) => {
+            if (result.isConfirmed) {
+                Livewire.dispatch('eliminarSesionConfirmada', {
+                    id: id
+                });
+            }
+        });
+    }
 </script>

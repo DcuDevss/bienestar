@@ -48,6 +48,8 @@ class SesionKinesiologica extends Component
         'finalizarSerieConfirmada' => 'finalizarSerieConfirmada',
         'guardarSesionConfirmada' => 'guardarSesion',
         'continuarGuardadoForzado' => 'guardarSesion',
+        // NUEVO
+        'eliminarSesionConfirmada' => 'eliminarSesion',
     ];
 
     // Se ejecuta cada vez que $perPage o $filtro cambia (para reiniciar la página)
@@ -127,7 +129,7 @@ class SesionKinesiologica extends Component
     }
 
     // 💡 Método obsoleto: Ya no se usa para cargar la lista de sesiones, solo para el estado activo
-    // public function cargarSesiones() { ... } 
+    // public function cargarSesiones() { ... }
     // Ahora, simplemente llamamos a cargarDatosSerieActiva() para el contador.
 
     public function confirmarGuardarSesion()
@@ -193,6 +195,9 @@ class SesionKinesiologica extends Component
         Log::info("[GUARDAR_FINAL] Sesión {$action} con ID: {$sesion->id}");
 
         $this->resetCampos(); // Reinicia el formulario al próximo número y recarga la lista
+
+        // ❗❗ CERRAR MODAL AL GUARDAR
+        $this->dispatch('cerrar-modal');
 
         $this->dispatch('sesionGuardada', [
             'title' => '¡Éxito!',
@@ -293,6 +298,8 @@ class SesionKinesiologica extends Component
         }
 
         $this->resetCampos(); // Esto llama a calcularProximaSesionNro() y recarga la lista
+        // ❗❗ CERRAR MODAL AL GUARDAR
+        $this->dispatch('cerrar-modal');
     }
 
     public function resetCampos(): void

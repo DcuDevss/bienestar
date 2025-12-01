@@ -97,16 +97,7 @@
     <div x-show="modal" x-transition.opacity x-on:cerrar-modal.window="modal = false"
         class="fixed inset-0 bg-black/50 backdrop-blur-sm flex items-center justify-center z-40" style="display:none">
 
-        <div x-transition.scale class="relative bg-white w-full max-w-lg p-6 rounded shadow-lg">
-
-            {{-- BOTÓN X ROJO --}}
-            <button @click="modal = false"
-                class="absolute top-3 right-3
-                   text-red-600 hover:text-red-800
-                   text-3xl font-bold leading-none
-                   transition transform hover:scale-110">
-                &times;
-            </button>
+        <div x-transition.scale class="bg-white w-full max-w-lg p-6 rounded shadow-lg">
 
             <h3 class="font-semibold text-lg mb-3">Registrar / Editar Sesión</h3>
 
@@ -152,6 +143,7 @@
 
         </div>
     </div>
+
 
 
 

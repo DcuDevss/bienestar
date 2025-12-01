@@ -95,17 +95,13 @@ class SesionKinesiologica extends Component
      */
     private function calcularProximaSesionNro(): int
     {
-        // Usa la propiedad ya cargada o la consulta simplificada
-        $lastSesionNroActiva = $this->serieActiva->max('sesion_nro');
+        // Cuenta las sesiones activas reales
+        $cantidad = $this->serieActiva->count();
 
-        if ($lastSesionNroActiva) {
-            // Si hay activas, continuamos la serie (Ej: si max es 4, devuelve 5)
-            return $lastSesionNroActiva + 1;
-        }
-
-        // Si no hay activas (serie finalizada), devuelve 1 para iniciar la nueva serie.
-        return 1;
+        // La próxima sesión es la cantidad + 1
+        return $cantidad + 1;
     }
+
 
     /**
      * 3. 🔑 Propiedad Calculada para obtener la lista de sesiones PAGINADAS.
@@ -236,6 +232,9 @@ class SesionKinesiologica extends Component
 
         try {
             Sesion::findOrFail($id)->delete();
+
+            // 💡 ACTUALIZAR LA SERIE ACTIVA ANTES DE RESETEAR
+            $this->cargarDatosSerieActiva();
             $this->resetCampos();
 
             $this->dispatch('swal', [

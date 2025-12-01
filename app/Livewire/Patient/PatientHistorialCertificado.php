@@ -60,21 +60,21 @@ class PatientHistorialCertificado extends Component
         'horas_salud'                    => 'nullable|integer',
         'suma_salud'                     => 'nullable|integer',
         // 🔑 CLAVE: Reglas de validación de archivos (max:1024 = 1MB)
-        'imagen_frente'                => 'nullable|file|image|max:2560', // <-- CAMBIO AQUÍ
-        'imagen_dorso'                 => 'nullable|file|image|max:2560', // <-- CAMBIO AQUÍ
+        'imagen_frente'                => 'nullable|file|image|max:5120', // 5MB
+        'imagen_dorso'                 => 'nullable|file|image|max:5120',
         'estado_certificado'             => 'nullable|boolean',
         'tipolicencia_id'                => 'nullable',
         'disase_id'                      => 'required', // debe elegir una opción
         'suma_auxiliar'                  => 'nullable|integer',
     ];
 
-    // 🔑 CLAVE: Añade la propiedad $messages aquí.
+  /*   // 🔑 CLAVE: Añade la propiedad $messages aquí.
     protected $messages = [
         'imagen_frente.max' => 'El tamaño del archivo Frente Certificado no debe exceder 2.5 MB.',
         'imagen_dorso.max'  => 'El tamaño del archivo Dorso Certificado no debe exceder 2.5 MB.',
         'imagen_frente.image' => 'El archivo Frente debe ser una imagen válida (JPG, PNG, etc.).',
         'imagen_dorso.image'  => 'El archivo Dorso debe ser una imagen válida (JPG, PNG, etc.).',
-    ];
+    ]; */
 
     public function mount($paciente)
     {

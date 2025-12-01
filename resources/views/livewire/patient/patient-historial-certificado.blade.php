@@ -1,54 +1,60 @@
-
 <section class="w-[90%] mx-auto bg-gray-100 text-gray-600 h-screen px-4 py-4">
-<style>
-.full-image-overlay {
-    position: fixed;
-    inset: 0; /* top:0; right:0; bottom:0; left:0 */
-    background: rgba(0, 0, 0, 0.75);
-    display: none;              /* oculto por defecto */
-    align-items: center;        /* centrar vertical */
-    justify-content: center;    /* centrar horizontal */
-    z-index: 9999;
-}
+    <style>
+        .full-image-overlay {
+            position: fixed;
+            inset: 0;
+            /* top:0; right:0; bottom:0; left:0 */
+            background: rgba(0, 0, 0, 0.75);
+            display: none;
+            /* oculto por defecto */
+            align-items: center;
+            /* centrar vertical */
+            justify-content: center;
+            /* centrar horizontal */
+            z-index: 9999;
+        }
 
-.full-image-container {
-    position: relative;
-    max-width: 80vw;   /* antes 60 — ahora mucho más pequeño */
-    max-height: 80vh;  /* antes 60 — evita que cubra pantalla */
-}
+        .full-image-container {
+            position: relative;
+            max-width: 80vw;
+            /* antes 60 — ahora mucho más pequeño */
+            max-height: 80vh;
+            /* antes 60 — evita que cubra pantalla */
+        }
 
-#full-image {
-    width: 100%;
-    height: auto;
-    max-height: 80vh;
-    border-radius: 10px;
-}
+        #full-image {
+            width: 100%;
+            height: auto;
+            max-height: 80vh;
+            border-radius: 10px;
+        }
 
 
-.full-image-container img {
-    max-width: 100%;
-    max-height: 100%;
-    display: block;
-    border-radius: 0.5rem;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.5);
-}
+        .full-image-container img {
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+            border-radius: 0.5rem;
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.5);
+        }
 
-.action-button {
-    position: absolute;
-    top: 0.5rem;
-    right: 0.5rem;
-    background: rgba(0,0,0,0.7);
-    color: #fff;
-    border: none;
-    padding: 0.25rem 0.75rem;
-    border-radius: 0.375rem;
-    font-size: 0.8rem;
-    cursor: pointer;
-}
-.action-button:hover {
-    background: rgba(0,0,0,0.9);
-}
-</style>
+        .action-button {
+            position: absolute;
+            top: 0.5rem;
+            right: 0.5rem;
+            background: rgba(0, 0, 0, 0.7);
+            color: #fff;
+            border: none;
+            padding: 0.25rem 0.75rem;
+            border-radius: 0.375rem;
+            font-size: 0.8rem;
+            cursor: pointer;
+        }
+
+        .action-button:hover {
+            background: rgba(0, 0, 0, 0.9);
+        }
+    </style>
     <!-- REGISTROS DATA-TABLES -->
     <div class="w-full bg-white p-2">
         <div class="flex justify-between">
@@ -64,11 +70,12 @@
             <!-- BOTONES OSEF & LA CAJA -->
             <div class="float-right mr-2 flex gap-x-2">
                 <!-- Imagen con link (RCTA) -->
-                    <a href="https://rcta.me/?utm_term=&utm_campaign=RCTA+DNU/+Pmax+/+Reconnect&utm_source=adwords&utm_medium=ppc&hsa_acc=3976412703&hsa_cam=21983270123&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=21983271299&gbraid=0AAAAAp3bv2M-2NoWfjCKXwvQFRekKOKO3&gclid=Cj0KCQjwgIXCBhDBARIsAELC9ZhPejgMuncQuoBdXnlBKYeV4pe06k2knUoVCHSvUOPPzjFGOfIv6vgaAgpOEALw_wcB
-                        " target="_blank" class="bg-white rounded-md py-1 px-3">
-                        <img class="h-[34px]" src="{{ asset('assets/rctaLogo.jpg') }}" alt="">
-                    </a>
-                    <a href="https://prescriptorweb.ddaval.com.ar/" target="_blank">
+                <a href="https://rcta.me/?utm_term=&utm_campaign=RCTA+DNU/+Pmax+/+Reconnect&utm_source=adwords&utm_medium=ppc&hsa_acc=3976412703&hsa_cam=21983270123&hsa_grp=&hsa_ad=&hsa_src=x&hsa_tgt=&hsa_kw=&hsa_mt=&hsa_net=adwords&hsa_ver=3&gad_source=1&gad_campaignid=21983271299&gbraid=0AAAAAp3bv2M-2NoWfjCKXwvQFRekKOKO3&gclid=Cj0KCQjwgIXCBhDBARIsAELC9ZhPejgMuncQuoBdXnlBKYeV4pe06k2knUoVCHSvUOPPzjFGOfIv6vgaAgpOEALw_wcB
+                        "
+                    target="_blank" class="bg-white rounded-md py-1 px-3">
+                    <img class="h-[34px]" src="{{ asset('assets/rctaLogo.jpg') }}" alt="">
+                </a>
+                <a href="https://prescriptorweb.ddaval.com.ar/" target="_blank">
                     <button class="bg-blue-600 rounded-md py-1 px-3">
                         <img class="h-[25px]" src="https://osef.gob.ar/assets/images/osef-logotipo.png" alt="">
                     </button>
@@ -97,7 +104,8 @@
                         <li class="mb-0">
                             <p>
                                 <span class="pr-1 font-extrabold text-black">Presentación de certificado:</span>
-                                {{ !empty($disase->pivot->fecha_presentacion_certificado) && $disase->pivot->fecha_presentacion_certificado !== '0000-00-00 00:00:00'
+                                {{ !empty($disase->pivot->fecha_presentacion_certificado) &&
+                                $disase->pivot->fecha_presentacion_certificado !== '0000-00-00 00:00:00'
                                     ? \Carbon\Carbon::parse($disase->pivot->fecha_presentacion_certificado)->format('d-m-Y H:i:s')
                                     : '—' }}
                             </p>
@@ -106,7 +114,8 @@
                         <li class="mb-0">
                             <p>
                                 <span class="pr-1 font-extrabold text-black">Inicio de licencia:</span>
-                                {{ !empty($disase->pivot->fecha_inicio_licencia) && $disase->pivot->fecha_inicio_licencia !== '0000-00-00 00:00:00'
+                                {{ !empty($disase->pivot->fecha_inicio_licencia) &&
+                                $disase->pivot->fecha_inicio_licencia !== '0000-00-00 00:00:00'
                                     ? \Carbon\Carbon::parse($disase->pivot->fecha_inicio_licencia)->format('d-m-Y H:i:s')
                                     : '—' }}
                             </p>
@@ -115,7 +124,8 @@
                         <li class="mb-0">
                             <p>
                                 <span class="pr-1 font-extrabold text-black">Finalización:</span>
-                                {{ !empty($disase->pivot->fecha_finalizacion_licencia) && $disase->pivot->fecha_finalizacion_licencia !== '0000-00-00 00:00:00'
+                                {{ !empty($disase->pivot->fecha_finalizacion_licencia) &&
+                                $disase->pivot->fecha_finalizacion_licencia !== '0000-00-00 00:00:00'
                                     ? \Carbon\Carbon::parse($disase->pivot->fecha_finalizacion_licencia)->format('d-m-Y H:i:s')
                                     : '—' }}
                             </p>
@@ -147,19 +157,17 @@
                             @if ($disase->pivot->imagen_frente)
                                 {{-- <a href=" {{ Storage::url($disase->pivot->imagen_frente) }}" target="_blank">Ver PDF</a> --}}
 
-                               <img src="{{ Storage::url($disase->pivot->imagen_frente) }}"
-                                    alt="Imagen"
-                                    onclick="showFullImage(this)"
-                                    class="w-24 h-24 text-center cursor-pointer">
+                                <img src="{{ Storage::url($disase->pivot->imagen_frente) }}" alt="Imagen"
+                                    onclick="showFullImage(this)" class="w-24 h-24 text-center cursor-pointer">
 
                                 <!-- Plantilla para la imagen ampliada -->
                                 <div id="full-image-overlay" class="full-image-overlay">
                                     <div class="full-image-container">
                                         <img id="full-image" src="" alt="Imagen Ampliada">
-                                        <button id="close-button" class="action-button" onclick="closeFullImage()">Cerrar</button>
+                                        <button id="close-button" class="action-button"
+                                            onclick="closeFullImage()">Cerrar</button>
                                     </div>
                                 </div>
-
                             @else
                                 Sin Archivo
                                 <div class="bottom-0 pt-2">
@@ -222,55 +230,55 @@
             <div class="grid grid-cols-2 gap-4">
                 <!-- Nombre del Padecimiento -->
                 <div class="relative" wire:click.outside="closeEditPicker" wire:keydown.escape="closeEditPicker">
-    <label for="editedDisaseName" class="block text-sm font-medium text-gray-700">
-        {{ __('Nombre del Padecimiento') }}
-    </label>
+                    <label for="editedDisaseName" class="block text-sm font-medium text-gray-700">
+                        {{ __('Nombre del Padecimiento') }}
+                    </label>
 
-    <input id="editedDisaseName" class="w-full rounded" type="text"
-        placeholder="{{ __('Nuevo nombre') }}" wire:model.live="editedDisaseName" x-data
-        @focus="$wire.openEditPicker()" />
+                    <input id="editedDisaseName" class="w-full rounded" type="text"
+                        placeholder="{{ __('Nuevo nombre') }}" wire:model.live="editedDisaseName" x-data
+                        @focus="$wire.openEditPicker()" />
 
-    <x-input-error for="editedDisaseName" />
+                    <x-input-error for="editedDisaseName" />
 
-    @if ($editPickerOpen && trim($editedDisaseName) !== '')
-        <div
-            class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto bg-white border border-slate-200 rounded-md shadow">
-            <ul class="w-full">
-               @forelse($editOptions as $i => $opt)
-    <li class="cursor-pointer px-3 py-2 bg-gray-50 hover:bg-gray-100 my-1 rounded-md">
-        <button type="button" class="w-full text-left"
-            wire:click="pickEditedDisase({{ $opt['id'] }})">
-            {{ $opt['name'] }}
-        </button>
-    </li>
-@empty
-    {{-- AQUI SE INSERTA LA LÓGICA DE AGREGAR NUEVO PADECIMIENTO --}}
-    @if (strlen(trim($editedDisaseName)) > 3 && !$disase_id)
-        <div class="bg-red-600 text-white text-center p-2 rounded-md text-sm">
-            <span>
-                Sin resultados: {{-- para **"{{ $editedDisaseName }}"**. --}} ¿Desea agregarlo como nuevo?
-            </span>
-            <div class="mt-1">
-                <button wire:click="addNewEditedDisase"
-                    class="text-black bg-white px-2 py-1 rounded-md hover:bg-gray-200">
-                    {{ __('Si') }}
-                </button>
-            </div>
-        </div>
-    @elseif (strlen(trim($editedDisaseName)) > 0)
-        {{-- Mensaje para búsqueda muy corta --}}
-        <div class="px-3 py-2 text-sm text-slate-500">
-            Escriba más de 3 caracteres para buscar.
-        </div>
-    @else
-        {{-- Sin búsqueda --}}
-        <div class="px-3 py-2 text-sm text-slate-500">Sin resultados…</div>
-    @endif
-@endforelse
-            </ul>
-        </div>
-    @endif
-</div>
+                    @if ($editPickerOpen && trim($editedDisaseName) !== '')
+                        <div
+                            class="absolute left-0 right-0 z-50 mt-1 max-h-64 overflow-y-auto bg-white border border-slate-200 rounded-md shadow">
+                            <ul class="w-full">
+                                @forelse($editOptions as $i => $opt)
+                                    <li class="cursor-pointer px-3 py-2 bg-gray-50 hover:bg-gray-100 my-1 rounded-md">
+                                        <button type="button" class="w-full text-left"
+                                            wire:click="pickEditedDisase({{ $opt['id'] }})">
+                                            {{ $opt['name'] }}
+                                        </button>
+                                    </li>
+                                @empty
+                                    {{-- AQUI SE INSERTA LA LÓGICA DE AGREGAR NUEVO PADECIMIENTO --}}
+                                    @if (strlen(trim($editedDisaseName)) > 3 && !$disase_id)
+                                        <div class="bg-red-600 text-white text-center p-2 rounded-md text-sm">
+                                            <span>
+                                                Sin resultados: {{-- para **"{{ $editedDisaseName }}"**. --}} ¿Desea agregarlo como nuevo?
+                                            </span>
+                                            <div class="mt-1">
+                                                <button wire:click="addNewEditedDisase"
+                                                    class="text-black bg-white px-2 py-1 rounded-md hover:bg-gray-200">
+                                                    {{ __('Si') }}
+                                                </button>
+                                            </div>
+                                        </div>
+                                    @elseif (strlen(trim($editedDisaseName)) > 0)
+                                        {{-- Mensaje para búsqueda muy corta --}}
+                                        <div class="px-3 py-2 text-sm text-slate-500">
+                                            Escriba más de 3 caracteres para buscar.
+                                        </div>
+                                    @else
+                                        {{-- Sin búsqueda --}}
+                                        <div class="px-3 py-2 text-sm text-slate-500">Sin resultados…</div>
+                                    @endif
+                                @endforelse
+                            </ul>
+                        </div>
+                    @endif
+                </div>
 
                 <!-- Tipo de Licencia -->
                 <div>
@@ -341,9 +349,7 @@
                         {{ __('Frente certificado') }}
                     </label>
 
-                    <input id="imagen_frente" type="file"
-                        class="rounded py-2 cursor-pointer"
-                        accept="image/*"
+                    <input id="imagen_frente" type="file" class="rounded py-2 cursor-pointer" accept="image/*"
                         x-on:change="
                                 const file = $event.target.files[0];
                                 if (!file) return;
@@ -370,14 +376,30 @@
                                         });
                                     }
                                 );
-                        "
-                    />
+                        " />
 
                     <x-input-error for="imagen_frente" />
 
-                    @if ($old_imagen_frente && !$imagen_frente)
+                    {{-- @if ($old_imagen_frente && !$imagen_frente)
                         <p class="text-xs text-gray-500 mt-1">Archivo actual cargado.</p>
-                    @endif
+                    @endif --}}
+
+                    {{-- ⭐ PREVIEW EN MINIATURA SI SELECCIONA UNA IMAGEN --}}
+                    {{--      @if ($imagen_frente)
+                        <div class="relative mt-2 inline-block">
+                            <img src="{{ $imagen_frente->temporaryUrl() }}"
+                                class="w-24 h-24 object-cover rounded border" />
+
+                            <!-- Botón cerrar más pequeño -->
+                            <button type="button"
+                                class="absolute top-0 right-0 bg-red-600 text-white rounded-full w-4 h-4 text-[10px] flex items-center justify-center"
+                                wire:click="$set('imagen_frente', null)">
+                                &times;
+                            </button>
+                        </div>
+                    @endif --}}
+
+
                 </div>
 
 
@@ -386,9 +408,7 @@
                         {{ __('Dorso certificado') }}
                     </label>
 
-                    <input id="imagen_dorso" type="file"
-                        class="rounded py-2 cursor-pointer"
-                        accept="image/*"
+                    <input id="imagen_dorso" type="file" class="rounded py-2 cursor-pointer" accept="image/*"
                         x-on:change="
                                 const file = $event.target.files[0];
                                 if (!file) return;
@@ -415,14 +435,13 @@
                                         });
                                     }
                                 );
-                        "
-                    />
+                        " />
 
                     <x-input-error for="imagen_dorso" />
 
-                    @if ($old_imagen_dorso && !$imagen_dorso)
+                    {{--  @if ($old_imagen_dorso && !$imagen_dorso)
                         <p class="text-xs text-gray-500 mt-1">Archivo actual cargado.</p>
-                    @endif
+                    @endif --}}
                 </div>
 
 
@@ -452,7 +471,7 @@
     <script>
         function showFullImage(image) {
             const fullImageOverlay = document.getElementById('full-image-overlay');
-            const fullImage        = document.getElementById('full-image');
+            const fullImage = document.getElementById('full-image');
 
             fullImage.src = image.src;
             fullImageOverlay.style.display = 'flex'; // coincide con flex de CSS
@@ -464,7 +483,7 @@
         }
 
         // Cerrar con ESC
-        document.addEventListener('keydown', function (event) {
+        document.addEventListener('keydown', function(event) {
             if (event.key === 'Escape') {
                 closeFullImage();
             }
@@ -473,29 +492,36 @@
     {{-- SweetAlert --}}
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
-    document.addEventListener('livewire:init', () => {
-        Livewire.on('swal', function () {
-        let payload = {};
-        if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[0])) {
-            payload = arguments[0];
-        } else {
-            payload = { title: arguments[0] ?? '', text: arguments[1] ?? '', icon: arguments[2] ?? 'info' };
-        }
+        document.addEventListener('livewire:init', () => {
+            Livewire.on('swal', function() {
+                let payload = {};
+                if (arguments.length === 1 && typeof arguments[0] === 'object' && !Array.isArray(arguments[
+                        0])) {
+                    payload = arguments[0];
+                } else {
+                    payload = {
+                        title: arguments[0] ?? '',
+                        text: arguments[1] ?? '',
+                        icon: arguments[2] ?? 'info'
+                    };
+                }
 
-        const { title = 'Listo', text = '', html = null, icon = 'success', timer = 3000 } = payload;
+                const {
+                    title = 'Listo', text = '', html = null, icon = 'success', timer = 3000
+                } = payload;
 
-        Swal.fire({
-            title,
-            text,
-            html,
-            icon,
-            timer,
-            toast: true,
-            position: 'top-end',
-            showConfirmButton: false,
-            timerProgressBar: true,
+                Swal.fire({
+                    title,
+                    text,
+                    html,
+                    icon,
+                    timer,
+                    toast: true,
+                    position: 'top-end',
+                    showConfirmButton: false,
+                    timerProgressBar: true,
+                });
+            });
         });
-        });
-    });
     </script>
 </section>

@@ -24,6 +24,7 @@ class SesionPdfController extends Controller
         } elseif ($estado === 'inactivas') {
             $query->where('firma_paciente_digital', 1);
         } elseif ($estado === 'todas') {
+
             // FILTRO SECUNDARIO (solo si eligió algo)
             if ($subestado === 'activas') {
                 $query->where('firma_paciente_digital', 0);
@@ -33,13 +34,16 @@ class SesionPdfController extends Controller
         }
 
         // -------------------------
+        // TOTAL REAL (antes del límite)
+        // -------------------------
+        $totalReal = $query->count();
+
+        // -------------------------
         // LÍMITE
         // -------------------------
         if ($estado === 'todas') {
-            // no limitar
             $sesiones = $query->orderBy('fecha_sesion', 'asc')->get();
         } else {
-            // sí limitar
             $sesiones = $query->orderBy('fecha_sesion', 'asc')
                 ->limit($limite)
                 ->get();
@@ -50,7 +54,8 @@ class SesionPdfController extends Controller
             'sesiones',
             'estado',
             'subestado',
-            'limite'
+            'limite',
+            'totalReal'
         ));
     }
 }

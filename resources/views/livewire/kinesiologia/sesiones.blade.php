@@ -35,7 +35,6 @@
             background: #eee;
         }
 
-        /* Botón que solo aparece en navegador */
         @media print {
             .no-print {
                 display: none !important;
@@ -53,6 +52,18 @@
 
         .btn:hover {
             background: #333;
+        }
+
+        .alert {
+            background: #f8d7da;
+            /* rojo claro */
+            border: 1px solid #f5c6cb;
+            /* borde rojo suave */
+            color: #721c24;
+            /* texto rojo oscuro */
+            padding: 10px;
+            border-radius: 5px;
+            margin-bottom: 15px;
         }
     </style>
 </head>
@@ -91,7 +102,7 @@
     @endif
 
 
-    {{-- 🔥 FORMULARIO DE FILTROS (SOLO NAVEGADOR) --}}
+    {{-- 🔥 FORMULARIO DE FILTROS --}}
     <form method="GET" class="no-print" style="margin-bottom: 15px;">
 
         <label><strong>Estado:</strong></label>
@@ -100,16 +111,17 @@
             <option value="inactivas" {{ $estado == 'inactivas' ? 'selected' : '' }}>Inactivas</option>
             <option value="todas" {{ $estado == 'todas' ? 'selected' : '' }}>Todas</option>
         </select>
+
         @if ($estado === 'todas')
             &nbsp;&nbsp;&nbsp;
 
             <label><strong>Mostrar solo:</strong></label>
             <select name="subestado" onchange="this.form.submit()">
+                <option value="" {{ request('subestado') == '' ? 'selected' : '' }}>Todas</option>
                 <option value="activas" {{ request('subestado') == 'activas' ? 'selected' : '' }}>Activas</option>
                 <option value="inactivas" {{ request('subestado') == 'inactivas' ? 'selected' : '' }}>Inactivas</option>
             </select>
         @endif
-
 
         &nbsp;&nbsp;&nbsp;
 
@@ -121,10 +133,24 @@
         </select>
     </form>
 
+
+    {{-- ⚠️ AVISO DE LÍMITE (solo muestra cuando corresponde) --}}
+    @if ($estado !== 'todas' && $totalReal > $limite)
+        <div class="alert no-print">
+            <strong>Atención:</strong> Se están mostrando solo {{ $limite }} sesiones,
+            pero existen {{ $totalReal }} registros en total.
+        </div>
+    @endif
+
+
     <p>
-        <strong>Mostrando:</strong> {{ ucfirst($estado) }}
-        {{-- <strong>Límite:</strong> {{ $limite }} --}}
+        <strong>Mostrando:</strong>
+        {{ ucfirst($estado) }}
+        @if ($estado === 'todas' && $subestado)
+            ({{ ucfirst($subestado) }})
+        @endif
     </p>
+
 
     <table>
         <thead>
@@ -152,18 +178,17 @@
         </tbody>
     </table>
 
+
     {{-- Firmas --}}
     <div class="section"
         style="margin-top: 95px; display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
 
-        {{-- Firma del Kinesiólogo --}}
         <div style="text-align: center; flex: 0 0 45%;">
             <p style="margin: 0 0 10px 0;">______________________________</p>
             <p style="margin: 0 0 5px 0;">Firma del Kinesiólogo</p>
             <strong>{{ auth()->user()->name }}</strong>
         </div>
 
-        {{-- Firma del Paciente --}}
         <div style="text-align: center; flex: 0 0 45%;">
             <p style="margin: 0 0 10px 0;">______________________________</p>
             <p style="margin: 0 0 5px 0;">Firma del Paciente</p>
@@ -174,7 +199,6 @@
         </div>
 
     </div>
-
 
 </body>
 

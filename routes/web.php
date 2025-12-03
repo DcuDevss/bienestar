@@ -236,6 +236,5 @@ Route::get('/pacientes/{paciente}/sesiones', SesionKinesiologica::class)
     ->name('kinesiologia.sesion-kinesiologica');
 
 //PDF para ver de kinesiologia
-
-Route::get('/kinesiologia/ficha-pdf/{fichaId}', [FichaPdfController::class, 'view'])
+Route::get('kinesiologia/ficha-pdf/{fichaId}', [FichaPdfController::class, 'view'])
     ->name('kinesiologia.pdf-ficha');

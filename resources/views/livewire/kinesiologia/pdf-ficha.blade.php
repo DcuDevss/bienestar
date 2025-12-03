@@ -54,6 +54,12 @@
 <body>
 
     <h1>Ficha Kinesiológica</h1>
+    <div style="text-align:center; margin-bottom:20px;">
+        <button onclick="window.print()"
+            style="padding:5px 10px; background:#333; color:white; border:none; border-radius:4px;">
+            Imprimir / Guardar como PDF
+        </button>
+    </div>
 
     {{-- Datos del Paciente --}}
     @php
@@ -205,6 +211,7 @@
     @endif
     <p>
     <p>
+
 
 
     <div class="section" style="margin-top: 60px; display: flex; justify-content: space-between; width: 100%;">

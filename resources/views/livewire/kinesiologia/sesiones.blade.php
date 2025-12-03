@@ -100,13 +100,21 @@
             <option value="inactivas" {{ $estado == 'inactivas' ? 'selected' : '' }}>Inactivas</option>
             <option value="todas" {{ $estado == 'todas' ? 'selected' : '' }}>Todas</option>
         </select>
+        @if ($estado === 'todas')
+            &nbsp;&nbsp;&nbsp;
+
+            <label><strong>Mostrar solo:</strong></label>
+            <select name="subestado" onchange="this.form.submit()">
+                <option value="activas" {{ request('subestado') == 'activas' ? 'selected' : '' }}>Activas</option>
+                <option value="inactivas" {{ request('subestado') == 'inactivas' ? 'selected' : '' }}>Inactivas</option>
+            </select>
+        @endif
+
 
         &nbsp;&nbsp;&nbsp;
 
         <label><strong>Límite:</strong></label>
         <select name="limite" onchange="this.form.submit()">
-            <option value="1" {{ $limite == 1 ? 'selected' : '' }}>1</option>
-            <option value="5" {{ $limite == 5 ? 'selected' : '' }}>5</option>
             <option value="10" {{ $limite == 10 ? 'selected' : '' }}>10</option>
             <option value="20" {{ $limite == 20 ? 'selected' : '' }}>20</option>
             <option value="50" {{ $limite == 50 ? 'selected' : '' }}>50</option>

@@ -59,6 +59,8 @@ use App\Livewire\Kinesiologia\KinesiologiaForm;
 use App\Livewire\Kinesiologia\ListaPlanillas;
 use App\Livewire\Kinesiologia\PdfsKinesiologia;
 use App\Livewire\Kinesiologia\SesionKinesiologica;
+use App\Http\Controllers\Kinesiologia\FichaPdfController;
+
 
 
 /*
@@ -229,6 +231,11 @@ Route::get('/kinesiologia/planillas', ListaPlanillas::class)
 Route::get('/paciente/{paciente}/kinesiologia/pdfs', PdfsKinesiologia::class)
     ->name('kinesiologia.pdfs-kinesiologia');
 
-    //registro de sesiones
+//registro de sesiones
 Route::get('/pacientes/{paciente}/sesiones', SesionKinesiologica::class)
     ->name('kinesiologia.sesion-kinesiologica');
+
+//PDF para ver de kinesiologia
+
+Route::get('/kinesiologia/ficha-pdf/{fichaId}', [FichaPdfController::class, 'view'])
+    ->name('kinesiologia.pdf-ficha');

@@ -1,19 +1,18 @@
-<div class="padreTablas flex gap-x-2 px-6 min-h-screen bg-gray-100 py-8"
-    x-data="{
-        // Estado inicial de las secciones del acordeón
-        openDerivacion: true, // Abierta por defecto
-        openAnamnesis: false,
-        openGinecologico: false,
-        openEOM: false,
+<div class="padreTablas flex gap-x-2 px-6 min-h-screen bg-gray-100 py-8" x-data="{
+    // Estado inicial de las secciones del acordeón
+    openDerivacion: true, // Abierta por defecto
+    openAnamnesis: false,
+    openGinecologico: false,
+    openEOM: false,
 
-        // Función para alternar cualquier sección
-        toggleSection(section) {
-            if (section === 'derivacion') this.openDerivacion = !this.openDerivacion;
-            else if (section === 'anamnesis') this.openAnamnesis = !this.openAnamnesis;
-            else if (section === 'ginecologico') this.openGinecologico = !this.openGinecologico;
-            else if (section === 'eom') this.openEOM = !this.openEOM;
-        }
-    }" x-cloak>
+    // Función para alternar cualquier sección
+    toggleSection(section) {
+        if (section === 'derivacion') this.openDerivacion = !this.openDerivacion;
+        else if (section === 'anamnesis') this.openAnamnesis = !this.openAnamnesis;
+        else if (section === 'ginecologico') this.openGinecologico = !this.openGinecologico;
+        else if (section === 'eom') this.openEOM = !this.openEOM;
+    }
+}" x-cloak>
 
     <section class="seccionTab xl:mx-auto lg:mx-auto w-[95%]">
         <div class="mx-auto text-[12px]">
@@ -33,7 +32,8 @@
                     <ul class="space-y-2 text-gray-700">
                         <li><span class="font-medium text-gray-600">Nombre:</span> {{ $paciente->apellido_nombre }}</li>
                         <li><span class="font-medium text-gray-600">Domicilio:</span> {{ $paciente->domicilio }}</li>
-                        <li><span class="font-medium text-gray-600">Teléfono:</span> {{ $paciente->TelefonoCelular }}</li>
+                        <li><span class="font-medium text-gray-600">Teléfono:</span> {{ $paciente->TelefonoCelular }}
+                        </li>
                         <li><span class="font-medium text-gray-600">DNI:</span> {{ $paciente->dni }}</li>
                         <li><span class="font-medium text-gray-600">Edad:</span> {{ $paciente->edad }} años</li>
                     </ul>
@@ -51,13 +51,16 @@
                             <h3 class="text-xl font-bold text-black">
                                 Datos de Derivación y Diagnóstico
                             </h3>
-                            <svg :class="{'rotate-180': openDerivacion}" class="w-6 h-6 text-black transform transition-transform duration-300"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            <svg :class="{ 'rotate-180': openDerivacion }"
+                                class="w-6 h-6 text-black transform transition-transform duration-300" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
 
-                        <div x-show="openDerivacion" x-collapse.duration.500ms class="p-6 pt-4 border-t border-gray-200 space-y-6">
+                        <div x-show="openDerivacion" x-collapse.duration.500ms
+                            class="p-6 pt-4 border-t border-gray-200 space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                                 {{-- BLOQUE COMPLETO DEL DOCTOR (AUTOCUMPLETADO / ALERTA / INFO) --}}
@@ -65,7 +68,8 @@
                                     <div class="border p-4 rounded-lg bg-gray-100">
                                         <p class="font-semibold text-gray-800">Doctor Asignado:</p>
                                         <p class="text-gray-700 mt-1">{{ $doctor_name }}</p>
-                                        <p class="text-sm text-gray-600">Matrícula: {{ $doctor_matricula }} | Especialidad:
+                                        <p class="text-sm text-gray-600">Matrícula: {{ $doctor_matricula }} |
+                                            Especialidad:
                                             {{ $doctor_especialidad }}
                                         </p>
                                     </div>
@@ -90,95 +94,102 @@
                                     <div class="relative">
                                         <label class="block text-sm font-semibold text-gray-700 mb-1"
                                             for="doctor_name">Doctor</label>
-                                        <input type="text" id="doctor_name" wire:model.live.debounce.300ms="doctor_name"
+                                        <input type="text" id="doctor_name"
+                                            wire:model.live.debounce.300ms="doctor_name"
                                             class="w-full border-gray-300 rounded-md shadow-sm"
                                             placeholder="Comienza a escribir el nombre del doctor">
 
                                         @error('doctor_name')
-                                        <span class="text-red-500 text-sm">{{ $message }}</span>
+                                            <span class="text-red-500 text-sm">{{ $message }}</span>
                                         @enderror
 
                                         {{-- Lógica de Sugerencias (Visible si hay texto, no hay doctor_id, no hay alerta, y hay resultados) --}}
                                         @if (!empty($doctor_name) && $doctor_id === null && !$showDoctorAlert && count($doctorsFound) > 0)
-                                        <div
-                                            class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto">
-                                            @foreach ($doctorsFound as $doctor)
-                                            <div class="px-4 py-2 cursor-pointer hover:bg-gray-100"
-                                                wire:click="selectDoctor({{ $doctor->id }})">
-                                                <p class="font-medium text-gray-800">{{ $doctor->name }}</p>
-                                                <p class="text-xs text-gray-500">Mat: {{ $doctor->nro_matricula }}
-                                                    | {{ $doctor->especialidad }}</p>
+                                            <div
+                                                class="absolute z-10 w-full bg-white border border-gray-300 rounded-md shadow-lg mt-1 max-h-48 overflow-y-auto">
+                                                @foreach ($doctorsFound as $doctor)
+                                                    <div class="px-4 py-2 cursor-pointer hover:bg-gray-100"
+                                                        wire:click="selectDoctor({{ $doctor->id }})">
+                                                        <p class="font-medium text-gray-800">{{ $doctor->name }}</p>
+                                                        <p class="text-xs text-gray-500">Mat:
+                                                            {{ $doctor->nro_matricula }}
+                                                            | {{ $doctor->especialidad }}</p>
+                                                    </div>
+                                                @endforeach
                                             </div>
-                                            @endforeach
-                                        </div>
                                         @endif
 
                                         {{-- Lógica de Alerta/Creación (Visible si la búsqueda no dio resultados) --}}
                                         @if ($showDoctorAlert)
-                                        <div
-                                            class="mt-3 p-3 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg md:col-span-2">
-                                            <p>El doctor <strong>{{ $doctor_name }}</strong> no existe. ¿Desea agregarlo?
-                                            </p>
+                                            <div
+                                                class="mt-3 p-3 bg-yellow-50 border border-yellow-400 text-yellow-800 rounded-lg md:col-span-2">
+                                                <p>El doctor <strong>{{ $doctor_name }}</strong> no existe. ¿Desea
+                                                    agregarlo?
+                                                </p>
 
-                                            <div class="mt-2 space-y-2">
-                                                <div>
-                                                    <label class="block text-sm font-semibold text-gray-700 mb-1"
-                                                        for="new_matricula">Matrícula</label>
-                                                    <input type="text" wire:model.defer="doctor_matricula"
-                                                        id="new_matricula"
-                                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 text-gray-800"
-                                                        placeholder="Número de matrícula (requerido)">
-                                                    @error('doctor_matricula')
-                                                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                                                    @enderror
-                                                </div>
-
-                                                <div>
-                                                    <label class="block text-sm font-semibold text-gray-700 mb-1"
-                                                        for="new_especialidad">Especialidad</label>
-                                                    <input list="especialidades" wire:model.live="doctor_especialidad"
-                                                        wire:blur="verificarEspecialidad" id="new_especialidad"
-                                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 text-gray-800"
-                                                        placeholder="Seleccione o escriba una especialidad (requerido)...">
-
-                                                    <datalist id="especialidades">
-                                                        @foreach ($especialidades as $esp)
-                                                        <option value="{{ $esp }}"></option>
-                                                        @endforeach
-                                                    </datalist>
-
-                                                    @error('doctor_especialidad')
-                                                    <span class="text-red-500 text-sm">{{ $message }}</span>
-                                                    @enderror
-
-                                                    @if ($showEspecialidadAlert)
-                                                    <div
-                                                        class="mt-3 p-3 bg-red-100 border border-red-400 text-red-800 rounded-lg">
-                                                        <p>La especialidad <strong>{{ $doctor_especialidad }}</strong>
-                                                            no existe.</p>
-                                                        <button wire:click.prevent="crearEspecialidad" type="button"
-                                                            class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm mt-1">
-                                                            Sí, agregar especialidad
-                                                        </button>
+                                                <div class="mt-2 space-y-2">
+                                                    <div>
+                                                        <label class="block text-sm font-semibold text-gray-700 mb-1"
+                                                            for="new_matricula">Matrícula</label>
+                                                        <input type="text" wire:model.defer="doctor_matricula"
+                                                            id="new_matricula"
+                                                            class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 text-gray-800"
+                                                            placeholder="Número de matrícula (requerido)">
+                                                        @error('doctor_matricula')
+                                                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                                                        @enderror
                                                     </div>
-                                                    @endif
+
+                                                    <div>
+                                                        <label class="block text-sm font-semibold text-gray-700 mb-1"
+                                                            for="new_especialidad">Especialidad</label>
+                                                        <input list="especialidades"
+                                                            wire:model.live="doctor_especialidad"
+                                                            wire:blur="verificarEspecialidad" id="new_especialidad"
+                                                            class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 text-gray-800"
+                                                            placeholder="Seleccione o escriba una especialidad (requerido)...">
+
+                                                        <datalist id="especialidades">
+                                                            @foreach ($especialidades as $esp)
+                                                                <option value="{{ $esp }}"></option>
+                                                            @endforeach
+                                                        </datalist>
+
+                                                        @error('doctor_especialidad')
+                                                            <span class="text-red-500 text-sm">{{ $message }}</span>
+                                                        @enderror
+
+                                                        @if ($showEspecialidadAlert)
+                                                            <div
+                                                                class="mt-3 p-3 bg-red-100 border border-red-400 text-red-800 rounded-lg">
+                                                                <p>La especialidad
+                                                                    <strong>{{ $doctor_especialidad }}</strong>
+                                                                    no existe.</p>
+                                                                <button wire:click.prevent="crearEspecialidad"
+                                                                    type="button"
+                                                                    class="bg-red-600 text-white px-3 py-1 rounded hover:bg-red-700 text-sm mt-1">
+                                                                    Sí, agregar especialidad
+                                                                </button>
+                                                            </div>
+                                                        @endif
+                                                    </div>
+                                                </div>
+
+                                                <div class="mt-4 flex gap-2">
+                                                    <button type="button" onclick="confirmarCreacionDoctor()"
+                                                        @if ($showEspecialidadAlert) disabled @endif
+                                                        class="px-3 py-2 rounded-lg transition duration-150 text-white text-sm
+                                                    @if ($showEspecialidadAlert) bg-green-400 cursor-not-allowed @else bg-green-600 hover:bg-green-700 @endif">
+                                                        ✅ Agregar y Seleccionar Doctor
+                                                    </button>
+                                                    <button
+                                                        wire:click.prevent="$set('showDoctorAlert', false); $set('doctor_name', '');"
+                                                        type="button"
+                                                        class="bg-gray-400 text-white px-3 py-2 rounded-lg hover:bg-gray-500 transition duration-150 text-sm">
+                                                        Cancelar
+                                                    </button>
                                                 </div>
                                             </div>
-
-                                            <div class="mt-4 flex gap-2">
-                                                <button type="button" onclick="confirmarCreacionDoctor()"
-                                                    @if($showEspecialidadAlert) disabled @endif
-                                                    class="px-3 py-2 rounded-lg transition duration-150 text-white text-sm
-                                                    @if($showEspecialidadAlert) bg-green-400 cursor-not-allowed @else bg-green-600 hover:bg-green-700 @endif">
-                                                    ✅ Agregar y Seleccionar Doctor
-                                                </button>
-                                                <button wire:click.prevent="$set('showDoctorAlert', false); $set('doctor_name', '');"
-                                                    type="button"
-                                                    class="bg-gray-400 text-white px-3 py-2 rounded-lg hover:bg-gray-500 transition duration-150 text-sm">
-                                                    Cancelar
-                                                </button>
-                                            </div>
-                                        </div>
                                         @endif
                                     </div>
                                 @endif
@@ -193,11 +204,11 @@
                                         class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                         <option value="">Seleccione una obra social</option>
                                         @foreach ($obrasSociales as $obra)
-                                        <option value="{{ $obra->id }}">{{ $obra->nombre }}</option>
+                                            <option value="{{ $obra->id }}">{{ $obra->nombre }}</option>
                                         @endforeach
                                     </select>
                                     @error('obra_social_id')
-                                    <span class="text-red-500 text-sm">{{ $message }}</span>
+                                        <span class="text-red-500 text-sm">{{ $message }}</span>
                                     @enderror
                                 </div>
 
@@ -222,18 +233,22 @@
                             <h3 class="text-xl font-bold text-black">
                                 Anamnesis (Historia Clínica)
                             </h3>
-                            <svg :class="{'rotate-180': openAnamnesis}" class="w-6 h-6 text-black transform transition-transform duration-300"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            <svg :class="{ 'rotate-180': openAnamnesis }"
+                                class="w-6 h-6 text-black transform transition-transform duration-300" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
 
-                        <div x-show="openAnamnesis" x-collapse.duration.500ms class="p-6 pt-4 border-t border-gray-200 space-y-6">
+                        <div x-show="openAnamnesis" x-collapse.duration.500ms
+                            class="p-6 pt-4 border-t border-gray-200 space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
 
                                 {{-- Motivo de consulta --}}
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Motivo de consulta</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Motivo de
+                                        consulta</label>
                                     <textarea wire:model="motivo_consulta" rows="3"
                                         class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400 resize-y"
                                         placeholder="Describa el motivo de consulta..."></textarea>
@@ -241,7 +256,8 @@
 
                                 {{-- Posturas dolorosas --}}
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Posturas dolorosas</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Posturas
+                                        dolorosas</label>
                                     <textarea type="text" wire:model="posturas_dolorosas" rows="3"
                                         class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400"></textarea>
                                 </div>
@@ -260,7 +276,8 @@
 
                                 {{-- Tipo de actividad --}}
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Tipo de actividad</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Tipo de
+                                        actividad</label>
                                     <input type="text" wire:model="tipo_actividad"
                                         class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                 </div>
@@ -284,7 +301,8 @@
                                 {{-- Cirugías --}}
                                 <div>
                                     <label class="block text-sm font-semibold text-gray-700 mb-1">Cirugías</label>
-                                    <input type="text" wire:model="cirugias" rows="2" class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                                    <input type="text" wire:model="cirugias" rows="2"
+                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                 </div>
 
                                 {{-- Traumatismos o accidentes --}}
@@ -318,7 +336,8 @@
 
                                 {{-- ¿Presenta alteración de peso? --}}
                                 <div>
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">¿Presenta alteración de
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">¿Presenta alteración
+                                        de
                                         peso?</label>
                                     <select wire:model="alteracion_peso"
                                         class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
@@ -330,7 +349,8 @@
 
                                 {{-- Medicación actual --}}
                                 <div class="md:col-span-2">
-                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Medicación actual</label>
+                                    <label class="block text-sm font-semibold text-gray-700 mb-1">Medicación
+                                        actual</label>
                                     <input type="text" wire:model="medicacion_actual" rows="2"
                                         class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
                                 </div>
@@ -354,15 +374,18 @@
                         <div class="p-4 cursor-pointer flex justify-between items-center  bg-gray-200 rounded-t-lg"
                             @click="toggleSection('ginecologico')">
                             <h3 class="text-xl font-bold text-black">
-                                 Antecedentes Ginecológicos
+                                Antecedentes Ginecológicos
                             </h3>
-                            <svg :class="{'rotate-180': openGinecologico}" class="w-6 h-6 text-black transform transition-transform duration-300"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            <svg :class="{ 'rotate-180': openGinecologico }"
+                                class="w-6 h-6 text-black transform transition-transform duration-300" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
 
-                        <div x-show="openGinecologico" x-collapse.duration.500ms class="p-6 pt-4 border-t border-gray-200 space-y-6">
+                        <div x-show="openGinecologico" x-collapse.duration.500ms
+                            class="p-6 pt-4 border-t border-gray-200 space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
 
                                 {{-- Menarca --}}
@@ -408,35 +431,38 @@
                             <h3 class="text-xl font-bold text-black">
                                 Examen EOM (Evaluación Osteopática/Otras Mediciones)
                             </h3>
-                            <svg :class="{'rotate-180': openEOM}" class="w-6 h-6 text-black transform transition-transform duration-300"
-                                fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7"></path>
+                            <svg :class="{ 'rotate-180': openEOM }"
+                                class="w-6 h-6 text-black transform transition-transform duration-300" fill="none"
+                                stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2"
+                                    d="M19 9l-7 7-7-7"></path>
                             </svg>
                         </div>
 
-                        <div x-show="openEOM" x-collapse.duration.500ms class="p-6 pt-4 border-t border-gray-200 space-y-6">
+                        <div x-show="openEOM" x-collapse.duration.500ms
+                            class="p-6 pt-4 border-t border-gray-200 space-y-6">
                             <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                                 @foreach ([
-                                'visceral_palpacion' => 'Palpación visceral',
-                                'visceral_dermalgias' => 'Dermalgias',
-                                'visceral_triggers' => 'Triggers',
-                                'visceral_fijaciones' => 'Fijaciones',
-                                'craneal_forma' => 'Forma craneal',
-                                'craneal_triggers' => 'Triggers craneales',
-                                'craneal_fijaciones' => 'Fijaciones craneales',
-                                'craneal_musculos' => 'Músculos craneales',
-                                'tension_arterial' => 'Tensión arterial',
-                                'pulsos' => 'Pulsos',
-                                'auscultacion' => 'Auscultación',
-                                'ecg' => 'ECG',
-                                'ecodoppler' => 'Ecodoppler',
-                                ] as $campo => $label)
-                                <div>
-                                    <label
-                                        class="block text-sm font-semibold text-gray-700 mb-1">{{ $label }}</label>
-                                    <input type="text" wire:model="{{ $campo }}"
-                                        class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
-                                </div>
+        'visceral_palpacion' => 'Palpación visceral',
+        'visceral_dermalgias' => 'Dermalgias',
+        'visceral_triggers' => 'Triggers',
+        'visceral_fijaciones' => 'Fijaciones',
+        'craneal_forma' => 'Forma craneal',
+        'craneal_triggers' => 'Triggers craneales',
+        'craneal_fijaciones' => 'Fijaciones craneales',
+        'craneal_musculos' => 'Músculos craneales',
+        'tension_arterial' => 'Tensión arterial',
+        'pulsos' => 'Pulsos',
+        'auscultacion' => 'Auscultación',
+        'ecg' => 'ECG',
+        'ecodoppler' => 'Ecodoppler',
+    ] as $campo => $label)
+                                    <div>
+                                        <label
+                                            class="block text-sm font-semibold text-gray-700 mb-1">{{ $label }}</label>
+                                        <input type="text" wire:model="{{ $campo }}"
+                                            class="w-full border rounded-lg p-2 focus:ring-2 focus:ring-blue-400">
+                                    </div>
                                 @endforeach
                             </div>
                         </div>
@@ -447,18 +473,19 @@
                     <div class="flex justify-center space-x-4 mb-4 mt-8 pt-4 border-t border-gray-200">
                         <button type="submit"
                             class="px-6 py-3 bg-blue-600 text-white rounded-xl shadow-lg hover:bg-blue-700 focus:outline-none transition duration-150 transform hover:scale-105">
-                             Guardar Ficha Kinesiológica
+                            Guardar Ficha Kinesiológica
                         </button>
+
 
                         <a href="{{ route('kinesiologia.ficha-kinesiologica-index', ['paciente' => $paciente->id]) }}"
                             class="bg-green-600 text-white px-6 py-3 rounded-xl shadow-lg hover:bg-green-700 transition duration-150 transform hover:scale-105 flex items-center">
-                             Ver Historial de Fichas
+                            Ver Historial de Fichas
                         </a>
 
 
                         <a href="{{ route('interviews.index', $paciente) }}"
                             class="px-6 py-3 bg-gray-500 text-white rounded-xl shadow-lg hover:bg-gray-600 focus:outline-none transition duration-150 transform hover:scale-105">
-                             Volver
+                            Volver
                         </a>
                     </div>
                 </form>
@@ -474,7 +501,8 @@
         Livewire.on('swal', (payload) => {
             if (Array.isArray(payload)) payload = payload[0];
             const {
-                title = 'Listo', text = '', html = null, icon = 'success', timer = 3000, redirect = null // 👈 1. CAPTURAR LA PROPIEDAD 'redirect'
+                title = 'Listo', text = '', html = null, icon = 'success', timer = 3000, redirect =
+                    null // 👈 1. CAPTURAR LA PROPIEDAD 'redirect'
             } = payload || {};
             const isErrorOrWarning = (icon === 'error' || icon === 'warning');
             Swal.fire({
@@ -487,7 +515,7 @@
                 showConfirmButton: isErrorOrWarning,
                 timer: isErrorOrWarning ? null : timer,
                 timerProgressBar: !isErrorOrWarning,
-                }).then((result) => {
+            }).then((result) => {
                 // 👈 2. AGREGAR LA LÓGICA DE REDIRECCIÓN AQUÍ
                 // Redirige solo si existe una URL de redirección y NO es un error/warning.
                 if (redirect && !isErrorOrWarning) {
@@ -518,7 +546,7 @@
         const especialidadAlertVisible = @js($showEspecialidadAlert ?? false); // Usar Livewire prop
 
         if (!matricula || !especialidad || especialidadAlertVisible) {
-             Swal.fire({
+            Swal.fire({
                 title: 'Información Incompleta',
                 text: 'Por favor, complete la Matrícula y la Especialidad (y verifique la especialidad si es nueva) antes de agregar el doctor.',
                 icon: 'warning',

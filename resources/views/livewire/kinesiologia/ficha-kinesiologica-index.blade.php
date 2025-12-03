@@ -198,6 +198,13 @@
                                     Adjuntar PDFs
                                 </a>
 
+                                <div class="flex gap-2 mt-3 justify-center">
+                                    <a href="{{ route('kinesiologia.pdf-ficha', $ficha->id ?? 0) }}" target="_blank"
+                                        class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
+                                        Ver / Imprimir PDF
+                                    </a>
+                                </div>
+
                                 <a href="{{ route('kinesiologia.ficha-kinesiologica-edit', ['ficha' => $ficha->id]) }}"
                                     class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
                                     Editar Planilla

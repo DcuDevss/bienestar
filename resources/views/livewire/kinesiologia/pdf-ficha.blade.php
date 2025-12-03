@@ -48,13 +48,22 @@
         .label {
             font-weight: bold;
         }
+
+        /* Ocultar botones en la impresión */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+        }
     </style>
 </head>
 
 <body>
 
     <h1>Ficha Kinesiológica</h1>
-    <div style="text-align:center; margin-bottom:20px;">
+
+    <!-- Botón solo visible en pantalla -->
+    <div class="no-print" style="text-align:center; margin-bottom:20px;">
         <button onclick="window.print()"
             style="padding:5px 10px; background:#333; color:white; border:none; border-radius:4px;">
             Imprimir / Guardar como PDF
@@ -210,7 +219,7 @@
         </div>
     @endif
 
-
+    {{-- Firmas --}}
     <div class="section"
         style="margin-top: 95px; display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
         {{-- Firma del Kinesiólogo --}}
@@ -232,11 +241,6 @@
             </strong>
         </div>
     </div>
-
-
-
-
-
 
 </body>
 

@@ -209,38 +209,30 @@
             </table>
         </div>
     @endif
-    <p>
-    <p>
 
 
-
-    <div class="section" style="margin-top: 60px; display: flex; justify-content: space-between; width: 100%;">
+    <div class="section"
+        style="margin-top: 95px; display: flex; justify-content: space-between; align-items: flex-end; width: 100%;">
         {{-- Firma del Kinesiólogo --}}
         @if ($ficha->user)
-            <div style="text-align: center; flex: 0 0 40%;"> <!-- ocupa 40% del ancho -->
-                <p style="margin-bottom: 10px;">______________________________</p>
-                <p style="margin-bottom: 5px;">Firma del Kinesiólogo</p>
+            <div style="text-align: center; flex: 0 0 45%;">
+                <p style="margin: 0 0 10px 0;">______________________________</p>
+                <p style="margin: 0 0 5px 0;">Firma del Kinesiólogo</p>
                 <strong>{{ auth()->user()->name }}</strong>
-
             </div>
         @endif
-        <!-- ↓ más espacio arriba -->
 
         {{-- Firma del Paciente --}}
-        <div style="text-align: center; flex: 1;">
-            <p style="margin-bottom: 15px; margin-top: 40px;">______________________________</p>
-
-            <p style="margin-bottom: 5px;">Firma del Paciente</p>
+        <div style="text-align: center; flex: 0 0 45%;">
+            <p style="margin: 0 0 10px 0;">______________________________</p>
+            <p style="margin: 0 0 5px 0;">Firma del Paciente</p>
             <strong>
                 {{ $ficha->paciente?->jerarquias?->name ?? 'Jerarquía' }}
                 {{ $ficha->paciente->apellido_nombre ?? 'Sin Nombre' }}
             </strong>
         </div>
-
     </div>
 
-
-    </div>
 
 
 

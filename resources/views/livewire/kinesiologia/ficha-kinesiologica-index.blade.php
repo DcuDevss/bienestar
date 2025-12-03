@@ -192,33 +192,29 @@
                                 @endif
                             @endforeach
 
-                            <div class="flex gap-2 mt-3 justify-center">
-                                <a href="{{ route('kinesiologia.pdfs-kinesiologia', ['paciente' => $paciente->id, 'ficha' => $ficha->id]) }}"
-                                    class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
+                            <div class="flex flex-wrap justify-center gap-3 mt-3">
+                                {{--    <a href="{{ route('kinesiologia.pdfs-kinesiologia', ['paciente' => $paciente->id, 'ficha' => $ficha->id]) }}"
+                                    class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm whitespace-nowrap">
                                     Adjuntar PDFs
                                 </a>
-
+ --}}
                                 <a href="{{ route('kinesiologia.pdf-ficha', ['fichaId' => $ficha->id]) }}"
                                     target="_blank"
-                                    class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
+                                    class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm whitespace-nowrap">
                                     Ver / Imprimir PDF
                                 </a>
 
-
-
-
-
-
                                 <a href="{{ route('kinesiologia.ficha-kinesiologica-edit', ['ficha' => $ficha->id]) }}"
-                                    class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
+                                    class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm whitespace-nowrap">
                                     Editar Planilla
                                 </a>
 
                                 <a href="{{ route('kinesiologia.sesion-kinesiologica', ['paciente' => $paciente->id]) }}"
-                                    class="bg-gray-700 hover:bg-gray-800 text-white px-3 py-1.5 rounded-md text-sm">
+                                    class="bg-gray-700 hover:bg-gray-800 text-white px-4 py-2 rounded-md text-sm whitespace-nowrap">
                                     Sesiones de Kinesiología
                                 </a>
                             </div>
+
                         </div>
                     </div>
                 @endforeach

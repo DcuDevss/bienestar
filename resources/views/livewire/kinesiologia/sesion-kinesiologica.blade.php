@@ -271,7 +271,20 @@
             class="bg-green-600 text-white px-6 py-2 rounded-xl shadow-lg hover:bg-green-700 transition duration-150 transform hover:scale-105 flex items-center">
             Ver Historial de Fichas
         </a>
+
+        {{-- Ver PDF --}}
+        <a href="{{ route('kinesiologia.sesiones', [
+            'paciente' => $paciente->id,
+            'estado' => request('estado', 'activas'),
+            'limite' => request('limite', 10),
+        ]) }}"
+            class="bg-gray-700 text-white px-6 py-2 rounded-xl shadow-lg hover:bg-gray-800 transition duration-150 transform hover:scale-105 flex items-center">
+            Ver Sesiones (PDF)
+        </a>
+        {{-- Fin PDF --}}
     </div>
+
+
 
 </div>
 

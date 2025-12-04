@@ -21,6 +21,7 @@ class SesionPdfController extends Controller
         if ($limiteRequest === 'todos') {
             // Un número muy grande para simular "sin límite" en la vista, aunque no se aplicará en la query
             $limite = 9999;
+            //limite
         } else {
             // Asegura que el límite sea al menos 10 o el valor ingresado por el usuario
             $limite = max((int) $limiteRequest, 0);

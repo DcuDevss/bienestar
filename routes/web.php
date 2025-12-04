@@ -60,6 +60,7 @@ use App\Livewire\Kinesiologia\ListaPlanillas;
 use App\Livewire\Kinesiologia\PdfsKinesiologia;
 use App\Livewire\Kinesiologia\SesionKinesiologica;
 use App\Http\Controllers\Kinesiologia\FichaPdfController;
+use App\Http\Controllers\Kinesiologia\SesionPdfController;
 
 
 
@@ -238,3 +239,8 @@ Route::get('/pacientes/{paciente}/sesiones', SesionKinesiologica::class)
 //PDF para ver de kinesiologia
 Route::get('kinesiologia/ficha-pdf/{fichaId}', [FichaPdfController::class, 'view'])
     ->name('kinesiologia.pdf-ficha');
+
+
+// 📄 Ver / Imprimir PDF de sesiones
+Route::get('/kinesiologia/sesiones/pdf/{paciente}', [SesionPdfController::class, 'pdfSesiones'])
+    ->name('kinesiologia.sesiones');

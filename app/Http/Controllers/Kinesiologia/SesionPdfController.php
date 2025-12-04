@@ -41,13 +41,11 @@ class SesionPdfController extends Controller
         // -------------------------
         // LÍMITE
         // -------------------------
-        if ($estado === 'todas') {
-            $sesiones = $query->orderBy('fecha_sesion', 'asc')->get();
-        } else {
-            $sesiones = $query->orderBy('fecha_sesion', 'asc')
-                ->limit($limite)
-                ->get();
-        }
+        $sesiones = $query
+            ->orderBy('fecha_sesion', 'asc')
+            ->limit($limite)
+            ->get();
+
 
         return view('livewire.kinesiologia.sesiones', compact(
             'paciente',

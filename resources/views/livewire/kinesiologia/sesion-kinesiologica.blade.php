@@ -182,15 +182,34 @@
             </span>
         @endif
     </div>
-
     {{-- TABLA DE SESIONES --}}
     <div class="bg-white shadow p-4 rounded">
         <h3 class="font-semibold mb-3">Listado de Sesiones</h3>
+        {{-- BOTÓN ELIMINAR SELECCIONADOS --}}
+        @role('super-admin')
+            @if (count($seleccionados) > 0)
+                <button onclick="confirmarEliminacionMasiva()"
+                    class="mb-3 px-3 py-1.5 bg-red-600 text-white text-sm rounded shadow hover:bg-red-700 transition">
+                    Eliminar seleccionados ({{ count($seleccionados) }})
+                </button>
+            @endif
+        @endrole
 
         <table class="w-full text-left border">
             <thead class="bg-gray-100">
                 <tr>
-                    {{-- ID (#) ELIMINADO --}}
+                    {{-- CHECKBOX SELECT ALL (solo página actual) --}}
+                    @role('super-admin')
+                        <th class="px-2 py-1 border w-10 text-center">
+                            {{-- Intenta con .live para forzar la actualización visual --}}
+                            <input type="checkbox" wire:model.live="selectAll">
+                        </th>
+                    @endrole
+                    {{-- Se añade un <th> vacío si no es super-admin para mantener la estructura de la tabla --}}
+                    @unlessrole('super-admin')
+                        <th class="px-2 py-1 border w-10 text-center"></th>
+                    @endunlessrole
+
                     <th class="px-2 py-1 border">Fecha</th>
                     <th class="px-2 py-1 border">Tratamiento</th>
                     <th class="px-2 py-1 border">Evolución</th>
@@ -200,17 +219,24 @@
             </thead>
 
             <tbody>
-                {{-- La variable $sesionesFiltradas DEBE retornar ahora un Paginator --}}
-                @foreach ($this->sesionesFiltradas as $sesion)
-                    <tr x-transition.opacity.duration.300ms
-                        class="{{ $sesion->firma_paciente_digital == 0 ? 'bg-green-50' : 'bg-red-50' }}">
+                @foreach ($sesionesFiltradas as $sesion)
+                    <tr class="{{ $sesion->firma_paciente_digital == 0 ? 'bg-green-50' : 'bg-red-50' }}">
 
-                        {{-- ID (sesion_nro) ELIMINADO --}}
-                        {{-- <td class="border px-2 py-1">{{ $sesion->sesion_nro }}</td> --}}
+                        {{-- CHECKBOX INDIVIDUAL (Solo para Super-Admin) --}}
+                        @role('super-admin')
+                            <td class="border px-2 py-1 text-center">
+                                <input type="checkbox" wire:model.live="seleccionados" value="{{ $sesion->id }}">
+                            </td>
+                        @endrole
+                        {{-- Celda vacía para usuarios sin permiso, manteniendo el diseño de la tabla --}}
+                        @unlessrole('super-admin')
+                            <td class="border px-2 py-1 text-center"></td>
+                        @endunlessrole
 
-                        {{-- Formateado para mostrar d/m/Y --}}
-                        <td class="border px-2 py-1">{{ Carbon\Carbon::parse($sesion->fecha_sesion)->format('d/m/Y') }}
-                        </td>
+
+                        {{-- Resto de columnas (sin cambios) --}}
+                        <td class="border px-2 py-1">
+                            {{ Carbon\Carbon::parse($sesion->fecha_sesion)->format('d/m/Y') }}</td>
                         <td class="border px-2 py-1">{{ $sesion->tratamiento_fisiokinetico }}</td>
                         <td class="border px-2 py-1">{{ $sesion->evolucion_sesion }}</td>
                         <td class="border px-2 py-1">
@@ -226,28 +252,26 @@
                                 </span>
                             @endif
                         </td>
-
                         <td class="border px-2 py-1 flex gap-2">
-                            {{-- EDITAR --}}
                             <button wire:click="editarSesion({{ $sesion->id }})" @click="modal=true"
                                 class="px-2 py-1 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition text-xs">
                                 Editar
                             </button>
 
-                            {{-- ELIMINAR --}}
+                            {{-- BOTÓN ELIMINAR INDIVIDUAL (Ya estaba correctamente envuelto) --}}
                             @role('super-admin')
                                 <button onclick="confirmarEliminarSesion({{ $sesion->id }})"
                                     class="px-2 py-1 bg-red-600 text-white rounded hover:bg-red-700 transition text-xs">
                                     Eliminar
                                 </button>
                             @endrole
-
-
                         </td>
                     </tr>
                 @endforeach
             </tbody>
         </table>
+        {{-- </div> --}}
+
 
         {{-- 🔑 LINKS DEL PAGINADOR: Usar la variable de las sesiones filtradas --}}
         <div class="mt-4">
@@ -423,6 +447,26 @@
                 Livewire.dispatch('eliminarSesionConfirmada', {
                     id: id
                 });
+            }
+        });
+    }
+</script>
+{{-- AÑADE ESTE BLOQUE DE SCRIPT AL FINAL DE TU COMPONENTE O EN EL LAYOUT --}}
+<script>
+    function confirmarEliminacionMasiva() {
+        Swal.fire({
+            title: '¿Estás seguro?',
+            text: "¡No podrás revertir esto!",
+            icon: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#d33',
+            cancelButtonColor: '#3085d6',
+            confirmButtonText: 'Sí, eliminar sesiones',
+            cancelButtonText: 'Cancelar'
+        }).then((result) => {
+            if (result.isConfirmed) {
+                // 🔥 Aquí llamamos al método de Livewire SOLO si el usuario confirma
+                Livewire.dispatch('confirmarEliminacionMasiva');
             }
         });
     }

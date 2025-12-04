@@ -25,6 +25,10 @@ class SesionKinesiologica extends Component
     public $tratamiento_fisiokinetico;
     public $evolucion_sesion;
 
+    public $seleccionados = [];
+    public $selectAll = false;
+
+
     // Propiedades de la UI y la data
     // No necesitamos $this->sesiones aquí, la consulta se hace en el getter paginado.
     // public $sesiones; // ⬅️ Eliminada o no usada directamente en la consulta principal
@@ -32,6 +36,10 @@ class SesionKinesiologica extends Component
     public $nuevaSerie = false;
     public $filtro = 'todas';
     public $limiteSerie = 10; // Límite de sesiones para la alerta visual
+
+    // Variables
+    public $seleccionadosPorPagina = []; // array de arrays: ['pagina1' => [id1,id2], 'pagina2' => [...]]
+    public $selectAllPorPagina = [];    // array de booleans: ['pagina1' => true/false]
 
     // 2. 🔑 Propiedades de Paginación
     public $perPage = 10;
@@ -51,6 +59,96 @@ class SesionKinesiologica extends Component
         // NUEVO
         'eliminarSesionConfirmada' => 'eliminarSesion',
     ];
+
+    // 🔥 CONEXIÓN CRUCIAL: Este Listener recibe el evento del JavaScript
+    #[On('confirmarEliminacionMasiva')]
+    public function eliminarSeleccionados()
+    {
+        Log::info('*** ELIMINACIÓN MASIVA CONFIRMADA POR USUARIO ***');
+
+        if (empty($this->seleccionados)) {
+            Log::warning('No hay IDs seleccionados para eliminar. Retornando.');
+            return;
+        }
+
+        // Asegúrate de que los IDs sean enteros antes de la consulta
+        $ids = array_map('intval', $this->seleccionados);
+
+        // Ejecuta la eliminación en la base de datos
+        Sesion::whereIn('id', $ids)->delete();
+
+        // Limpia la selección en el componente
+        $this->seleccionados = [];
+        $this->selectAll = false;
+
+        Log::info('Eliminación exitosa. Sesiones eliminadas: ' . implode(', ', $ids));
+
+        // Modifica la línea del dispatch en public function eliminarSeleccionados()
+        $this->dispatch(
+            'swal',
+            title: 'Sesiones eliminadas',
+            text: 'Las sesiones seleccionadas fueron eliminadas correctamente.',
+            icon: 'success'
+        );
+    }
+
+    // Toggle selección de todos los de la página actual
+    public function updatedSelectAll($value) // $value será true o false
+    {
+        Log::info('*** updatedSelectAll INICIADO ***');
+        Log::info('Nuevo valor de $selectAll: ' . ($value ? 'true' : 'false'));
+
+        // Asegúrate de mapear los IDs a string para evitar conflictos de tipo con wire:model
+        // IMPORTANTE: Asegúrate que $this->sesionesFiltradas contenga los datos correctos.
+        $currentItems = $this->sesionesFiltradas->pluck('id')->map(fn($id) => (string)$id);
+        Log::info('IDs en la página actual ($sesionesFiltradas): ' . $currentItems->implode(', '));
+
+        if ($value) {
+            // Selecciona SOLO los IDs de la página actual
+            $this->seleccionados = $currentItems->toArray();
+        } else {
+            // Deselecciona todo de la página actual
+            $this->seleccionados = [];
+        }
+
+        Log::info('Resultado de $seleccionados después de updatedSelectAll: ' . implode(', ', $this->seleccionados));
+        Log::info('*** updatedSelectAll FINALIZADO ***');
+    }
+
+    // NUEVA LÓGICA CRUCIAL: Sincroniza el checkbox "Seleccionar Todo"
+    public function updatedSeleccionados()
+    {
+        Log::info('*** updatedSeleccionados INICIADO ***');
+        Log::info('IDs seleccionados actualmente: ' . implode(', ', $this->seleccionados));
+
+        // Compara el conteo de seleccionados con el total de ítems en la página actual
+        $allItemsCount = $this->sesionesFiltradas->count();
+        Log::info('Total de ítems en la página: ' . $allItemsCount);
+
+        if (count($this->seleccionados) === $allItemsCount && $allItemsCount > 0) {
+            $this->selectAll = true;
+            Log::info('Resultado: $selectAll se establece en TRUE (todos seleccionados).');
+        } else {
+            $this->selectAll = false;
+            Log::info('Resultado: $selectAll se establece en FALSE (selección incompleta).');
+        }
+
+        Log::info('*** updatedSeleccionados FINALIZADO ***');
+    }
+
+    // Reiniciar selección al cambiar de página
+    public function updatedPage()
+    {
+        Log::info('*** updatedPage INICIADO ***');
+
+        $this->seleccionados = [];
+        $this->selectAll = false;
+
+        Log::info('Página cambiada. Selección reseteada.');
+    }
+
+
+    //Hasta aca:
 
     // Se ejecuta cada vez que $perPage o $filtro cambia (para reiniciar la página)
     public function updatedPerPage()

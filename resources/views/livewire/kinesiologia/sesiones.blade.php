@@ -102,11 +102,12 @@
     @endif
 
 
-    {{-- 🔥 FORMULARIO DE FILTROS --}}
+    {{-- 🔥 FORMULARIO DE FILTROS (Con IDs y JS para resetear límite) --}}
     <form method="GET" class="no-print" style="margin-bottom: 15px;">
 
         <label><strong>Estado:</strong></label>
-        <select name="estado" onchange="this.form.submit()">
+        {{-- CRUCIAL: Cambiar onchange a la función JS --}}
+        <select name="estado" id="filtroEstado" onchange="resetearLimiteYEnviar()">
             <option value="activas" {{ $estado == 'activas' ? 'selected' : '' }}>Activas</option>
             <option value="inactivas" {{ $estado == 'inactivas' ? 'selected' : '' }}>Inactivas</option>
             <option value="todas" {{ $estado == 'todas' ? 'selected' : '' }}>Todas</option>
@@ -126,12 +127,11 @@
         &nbsp;&nbsp;&nbsp;
 
         <label><strong>Límite:</strong></label>
-        <input type="number" name="limite" value="{{ $limite_input_valor }}" min="1"
+        {{-- CRUCIAL: Añadir ID para que el JS pueda manipularlo --}}
+        <input type="number" name="limite" id="inputLimite" value="{{ $limite_input_valor }}" min="1"
             onchange="this.form.submit()"
             style="width: 70px; padding: 5px; border: 1px solid #ccc; border-radius: 3px;">
         <button type="submit" class="btn" style="padding: 5px 10px; margin-left: 5px;">Aplicar Límite</button>
-
-    
 
 
         {{-- ⚠️ AVISO DE LÍMITE (solo muestra cuando corresponde) --}}
@@ -142,7 +142,7 @@
             </div>
         @endif
 
-    </form> {{-- <<<<<<<<<<<<<<<< ¡ESTA ETIQUETA DE CIERRE ES LA CLAVE! --}}
+    </form>
 
 
     <p>
@@ -201,6 +201,22 @@
         </div>
 
     </div>
+
+    <!-- SCRIPT PARA EL COMPORTAMIENTO DEL FILTRO DE LÍMITE -->
+    <script>
+        function resetearLimiteYEnviar() {
+            const estadoSelect = document.getElementById('filtroEstado');
+            const limiteInput = document.getElementById('inputLimite');
+
+            // Al cambiar cualquier estado (Activas, Inactivas, Todas),
+            // establecemos el valor del input de límite a cadena vacía ('').
+            // Esto garantiza que el límite no se recuerde al moverse a un nuevo filtro.
+            limiteInput.value = '';
+
+            // Enviamos el formulario para aplicar el nuevo filtro y el límite reseteado.
+            estadoSelect.form.submit();
+        }
+    </script>
 
 </body>
 

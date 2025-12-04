@@ -12,7 +12,19 @@ class SesionPdfController extends Controller
     {
         $estado = request()->get('estado', 'activas'); // activas | inactivas | todas
         $subestado = request()->get('subestado');      // solo si estado=todas
-        $limite = max((int) request()->get('limite', 10), 10);
+
+        // -------------------------
+        // 1. OBTENCIÓN DEL LÍMITE DEL USUARIO
+        // -------------------------
+        $limiteRequest = request()->get('limite', '10'); // Puede ser 'todos' o un número.
+
+        if ($limiteRequest === 'todos') {
+            // Un número muy grande para simular "sin límite" en la vista, aunque no se aplicará en la query
+            $limite = 9999;
+        } else {
+            // Asegura que el límite sea al menos 10 o el valor ingresado por el usuario
+            $limite = max((int) $limiteRequest, 0);
+        }
 
         $query = RegistroSesion::where('paciente_id', $paciente->id);
 
@@ -39,12 +51,16 @@ class SesionPdfController extends Controller
         $totalReal = $query->count();
 
         // -------------------------
-        // LÍMITE
+        // 2. APLICACIÓN CONDICIONAL DEL LÍMITE
         // -------------------------
-        $sesiones = $query
-            ->orderBy('fecha_sesion', 'asc')
-            ->limit($limite)
-            ->get();
+        $query->orderBy('fecha_sesion', 'asc');
+
+        // Solo aplica limit() si el usuario no eligió 'todos'
+        if ($limiteRequest !== 'todos') {
+            $query->limit($limite);
+        }
+
+        $sesiones = $query->get();
 
 
         return view('livewire.kinesiologia.sesiones', compact(

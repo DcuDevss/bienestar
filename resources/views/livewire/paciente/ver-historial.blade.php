@@ -40,10 +40,12 @@
                     </div>
 
                     <div class="flex items-center gap-2">
-                        <a href="{{ route('pdf.download', ['filename' => urlencode($item['display']), 'pid' => $pacienteId]) }}"
+                        <a href="{{ route('pdf.download', ['filename' => basename($item['path']), 'pid' => $pacienteId]) }}"
                             class="px-2 py-1 bg-gray-600 text-white rounded hover:bg-gray-700 text-sm">
                             Descargar
                         </a>
+
+
 
                         <button x-data
                             @click.prevent="

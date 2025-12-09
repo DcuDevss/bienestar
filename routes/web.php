@@ -252,6 +252,6 @@ Route::get('kinesiologia/ficha-pdf/{fichaId}', [FichaPdfController::class, 'view
 Route::get('/kinesiologia/sesiones/pdf/{paciente}', [SesionPdfController::class, 'pdfSesiones'])
     ->name('kinesiologia.sesiones');
 
-//Vista previa:
-Route::get('/pdf/preview/{id}', [PdfsKinesiologia::class, 'previewPdf'])
-    ->name('pdf.preview');
+// Ahora
+Route::get('/pdfs/{filename}', [PdfsKinesiologia::class, 'previewPdfByFilename'])
+    ->name('pdf.show');

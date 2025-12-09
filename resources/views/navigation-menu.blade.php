@@ -532,11 +532,17 @@
                             <!-- Authentication -->
                             <form method="POST" action="{{ route('logout') }}" x-data id="logout-form">
                                 @csrf
+
+                                {{-- Botón cerrar sesión --}}
                                 <x-dropdown-link href="{{ route('logout') }}" id="logout-button">
                                     {{ __('Log Out') }}
                                 </x-dropdown-link>
-                            </form>
 
+                                {{-- Botón cambiar contraseña con los mismos estilos --}}
+                                <x-dropdown-link href="{{ route('password.edit') }}">
+                                    {{ __('Cambiar contraseña') }}
+                                </x-dropdown-link>
+                            </form>
                         </x-slot>
                     </x-dropdown>
                 </div>

@@ -61,6 +61,7 @@ use App\Livewire\Kinesiologia\PdfsKinesiologia;
 use App\Livewire\Kinesiologia\SesionKinesiologica;
 use App\Http\Controllers\Kinesiologia\FichaPdfController;
 use App\Http\Controllers\Kinesiologia\SesionPdfController;
+use App\Http\Controllers\PasswordController;
 
 
 
@@ -244,3 +245,12 @@ Route::get('kinesiologia/ficha-pdf/{fichaId}', [FichaPdfController::class, 'view
 // 📄 Ver / Imprimir PDF de sesiones
 Route::get('/kinesiologia/sesiones/pdf/{paciente}', [SesionPdfController::class, 'pdfSesiones'])
     ->name('kinesiologia.sesiones');
+
+ /* Reseteo de contraseña */
+Route::middleware('auth')->group(function () {
+    Route::get('/password/cambiar', [PasswordController::class, 'edit'])
+        ->name('password.edit');
+
+    Route::post('/password/cambiar', [PasswordController::class, 'update'])
+        ->name('password.update.manual');
+});

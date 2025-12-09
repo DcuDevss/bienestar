@@ -49,6 +49,7 @@
                             <option value="sesion.finalizada">Sesion Finalizadas</option>
                             <option value="paciente.photo.removed">Foto Eliminada</option>
                             <option value="paciente.photo.uploaded">Foto Actualizada</option>
+                            <option value="user.password.update">Actualización de contraseña</option>
                         </select>
 
                         <!-- Usuario -->

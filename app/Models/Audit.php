@@ -60,6 +60,7 @@ class Audit extends Model
             'sesion.finalizada' => 'Finalizar Sesion',
             'paciente.photo.uploaded' => 'Actualizacion Foto del Paciente',
             'paciente.photo.removed'    => 'Eliminación Foto del Paciente',
+            'user.password.update'  => 'Actualización de contraseña'
         ];
 
         if (isset($map[$this->action])) {

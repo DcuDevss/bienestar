@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
 class PdfKinesiologia extends Model
 {
@@ -17,6 +18,15 @@ class PdfKinesiologia extends Model
         'filename',
         'filepath',
     ];
+
+    /**
+     * Genera un nombre hasheado para guardar el archivo en el disco
+     */
+    public static function generateHashedFilename($originalName)
+    {
+        $ext = pathinfo($originalName, PATHINFO_EXTENSION);
+        return hash('sha256', Str::uuid() . now()) . '.' . strtolower($ext);
+    }
 
     /**
      * Relación con Paciente
@@ -35,7 +45,7 @@ class PdfKinesiologia extends Model
     }
 
     /**
-     * Devuelve el nombre limpio del archivo (por si algún día lo procesás)
+     * Devuelve el nombre limpio del archivo (para mostrar en la app)
      */
     public function getDisplayNameAttribute()
     {

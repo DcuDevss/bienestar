@@ -6,6 +6,7 @@ use App\Models\Paciente;
 use App\Models\PdfHistorial;
 use Livewire\Component;
 use Livewire\WithFileUploads;
+use App\Helpers\PdfCrypto;
 
 class FileController extends Component
 {
@@ -59,19 +60,28 @@ class FileController extends Component
             $nombreOriginal = $archivo->getClientOriginalName();
             $timestamp = now()->format('d-m-Y_H-i-s');
 
-            // sanitizar nombre base y conservar extensión original
-            $ext         = $archivo->getClientOriginalExtension();
-            $base        = pathinfo($nombreOriginal, PATHINFO_FILENAME);
-            $seguro      = \Illuminate\Support\Str::slug($base);
-            $nombreFinal = "{$timestamp}_{$seguro}.".strtolower($ext);
+            $ext   = $archivo->getClientOriginalExtension();
+            $base  = pathinfo($nombreOriginal, PATHINFO_FILENAME);
+            $seguro = \Illuminate\Support\Str::slug($base);
+            $nombreFinal = "{$timestamp}_{$seguro}." . strtolower($ext);
 
-            $ruta = $archivo->storeAs("pdfhistoriales/{$this->pacienteId}", $nombreFinal, 'public');
+            // 1️⃣ Leer contenido del archivo
+            $contenido = file_get_contents($archivo->getRealPath());
 
+            // 2️⃣ Cifrar contenido
+            $cifrado = \App\Helpers\PdfCrypto::encryptRaw($contenido);
+
+            // 3️⃣ Guardar en disco cifrado
+            $ruta = "pdfhistoriales/{$this->pacienteId}/{$nombreFinal}";
+            \Illuminate\Support\Facades\Storage::disk('public')->put($ruta, $cifrado);
+
+            // 4️⃣ Guardar registro en BD
             \App\Models\PdfHistorial::create([
                 'file'        => $ruta,
                 'paciente_id' => $this->pacienteId,
             ]);
-                // 🧾 AUDITORÍA
+
+            // Auditoría
             \App\Support\AuditLog::log(
                 'archivo.create',
                 $this->patient,
@@ -85,6 +95,8 @@ class FileController extends Component
 
         $this->dispatch('swal', title: 'Cargado', text: 'Archivo(s) subido(s) correctamente.', icon: 'success');
     }
+
+
 
 
     public function render()

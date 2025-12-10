@@ -9,6 +9,7 @@ use App\Models\PdfPsiquiatra;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Livewire\Attributes\On;
+use App\Helpers\PdfCrypto; // Asegurarse de importar PdfCrypto
 
 class PdfPsiquiatraController extends Component
 {
@@ -29,7 +30,7 @@ class PdfPsiquiatraController extends Component
         $this->pdfsList = PdfPsiquiatra::where('paciente_id', $this->paciente->id)
             ->latest()
             ->get()
-            ->filter(fn ($r) => Storage::disk('public')->exists($r->filepath))
+            ->filter(fn($r) => Storage::disk('public')->exists($r->filepath))
             ->values();
     }
 
@@ -38,7 +39,8 @@ class PdfPsiquiatraController extends Component
         return "pdfhistoriales/{$this->paciente->id}";
     }
 
-   public function uploadPdfs()
+    //Original:
+    /* public function uploadPdfs()
     {
         // 1) Guard clause: nada seleccionado
         if (empty($this->pdfs) || count($this->pdfs) === 0) {
@@ -78,7 +80,66 @@ class PdfPsiquiatraController extends Component
         $this->loadPdfs();
 
         $this->dispatch('swal', title: 'Cargado', text: 'PDF(s) cargados correctamente.', icon: 'success');
+    } */
+    //Termina el metodo
+
+    //-> Nuevo metodo con cifrado:
+    public function uploadPdfs()
+    {
+        if (empty($this->pdfs) || count($this->pdfs) === 0) {
+            $this->dispatch('swal', title: 'Sin archivos', text: 'Seleccioná al menos un PDF para subir.', icon: 'error');
+            return;
+        }
+
+        $this->validate([
+            'pdfs'   => 'required|array|min:1',
+            'pdfs.*' => 'file|mimes:pdf|max:5120',
+        ]);
+
+        foreach ($this->pdfs as $pdf) {
+            $orig = $pdf->getClientOriginalName();
+            $ext  = $pdf->getClientOriginalExtension();
+            $base = pathinfo($orig, PATHINFO_FILENAME);
+            $safe = \Illuminate\Support\Str::slug($base);
+
+            $name = $safe . '_' . now()->format('d-m-Y_His') . '_' . Str::random(6) . '.' . $ext;
+
+            // ✅ Ruta final (igual que antes)
+            $relativePath = $this->storageDir() . '/' . $name;
+
+            // ✅ Obtener contenido REAL del archivo
+            $fileContents = $pdf->get();
+
+            // ✅ Guardar CIFRADO usando tu helper
+            $savedPath = PdfCrypto::storeEncrypted(
+                'public',
+                $relativePath,
+                $fileContents
+            );
+
+            if (!$savedPath) {
+                continue; // si falla, pasa al siguiente
+            }
+
+            PdfPsiquiatra::create([
+                'paciente_id' => $this->paciente->id,
+                'filename'    => $orig,
+                'filepath'    => $relativePath,
+            ]);
+        }
+
+        audit_log(
+            'pdf.create',
+            $this->paciente,
+            "Subida de PDFs psiquiátricos"
+        );
+
+        $this->reset('pdfs');
+        $this->loadPdfs();
+
+        $this->dispatch('swal', title: 'Cargado', text: 'PDF(s) subidos y cifrados correctamente.', icon: 'success');
     }
+    //Termina el metodo
 
 
     public function confirmarEliminar($pdfId)
@@ -100,7 +161,7 @@ class PdfPsiquiatraController extends Component
         if ($pdf) {
             if (Storage::disk('public')->exists($pdf->filepath)) {
                 Storage::disk('public')->delete($pdf->filepath);
-                    // ✅ Registrar auditoría de borrado físico
+                // ✅ Registrar auditoría de borrado físico
                 audit_log(
                     'pdf.deleted.file',
                     $this->paciente,

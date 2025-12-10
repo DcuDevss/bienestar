@@ -53,7 +53,7 @@ class VerHistorial extends Component
                 'display'  => $origName,
                 'path'     => $primary,
                 'url'      => Storage::disk('public')->url($primary),
-                'source'   => 'historial',
+                'source'   => 'archivo',
                 'modified' => $this->formatDate($this->lastModifiedSafe($primary)),
             ];
         })->filter();
@@ -78,7 +78,7 @@ class VerHistorial extends Component
             ];
         })->filter();
 
-        
+
 
         // PDFs en el filesystem
         $fromFs = collect(Storage::disk('public')->files($dir))

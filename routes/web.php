@@ -61,6 +61,12 @@ use App\Livewire\Kinesiologia\PdfsKinesiologia;
 use App\Livewire\Kinesiologia\SesionKinesiologica;
 use App\Http\Controllers\Kinesiologia\FichaPdfController;
 use App\Http\Controllers\Kinesiologia\SesionPdfController;
+use App\Livewire\Paciente\FileController;
+use App\Helpers\PdfCrypto;
+
+
+
+
 
 
 
@@ -152,6 +158,7 @@ Route::get('/curriculum', [CurriculumController::class, 'index'])->middleware('c
 Route::get('/interviews/{paciente}', [InterviewController::class, 'index'])->middleware('can:interviews.index')->name('interviews.index');
 Route::post('/interviews/{paciente}', [InterviewController::class, 'resetSums'])->name('reset-sums'); // web.php
 Route::get('/pdfs/{filename}', [PdfController::class, 'show'])->name('pdf.show');
+Route::get('/pdf/download/{filename}', [PdfController::class, 'download'])->name('pdf.download');
 Route::get('/auditorias', AuditoriaList::class)->name('auditorias.index');
 Route::get('/auditorias/general', AuditoriaGeneral::class)->name('auditorias.auditoria-general');
 
@@ -244,3 +251,7 @@ Route::get('kinesiologia/ficha-pdf/{fichaId}', [FichaPdfController::class, 'view
 // 📄 Ver / Imprimir PDF de sesiones
 Route::get('/kinesiologia/sesiones/pdf/{paciente}', [SesionPdfController::class, 'pdfSesiones'])
     ->name('kinesiologia.sesiones');
+
+// Ahora
+Route::get('/pdfs/{filename}', [PdfsKinesiologia::class, 'previewPdfByFilename'])
+    ->name('pdf.show');

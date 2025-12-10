@@ -76,10 +76,11 @@
                     </a> --}}
                 <li class="flex items-center justify-between">
                     {{-- ✅ LLAMADA A LIVEWIRE PARA DESCIFRAR Y DESCARGAR --}}
-                    <a href="{{ route('pdf.preview', $pdf->id) }}" target="_blank"
-                        class="text-blue-600 hover:text-blue-400 font-semibold">
+                    <a href="{{ route('pdf.show', ['filename' => basename($pdf->filepath), 'pid' => $paciente->id]) }}"
+                        target="_blank"class="text-blue-600 hover:text-blue-400 font-semibold">
                         {{ $pdf->filename }}
                     </a>
+
 
 
 

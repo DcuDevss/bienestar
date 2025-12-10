@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Storage;
 use Carbon\Carbon;
 use Illuminate\Support\Facades\Auth;
 use App\Helpers\PdfCrypto;
+use Illuminate\Http\Request;
 use Illuminate\Support\Str;
 
 class PdfsKinesiologia extends Component
@@ -135,6 +136,25 @@ class PdfsKinesiologia extends Component
             ->header('Content-Type', 'application/pdf')
             ->header('Content-Disposition', 'inline; filename="' . $pdf->filename . '"');
     }
+
+    public function previewPdfByFilename($filename, Request $request)
+    {
+        $pid = $request->query('pid'); // id del paciente
+        $path = "pdfhistoriales/{$pid}/{$filename}";
+
+        if (!Storage::disk('public')->exists($path)) {
+            abort(404);
+        }
+
+        $decrypted = PdfCrypto::getDecrypted('public', $path);
+
+        if (!$decrypted) abort(404);
+
+        return response($decrypted, 200)
+            ->header('Content-Type', 'application/pdf')
+            ->header('Content-Disposition', 'inline; filename="' . $filename . '"');
+    }
+
 
     public function eliminarPdf($id)
     {

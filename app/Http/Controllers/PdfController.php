@@ -56,6 +56,7 @@ class PdfController extends Controller
     {
         $filename = urldecode($filename);
 
+        // Evitar path traversal
         if (Str::contains($filename, ['..', '/', '\\'])) {
             abort(404);
         }
@@ -63,14 +64,27 @@ class PdfController extends Controller
         $pid = $request->query('pid'); // paciente id opcional
         $candidates = [];
 
+        // Buscar el archivo real en disco
         if ($pid) {
-            $candidates[] = "pdfhistoriales/{$pid}/{$filename}";
+            $files = Storage::disk('public')->files("pdfhistoriales/{$pid}");
+            foreach ($files as $file) {
+                // Comparar solo el "basename" sin extensión de timestamp
+                if (Str::contains($file, pathinfo($filename, PATHINFO_FILENAME))) {
+                    $candidates[] = $file;
+                }
+            }
         } else {
             foreach (Storage::disk('public')->directories('pdfhistoriales') as $dir) {
-                $candidates[] = $dir . '/' . $filename;
+                $files = Storage::disk('public')->files($dir);
+                foreach ($files as $file) {
+                    if (Str::contains($file, pathinfo($filename, PATHINFO_FILENAME))) {
+                        $candidates[] = $file;
+                    }
+                }
             }
         }
 
+        // Tomar el primer archivo que coincida
         foreach ($candidates as $path) {
             if (Storage::disk('public')->exists($path)) {
                 $decrypted = PdfCrypto::getDecrypted('public', $path);

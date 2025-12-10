@@ -261,4 +261,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/password/cambiar', [PasswordController::class, 'update'])
         ->name('password.update.manual');
 });
->>>>>>>>> Temporary merge branch 2
+

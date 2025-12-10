@@ -78,8 +78,12 @@
             </script>
         @endif
 
-        <div class="mb-4 text-sm text-gray-600">
+        <div class="mb-2 text-l text-gray-600">
             {{ __('Cambiá tu contraseña.') }}
+        </div>
+
+        <div class="alert alert-warning py-1 my-2">
+            La contraseña debe contener al menos 8 caracteres.
         </div>
 
         <x-validation-errors class="mb-4" />

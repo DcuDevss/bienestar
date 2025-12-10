@@ -261,6 +261,4 @@ Route::middleware('auth')->group(function () {
     Route::post('/password/cambiar', [PasswordController::class, 'update'])
         ->name('password.update.manual');
 });
-// Ahora
-Route::get('/pdfs/{filename}', [PdfsKinesiologia::class, 'previewPdfByFilename'])
-    ->name('pdf.show');
+>>>>>>>>> Temporary merge branch 2

@@ -12,19 +12,17 @@
         </label>
 
         <input type="file" id="pdfs" wire:model="pdfs" multiple accept="application/pdf"
-               class="block w-full border rounded p-2" />
+            class="block w-full border rounded p-2" />
 
         {{-- Validación --}}
         @error('pdfs.*')
             <span class="text-red-600 text-sm mt-1 block">{{ $message }}</span>
         @enderror
 
-           {{-- Imagen de encabezado --}}
-<button type="button"
-    class="mt-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
-    wire:loading.attr="disabled" wire:target="uploadPdfs"
-    x-data
-    @click.prevent="
+        {{-- Imagen de encabezado --}}
+        <button type="button" class="mt-3 bg-blue-600 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded"
+            wire:loading.attr="disabled" wire:target="uploadPdfs" x-data
+            @click.prevent="
         const input = document.getElementById('pdfs');
         if (!input.files.length) {
             Swal.fire({
@@ -48,8 +46,8 @@
             if (r.isConfirmed) { $wire.uploadPdfs() }
         });
     ">
-    Subir PDFs
-</button>
+            Subir PDFs
+        </button>
 
 
     </form>
@@ -61,24 +59,22 @@
         $pdfsCollection = collect($pdfsList);
     @endphp
 
-    @if($pdfsCollection->isEmpty())
+    @if ($pdfsCollection->isEmpty())
         <p class="text-gray-600">No hay PDFs adjuntados en Kinesiología.</p>
     @else
         <ul class="list-disc list-inside space-y-2">
             @foreach ($pdfsCollection as $pdf)
-                @if(!isset($pdf->filepath))
+                @if (!isset($pdf->filepath))
                     @continue
                 @endif
 
                 <li class="flex items-center justify-between">
-                    <a href="{{ Storage::url($pdf->filepath) }}"
-                       target="_blank"
-                       class="text-blue-600 hover:text-blue-400 font-semibold">
+                    <a href="{{ Storage::url($pdf->filepath) }}" target="_blank"
+                        class="text-blue-600 hover:text-blue-400 font-semibold">
                         {{ $pdf->filename }}
                     </a>
 
-                    <button
-                        x-data
+                    <button x-data
                         @click.prevent="
                             Swal.fire({
                                 title: '¿Eliminar PDF?',
@@ -103,101 +99,102 @@
     {{-- Botón Volver --}}
     <div class="flex justify-center mb-2 mt-4">
         <button type="button" onclick="window.history.back()"
-                class="px-4 py-2 bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 focus:outline-none">
+            class="px-4 py-2 bg-gray-500 text-white rounded-md shadow-md hover:bg-gray-600 focus:outline-none">
             Volver
         </button>
     </div>
 </div>
-
+{{-- Alerta --}}
 {{-- SweetAlert y hooks de Livewire --}}
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-document.addEventListener('livewire:init', () => {
+    document.addEventListener('livewire:init', () => {
 
-    // 🔔 Mostrar alertas tipo toast desde Livewire (this->dispatch('swal'))
-    Livewire.on('swal', (payload) => {
-        if (Array.isArray(payload)) payload = payload[0];
-        const { title = 'Listo', text = '', html = null, icon = 'success', timer = 3000 } = payload || {};
-        const isErrorOrWarning = (icon === 'error' || icon === 'warning');
+        // 🔔 Mostrar alertas tipo toast desde Livewire (this->dispatch('swal'))
+        Livewire.on('swal', (payload) => {
+            if (Array.isArray(payload)) payload = payload[0];
+            const {
+                title = 'Listo', text = '', html = null, icon = 'success', timer = 3000
+            } = payload || {};
+            const isErrorOrWarning = (icon === 'error' || icon === 'warning');
 
-        Swal.fire({
-            title,
-            text,
-            html,
-            icon,
-            toast: !isErrorOrWarning,
-            position: isErrorOrWarning ? 'center' : 'top-end',
-            showConfirmButton: isErrorOrWarning,
-            timer: isErrorOrWarning ? null : timer,
-            timerProgressBar: !isErrorOrWarning,
-        });
-    });
-
-    // ✅ Confirmación al subir PDFs
-    const btnSubir = document.querySelector('button[wire\\:target="uploadPdfs"]');
-    const input = document.getElementById('pdfs');
-
-    if (btnSubir && input) {
-        btnSubir.addEventListener('click', (e) => {
-            e.preventDefault();
-
-            // ⚠️ Si no hay archivos cargados, mostrar alerta y salir
-            if (!input.files.length) {
-                Swal.fire({
-                    title: 'Ningún archivo seleccionado',
-                    text: 'Por favor, cargá al menos un archivo PDF antes de subir.',
-                    icon: 'warning',
-                    confirmButtonText: 'Entendido',
-                });
-                return;
-            }
-
-            // ✅ Si hay archivos, confirmar subida
             Swal.fire({
-                title: '¿Subir PDFs?',
-                text: '¿Estás seguro de que deseas subir los archivos seleccionados?',
-                icon: 'question',
+                title,
+                text,
+                html,
+                icon,
+                toast: !isErrorOrWarning,
+                position: isErrorOrWarning ? 'center' : 'top-end',
+                showConfirmButton: isErrorOrWarning,
+                timer: isErrorOrWarning ? null : timer,
+                timerProgressBar: !isErrorOrWarning,
+            });
+        });
+
+        // ✅ Confirmación al subir PDFs
+        const btnSubir = document.querySelector('button[wire\\:target="uploadPdfs"]');
+        const input = document.getElementById('pdfs');
+
+        if (btnSubir && input) {
+            btnSubir.addEventListener('click', (e) => {
+                e.preventDefault();
+
+                // ⚠️ Si no hay archivos cargados, mostrar alerta y salir
+                if (!input.files.length) {
+                    Swal.fire({
+                        title: 'Ningún archivo seleccionado',
+                        text: 'Por favor, cargá al menos un archivo PDF antes de subir.',
+                        icon: 'warning',
+                        confirmButtonText: 'Entendido',
+                    });
+                    return;
+                }
+
+                // ✅ Si hay archivos, confirmar subida
+                Swal.fire({
+                    title: '¿Subir PDFs?',
+                    text: '¿Estás seguro de que deseas subir los archivos seleccionados?',
+                    icon: 'question',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sí, subir',
+                    cancelButtonText: 'Cancelar',
+                    reverseButtons: true,
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        const componentId = document.querySelector('[wire\\:id]')?.getAttribute(
+                            'wire:id');
+                        if (componentId) {
+                            Livewire.find(componentId).uploadPdfs();
+                        }
+                    }
+                });
+            });
+        }
+
+        // 🔥 Confirmación para eliminar PDFs (usada desde this->dispatch('confirm', { id: ... }))
+        Livewire.on('confirm', ({
+            title = '¿Estás seguro?',
+            text = '',
+            icon = 'warning',
+            confirmText = 'Sí',
+            cancelText = 'Cancelar',
+            id = null
+        } = {}) => {
+
+            Swal.fire({
+                title,
+                text,
+                icon,
                 showCancelButton: true,
-                confirmButtonText: 'Sí, subir',
-                cancelButtonText: 'Cancelar',
+                confirmButtonText: confirmText,
+                cancelButtonText: cancelText,
                 reverseButtons: true,
             }).then((result) => {
-                if (result.isConfirmed) {
-                    const componentId = document.querySelector('[wire\\:id]')?.getAttribute('wire:id');
-                    if (componentId) {
-                        Livewire.find(componentId).uploadPdfs();
-                    }
+                if (result.isConfirmed && id) {
+                    @this.call('eliminarPdf', id);
                 }
             });
         });
-    }
 
-    // 🔥 Confirmación para eliminar PDFs (usada desde this->dispatch('confirm', { id: ... }))
-    Livewire.on('confirm', ({ 
-        title = '¿Estás seguro?', 
-        text = '', 
-        icon = 'warning', 
-        confirmText = 'Sí', 
-        cancelText = 'Cancelar', 
-        id = null 
-    } = {}) => {
-
-        Swal.fire({
-            title,
-            text,
-            icon,
-            showCancelButton: true,
-            confirmButtonText: confirmText,
-            cancelButtonText: cancelText,
-            reverseButtons: true,
-        }).then((result) => {
-            if (result.isConfirmed && id) {
-                @this.call('eliminarPdf', id);
-            }
-        });
     });
-
-});
 </script>
-
-
